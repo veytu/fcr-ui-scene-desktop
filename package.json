@@ -1,0 +1,8 @@
+{
+  "name": "agora-classroom-sdk",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "ssh://git@git.agoralab.co/aduc/online-class-desktop.git",
+  "author": "renyifei <renyifei@agora.io>",
+  "license": "MIT"
+}
