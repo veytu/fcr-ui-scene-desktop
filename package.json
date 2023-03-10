@@ -4,5 +4,9 @@
   "main": "index.js",
   "repository": "ssh://git@git.agoralab.co/aduc/online-class-desktop.git",
   "author": "renyifei <renyifei@agora.io>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "agora-edu-core": "2.8.20",
+    "agora-rte-sdk": "2.8.20"
+  }
 }
