@@ -5,7 +5,7 @@ module.exports = {
   typescript: {
     reactDocgen: 'react-docgen',
   },
-  stories: ['../src/ui-kit/components/**/*.stories.@(ts|tsx)'],
+  stories: [path.resolve(ROOT_PATH, 'src/ui-kit/components/**/*.stories.@(ts|tsx)')],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
@@ -19,17 +19,13 @@ module.exports = {
       },
     },
   ],
-  babel: async (options) => {
-    return {
-      ...options,
-    };
-  },
+  // babel: async (options) => {
+  //   return {
+  //     ...options,
+  //   };
+  // },
   webpackFinal: async (config) => {
     config.resolve.extensions.push('.ts', '.tsx');
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@classroom': path.resolve(ROOT_PATH, 'src'),
-    };
 
     return config;
   },
