@@ -1,6 +1,6 @@
 import React from "react";
 import { Meta } from "@storybook/react";
-import { SvgIcon } from "./";
+import { SvgIcon } from ".";
 import { SvgIconEnum } from "./type";
 import "./index.css";
 
