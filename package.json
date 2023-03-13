@@ -6,7 +6,38 @@
   "author": "renyifei <renyifei@agora.io>",
   "license": "MIT",
   "dependencies": {
+    "agora-common-libs": "2.8.1",
     "agora-edu-core": "2.8.20",
-    "agora-rte-sdk": "2.8.20"
+    "agora-rte-sdk": "2.8.20",
+    "rc-tooltip": "5.1.1",
+    "react": "17.0.0",
+    "react-copy-to-clipboard": "^5.1.0",
+    "react-dom": "17.0.0",
+    "react-draggable": "4.4.3",
+    "react-helmet": "6.1.0",
+    "react-i18next": "11.16.7",
+    "react-rnd": "10.3.4",
+    "react-router": "5.2.0",
+    "react-router-dom": "5.2.0",
+    "react-spring": "9.4.4",
+    "react-transition-group": "4.4.1",
+    "react-use-measure": "2.1.1"
+  },
+  "devDependencies": {
+    "@storybook/addon-essentials": "6.5.13",
+    "@storybook/addon-links": "6.5.13",
+    "@storybook/addon-postcss": "2.0.0",
+    "@storybook/addon-styling": "^0.3.1",
+    "@storybook/react": "6.5.13",
+    "@types/react": "17.0.0",
+    "autoprefixer": "10.4.14",
+    "postcss": "8.4.21",
+    "postcss-import": "14.0.1",
+    "postcss-loader": "4.0.3",
+    "storybook": "6.5.13",
+    "tailwindcss": "2.0.3"
+  },
+  "scripts": {
+    "storybook": "start-storybook -p 6006 --no-manager-cache"
   }
 }

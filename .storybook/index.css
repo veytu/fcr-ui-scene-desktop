@@ -1,0 +1,10 @@
+:root {
+  --fcr_v2_dark_line1: 0.5px solid #4a4c5f;
+  --fcr_v2_gray1: black;
+}
+.fcr_v2_gray1 {
+  background: var(--fcr_v2_gray1);
+}
+.fcr_v2_white {
+  color: #fff;
+}
