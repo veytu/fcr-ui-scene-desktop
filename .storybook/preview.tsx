@@ -1,7 +1,7 @@
 import React from "react";
 import { FcrTheme, ThemeProvider } from "agora-common-libs";
-import "tailwindcss/tailwind.css";
-import "./index.css";
+import "../src/ui-kit/preflight.css";
+
 const theme: FcrTheme = {
   /**
    * 背景色

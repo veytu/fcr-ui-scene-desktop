@@ -1,10 +1,13 @@
 {
-  "name": "agora-classroom-sdk",
+  "name": "agora-onlineclass-sdk",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "ssh://git@git.agoralab.co/aduc/online-class-desktop.git",
   "author": "renyifei <renyifei@agora.io>",
   "license": "MIT",
+  "scripts": {
+    "storybook": "start-storybook -p 6006 --no-manager-cache"
+  },
   "dependencies": {
     "agora-common-libs": "2.8.1",
     "agora-edu-core": "2.8.20",
@@ -24,20 +27,20 @@
     "react-use-measure": "2.1.1"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "6.5.13",
-    "@storybook/addon-links": "6.5.13",
-    "@storybook/addon-postcss": "2.0.0",
-    "@storybook/addon-styling": "^0.3.1",
-    "@storybook/react": "6.5.13",
     "@types/react": "17.0.0",
     "autoprefixer": "10.4.14",
     "postcss": "8.4.21",
     "postcss-import": "14.0.1",
     "postcss-loader": "4.0.3",
+    "tailwindcss": "2.0.3",
+    "@types/tailwindcss": "2.2.4",
     "storybook": "6.5.13",
-    "tailwindcss": "2.0.3"
-  },
-  "scripts": {
-    "storybook": "start-storybook -p 6006 --no-manager-cache"
+    "@storybook/addon-postcss": "2.0.0",
+    "@storybook/addon-essentials": "6.5.13",
+    "@storybook/addon-links": "6.5.13",
+    "@storybook/react": "6.5.13",
+    "babel-plugin-preval": "5.1.0"
   }
+ 
+  
 }
