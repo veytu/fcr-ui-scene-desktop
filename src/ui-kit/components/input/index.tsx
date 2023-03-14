@@ -23,7 +23,7 @@ export const Input: FC<Props> = ({
   onKeyDown,
   onKeyUp,
 }) => {
-  const [focused, setFocused] = useState(false);
+  const [focused, setFocused] = useState(true);
   const inputRef = useRef<HTMLInputElement>(null);
   const handleFocus = () => {
     setFocused(true);
@@ -37,9 +37,6 @@ export const Input: FC<Props> = ({
   };
 
   const handleClear = () => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
     onChange('');
   };
 
@@ -53,15 +50,15 @@ export const Input: FC<Props> = ({
     }
   };
 
-  const iconCls = classNames('fcr-input-icon', {
-    'fcr-input-icon--invisible': readOnly || !focused,
-  });
+  const iconCls = classNames('fcr-input-icon', {});
 
   const cls = classNames('fcr-input', {
     'fcr-input--focused': focused,
   });
 
-  const iconWrapCls = classNames('fcr-input-icon-wrap', {});
+  const iconWrapCls = classNames('fcr-input-icon-wrap', {
+    'fcr-input-icon-wrap--invisible': readOnly || !focused,
+  });
 
   return (
     <div className={cls} onClick={handleClick}>
@@ -76,13 +73,12 @@ export const Input: FC<Props> = ({
         onKeyDown={onKeyDown}
         onKeyUp={onKeyUp}
       />
-      <div className={iconWrapCls}>
+      <div className={iconWrapCls} onMouseDown={handleClear}>
         <SvgImg
           className={iconCls}
-          type={SvgIconEnum.CLOSE}
+          type={SvgIconEnum.FCR_CLOSE}
           size={20}
           style={{ top: 14, right: 10 }}
-          onMouseDown={handleClear}
         />
       </div>
     </div>

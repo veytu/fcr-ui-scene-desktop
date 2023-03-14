@@ -16,12 +16,12 @@ type DocsProps = {
 const keys = Object.keys(SvgIconEnum);
 export const Docs = ({ size, color }: DocsProps) => {
   return (
-    <div className="h-full overflow-auto">
-      <h1 className="mb-4">Icon Gallery</h1>
-      <div className="flex flex-wrap">
+    <div>
+      <h1>Icon Gallery</h1>
+      <div>
         {keys.map((k) => {
           return (
-            <div key={k} className="mr-4 mb-4 border">
+            <div key={k}>
               <SvgImg
                 type={SvgIconEnum[k]}
                 size={size}

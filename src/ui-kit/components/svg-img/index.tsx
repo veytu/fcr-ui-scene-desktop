@@ -1,9 +1,9 @@
-import React, { FC, useContext, MouseEvent, CSSProperties } from 'react';
+import React, { FC, MouseEvent, CSSProperties } from 'react';
 import classnames from 'classnames';
-import { themeContext } from 'agora-common-libs';
+
 import { getPath, getViewBox, PathOptions } from './svg-dict';
 import { SvgIconEnum } from './type';
-
+import { themeVal } from '../../tailwindcss';
 
 export type SvgImgProps = {
   type: SvgIconEnum;
@@ -29,13 +29,16 @@ export const SvgImg: FC<SvgImgProps> = ({
   const cls = classnames({
     [`${className}`]: !!className,
   });
-  const { iconPrimary, iconSecondary } = useContext(themeContext);
+
+  const iconPrimary = themeVal('colors.icon-1');
+  const iconSecondary = themeVal('colors.icon-2');
+  console.log(iconPrimary, iconSecondary);
 
   const viewBox = getViewBox(type);
   const path = getPath(type, {
     ...colors,
-    iconPrimary: colors?.iconPrimary ?? iconPrimary,
-    iconSecondary: colors?.iconSecondary ?? iconSecondary,
+    iconPrimary: colors?.iconPrimary ?? iconPrimary ?? 'currentColor',
+    iconSecondary: colors?.iconSecondary ?? iconSecondary ?? 'currentColor',
   });
 
   return (

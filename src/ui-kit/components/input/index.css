@@ -1,19 +1,20 @@
 .fcr-input {
+  @apply fcr-bg-8 fcr-border-1 fcr-rounded-12;
   position: relative;
   padding: 15px 12px;
   transition: border-color 0.3s;
-  border: 1px solid;
+  border-width: 1px;
+  border-style: solid;
   cursor: text;
-  @apply fcr-bg-8 fcr-border-1 fcr-rounded-12;
 }
 
 .fcr-input input {
+  @apply fcr-text-1 fcr-bg-8;
   outline: none;
   width: 100%;
   height: 100%;
   border: none;
   font-size: 12px;
-  @apply fcr-text-1 fcr-bg-8;
 }
 
 .fcr-input input::placeholder {
@@ -21,22 +22,19 @@
 }
 
 .fcr-input:hover {
-  border: 1px solid;
   @apply fcr-border-notsb-inverse;
+  border-style: solid;
+  border-width: 1px;
 }
 
 .fcr-input.fcr-input--focused {
-  @apply fcr-border-brand;
-}
-
-.fcr-input-icon {
-}
-
-.fcr-input-icon--invisible {
-  /* visibility: hidden; */
+  @apply fcr-border-brand fcr-outline-brand-a50;
+  outline-width: 3px;
+  outline-style: solid;
 }
 
 .fcr-input-icon-wrap {
+  @apply fcr-rounded-full;
   position: absolute;
   cursor: pointer;
   width: 22px;
@@ -46,5 +44,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  @apply fcr-bg-2 fcr-rounded-full;
+  transition: background-color 0.3s;
+}
+
+.fcr-input-icon-wrap:hover {
+  @apply fcr-bg-2;
+}
+
+.fcr-input-icon-wrap--invisible {
+  visibility: hidden;
 }

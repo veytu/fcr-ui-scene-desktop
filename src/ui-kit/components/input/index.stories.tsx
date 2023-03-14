@@ -1,6 +1,6 @@
-import React from 'react';
-import { ComponentMeta } from '@storybook/react';
-import { Input, Props } from '.';
+import React, { useState } from 'react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Input } from '.';
 
 const meta: ComponentMeta<typeof Input> = {
   title: 'Components/Input',
@@ -10,10 +10,14 @@ const meta: ComponentMeta<typeof Input> = {
   },
 };
 
-export const Docs = (props: Props) => {
+export const Docs: ComponentStory<typeof Input> = (props) => {
+  const [value, setValue] = useState('');
+  const handleChange = (val: string) => {
+    setValue(val);
+  };
   return (
-    <div className="h-full w-full">
-      <Input {...props} />
+    <div>
+      <Input {...props} value={value} onChange={handleChange} />
     </div>
   );
 };
