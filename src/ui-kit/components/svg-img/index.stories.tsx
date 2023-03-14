@@ -1,12 +1,11 @@
-import React from "react";
-import { Meta } from "@storybook/react";
-import { SvgIcon } from ".";
-import { SvgIconEnum } from "./type";
-import "./index.css";
+import React from 'react';
+import { Meta } from '@storybook/react';
+import { SvgIconEnum } from './type';
+import { SvgImg } from '.';
 
 const meta: Meta = {
-  title: "Components/SvgImg",
-  component: SvgIcon,
+  title: 'Components/SvgImg',
+  component: SvgImg,
 };
 
 type DocsProps = {
@@ -23,15 +22,10 @@ export const Docs = ({ size, color }: DocsProps) => {
         {keys.map((k) => {
           return (
             <div key={k} className="mr-4 mb-4 border">
-              <SvgIcon
+              <SvgImg
                 type={SvgIconEnum[k]}
-                hoverType={SvgIconEnum[k]}
                 size={size}
-                colors={
-                  color
-                    ? { iconPrimary: color, penColor: "red" }
-                    : { penColor: "red" }
-                }
+                colors={color ? { iconPrimary: color, penColor: 'red' } : { penColor: 'red' }}
               />
             </div>
           );
@@ -43,7 +37,7 @@ export const Docs = ({ size, color }: DocsProps) => {
 
 Docs.args = {
   size: 100,
-  color: "",
+  color: '',
 };
 
 export default meta;
