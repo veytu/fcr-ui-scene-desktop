@@ -1,4 +1,4 @@
-import { themeVal } from '../../../infra/utils/tailwindcss';
+import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { CSSProperties, FC } from 'react';
 import { SvgIconEnum, SvgImg } from '../svg-img';
@@ -6,9 +6,8 @@ import './index.css';
 import './arrow.css';
 
 import { FcrToolTip, FcrToolTipProps } from '.';
-const colors = themeVal('theme.colors');
-const borderRadius = themeVal('theme.borderRadius');
-const boxShadow = themeVal('theme.boxShadow');
+const colors = themeVal('colors');
+const borderRadius = themeVal('borderRadius');
 const defaultInfoOverlayInnerStyle: CSSProperties = {
   padding: '0 12px',
   background: `${colors['block-2']}`,

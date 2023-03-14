@@ -1,8 +1,8 @@
-import { themeVal } from '@onlineclass/infra/utils/tailwindcss';
+import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
 import classNames from 'classnames';
 import { ReactNode } from 'react';
 import { SvgIconEnum, SvgImg } from '../svg-img';
-const colors = themeVal('theme.colors');
+const colors = themeVal('colors');
 
 import './index.css';
 export type FcrToastType = 'Alarm' | 'Warn' | 'Info' | 'Normal';
@@ -41,7 +41,7 @@ export const FcrToast = (props: FcrToastProps) => {
       {closeable && (
         <div className={classNames('fcr-toast-container-close', 'fcr-divider')}>
           <SvgImg
-            type={SvgIconEnum.CLOSE}
+            type={SvgIconEnum.FCR_CLOSE}
             colors={{ iconPrimary: colors['white'] }}
             size={20}></SvgImg>
         </div>

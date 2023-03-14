@@ -1,4 +1,4 @@
-import { themeVal } from '../../../infra/utils/tailwindcss';
+import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
 import ToolTip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { CSSProperties, FC, ReactElement, ReactNode } from 'react';
@@ -21,10 +21,10 @@ const calcOverlayOffset = (placement: string) => {
     return [overlayOffset, 0];
   }
 };
-const colors = themeVal('theme.colors');
-const borderRadius = themeVal('theme.borderRadius');
-const borderColor = themeVal('theme.borderColor');
-const boxShadow = themeVal('theme.boxShadow');
+const colors = themeVal('colors');
+const borderRadius = themeVal('borderRadius');
+const borderColor = themeVal('borderColor');
+const boxShadow = themeVal('boxShadow');
 const defaultOverlayInnerStyle: CSSProperties = {
   padding: '0 10px',
   background: `${colors['black']}`,
@@ -66,7 +66,7 @@ export const FcrToolTip: FC<FcrToolTipProps> = (props) => {
       arrowContent={
         arrowContent || (
           <SvgImg
-            type={SvgIconEnum.TOOLTIP_ARROW}
+            type={SvgIconEnum.FCR_ALLLEAVE}
             colors={{
               iconPrimary: colors['black'],
               iconSecondary: colors['line-1'],

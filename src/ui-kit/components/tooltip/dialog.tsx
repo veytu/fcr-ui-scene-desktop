@@ -1,4 +1,3 @@
-import { themeVal } from '../../../infra/utils/tailwindcss';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { CSSProperties, FC } from 'react';
 import { SvgIconEnum, SvgImg } from '../svg-img';
@@ -6,9 +5,10 @@ import './index.css';
 import './arrow.css';
 import { FcrToolTip, FcrToolTipProps } from '.';
 import classNames from 'classnames';
-const colors = themeVal('theme.colors');
-const borderRadius = themeVal('theme.borderRadius');
-const boxShadow = themeVal('theme.boxShadow');
+import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
+const colors = themeVal('colors');
+const borderRadius = themeVal('borderRadius');
+const boxShadow = themeVal('boxShadow');
 const defaultDialogOverlayInnerStyle: CSSProperties = {
   padding: '0',
   background: `${colors['block-2']}`,
@@ -28,7 +28,7 @@ const DialogToolTipCloseableOverlayWrap: FC<Pick<FcrDialogToolTipProps, 'content
     <div className={classNames('fcr-dialog-tooltip-overlay-content')}>
       <div className={classNames('fcr-dialog-tooltip-overlay-close')} onClick={onClose}>
         <SvgImg
-          type={SvgIconEnum.CLOSE}
+          type={SvgIconEnum.FCR_CLOSE}
           size={9}
           colors={{ iconPrimary: colors['text-1'] }}></SvgImg>
       </div>
@@ -43,7 +43,8 @@ export const FcrDialogToolTip: FC<FcrDialogToolTipProps> = (props) => {
       overlayClassName="fcr-tooltip-border-width-2"
       arrowContent={
         <SvgImg
-          type={SvgIconEnum.TOOLTIP_ARROW_2}
+          //todo icon
+          type={SvgIconEnum.FCR_TOPWINDOWS}
           colors={{
             iconPrimary: colors['block-2'],
             iconSecondary: colors['line-1'],
