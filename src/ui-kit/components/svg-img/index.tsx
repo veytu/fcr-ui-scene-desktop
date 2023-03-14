@@ -40,7 +40,6 @@ export const SvgImg: FC<SvgImgProps> = ({
     iconPrimary: colors?.iconPrimary ?? iconPrimary ?? 'currentColor',
     iconSecondary: colors?.iconSecondary ?? iconSecondary ?? 'currentColor',
   });
-
   return (
     <svg
       className={cls}

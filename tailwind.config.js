@@ -65,6 +65,7 @@ module.exports = {
       6: theme('colors.block-6'),
       7: theme('colors.block-7'),
       8: theme('colors.block-8'),
+      brand: theme('colors.brand'),
     }),
     borderColor: (theme) => ({
       1: theme('colors.line-1'),
