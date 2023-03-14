@@ -92,3 +92,41 @@
   left: -7px;
   top: -7px;
 }
+
+/** Guide ToolTip **/
+.fcr-guide-tooltip-overlay-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.fcr-guide-tooltip-overlay-content-inner {
+  flex: 1;
+  flex-shrink: 0;
+}
+.fcr-guide-tooltip-overlay-content-closeable {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+.fcr-guide-tooltip-overlay-content-closeable::before {
+  content: "";
+  width: 1px;
+  height: calc(100% + 2px);
+  background: linear-gradient(
+    rgba(255, 255, 255, 0) 0%,
+    #ffffff 52.6%,
+    rgba(255, 255, 255, 0) 97.92%
+  );
+  position: absolute;
+  top: -1px;
+  left: 0;
+}
+
+/** Dialog ToolTip **/
+.fcr-dialog-tooltip-overlay-content {
+  padding: 15px 12px;
+  position: relative;
+}

@@ -1,10 +1,20 @@
-import React, { FC, useContext, useState, MouseEvent } from "react";
+import React, {
+  FC,
+  useContext,
+  useState,
+  MouseEvent,
+  CSSProperties,
+} from "react";
 import classnames from "classnames";
-import { BaseProps } from "../util/type";
 import { getPath, getViewBox, PathOptions } from "./svg-dict";
 import { SvgIconEnum } from "./type";
 import "./index.css";
 import { themeContext } from "agora-common-libs";
+interface BaseProps {
+  style?: CSSProperties;
+  className?: string;
+  id?: string;
+}
 
 export type SvgImgProps = BaseProps & {
   type: SvgIconEnum;

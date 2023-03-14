@@ -1,6 +1,9 @@
 import React, { FC, useState } from "react";
 import { Meta } from "@storybook/react";
-import { FcrToolTip, FcrGuideToolTip } from ".";
+import { FcrToolTip } from ".";
+import { FcrGuideToolTip } from "./guide";
+import { FcrInfoToolTip } from "./info";
+import { FcrDialogToolTip } from "./dialog";
 
 const meta: Meta = {
   title: "Components/ToolTip",
@@ -19,20 +22,150 @@ const placementMap = [
   "bottomLeft",
   "bottomRight",
 ];
-export const Docs: FC = (props) => {
+export const Placement = ({ type, trigger }: { type; trigger }) => {
+  const Component = type === "normal" ? FcrToolTip : FcrGuideToolTip;
   return (
-    <div className="grid grid-cols-3 gap-6 p-56">
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+        gap: 30,
+        padding: 50,
+      }}
+    >
       {placementMap.map((placement) => {
         return (
-          <FcrToolTip trigger="click" placement={placement} content={placement}>
-            <a className="w-26 h-8 text-center text-blue-300 underline cursor-pointer bg-gray-200">
+          <Component
+            trigger={trigger}
+            placement={placement}
+            content={placement}
+            closeable
+          >
+            <a
+              style={{
+                width: 120,
+                height: 40,
+                textAlign: "center",
+                color: "blue",
+                background: "gray",
+                cursor: "pointer",
+                lineHeight: "40px",
+              }}
+            >
               {placement}
             </a>
-          </FcrToolTip>
+          </Component>
         );
       })}
     </div>
   );
 };
-
+Placement.argTypes = {
+  type: {
+    control: "radio",
+    options: ["normal", "guide"],
+    defaultValue: "normal",
+  },
+  trigger: {
+    control: "radio",
+    options: ["hover", "click"],
+    defaultValue: "hover",
+  },
+};
 export default meta;
+
+export const Type = ({ trigger }: { trigger }) => {
+  return (
+    <div
+      style={{
+        padding: "100px",
+        display: "flex",
+        gap: "40px",
+        flexDirection: "row",
+      }}
+    >
+      <FcrToolTip trigger={trigger} placement={"top"} content={"关闭摄像头"}>
+        <a
+          style={{
+            width: 120,
+            height: 40,
+            textAlign: "center",
+            color: "blue",
+            background: "gray",
+            cursor: "pointer",
+            lineHeight: "40px",
+          }}
+        >
+          normal
+        </a>
+      </FcrToolTip>
+      <FcrGuideToolTip
+        trigger={trigger}
+        placement={"top"}
+        content={"解除禁言"}
+        closeable
+      >
+        <a
+          style={{
+            width: 120,
+            height: 40,
+            textAlign: "center",
+            color: "blue",
+            background: "gray",
+            cursor: "pointer",
+            lineHeight: "40px",
+          }}
+        >
+          guide
+        </a>
+      </FcrGuideToolTip>
+      <FcrInfoToolTip
+        trigger={trigger}
+        placement={"top"}
+        content={"🙋 有1人举手，请点击查看"}
+        closeable
+      >
+        <a
+          style={{
+            width: 120,
+            height: 40,
+            textAlign: "center",
+            color: "blue",
+            background: "gray",
+            cursor: "pointer",
+            lineHeight: "40px",
+          }}
+        >
+          info
+        </a>
+      </FcrInfoToolTip>
+      <FcrDialogToolTip
+        trigger={trigger}
+        placement={"top"}
+        content={"🙋 有1人举手，请点击查看"}
+        closeable
+      >
+        <a
+          style={{
+            width: 120,
+            height: 40,
+            textAlign: "center",
+            color: "blue",
+            background: "gray",
+            cursor: "pointer",
+            lineHeight: "40px",
+          }}
+        >
+          dialog
+        </a>
+      </FcrDialogToolTip>
+    </div>
+  );
+};
+Type.argTypes = {
+  trigger: {
+    control: "radio",
+    options: ["hover", "click"],
+    defaultValue: "hover",
+  },
+};
