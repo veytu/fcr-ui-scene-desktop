@@ -6,7 +6,8 @@
   "author": "renyifei <renyifei@agora.io>",
   "license": "MIT",
   "scripts": {
-    "storybook": "start-storybook -p 6006 --no-manager-cache"
+    "storybook": "start-storybook -p 6006 --no-manager-cache",
+    "convertsvg": "ts-node --skipProject src/ui-kit/convertsvg"
   },
   "dependencies": {
     "agora-common-libs": "2.8.1",
@@ -40,6 +41,8 @@
     "postcss-loader": "4.0.3",
     "storybook": "6.5.13",
     "tailwindcss": "2.0.3",
-    "tinycolor2": "1.6.0"
+    "tinycolor2": "1.6.0",
+    "node-html-parser": "6.1.5",
+    "ts-node": "10.9.1"
   }
 }

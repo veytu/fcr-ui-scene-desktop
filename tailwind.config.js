@@ -1,4 +1,4 @@
-const { colorDepth } = require('./webpack/utils/color-palette');
+const { colorDepth, colorAlpha } = require('./webpack/utils/color-palette');
 
 module.exports = {
   prefix: 'fcr-',
@@ -73,7 +73,7 @@ module.exports = {
     borderColor: (theme) => ({
       1: theme('colors.line-1'),
       'notsb-inverse': theme('colors.notsb-inverse'),
-      brand: theme('colors.brand')['DEFAULT'],
+      brand: theme('colors.brand.DEFAULT'),
     }),
     textColor: (theme) => ({
       1: theme('colors.text-1'),
@@ -106,8 +106,12 @@ module.exports = {
     fontFamily: {
       scenario: ['helvetica neue', 'arial', 'PingFangSC', 'microsoft yahei'],
     },
+    outline: (theme) => ({
+      'brand-a50': colorAlpha(theme('colors.brand.DEFAULT'), 0.5),
+    }),
   },
   corePlugins: [
+    'outline',
     'fontWeight',
     'backgroundImage',
     'backgroundColor',

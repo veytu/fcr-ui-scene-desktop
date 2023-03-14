@@ -84,18 +84,6 @@ module.exports.colorDepth = (baseColor) => {
   return palette;
 };
 
-module.exports.colorAlpha = (baseColor) => {
-  const palette = {};
-  range(1, 11).forEach((n) => {
-    if (n === 10) {
-      palette[10] = tinycolor(baseColor).setAlpha(1).toRgb();
-      palette['DEFAULT'] = palette[10];
-    } else {
-      palette[n] = tinycolor(baseColor)
-        .setAlpha(n * 0.1)
-        .toRgbString();
-    }
-  });
-
-  return palette;
+module.exports.colorAlpha = (baseColor, alpha) => {
+  return tinycolor(baseColor).setAlpha(alpha).toRgbString();
 };
