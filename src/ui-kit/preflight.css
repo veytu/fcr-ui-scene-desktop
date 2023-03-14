@@ -38,3 +38,20 @@ html body {
   animation-name: fadeIn;
   animation-duration: 0.2s;
 }
+
+.fcr-divider {
+  position: relative;
+}
+.fcr-divider::before {
+  content: '';
+  width: 1px;
+  height: calc(100% + 2px);
+  background: linear-gradient(
+    rgba(255, 255, 255, 0) 0%,
+    #ffffff 52.6%,
+    rgba(255, 255, 255, 0) 97.92%
+  );
+  position: absolute;
+  top: -1px;
+  left: 0;
+}

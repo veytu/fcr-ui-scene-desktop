@@ -1,0 +1,37 @@
+.fcr-toast-container {
+  @apply fcr-rounded-50 fcr-shadow-2;
+  height: 48px;
+  max-width: 800px;
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+}
+.fcr-toast-container-icon {
+}
+
+.fcr-toast-container-content {
+  @apply fcr-text-1;
+  font-size: 16px;
+  line-height: 48px;
+}
+.fcr-toast-container-close {
+  width: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100% - 8px);
+  margin-top: 4px;
+  cursor: pointer;
+}
+.fcr-toast-normal {
+  @apply fcr-bg-notsb;
+}
+.fcr-toast-alarm {
+  @apply fcr-bg-red-6;
+}
+.fcr-toast-warn {
+  @apply fcr-bg-yellowwarm;
+}
+.fcr-toast-info {
+  @apply fcr-bg-brand-6;
+}

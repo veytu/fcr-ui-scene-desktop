@@ -66,6 +66,9 @@ module.exports = {
       7: theme('colors.block-7'),
       8: theme('colors.block-8'),
       brand: theme('colors.brand'),
+      red: theme('colors.red'),
+      yellowwarm: theme('colors.yellowwarm'),
+      notsb: theme('colors.notsb'),
     }),
     borderColor: (theme) => ({
       1: theme('colors.line-1'),
@@ -94,6 +97,7 @@ module.exports = {
       50: '50px',
       full: '9999px',
     },
+
     fontWeight: {
       title: 800,
       medium: 600,

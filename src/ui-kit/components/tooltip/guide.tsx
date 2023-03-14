@@ -9,7 +9,6 @@ import classNames from 'classnames';
 import { FcrToolTip, FcrToolTipProps } from '.';
 const colors = themeVal('theme.colors');
 const borderRadius = themeVal('theme.borderRadius');
-const boxShadow = themeVal('theme.boxShadow');
 const defaultGuideOverlayInnerStyle: CSSProperties = {
   padding: '0',
   background: `${colors['brand'][6]}`,
@@ -42,7 +41,7 @@ const GuideToolTipCloseableOverlayWrap: FC<
       </div>
       {closeable && (
         <div
-          className={classNames('fcr-guide-tooltip-overlay-content-closeable')}
+          className={classNames('fcr-guide-tooltip-overlay-content-closeable', 'fcr-divider')}
           onClick={onClose}>
           <SvgImg
             type={SvgIconEnum.CLOSE}
