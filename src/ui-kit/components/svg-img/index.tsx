@@ -1,13 +1,14 @@
-import React, { FC, useContext, useState, MouseEvent } from "react";
-import classnames from "classnames";
-import { BaseProps } from "../util/type";
-import { getPath, getViewBox, PathOptions } from "./svg-dict";
-import { SvgIconEnum } from "./type";
-import "./index.css";
-import { themeContext } from "agora-common-libs";
+import React, { FC, useContext, MouseEvent, CSSProperties } from 'react';
+import classnames from 'classnames';
+import { themeContext } from 'agora-common-libs';
+import { getPath, getViewBox, PathOptions } from './svg-dict';
+import { SvgIconEnum } from './type';
 
-export type SvgImgProps = BaseProps & {
+
+export type SvgImgProps = {
   type: SvgIconEnum;
+  className?: string;
+  style?: CSSProperties;
   colors?: Partial<PathOptions>;
   size?: number | string;
   onClick?: (e: MouseEvent) => void;
@@ -49,57 +50,10 @@ export const SvgImg: FC<SvgImgProps> = ({
       onMouseUp={onMouseUp}
       onMouseDown={onMouseDown}
       style={style}
-      data-label={type}
-    >
+      data-label={type}>
       {path}
     </svg>
   );
 };
 
-export type SvgIconProps = BaseProps & {
-  type: SvgIconEnum;
-  colors?: Partial<PathOptions>;
-  hoverType: SvgIconEnum;
-  hoverColors?: Partial<PathOptions>;
-  size?: number;
-  onClick?: any;
-  canHover?: boolean;
-};
-
-// Icon that has hoverable surroundings
-export const SvgIcon: FC<SvgIconProps> = ({
-  type,
-  hoverType,
-  size,
-  onClick,
-  className,
-  style,
-  colors,
-  hoverColors,
-  canHover = true,
-}) => {
-  const [hovering, setHovering] = useState<boolean>(false);
-
-  const t = hovering && hoverType ? hoverType : type;
-  const c = hovering && hoverColors ? hoverColors : colors;
-
-  return (
-    <div
-      className={canHover ? "can-hover" : ""}
-      style={{ display: "flex" }}
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
-    >
-      <SvgImg
-        type={t}
-        colors={c}
-        size={size}
-        onClick={onClick}
-        className={className}
-        style={style}
-      />
-    </div>
-  );
-};
-
-export { SvgIconEnum } from "./type";
+export { SvgIconEnum } from './type';

@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 
-import { PathOptions } from "../svg-dict";
+import { PathOptions } from '../svg-dict';
 
 export const path = ({ iconPrimary }: PathOptions) => (
   <>
-    <g clip-path="url(#clip0_3300_30270)">
+    <g clipPath="url(#clip0_3300_30270)">
       <rect
         x="5.58594"
         y="17.3359"
@@ -12,7 +12,7 @@ export const path = ({ iconPrimary }: PathOptions) => (
         height="1.52822"
         rx="0.764111"
         transform="rotate(-45 5.58594 17.3359)"
-        fill="white"
+        fill={iconPrimary}
       />
       <rect
         x="6.66406"
@@ -21,7 +21,7 @@ export const path = ({ iconPrimary }: PathOptions) => (
         height="1.52822"
         rx="0.764111"
         transform="rotate(45 6.66406 5.58301)"
-        fill="white"
+        fill={iconPrimary}
       />
     </g>
     <defs>
@@ -32,4 +32,4 @@ export const path = ({ iconPrimary }: PathOptions) => (
   </>
 );
 
-export const viewBox = "0 0 24 24";
+export const viewBox = '0 0 24 24';
