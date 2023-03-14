@@ -60,3 +60,10 @@
 .fcr-dialog-tooltip-overlay-close:hover {
   @apply fcr-bg-brand-6;
 }
+.fcr-tooltip-border-width-2 .rc-tooltip-content {
+  backdrop-filter: blur(25px);
+}
+
+.fcr-dialog-tooltip-overlay-content-inner {
+  line-height: 1;
+}

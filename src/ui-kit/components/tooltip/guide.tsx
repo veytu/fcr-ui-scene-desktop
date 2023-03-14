@@ -12,16 +12,15 @@ const borderRadius = themeVal('theme.borderRadius');
 const boxShadow = themeVal('theme.boxShadow');
 const defaultGuideOverlayInnerStyle: CSSProperties = {
   padding: '0',
-  background: `${colors['brand']['DEFAULT']}`,
+  background: `${colors['brand'][6]}`,
   border: `1px solid ${colors['brand']['DEFAULT']}`,
   fontFamily: 'Helvetica Neue',
   fontStyle: 'normal',
   fontWeight: '400',
   fontSize: '14px',
   lineHeight: '40px',
-  color: '#fff',
+  color: colors['text-1'],
   borderRadius: `${borderRadius[8]}`,
-  boxShadow: `${boxShadow[2]}`,
 };
 
 interface FcrGuideToolTipProps extends FcrToolTipProps {
@@ -62,8 +61,8 @@ export const FcrGuideToolTip: FC<FcrGuideToolTipProps> = (props) => {
         <SvgImg
           type={SvgIconEnum.TOOLTIP_ARROW}
           colors={{
-            iconPrimary: colors['brand']['DEFAULT'],
-            iconSecondary: colors['brand']['DEFAULT'],
+            iconPrimary: colors['brand'][6],
+            iconSecondary: colors['brand'][6],
           }}
           size={16}></SvgImg>
       }

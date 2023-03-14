@@ -17,7 +17,7 @@
 .rc-tooltip-placement-leftBottom .rc-tooltip-arrow svg {
   position: absolute;
   bottom: -2px;
-  right: -9.2px;
+  right: -9px;
   transform: rotate(-90deg);
 }
 /** bottom **/

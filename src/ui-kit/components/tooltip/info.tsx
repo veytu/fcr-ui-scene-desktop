@@ -13,14 +13,12 @@ const defaultInfoOverlayInnerStyle: CSSProperties = {
   padding: '0 12px',
   background: `${colors['block-2']}`,
   border: `2px solid ${colors['line-1']}`,
-  fontFamily: 'Helvetica Neue',
-  fontStyle: 'normal',
-  fontWeight: '600',
   fontSize: '13px',
   lineHeight: '50px',
-  color: '#fff',
-  borderRadius: `${borderRadius[8]}`,
-  boxShadow: `${boxShadow[2]}`,
+  color: colors['text-1'],
+  borderRadius: `${borderRadius[12]}`,
+  minWidth: '180px',
+  textAlign: 'center',
 };
 
 interface FcrInfoToolTipProps extends FcrToolTipProps {}

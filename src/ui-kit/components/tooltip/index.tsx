@@ -6,6 +6,21 @@ import { SvgIconEnum, SvgImg } from '../svg-img';
 import './index.css';
 import './arrow.css';
 
+const overlayOffset = 12;
+const calcOverlayOffset = (placement: string) => {
+  if (placement.includes('top')) {
+    return [0, -overlayOffset];
+  }
+  if (placement.includes('bottom')) {
+    return [0, overlayOffset];
+  }
+  if (placement.includes('left')) {
+    return [-overlayOffset, 0];
+  }
+  if (placement.includes('right')) {
+    return [overlayOffset, 0];
+  }
+};
 const colors = themeVal('theme.colors');
 const borderRadius = themeVal('theme.borderRadius');
 const borderColor = themeVal('theme.borderColor');
@@ -19,9 +34,8 @@ const defaultOverlayInnerStyle: CSSProperties = {
   fontWeight: '400',
   fontSize: '14px',
   lineHeight: '32px',
-  color: '#fff',
+  color: colors['text-1'],
   borderRadius: `${borderRadius[8]}`,
-  boxShadow: `${boxShadow[2]}`,
 };
 
 type FcrToolTipActionType = 'hover' | 'focus' | 'click' | 'contextMenu';
@@ -40,7 +54,7 @@ export const FcrToolTip: FC<FcrToolTipProps> = (props) => {
     content,
     children,
     trigger,
-    placement,
+    placement = 'top',
     arrowContent,
     overlayInnerStyle,
     overlayClassName,
@@ -60,6 +74,7 @@ export const FcrToolTip: FC<FcrToolTipProps> = (props) => {
             size={16}></SvgImg>
         )
       }
+      align={{ offset: calcOverlayOffset(placement) }}
       trigger={trigger}
       placement={placement}
       overlay={content}
