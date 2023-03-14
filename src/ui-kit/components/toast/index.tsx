@@ -17,7 +17,7 @@ interface FcrToastProps {
   };
 }
 export const FcrToast = (props: FcrToastProps) => {
-  const { content, icon, type, closeable } = props;
+  const { content, icon, type, closeable, action } = props;
   return (
     <div
       style={{
@@ -35,9 +35,15 @@ export const FcrToast = (props: FcrToastProps) => {
           paddingRight: closeable ? '10px' : '0',
         }}
         className={classNames('fcr-toast-container-content')}>
-        {content}
+        <span>{content}</span>
       </div>
-      <div className={classNames('fcr-toast-container-action')}></div>
+      {action && (
+        <div
+          className={classNames('fcr-toast-container-action', 'fcr-divider')}
+          onClick={action.onClick}>
+          <span>{action.text}</span>
+        </div>
+      )}
       {closeable && (
         <div className={classNames('fcr-toast-container-close', 'fcr-divider')}>
           <SvgImg
