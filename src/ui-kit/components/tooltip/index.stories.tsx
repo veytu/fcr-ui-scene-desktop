@@ -1,57 +1,55 @@
-import React, { FC, useState } from "react";
-import { Meta } from "@storybook/react";
-import { FcrToolTip } from ".";
-import { FcrGuideToolTip } from "./guide";
-import { FcrInfoToolTip } from "./info";
-import { FcrDialogToolTip } from "./dialog";
-
+import React, { FC, useState } from 'react';
+import { Meta } from '@storybook/react';
+import { FcrToolTip } from '.';
+import { FcrGuideToolTip } from './guide';
+import { FcrInfoToolTip } from './info';
+import { FcrDialogToolTip } from './dialog';
+const tooltipMap = {
+  normal: FcrToolTip,
+  guide: FcrGuideToolTip,
+  info: FcrInfoToolTip,
+  dialog: FcrDialogToolTip,
+};
 const meta: Meta = {
-  title: "Components/ToolTip",
+  title: 'Components/ToolTip',
 };
 const placementMap = [
-  "left",
-  "top",
-  "bottom",
-  "right",
-  "leftTop",
-  "leftBottom",
-  "rightTop",
-  "rightBottom",
-  "topLeft",
-  "topRight",
-  "bottomLeft",
-  "bottomRight",
+  'left',
+  'top',
+  'bottom',
+  'right',
+  'leftTop',
+  'leftBottom',
+  'rightTop',
+  'rightBottom',
+  'topLeft',
+  'topRight',
+  'bottomLeft',
+  'bottomRight',
 ];
 export const Placement = ({ type, trigger }: { type; trigger }) => {
-  const Component = type === "normal" ? FcrToolTip : FcrGuideToolTip;
+  const Component = tooltipMap[type];
   return (
     <div
       style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
         gap: 30,
         padding: 50,
-      }}
-    >
+      }}>
       {placementMap.map((placement) => {
         return (
-          <Component
-            trigger={trigger}
-            placement={placement}
-            content={placement}
-            closeable
-          >
+          <Component trigger={trigger} placement={placement} content={placement} closeable>
             <a
               style={{
                 width: 120,
                 height: 40,
-                textAlign: "center",
-                color: "blue",
-                background: "gray",
-                cursor: "pointer",
-                lineHeight: "40px",
-              }}
-            >
+                textAlign: 'center',
+                color: 'blue',
+                background: 'gray',
+                cursor: 'pointer',
+                lineHeight: '40px',
+              }}>
               {placement}
             </a>
           </Component>
@@ -62,14 +60,14 @@ export const Placement = ({ type, trigger }: { type; trigger }) => {
 };
 Placement.argTypes = {
   type: {
-    control: "radio",
-    options: ["normal", "guide"],
-    defaultValue: "normal",
+    control: 'radio',
+    options: ['normal', 'guide', 'info'],
+    defaultValue: 'normal',
   },
   trigger: {
-    control: "radio",
-    options: ["hover", "click"],
-    defaultValue: "hover",
+    control: 'radio',
+    options: ['hover', 'click'],
+    defaultValue: 'hover',
   },
 };
 export default meta;
@@ -78,84 +76,77 @@ export const Type = ({ trigger }: { trigger }) => {
   return (
     <div
       style={{
-        padding: "100px",
-        display: "flex",
-        gap: "40px",
-        flexDirection: "row",
-      }}
-    >
-      <FcrToolTip trigger={trigger} placement={"top"} content={"关闭摄像头"}>
+        padding: '100px',
+        display: 'flex',
+        gap: '40px',
+        flexDirection: 'row',
+      }}>
+      <FcrToolTip trigger={trigger} placement={'top'} content={'关闭摄像头'}>
         <a
           style={{
             width: 120,
             height: 40,
-            textAlign: "center",
-            color: "blue",
-            background: "gray",
-            cursor: "pointer",
-            lineHeight: "40px",
-          }}
-        >
+            textAlign: 'center',
+            color: 'blue',
+            background: 'gray',
+            cursor: 'pointer',
+            lineHeight: '40px',
+          }}>
           normal
         </a>
       </FcrToolTip>
       <FcrGuideToolTip
+        onClose={() => {
+          console.log('onClose');
+        }}
         trigger={trigger}
-        placement={"top"}
-        content={"解除禁言"}
-        closeable
-      >
+        placement={'top'}
+        content={'解除禁言'}
+        closeable>
         <a
           style={{
             width: 120,
             height: 40,
-            textAlign: "center",
-            color: "blue",
-            background: "gray",
-            cursor: "pointer",
-            lineHeight: "40px",
-          }}
-        >
+            textAlign: 'center',
+            color: 'blue',
+            background: 'gray',
+            cursor: 'pointer',
+            lineHeight: '40px',
+          }}>
           guide
         </a>
       </FcrGuideToolTip>
-      <FcrInfoToolTip
-        trigger={trigger}
-        placement={"top"}
-        content={"🙋 有1人举手，请点击查看"}
-        closeable
-      >
+      <FcrInfoToolTip trigger={trigger} placement={'top'} content={'🙋 有1人举手，请点击查看'}>
         <a
           style={{
             width: 120,
             height: 40,
-            textAlign: "center",
-            color: "blue",
-            background: "gray",
-            cursor: "pointer",
-            lineHeight: "40px",
-          }}
-        >
+            textAlign: 'center',
+            color: 'blue',
+            background: 'gray',
+            cursor: 'pointer',
+            lineHeight: '40px',
+          }}>
           info
         </a>
       </FcrInfoToolTip>
       <FcrDialogToolTip
         trigger={trigger}
-        placement={"top"}
-        content={"🙋 有1人举手，请点击查看"}
-        closeable
-      >
+        placement={'top'}
+        content={'🙋 有1人举手，请点击查看'}
+        onClose={() => {
+          console.log('onClose');
+        }}>
         <a
           style={{
             width: 120,
             height: 40,
-            textAlign: "center",
-            color: "blue",
-            background: "gray",
-            cursor: "pointer",
-            lineHeight: "40px",
-          }}
-        >
+            textAlign: 'center',
+            color: 'blue',
+            background: 'gray',
+            cursor: 'pointer',
+            lineHeight: '40px',
+          }}>
           dialog
         </a>
       </FcrDialogToolTip>
@@ -164,8 +155,8 @@ export const Type = ({ trigger }: { trigger }) => {
 };
 Type.argTypes = {
   trigger: {
-    control: "radio",
-    options: ["hover", "click"],
-    defaultValue: "hover",
+    control: 'radio',
+    options: ['hover', 'click'],
+    defaultValue: 'hover',
   },
 };

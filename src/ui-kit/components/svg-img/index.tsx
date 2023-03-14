@@ -1,8 +1,8 @@
-import React, { FC, useContext, MouseEvent, CSSProperties } from "react";
-import classnames from "classnames";
-import { themeContext } from "agora-common-libs";
-import { getPath, getViewBox, PathOptions } from "./svg-dict";
-import { SvgIconEnum } from "./type";
+import React, { FC, useContext, MouseEvent, CSSProperties } from 'react';
+import classnames from 'classnames';
+import { themeContext } from 'agora-common-libs';
+import { getPath, getViewBox, PathOptions } from './svg-dict';
+import { SvgIconEnum } from './type';
 
 export type SvgImgProps = {
   type: SvgIconEnum;
@@ -36,7 +36,6 @@ export const SvgImg: FC<SvgImgProps> = ({
     iconPrimary: colors?.iconPrimary ?? iconPrimary,
     iconSecondary: colors?.iconSecondary ?? iconSecondary,
   });
-
   return (
     <svg
       className={cls}
@@ -49,11 +48,10 @@ export const SvgImg: FC<SvgImgProps> = ({
       onMouseUp={onMouseUp}
       onMouseDown={onMouseDown}
       style={style}
-      data-label={type}
-    >
+      data-label={type}>
       {path}
     </svg>
   );
 };
 
-export { SvgIconEnum } from "./type";
+export { SvgIconEnum } from './type';

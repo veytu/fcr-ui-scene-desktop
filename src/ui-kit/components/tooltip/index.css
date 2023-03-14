@@ -9,90 +9,6 @@
   background: transparent;
 }
 
-/** Arrow Style Override **/
-.rc-tooltip-arrow svg {
-  fill: #000;
-  stroke: rgba(74, 76, 95, 1);
-}
-/** left **/
-
-.rc-tooltip-placement-left .rc-tooltip-arrow svg {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  right: -9.2px;
-  transform: rotate(-90deg);
-}
-.rc-tooltip-placement-leftTop .rc-tooltip-arrow svg {
-  position: absolute;
-  top: -2px;
-  right: -9.2px;
-  transform: rotate(-90deg);
-}
-.rc-tooltip-placement-leftBottom .rc-tooltip-arrow svg {
-  position: absolute;
-  top: -2px;
-  right: -9.2px;
-  transform: rotate(-90deg);
-}
-/** bottom **/
-.rc-tooltip-placement-bottom .rc-tooltip-arrow svg {
-  transform: rotate(180deg);
-  position: absolute;
-  left: -8px;
-  top: -9px;
-}
-.rc-tooltip-placement-bottomLeft .rc-tooltip-arrow svg {
-  transform: rotate(180deg);
-  position: absolute;
-  left: -8px;
-  top: -9px;
-}
-.rc-tooltip-placement-bottomRight .rc-tooltip-arrow svg {
-  transform: rotate(180deg);
-  position: absolute;
-  left: -8px;
-  top: -9px;
-}
-/** right **/
-.rc-tooltip-placement-right .rc-tooltip-arrow svg {
-  transform: rotate(90deg);
-  position: absolute;
-  left: -9px;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-}
-.rc-tooltip-placement-rightTop .rc-tooltip-arrow svg {
-  transform: rotate(90deg);
-  position: absolute;
-  left: -9px;
-  top: -3px;
-}
-.rc-tooltip-placement-rightBottom .rc-tooltip-arrow svg {
-  transform: rotate(90deg);
-  position: absolute;
-  left: -9px;
-  top: -3px;
-}
-/** top **/
-.rc-tooltip-placement-top .rc-tooltip-arrow svg {
-  position: absolute;
-  left: -7px;
-  top: -7px;
-}
-.rc-tooltip-placement-topLeft .rc-tooltip-arrow svg {
-  position: absolute;
-  left: -7px;
-  top: -7px;
-}
-.rc-tooltip-placement-topRight .rc-tooltip-arrow svg {
-  position: absolute;
-  left: -7px;
-  top: -7px;
-}
-
 /** Guide ToolTip **/
 .fcr-guide-tooltip-overlay-content {
   display: flex;
@@ -112,7 +28,7 @@
   position: relative;
 }
 .fcr-guide-tooltip-overlay-content-closeable::before {
-  content: "";
+  content: '';
   width: 1px;
   height: calc(100% + 2px);
   background: linear-gradient(
@@ -129,4 +45,18 @@
 .fcr-dialog-tooltip-overlay-content {
   padding: 15px 12px;
   position: relative;
+}
+.fcr-dialog-tooltip-overlay-close {
+  @apply fcr-rounded-full fcr-bg-3;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 7px;
+  right: 7px;
+}
+.fcr-dialog-tooltip-overlay-close:hover {
+  @apply fcr-bg-brand-6;
 }
