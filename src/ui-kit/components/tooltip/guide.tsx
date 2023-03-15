@@ -44,7 +44,7 @@ const GuideToolTipCloseableOverlayWrap: FC<
           className={classNames('fcr-guide-tooltip-overlay-content-closeable', 'fcr-divider')}
           onClick={onClose}>
           <SvgImg
-            type={SvgIconEnum.CLOSE}
+            type={SvgIconEnum.FCR_CLOSE}
             colors={{ iconPrimary: colors['white'] }}
             size={24}></SvgImg>
         </div>
