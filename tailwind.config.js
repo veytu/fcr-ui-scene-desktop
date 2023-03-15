@@ -72,13 +72,16 @@ module.exports = {
     }),
     borderColor: (theme) => ({
       1: theme('colors.line-1'),
+      brand: theme('colors.brand'),
+
       'notsb-inverse': theme('colors.notsb-inverse'),
-      brand: theme('colors.brand.DEFAULT'),
     }),
     textColor: (theme) => ({
       1: theme('colors.text-1'),
       2: theme('colors.text-2'),
       3: theme('colors.text-3'),
+      notsb: theme('colors.notsb'),
+      'notsb-inverse': theme('colors.notsb-inverse'),
     }),
     boxShadow: (theme) => ({
       1: `10px 2px 8px 5px ${theme('colors.shadow-1')}`,
