@@ -3,27 +3,29 @@ import React, { ChangeEvent, FC, useRef, useState } from 'react';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import './index.css';
 
-export type Props = {
+export type InputProps = {
   placeholder?: string;
   value: string;
-  onChange?: (value: string) => void;
-  onBlur?: () => void;
-  onKeyDown?: () => void;
-  onKeyUp?: () => void;
-  options?: { text: string; value: string }[];
+  label?: string;
   readOnly?: boolean;
+  iconPrefix?: SvgIconEnum;
+  textPrefix?: string;
+  size?: 'large' | 'medium';
+  borderLess?: boolean;
+  onChange?: (value: string) => void;
 };
 
-export const Input: FC<Props> = ({
+export const Input: FC<InputProps> = ({
   placeholder,
   value,
-  onChange = () => {},
   readOnly,
-  onBlur,
-  onKeyDown,
-  onKeyUp,
+  iconPrefix,
+  size = 'medium',
+  borderLess,
+  label,
+  onChange = () => {},
 }) => {
-  const [focused, setFocused] = useState(true);
+  const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const handleFocus = () => {
     setFocused(true);
@@ -31,9 +33,6 @@ export const Input: FC<Props> = ({
 
   const handleBlur = () => {
     setFocused(false);
-    if (onBlur) {
-      onBlur();
-    }
   };
 
   const handleClear = () => {
@@ -50,37 +49,40 @@ export const Input: FC<Props> = ({
     }
   };
 
-  const iconCls = classNames('fcr-input-icon', {});
-
   const cls = classNames('fcr-input', {
     'fcr-input--focused': focused,
+    'fcr-input-l': size === 'large',
+    'fcr-input-m': size === 'medium',
+    'fcr-input-borderless': borderLess,
   });
 
   const iconWrapCls = classNames('fcr-input-icon-wrap', {
     'fcr-input-icon-wrap--invisible': readOnly || !focused,
   });
+  const iconCls = classNames('fcr-input-icon', {});
+
+  const labelCls = classNames('fcr-input-label', {});
 
   return (
-    <div className={cls} onClick={handleClick}>
-      <input
-        ref={inputRef}
-        readOnly={readOnly}
-        placeholder={placeholder}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        value={value}
-        onChange={handleChange}
-        onKeyDown={onKeyDown}
-        onKeyUp={onKeyUp}
-      />
-      <div className={iconWrapCls} onMouseDown={handleClear}>
-        <SvgImg
-          className={iconCls}
-          type={SvgIconEnum.FCR_CLOSE}
-          size={20}
-          style={{ top: 14, right: 10 }}
+    <React.Fragment>
+      {label && !borderLess && <label className={labelCls}>{label}</label>}
+      <div className={cls} onClick={handleClick}>
+        {iconPrefix && <SvgImg style={{ marginRight: 10, marginLeft: 10 }} size={24} type={iconPrefix} />}
+        <input
+          ref={inputRef}
+          readOnly={readOnly}
+          placeholder={placeholder}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          value={value}
+          onChange={handleChange}
         />
+        {!borderLess && (
+          <div className={iconWrapCls} onMouseDown={handleClear}>
+            <SvgImg className={iconCls} type={SvgIconEnum.FCR_CLOSE} size={20} />
+          </div>
+        )}
       </div>
-    </div>
+    </React.Fragment>
   );
 };
