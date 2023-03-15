@@ -99,6 +99,7 @@ module.exports = {
       24: '24px',
       50: '50px',
       full: '9999px',
+      none: '0',
     },
 
     fontWeight: {
@@ -114,6 +115,7 @@ module.exports = {
     }),
   },
   corePlugins: [
+    'preflight',
     'outline',
     'fontWeight',
     'backgroundImage',

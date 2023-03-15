@@ -1,0 +1,18 @@
+.fcr-textarea {
+  @apply fcr-bg-8 fcr-rounded-12 fcr-border-1;
+  padding: 12px 15px;
+}
+
+.fcr-textarea textarea {
+  @apply fcr-text-1;
+  outline-width: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-size: 12px;
+  background: transparent;
+}
+
+.fcr-textarea input::placeholder {
+  @apply fcr-text-3;
+}

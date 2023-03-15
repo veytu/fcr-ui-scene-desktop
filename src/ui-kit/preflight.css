@@ -4,8 +4,6 @@
 
 @tailwind utilities;
 
-@tailwind screens;
-
 html,
 html body {
   @apply fcr-font-scenario;

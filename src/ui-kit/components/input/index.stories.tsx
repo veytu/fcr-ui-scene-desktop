@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { Input } from '.';
+import { SvgIconEnum } from '../svg-img';
 
 const meta: ComponentMeta<typeof Input> = {
   title: 'Components/Input',
@@ -17,7 +18,33 @@ export const Docs: ComponentStory<typeof Input> = (props) => {
   };
   return (
     <div>
-      <Input {...props} value={value} onChange={handleChange} />
+      <div
+        style={{
+          width: 200,
+          marginBottom: 50,
+        }}>
+        <Input
+          {...props}
+          label={'Name'}
+          iconPrefix={SvgIconEnum.FCR_ALLLEAVE}
+          value={value}
+          onChange={handleChange}
+        />
+      </div>
+      <div
+        style={{
+          width: 200,
+          marginBottom: 50,
+        }}>
+        <Input {...props} label={'Room'} size="large" value={value} onChange={handleChange} />
+      </div>
+      <div
+        style={{
+          width: 200,
+          marginBottom: 50,
+        }}>
+        <Input {...props} borderLess label={'1'} value={value} onChange={handleChange} />
+      </div>
     </div>
   );
 };
