@@ -17,91 +17,235 @@
   opacity: 0;
   transition: 0.3s;
 }
+.fcr-button:focus {
+  outline: none;
+}
 .fcr-button:disabled {
   opacity: 0.4;
+  cursor: not-allowed;
 }
+
 /** primary button **/
 .fcr-button-primary {
   @apply fcr-bg-brand-6 fcr-text-1;
 }
 
-.fcr-button-primary:hover {
+.fcr-button-primary:not(:disabled):hover {
   @apply fcr-bg-brand-7;
 }
-.fcr-button-primary:active {
+.fcr-button-primary:not(:disabled):active {
   @apply fcr-bg-brand-8;
 }
 .fcr-button-primary::after {
   box-shadow: 0 0 0 6px theme(colors.brand.4);
 }
-.fcr-button-primary:active:after {
+.fcr-button-primary:not(:disabled):active:after {
   box-shadow: none;
   opacity: 0.5;
   transition: 0s;
 }
+.fcr-button-primary.fcr-button-danger {
+  @apply fcr-bg-red-6 fcr-text-1;
+}
+
+.fcr-button-primary.fcr-button-danger:not(:disabled):hover {
+  @apply fcr-bg-red-7;
+}
+.fcr-button-primary.fcr-button-danger:not(:disabled):active {
+  @apply fcr-bg-red-8;
+}
+.fcr-button-primary.fcr-button-danger::after {
+  box-shadow: 0 0 0 6px theme(colors.red.4);
+}
+.fcr-button-primary.fcr-button-danger:not(:disabled):active:after {
+  box-shadow: none;
+  opacity: 0.5;
+  transition: 0s;
+}
+
 /** secondary button **/
+
 .fcr-button-secondary {
   @apply fcr-border-notsb-inverse fcr-text-notsb-inverse;
   border-style: solid;
   border-width: 1px;
   background: transparent;
 }
-.fcr-button-secondary:hover {
+.fcr-button-secondary:not(:disabled):hover {
   @apply fcr-bg-brand-6 fcr-border-brand-6;
 }
-.fcr-button-secondary:active {
+.fcr-button-secondary:not(:disabled):active {
   @apply fcr-bg-brand-8 fcr-border-brand-8;
 }
 .fcr-button-secondary::after {
   box-shadow: 0 0 0 6px theme(colors.brand.4);
 }
-.fcr-button-secondary:active:after {
+.fcr-button-secondary:not(:disabled):active:after {
   box-shadow: none;
   opacity: 0.5;
   transition: 0s;
 }
+.fcr-button-secondary.fcr-button-danger {
+  @apply fcr-border-red-6 fcr-text-red-6;
+  border-style: solid;
+  border-width: 1px;
+  background: transparent;
+}
+.fcr-button-secondary.fcr-button-danger:not(:disabled):hover {
+  @apply fcr-bg-red-6 fcr-border-red-6 fcr-text-1;
+}
+.fcr-button-secondary.fcr-button-danger:not(:disabled):active {
+  @apply fcr-bg-red-8 fcr-border-red-8 fcr-text-1;
+}
+.fcr-button-secondary.fcr-button-danger::after {
+  box-shadow: 0 0 0 6px theme(colors.red.4);
+}
+.fcr-button-secondary.fcr-button-danger:not(:disabled):active:after {
+  box-shadow: none;
+  opacity: 0.5;
+  transition: 0s;
+}
+/** text button **/
+.fcr-button-text {
+  @apply fcr-text-notsb-inverse;
+}
+.fcr-button-text:not(:disabled):hover {
+  @apply fcr-bg-2;
+}
+.fcr-button-text.fcr-button-danger {
+  @apply fcr-text-red-6;
+}
+.fcr-button-text.fcr-button-danger:not(:disabled):hover {
+  @apply fcr-bg-red-6 fcr-text-1;
+}
+/** link button **/
+.fcr-button-link {
+  @apply fcr-text-brand-6;
+  min-width: auto;
+}
+.fcr-button-link.fcr-button-danger {
+  @apply fcr-text-red-6;
+  min-width: auto;
+}
+.fcr-button-link:not(:disabled):hover {
+  text-decoration: underline;
+}
+
 /** Size **/
 .fcr-button-XL {
   @apply fcr-font-title;
+  font-size: 20px;
+}
+.fcr-button-XL:not(.fcr-button-link) {
   min-width: 200px;
   height: 56px;
-  font-size: 20px;
   padding: 0 24px;
+}
+.fcr-button-XL:not(.fcr-button-icon-only) > div:first-child {
+  padding-right: 10px;
+}
+.fcr-button-XL:not(.fcr-button-icon-only) > div:last-child {
+  padding-left: 10px;
+}
+.fcr-button-XL.fcr-button-icon-only svg {
+  width: 56px;
+  height: 56px;
 }
 .fcr-button-L {
   @apply fcr-font-title;
+  font-size: 16px;
+}
+.fcr-button-L:not(.fcr-button-link) {
   min-width: 100px;
   height: 48px;
-  font-size: 16px;
   padding: 0 24px;
+}
+.fcr-button-L:not(.fcr-button-icon-only) > div:first-child {
+  padding-right: 10px;
+}
+.fcr-button-L:not(.fcr-button-icon-only) > div:last-child {
+  padding-left: 10px;
+}
+.fcr-button-L.fcr-button-icon-only svg {
+  width: 48px;
+  height: 48px;
 }
 .fcr-button-M {
   @apply fcr-font-regular;
+
+  font-size: 16px;
+}
+.fcr-button-M:not(.fcr-button-link) {
   min-width: 100px;
   height: 42px;
-  font-size: 16px;
   padding: 0 24px;
+}
+.fcr-button-M:not(.fcr-button-icon-only) > div:first-child {
+  padding-right: 10px;
+}
+.fcr-button-M:not(.fcr-button-icon-only) > div:last-child {
+  padding-left: 10px;
+}
+.fcr-button-M.fcr-button-icon-only svg {
+  width: 42px;
+  height: 42px;
 }
 .fcr-button-S {
   @apply fcr-font-regular;
+  font-size: 14px;
+}
+.fcr-button-S:not(.fcr-button-link) {
   min-width: 90px;
   height: 36px;
-  font-size: 14px;
   padding: 0 20px;
 }
+.fcr-button-S:not(.fcr-button-icon-only) > div:first-child {
+  padding-right: 10px;
+}
+.fcr-button-S:not(.fcr-button-icon-only) > div:last-child {
+  padding-left: 10px;
+}
+.fcr-button-S.fcr-button-icon-only svg {
+  width: 36px;
+  height: 36px;
+}
 .fcr-button-XS {
-  @apply fcr-font-title;
+  @apply fcr-font-regular;
+  font-size: 14px;
+}
+.fcr-button-XS:not(.fcr-button-icon-only) > div:first-child {
+  padding-right: 8px;
+}
+.fcr-button-XS:not(.fcr-button-icon-only) > div:last-child {
+  padding-left: 8px;
+}
+.fcr-button-XS:not(.fcr-button-link) {
   min-width: 90px;
   height: 32px;
-  font-size: 14px;
   padding: 0 20px;
+}
+.fcr-button-XS.fcr-button-icon-only svg {
+  width: 32px;
+  height: 32px;
 }
 .fcr-button-XXS {
   @apply fcr-font-regular;
+  font-size: 12px;
+}
+.fcr-button-XXS:not(.fcr-button-link) {
   min-width: 80px;
   height: 24px;
-  font-size: 12px;
-  padding: 0 8;
+  padding: 0 8px;
+}
+.fcr-button-XXS:not(.fcr-button-icon-only) > div:first-child {
+  padding-right: 8px;
+}
+.fcr-button-XXS:not(.fcr-button-icon-only) > div:last-child {
+  padding-left: 8px;
+}
+.fcr-button-XXS.fcr-button-icon-only svg {
+  width: 24px;
+  height: 24px;
 }
 /** rounded **/
 .fcr-button-rounded {
@@ -109,4 +253,9 @@
 }
 .fcr-button-circle {
   @apply fcr-rounded-full;
+}
+
+.fcr-button.fcr-button-icon-only {
+  max-width: none;
+  min-width: 0;
 }

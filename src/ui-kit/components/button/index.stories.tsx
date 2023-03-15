@@ -1,17 +1,36 @@
 import React, { FC, useState } from 'react';
 import { Meta } from '@storybook/react';
 import { FcrButton } from '.';
+import { SvgIconEnum } from '../svg-img';
 const meta: Meta = {
   title: 'Components/Button',
 };
-
-export const Docs = (props) => {
+const sizes = ['XL', 'L', 'M', 'S', 'XS', 'XXS'];
+export const Docs = ({
+  text,
+  type,
+  shape,
+  preIcon,
+  postIcon,
+  disabled,
+  styleType,
+}: {
+  text;
+  type;
+  shape;
+  preIcon;
+  postIcon;
+  disabled;
+  styleType;
+}) => {
   return (
     <div>
       <div>
         <h3>type</h3>
         <div style={{ display: 'flex', gap: '10px' }}>
-          <FcrButton type="primary">primary</FcrButton>
+          <FcrButton styleType="danger" type="primary">
+            primary
+          </FcrButton>
           <FcrButton type="secondary">secondary</FcrButton>
           <FcrButton type="text">text</FcrButton>
           <FcrButton type="link">link</FcrButton>
@@ -27,16 +46,58 @@ export const Docs = (props) => {
       <div>
         <h3>Size</h3>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
-          <FcrButton size="XL">XL</FcrButton>
-          <FcrButton size="L">L</FcrButton>
-          <FcrButton size="M">M</FcrButton>
-          <FcrButton size="S">S</FcrButton>
-          <FcrButton size="XS">XS</FcrButton>
-          <FcrButton size="XXS">XXS</FcrButton>
+          {sizes.map((size) => {
+            return (
+              <FcrButton
+                disabled={disabled}
+                type={type}
+                shape={shape}
+                preIcon={preIcon && SvgIconEnum.FCR_HOST}
+                postIcon={postIcon && SvgIconEnum.FCR_HOST}
+                styleType={styleType}
+                size={size}>
+                {text}
+              </FcrButton>
+            );
+          })}
         </div>
       </div>
     </div>
   );
 };
+Docs.argTypes = {
+  text: {
+    control: 'text',
+    defaultValue: 'text',
+  },
+  type: {
+    control: 'radio',
+    options: ['primary', 'secondary', 'text', 'link'],
+    defaultValue: 'primary',
+  },
+  shape: {
+    control: 'radio',
+    options: ['circle', 'rounded'],
+    defaultValue: 'circle',
+  },
+  preIcon: {
+    control: 'boolean',
 
+    defaultValue: false,
+  },
+  postIcon: {
+    control: 'boolean',
+
+    defaultValue: false,
+  },
+  disabled: {
+    control: 'boolean',
+
+    defaultValue: false,
+  },
+  styleType: {
+    control: 'radio',
+    options: ['danger', 'gray'],
+  },
+};
 export default meta;

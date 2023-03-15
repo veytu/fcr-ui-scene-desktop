@@ -73,6 +73,7 @@ module.exports = {
     borderColor: (theme) => ({
       1: theme('colors.line-1'),
       brand: theme('colors.brand'),
+      red: theme('colors.red'),
 
       'notsb-inverse': theme('colors.notsb-inverse'),
     }),
@@ -80,6 +81,9 @@ module.exports = {
       1: theme('colors.text-1'),
       2: theme('colors.text-2'),
       3: theme('colors.text-3'),
+      brand: theme('colors.brand'),
+      red: theme('colors.red'),
+
       notsb: theme('colors.notsb'),
       'notsb-inverse': theme('colors.notsb-inverse'),
     }),
