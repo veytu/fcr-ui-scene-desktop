@@ -18,15 +18,24 @@ export const Docs = ({ size, color }: DocsProps) => {
   return (
     <div>
       <h1>Icon Gallery</h1>
-      <div>
+      <div
+        style={{ display: 'grid', gap: '20px', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))' }}>
         {keys.map((k) => {
           return (
-            <div key={k}>
+            <div
+              key={k}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
               <SvgImg
                 type={SvgIconEnum[k]}
                 size={size}
                 colors={color ? { iconPrimary: color, penColor: 'red' } : { penColor: 'red' }}
               />
+              <div>{(SvgIconEnum[k] as string).replace('fcr_', '')}</div>
             </div>
           );
         })}
@@ -36,7 +45,7 @@ export const Docs = ({ size, color }: DocsProps) => {
 };
 
 Docs.args = {
-  size: 100,
+  size: 24,
   color: '',
 };
 

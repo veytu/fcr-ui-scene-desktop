@@ -29,7 +29,7 @@ export const FcrInfoToolTip: FC<FcrInfoToolTipProps> = (props) => {
       overlayClassName="fcr-tooltip-border-width-2"
       arrowContent={
         <SvgImg
-          type={SvgIconEnum.TOOLTIP_ARROW_2}
+          type={SvgIconEnum.FCR_TOOLTIP_ARROW_2}
           colors={{
             iconPrimary: colors['block-2'],
             iconSecondary: colors['line-1'],

@@ -44,7 +44,7 @@ export const FcrDialogToolTip: FC<FcrDialogToolTipProps> = (props) => {
       arrowContent={
         <SvgImg
           //todo icon
-          type={SvgIconEnum.FCR_TOPWINDOWS}
+          type={SvgIconEnum.FCR_TOOLTIP_ARROW_2}
           colors={{
             iconPrimary: colors['block-2'],
             iconSecondary: colors['line-1'],

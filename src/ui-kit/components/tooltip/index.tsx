@@ -66,7 +66,7 @@ export const FcrToolTip: FC<FcrToolTipProps> = (props) => {
       arrowContent={
         arrowContent || (
           <SvgImg
-            type={SvgIconEnum.FCR_ALLLEAVE}
+            type={SvgIconEnum.FCR_TOOLTIP_ARROW}
             colors={{
               iconPrimary: colors['black'],
               iconSecondary: colors['line-1'],

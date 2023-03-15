@@ -11,6 +11,7 @@ interface FcrToastProps {
   content: string;
   closeable?: boolean;
   icon?: SvgIconEnum;
+  iconSize?: number;
   action?: {
     text: string;
     onClick: () => void;
@@ -27,7 +28,7 @@ export const FcrToast = (props: FcrToastProps) => {
       className={classNames('fcr-toast-container', `fcr-toast-${type.toLowerCase()}`)}>
       {icon && (
         <div className={classNames('fcr-toast-container-icon')}>
-          <SvgImg type={icon}></SvgImg>
+          <SvgImg type={icon} colors={{ iconPrimary: colors['icon-1'] }} size={24}></SvgImg>
         </div>
       )}
       <div
