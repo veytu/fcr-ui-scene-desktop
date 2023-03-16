@@ -16,8 +16,8 @@ module.exports = {
       yellow: '#FFC700',
       yellowwarm: '#FFB554',
       transparent: 'transparent',
-      notsb: '#000',
-      'notsb-inverse': '#fff',
+      notsb: '#000000',
+      'notsb-inverse': '#ffffff',
       'custom-1': '#4262FF',
       'custom-2': '#7C79FF',
       'custom-3': '#64BB5C',
@@ -44,6 +44,8 @@ module.exports = {
       'shadow-1': 'rgba(255, 255, 255, 0.1)',
       'shadow-2': 'rgba(255, 255, 255, 0.2)',
       'shadow-3': 'rgba(255, 255, 255, 0.3)',
+      // button
+      'btn-2': '#555B69',
     },
     backgroundImage: (theme) => ({
       // progress
