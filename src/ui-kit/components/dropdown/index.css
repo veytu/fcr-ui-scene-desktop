@@ -3,8 +3,6 @@
   transition: all 0.2s ease-in-out;
   border-width: 1px;
   border-style: solid;
-  outline-width: 0;
-  outline-style: solid;
   box-sizing: border-box;
   cursor: pointer;
   font-size: 12px;
@@ -36,9 +34,8 @@
 }
 
 .fcr-dropdown.fcr-dropdown--focused {
-  @apply fcr-border-brand fcr-outline-brand-a50;
-  outline-width: 3px;
-  outline-style: solid;
+  @apply fcr-border-brand;
+  box-shadow: 0 0 0 3px theme(colors.brand-a50);
 }
 .fcr-dropdown .fcr-dropdown__icon {
   transform: rotate(180deg);
