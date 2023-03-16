@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import snakeCase from 'lodash/snakeCase';
 import htmlParser from 'node-html-parser';
 import { ESLint } from 'eslint';
 
@@ -47,7 +46,9 @@ function generateSvgTsx() {
 
     const inplate = interpolateIcon(svgRoot.innerHTML, viewBox, svgRoot.childNodes.length > 1);
 
-    const outfile = path.resolve(SVG_PATHS_DIR, path.basename(fn, '.svg') + '.tsx');
+    const fnSnakeCase = (path.basename(fn, '.svg') + '.tsx').replace(/-/g, '_');
+
+    const outfile = path.resolve(SVG_PATHS_DIR, fnSnakeCase);
 
     if (!fs.existsSync(outfile)) {
       fs.writeFileSync(outfile, inplate);
@@ -62,7 +63,7 @@ function generateSvgEnumType() {
   const keys: string[] = [];
   fs.readdirSync(SVG_PATHS_DIR).forEach((fn) => {
     if (fn.toLowerCase().endsWith('.tsx')) {
-      const fsn = snakeCase(path.basename(fn, '.tsx'));
+      const fsn = path.basename(fn, '.tsx');
       keys.push(fsn.toUpperCase());
     }
   });

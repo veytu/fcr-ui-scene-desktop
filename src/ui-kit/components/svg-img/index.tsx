@@ -32,7 +32,6 @@ export const SvgImg: FC<SvgImgProps> = ({
 
   const iconPrimary = themeVal('colors.icon-1');
   const iconSecondary = themeVal('colors.icon-2');
-  console.log(iconPrimary, iconSecondary);
 
   const viewBox = getViewBox(type);
   const path = getPath(type, {

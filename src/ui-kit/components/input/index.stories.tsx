@@ -26,7 +26,7 @@ export const Docs: ComponentStory<typeof Input> = (props) => {
         <Input
           {...props}
           label={'Name'}
-          iconPrefix={SvgIconEnum.FCR_ALLLEAVE}
+          iconPrefix={SvgIconEnum.FCR_V2_SEARCH}
           value={value}
           onChange={handleChange}
         />
@@ -43,7 +43,7 @@ export const Docs: ComponentStory<typeof Input> = (props) => {
           width: 200,
           marginBottom: 50,
         }}>
-        <Input {...props} borderLess label={'1'} value={value} onChange={handleChange} />
+        <Input {...props} variant={'border-less'} label={'1'} value={value} onChange={handleChange} />
       </div>
     </div>
   );
