@@ -80,7 +80,8 @@ export const FcrToolTip: FC<FcrToolTipProps> = (props) => {
       overlay={content}
       overlayInnerStyle={{ ...defaultOverlayInnerStyle, ...overlayInnerStyle }}
       motion={{
-        motionName: { enter: 'animate__fadeIn', leave: 'animate__fadeOut' },
+        motionAppear: true,
+        motionName: 'fcr-tooltip-anim',
       }}
       {...others}>
       {(children as ReactElement) || <></>}
