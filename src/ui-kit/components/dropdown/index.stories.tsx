@@ -32,11 +32,28 @@ export const Docs: ComponentStory<typeof Dropdown> = (props) => {
   };
 
   return (
-    <div
-      style={{
-        width: 200,
-      }}>
-      <Dropdown {...props} value={value} onChange={handleChange} />
+    <div>
+      <div
+        style={{
+          width: 200,
+          marginBottom: 50,
+        }}>
+        <Dropdown {...props} value={value} onChange={handleChange} size={'large'} />
+      </div>
+      <div
+        style={{
+          width: 200,
+          marginBottom: 50,
+        }}>
+        <Dropdown {...props} value={value} onChange={handleChange} size={'medium'} />
+      </div>
+      <div
+        style={{
+          width: 200,
+          marginBottom: 50,
+        }}>
+        <Dropdown {...props} value={value} onChange={handleChange} size={'small'} />
+      </div>
     </div>
   );
 };

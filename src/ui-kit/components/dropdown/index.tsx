@@ -8,6 +8,7 @@ export type DropdownProps = {
   value?: string;
   placeholder?: string;
   options?: { text: string; value: string }[];
+  size?: 'large' | 'medium' | 'small';
   onChange?: (value: string) => void;
 };
 
@@ -15,11 +16,15 @@ export const Dropdown: FC<DropdownProps> = ({
   placeholder,
   options,
   value,
+  size = 'medium',
   onChange = () => {},
 }) => {
   const [focused, setFocused] = useState(false);
   const cls = classNames('fcr-dropdown', {
     'fcr-dropdown--focused': focused,
+    'fcr-dropdown-l': size === 'large',
+    'fcr-dropdown-m': size === 'medium',
+    'fcr-dropdown-s': size === 'small',
   });
   const selectedCls = classNames('fcr-dropdown__selected');
 
@@ -44,7 +49,7 @@ export const Dropdown: FC<DropdownProps> = ({
     <div className={cls} onClick={handleClick} ref={ref}>
       <div className={selectedCls}>
         <span>{selectedText}</span>
-        <SvgImg className="fcr-dropdown__icon" type={SvgIconEnum.FCR_DROPDOWN} />
+        <SvgImg className="fcr-dropdown__icon" type={SvgIconEnum.FCR_DROPDOWN} size={24} />
       </div>
       {/* options */}
       <ul className={optionsCls}>
