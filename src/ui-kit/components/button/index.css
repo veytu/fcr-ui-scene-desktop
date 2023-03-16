@@ -8,6 +8,7 @@
   outline: none;
   box-sizing: border-box;
   position: relative;
+  width: fit-content;
 }
 .fcr-button::after {
   content: '';
@@ -260,4 +261,13 @@
   max-width: none;
   min-width: 0;
   padding: 0 12px;
+}
+
+.fcr-button-loading {
+  animation: loadingCircle 1s infinite linear;
+}
+@keyframes loadingCircle {
+  100% {
+    transform: rotate(360deg);
+  }
 }

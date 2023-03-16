@@ -33,6 +33,7 @@
 }
 .fcr-toast-container-content {
   padding: 10px 0;
+  flex: 1;
 }
 .fcr-toast-container-content > span {
   @apply fcr-text-1;
@@ -62,4 +63,28 @@
 }
 .fcr-toast-info {
   @apply fcr-bg-brand-6;
+}
+
+.fcr-toast-anim-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.fcr-toast-anim-enter-active {
+  opacity: 1;
+  transition: all 0.2s ease-in;
+  transform: translateY(0px);
+}
+.fcr-toast-anim-enter-done {
+  opacity: 1;
+}
+.fcr-toast-anim-exit {
+  opacity: 1;
+}
+.fcr-toast-anim-exit-active {
+  opacity: 0;
+  transition: all 0.2s ease-in;
+  transform: translateY(-10px);
+}
+.fcr-toast-anim-exit-done {
+  opacity: 0;
 }
