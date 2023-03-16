@@ -1,22 +1,44 @@
 import React, { FC, useState } from 'react';
-import { Meta } from '@storybook/react';
-import { Dropdown, Props } from '.';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Dropdown } from '.';
 
-const meta: Meta = {
+const meta: ComponentMeta<typeof Dropdown> = {
   title: 'Components/Dropdown',
   component: Dropdown,
+  args: {
+    options: [
+      {
+        text: 'Option 1',
+        value: 'o1',
+      },
+      {
+        text: 'Option 2',
+        value: 'o2',
+      },
+      {
+        text: 'Option 3',
+        value: 'o3',
+      },
+    ],
+    placeholder: 'Please select',
+  },
 };
 
-export const Docs = (props: Props) => {
+export const Docs: ComponentStory<typeof Dropdown> = (props) => {
+  const [value, setValue] = useState('');
+
+  const handleChange = (value: string) => {
+    setValue(value);
+  };
+
   return (
-    <div className="h-full w-full">
-      <Dropdown {...props} />
+    <div
+      style={{
+        width: 200,
+      }}>
+      <Dropdown {...props} value={value} onChange={handleChange} />
     </div>
   );
-};
-
-Docs.args = {
-  options: [],
 };
 
 export default meta;

@@ -29,7 +29,14 @@ export const Docs: ComponentStory<typeof TextArea> = (props) => {
           width: 200,
           marginBottom: 50,
         }}>
-        <TextAreaBorderLess {...props} cols={10} label="1" />
+        <TextArea {...props} maxCount={50} value={value} onChange={handleChange} disabled />
+      </div>
+      <div
+        style={{
+          width: 200,
+          marginBottom: 50,
+        }}>
+        <TextAreaBorderLess {...props} label="1" />
       </div>
     </div>
   );

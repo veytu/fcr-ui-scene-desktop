@@ -15,9 +15,9 @@ export type InputProps = {
    * 输入框中的值
    */
   /** @en
-   * value of the input box
+   * Value of the input box
    */
-  value: string;
+  value?: string;
   /**
    * 输入框的标签，一般展示在输入框的头部，提示用户需要输入的内容
    */
@@ -55,7 +55,7 @@ export type InputProps = {
    * @param value 变更值
    */
   /** @en
-   * change event of the input's value
+   * Change event of the input's value
    * @param value changed value
    */
   onChange?: (value: string) => void;
@@ -63,7 +63,7 @@ export type InputProps = {
 
 export const Input: FC<InputProps> = ({
   placeholder,
-  value,
+  value = '',
   disabled,
   iconPrefix,
   size = 'medium',

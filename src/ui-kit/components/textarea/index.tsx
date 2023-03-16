@@ -4,19 +4,57 @@ import isNumber from 'lodash/isNumber';
 import './index.css';
 
 export type TextAreaProps = {
-  value: string;
+  /**
+   * 文本框中的值
+   */
+  /** @en
+   * Value of the textarea
+   */
+  value?: string;
+  /**
+   * 限制最大文本输入字数
+   */
+  /** @en
+   * Limit the max character count of the textarea
+   */
   maxCount?: number;
+  /**
+   * 文本框的提示符
+   */
+  /** @en
+   * Placeholder of the textarea
+   */
   placeholder?: string;
+  /**
+   * 文本框是否可以垂直方向拖拽更改尺寸
+   */
+  /** @en
+   * Whether the textarea can be resized vertically
+   */
   resizable?: boolean;
-  readOnly?: boolean;
+  /**
+   * 文本框是否禁用
+   */
+  /** @en
+   * Whether the textarea is disabled
+   */
+  disabled?: boolean;
+  /**
+   * 值变更事件
+   * @param value 变更值
+   */
+  /** @en
+   * Change event of the textarea's value
+   * @param value changed value
+   */
   onChange?: (value: string) => void;
 };
 
 export const TextArea: FC<TextAreaProps> = ({
-  value,
+  value = '',
   placeholder,
   resizable,
-  readOnly,
+  disabled,
   maxCount,
   onChange = () => {},
 }) => {
@@ -46,13 +84,14 @@ export const TextArea: FC<TextAreaProps> = ({
   const cls = classNames('fcr-textarea', {
     'fcr-textarea--focused': focused,
     'fcr-textarea--non-resizable': !resizable,
+    'fcr-textarea--disabled': disabled,
   });
 
   return (
     <div className={cls} onClick={handleClick}>
       <textarea
         ref={inputRef}
-        readOnly={readOnly}
+        disabled={disabled}
         placeholder={placeholder}
         onFocus={handleFocus}
         onBlur={handleBlur}
@@ -70,10 +109,28 @@ export const TextArea: FC<TextAreaProps> = ({
 };
 
 type TextAreaBorderLessProps = {
-  maxCount?: number;
-  cols?: number;
+  /**
+   * 文本框的标签，一般展示在文本框的头部，提示用户需要输入的内容
+   */
+  /** @en
+   * The label of the textarea, usually displayed at the head of the textarea, prompting the user to enter the content
+   */
   label?: string;
+  /**
+   * 文本框的提示符
+   */
+  /** @en
+   * Placeholder of the textarea
+   */
   placeholder?: string;
+  /**
+   * 值变更事件，只会在文本框失去焦点时触发
+   * @param value 变更值
+   */
+  /** @en
+   * Change event of the textarea's value, only fired when it lose focus
+   * @param value changed value
+   */
   onChange?: (value: string) => void;
 };
 export const TextAreaBorderLess: FC<TextAreaBorderLessProps> = ({
