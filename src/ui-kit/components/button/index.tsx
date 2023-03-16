@@ -50,7 +50,9 @@ export const FcrButton: FC<FcrButtonProps> = (props) => {
       <p>{props.children}</p>
       {(loading || postIcon) && (
         <div>
-          <SvgImg type={loading ? SvgIconEnum.FCR_ALLLEAVE : postIcon!}></SvgImg>
+          <SvgImg
+            className={classNames({ 'fcr-button-loading': loading })}
+            type={loading ? SvgIconEnum.FCR_BTN_LOADING : postIcon!}></SvgImg>
         </div>
       )}
     </button>

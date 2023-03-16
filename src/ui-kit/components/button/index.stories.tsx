@@ -14,6 +14,7 @@ export const Docs = ({
   postIcon,
   disabled,
   styleType,
+  loading,
 }: {
   text;
   type;
@@ -22,6 +23,7 @@ export const Docs = ({
   postIcon;
   disabled;
   styleType;
+  loading;
 }) => {
   return (
     <div>
@@ -45,10 +47,12 @@ export const Docs = ({
       </div>
       <div>
         <h3>Size</h3>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {sizes.map((size) => {
             return (
               <FcrButton
+                key={size}
+                loading={loading}
                 disabled={disabled}
                 type={type}
                 shape={shape}
@@ -79,6 +83,11 @@ Docs.argTypes = {
     control: 'radio',
     options: ['circle', 'rounded'],
     defaultValue: 'circle',
+  },
+  loading: {
+    control: 'boolean',
+
+    defaultValue: false,
   },
   preIcon: {
     control: 'boolean',
