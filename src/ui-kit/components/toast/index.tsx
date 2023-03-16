@@ -154,7 +154,7 @@ export class Toast {
       }
     }
   };
-  private static _removeToastContainer = (persist: boolean) => {
+  private static _removeToastContainer = () => {
     if (this._presistToastRenderCount === 0) {
       if (this._presistToastContainer) {
         document.body.removeChild(this._presistToastContainer);
