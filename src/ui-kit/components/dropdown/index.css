@@ -1,0 +1,75 @@
+.fcr-dropdown {
+  @apply fcr-bg-8 fcr-rounded-12 fcr-border-1;
+  transition: all 0.2s ease-in-out;
+  border-width: 1px;
+  border-style: solid;
+  outline-width: 0;
+  outline-style: solid;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 12px;
+  overflow: hidden;
+  user-select: none;
+}
+
+.fcr-dropdown.fcr-dropdown-l .fcr-dropdown__selected,
+.fcr-dropdown.fcr-dropdown-l .fcr-dropdown__option {
+  padding: 12px 6px 12px 12px;
+}
+
+.fcr-dropdown.fcr-dropdown-m .fcr-dropdown__selected,
+.fcr-dropdown.fcr-dropdown-m .fcr-dropdown__option {
+  padding: 6px 6px 6px 12px;
+}
+
+.fcr-dropdown.fcr-dropdown-s .fcr-dropdown__selected,
+.fcr-dropdown.fcr-dropdown-s .fcr-dropdown__option {
+  padding: 3px 0px 3px 6px;
+}
+
+.fcr-dropdown.fcr-dropdown-s .fcr-dropdown__icon {
+  height: 18px;
+}
+
+.fcr-dropdown:hover {
+  @apply fcr-border-notsb-inverse;
+}
+
+.fcr-dropdown.fcr-dropdown--focused {
+  @apply fcr-border-brand fcr-outline-brand-a50;
+  outline-width: 3px;
+  outline-style: solid;
+}
+.fcr-dropdown .fcr-dropdown__icon {
+  transform: rotate(180deg);
+  transition: transform 0.3s;
+}
+
+.fcr-dropdown.fcr-dropdown--focused .fcr-dropdown__icon {
+  transform: rotate(360deg);
+}
+
+.fcr-dropdown .fcr-dropdown__selected {
+  @apply fcr-text-1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fcr-dropdown .fcr-dropdown__options--invisible {
+  display: none;
+}
+
+.fcr-dropdown .fcr-dropdown__option {
+  @apply fcr-text-1;
+  transition: all 0.3s;
+}
+
+.fcr-dropdown .fcr-dropdown__option:hover,
+.fcr-dropdown .fcr-dropdown__option--active {
+  background: theme(colors.hover);
+}
+
+.fcr-dropdown .fcr-dropdown__option--active {
+  @apply fcr-font-title;
+}
