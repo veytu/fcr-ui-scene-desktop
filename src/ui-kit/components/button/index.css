@@ -136,6 +136,7 @@
   @apply fcr-font-title;
   font-size: 20px;
 }
+
 .fcr-button-XL:not(.fcr-button-link) {
   min-width: 200px;
   height: 56px;
@@ -258,4 +259,5 @@
 .fcr-button.fcr-button-icon-only {
   max-width: none;
   min-width: 0;
+  padding: 0 12px;
 }
