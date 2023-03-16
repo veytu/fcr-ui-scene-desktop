@@ -7,7 +7,7 @@ const meta: ComponentMeta<typeof Input> = {
   title: 'Components/Input',
   component: Input,
   args: {
-    placeholder: 'please input something..',
+    placeholder: 'please input room name',
   },
 };
 
@@ -43,7 +43,7 @@ export const Docs: ComponentStory<typeof Input> = (props) => {
           width: 200,
           marginBottom: 50,
         }}>
-        <Input {...props} variant={'border-less'} label={'1'} value={value} onChange={handleChange} />
+        <Input {...props} label={'Disabled'} size="large" disabled />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import { TextArea } from '.';
+import { TextArea, TextAreaBorderLess } from '.';
 
 const meta: ComponentMeta<typeof TextArea> = {
   title: 'Components/TextArea',
@@ -22,7 +22,14 @@ export const Docs: ComponentStory<typeof TextArea> = (props) => {
           width: 200,
           marginBottom: 50,
         }}>
-        <TextArea {...props} value={value} onChange={handleChange} />
+        <TextArea {...props} maxCount={50} value={value} onChange={handleChange} />
+      </div>
+      <div
+        style={{
+          width: 200,
+          marginBottom: 50,
+        }}>
+        <TextAreaBorderLess {...props} cols={10} label="1" />
       </div>
     </div>
   );

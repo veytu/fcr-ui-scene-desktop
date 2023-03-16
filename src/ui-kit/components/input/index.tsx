@@ -26,12 +26,12 @@ export type InputProps = {
    */
   label?: string;
   /**
-   * 输入框是否只读
+   * 输入框是否禁用
    */
   /** @en
-   * Whether the input box is read only
+   * Whether the input box is disabled
    */
-  readOnly?: boolean;
+  disabled?: boolean;
   /**
    * 输入框前置图标，仅在 variant = rounded 时生效
    */
@@ -39,13 +39,6 @@ export type InputProps = {
    * Input box front icon, takes effect only if variant = rounded
    */
   iconPrefix?: SvgIconEnum;
-  /**
-   * 输入框前缀文字，仅在 variant = border-less 时生效
-   */
-  /** @en
-   * Input box prefix text, takes effect only if variant = border-less
-   */
-  textPrefix?: string;
   /**
    * 输入框的尺寸：
    * medium - 中等(default)
@@ -57,17 +50,6 @@ export type InputProps = {
    * large
    */
   size?: 'large' | 'medium';
-  /**
-   * 输入框的风格变体，目前支持：
-   * 带边框圆角输入框（默认）
-   * 底部线条极简输入框 - border-less
-   */
-  /** @en
-   * Style variations of the input box, currently supported:
-   * Rounded input box with border - rounded (default)
-   * Bottom line minimalist input box - border-less
-   */
-  variant?: 'rounded' | 'border-less';
   /**
    * 值变更事件
    * @param value 变更值
@@ -82,10 +64,9 @@ export type InputProps = {
 export const Input: FC<InputProps> = ({
   placeholder,
   value,
-  readOnly,
+  disabled,
   iconPrefix,
   size = 'medium',
-  variant,
   label,
   onChange = () => {},
 }) => {
@@ -113,17 +94,15 @@ export const Input: FC<InputProps> = ({
     }
   };
 
-  const isBorerLess = variant === 'border-less';
-
   const cls = classNames('fcr-input', {
     'fcr-input--focused': focused,
     'fcr-input-l': size === 'large',
     'fcr-input-m': size === 'medium',
-    'fcr-input-borderless': isBorerLess,
+    'fcr-input--disabled': disabled,
   });
 
   const iconWrapCls = classNames('fcr-input-icon-wrap', {
-    'fcr-input-icon-wrap--invisible': readOnly || !focused,
+    'fcr-input-icon-wrap--invisible': disabled || !focused,
   });
   const iconCls = classNames('fcr-input-icon', {});
 
@@ -131,25 +110,21 @@ export const Input: FC<InputProps> = ({
 
   return (
     <React.Fragment>
-      {label && !isBorerLess && <label className={labelCls}>{label}</label>}
+      {label && <label className={labelCls}>{label}</label>}
       <div className={cls} onClick={handleClick}>
-        {iconPrefix && (
-          <SvgImg style={{ marginRight: 10, marginLeft: 10 }} size={24} type={iconPrefix} />
-        )}
+        {iconPrefix && <SvgImg style={{ marginRight: 10 }} size={18} type={iconPrefix} />}
         <input
           ref={inputRef}
-          readOnly={readOnly}
           placeholder={placeholder}
           onFocus={handleFocus}
           onBlur={handleBlur}
           value={value}
+          disabled={disabled}
           onChange={handleChange}
         />
-        {!isBorerLess && (
-          <div className={iconWrapCls} onMouseDown={handleClear}>
-            <SvgImg className={iconCls} type={SvgIconEnum.FCR_CLOSE} size={20} />
-          </div>
-        )}
+        <div className={iconWrapCls} onMouseDown={handleClear}>
+          <SvgImg className={iconCls} type={SvgIconEnum.FCR_CLOSE} size={18} />
+        </div>
       </div>
     </React.Fragment>
   );
