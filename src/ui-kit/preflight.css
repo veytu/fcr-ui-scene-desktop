@@ -8,34 +8,6 @@ html,
 html body {
   @apply fcr-font-scenario;
 }
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
-}
-.animate__fadeOut {
-  -webkit-animation-name: fadeOut;
-  animation-name: fadeOut;
-  animation-duration: 0.2s;
-}
-.animate__fadeIn {
-  -webkit-animation-name: fadeIn;
-  animation-name: fadeIn;
-  animation-duration: 0.2s;
-}
 
 .fcr-divider {
   position: relative;
