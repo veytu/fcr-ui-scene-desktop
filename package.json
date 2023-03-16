@@ -10,6 +10,9 @@
     "convertsvg": "ts-node --skipProject src/ui-kit/convertsvg"
   },
   "dependencies": {
+    "@types/react-dom": "^18.0.11",
+    "@types/react-transition-group": "^4.4.5",
+    "@types/uuid": "^9.0.1",
     "agora-common-libs": "2.8.1",
     "agora-edu-core": "2.8.20",
     "agora-rte-sdk": "2.8.20",
@@ -26,7 +29,8 @@
     "react-router-dom": "5.2.0",
     "react-spring": "9.4.4",
     "react-transition-group": "4.4.1",
-    "react-use-measure": "2.1.1"
+    "react-use-measure": "2.1.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "6.5.13",

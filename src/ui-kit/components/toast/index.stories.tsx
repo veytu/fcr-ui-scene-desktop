@@ -1,13 +1,30 @@
 import { Meta } from '@storybook/react';
 import React from 'react';
-import { FcrToast } from '.';
+import { FcrToast, Toast } from '.';
+import { FcrButton } from '../button';
 import { SvgIconEnum } from '../svg-img';
+import { v4 as uuidv4 } from 'uuid';
+
 export default {
   title: 'Components/Toast',
 };
 export const Docs = ({ closeable, icon, action, text }: { closeable; icon; action; text }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <FcrButton
+        onClick={() => {
+          Toast.open({
+            id: uuidv4(),
+            persist: true,
+            toastProps: {
+              type: 'alarm',
+              content: 'test',
+              closeable: true,
+            },
+          });
+        }}>
+        show toast
+      </FcrButton>
       <FcrToast
         icon={icon ? SvgIconEnum.FCR_HOST : undefined}
         action={
@@ -18,7 +35,7 @@ export const Docs = ({ closeable, icon, action, text }: { closeable; icon; actio
               }
             : undefined
         }
-        type="Alarm"
+        type="alarm"
         closeable={closeable}
         content={text}></FcrToast>
       <FcrToast
@@ -32,7 +49,7 @@ export const Docs = ({ closeable, icon, action, text }: { closeable; icon; actio
         }
         icon={icon ? SvgIconEnum.FCR_HOST : undefined}
         closeable={closeable}
-        type="Info"
+        type="info"
         content={text}></FcrToast>
       <FcrToast
         action={
@@ -45,7 +62,7 @@ export const Docs = ({ closeable, icon, action, text }: { closeable; icon; actio
         }
         icon={icon ? SvgIconEnum.FCR_HOST : undefined}
         closeable={closeable}
-        type="Normal"
+        type="normal"
         content={text}></FcrToast>
       <FcrToast
         action={
@@ -58,7 +75,7 @@ export const Docs = ({ closeable, icon, action, text }: { closeable; icon; actio
         }
         icon={icon ? SvgIconEnum.FCR_QUESTION : undefined}
         closeable={closeable}
-        type="Warn"
+        type="warn"
         content={text}></FcrToast>
     </div>
   );
