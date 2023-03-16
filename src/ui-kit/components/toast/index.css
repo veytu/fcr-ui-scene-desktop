@@ -8,6 +8,7 @@
   align-items: center;
   width: fit-content;
   justify-content: center;
+  pointer-events: all;
 }
 
 .fcr-toast-container-content,
@@ -87,4 +88,26 @@
 }
 .fcr-toast-anim-exit-done {
   opacity: 0;
+}
+
+.fcr-single-toast-container {
+  width: fit-content;
+  pointer-events: none;
+  position: absolute;
+  top: 22%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+.fcr-presist-toast-container {
+  width: fit-content;
+  pointer-events: none;
+  position: absolute;
+  top: 75%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+.fcr-toast-portal {
+  padding: 10px 0;
 }

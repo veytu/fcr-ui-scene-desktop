@@ -11,20 +11,36 @@ export default {
 export const Docs = ({ closeable, icon, action, text }: { closeable; icon; action; text }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      <FcrButton
-        onClick={() => {
-          Toast.open({
-            id: uuidv4(),
-            persist: true,
-            toastProps: {
-              type: 'alarm',
-              content: 'test',
-              closeable: true,
-            },
-          });
-        }}>
-        show toast
-      </FcrButton>
+      <div>
+        <FcrButton
+          onClick={() => {
+            Toast.open({
+              id: uuidv4(),
+              toastProps: {
+                type: 'info',
+                content: 'test',
+              },
+            });
+          }}>
+          show toast
+        </FcrButton>
+        <FcrButton
+          onClick={() => {
+            Toast.open({
+              id: uuidv4(),
+              persist: true,
+              duration: 15000,
+              toastProps: {
+                type: 'alarm',
+                content: 'test',
+                closeable: true,
+              },
+            });
+          }}>
+          show presist toast
+        </FcrButton>
+      </div>
+
       <FcrToast
         icon={icon ? SvgIconEnum.FCR_HOST : undefined}
         action={
