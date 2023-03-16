@@ -15,6 +15,7 @@ interface FcrButtonProps {
   postIcon?: SvgIconEnum;
   loading?: boolean;
   disabled?: boolean;
+  onClick?: () => void;
 }
 
 export const FcrButton: FC<FcrButtonProps> = (props) => {
@@ -27,9 +28,11 @@ export const FcrButton: FC<FcrButtonProps> = (props) => {
     preIcon,
     postIcon,
     disabled,
+    onClick,
   } = props;
   return (
     <button
+      onClick={onClick}
       disabled={disabled}
       className={classNames(
         'fcr-button',
