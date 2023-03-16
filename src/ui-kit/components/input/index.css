@@ -10,6 +10,8 @@
   outline-width: 0;
   outline-style: solid;
   box-sizing: border-box;
+  padding-right: 28px;
+  padding-left: 12px;
 }
 
 .fcr-input.fcr-input-l {
@@ -42,11 +44,11 @@
   @apply fcr-text-3;
 }
 
-.fcr-input:hover {
+.fcr-input:hover:not(.fcr-input--disabled) {
   @apply fcr-border-notsb-inverse;
 }
 
-.fcr-input.fcr-input--focused {
+.fcr-input.fcr-input--focused:not(.fcr-input--disabled) {
   @apply fcr-border-brand fcr-outline-brand-a50;
   outline-width: 3px;
   outline-style: solid;
@@ -58,7 +60,7 @@
   cursor: pointer;
   width: 22px;
   height: 22px;
-  right: 9px;
+  right: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,16 +75,14 @@
   visibility: hidden;
 }
 
-.fcr-input.fcr-input-borderless {
-  @apply fcr-rounded-none;
-  border-top-width: 0;
-  border-left-width: 0;
-  border-right-width: 0;
-  outline: 0;
-  background: none;
+.fcr-input.fcr-input--disabled {
+  cursor: not-allowed;
+  opacity: 50%;
 }
-
-.fcr-input.fcr-input-borderless.fcr-input--focused {
-  @apply fcr-border-brand fcr-outline-brand-a50;
-  outline: 0;
+.fcr-input.fcr-input--disabled input {
+  @apply fcr-text-2;
+  cursor: not-allowed;
+}
+.fcr-input.fcr-input--disabled input::placeholder {
+  @apply fcr-text-2;
 }

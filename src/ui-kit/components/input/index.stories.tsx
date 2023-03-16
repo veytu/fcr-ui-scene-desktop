@@ -7,7 +7,7 @@ const meta: ComponentMeta<typeof Input> = {
   title: 'Components/Input',
   component: Input,
   args: {
-    placeholder: 'please input something..',
+    placeholder: 'please input room name',
   },
 };
 
@@ -26,7 +26,7 @@ export const Docs: ComponentStory<typeof Input> = (props) => {
         <Input
           {...props}
           label={'Name'}
-          iconPrefix={SvgIconEnum.FCR_ALLLEAVE}
+          iconPrefix={SvgIconEnum.FCR_V2_SEARCH}
           value={value}
           onChange={handleChange}
         />
@@ -43,7 +43,7 @@ export const Docs: ComponentStory<typeof Input> = (props) => {
           width: 200,
           marginBottom: 50,
         }}>
-        <Input {...props} borderLess label={'1'} value={value} onChange={handleChange} />
+        <Input {...props} label={'Disabled'} size="large" disabled />
       </div>
     </div>
   );

@@ -1,18 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import snakeCase from 'lodash/snakeCase';
 import htmlParser from 'node-html-parser';
 import { ESLint } from 'eslint';
-// const fs = require('fs');
-// const path = require('path');
-// const snakeCase = require('lodash/snakeCase');
-// const htmlParser = require('node-html-parser');
-// const { ESLint } = require('eslint');
 
 const SVG_COM_DIR = path.resolve(__dirname, 'components/svg-img');
 const SVG_PATHS_DIR = path.resolve(__dirname, 'components/svg-img/paths');
-
-const keys = new Set<string>();
 
 function interpolateIcon(tag: string, viewBox: string, needWrap: boolean) {
   const template = `
@@ -34,47 +26,63 @@ function interpolateIcon(tag: string, viewBox: string, needWrap: boolean) {
 function interpolateType(content: string) {
   const template = `
   export enum SvgIconEnum {
-    ${content}
+  ${content}
   }
   `;
   return template;
 }
 
-fs.readdirSync(SVG_PATHS_DIR).forEach(async (fn: string) => {
-  if (!fn.toLowerCase().endsWith('.svg')) {
-    return;
-  }
+function generateSvgTsx() {
+  fs.readdirSync(SVG_PATHS_DIR).forEach((fn: string) => {
+    if (!fn.toLowerCase().endsWith('.svg')) {
+      return;
+    }
 
-  const content = fs.readFileSync(path.resolve(SVG_PATHS_DIR, fn), 'utf-8');
+    const content = fs.readFileSync(path.resolve(SVG_PATHS_DIR, fn), 'utf-8');
 
-  const svgRoot = htmlParser.parse(content).querySelector('svg')!;
+    const svgRoot = htmlParser.parse(content).querySelector('svg')!;
 
-  const viewBox = svgRoot.getAttribute('viewBox')!;
+    const viewBox = svgRoot.getAttribute('viewBox')!;
 
-  const inplate = interpolateIcon(svgRoot.innerHTML, viewBox, svgRoot.childNodes.length > 1);
+    const inplate = interpolateIcon(svgRoot.innerHTML, viewBox, svgRoot.childNodes.length > 1);
 
-  fs.writeFileSync(path.resolve(SVG_PATHS_DIR, path.basename(fn, '.svg') + '.tsx'), inplate);
+    const fnSnakeCase = (path.basename(fn, '.svg') + '.tsx').replace(/-/g, '_');
 
-  fs.unlinkSync(path.resolve(SVG_PATHS_DIR, fn));
+    const outfile = path.resolve(SVG_PATHS_DIR, fnSnakeCase);
 
-  const fsn = snakeCase(path.basename(fn, '.svg'));
+    if (!fs.existsSync(outfile)) {
+      fs.writeFileSync(outfile, inplate);
+      console.log(`${outfile} generated`);
+    }
 
-  keys.add(fsn.toUpperCase());
-});
+    fs.unlinkSync(path.resolve(SVG_PATHS_DIR, fn));
+  });
+}
 
-const eslint = new ESLint({ fix: true });
-eslint.lintFiles([path.resolve(SVG_PATHS_DIR, '*.tsx')]).then(async (results) => {
-  ESLint.outputFixes(results);
-});
+function generateSvgEnumType() {
+  const keys: string[] = [];
+  fs.readdirSync(SVG_PATHS_DIR).forEach((fn) => {
+    if (fn.toLowerCase().endsWith('.tsx')) {
+      const fsn = path.basename(fn, '.tsx');
+      keys.push(fsn.toUpperCase());
+    }
+  });
+  const content = keys.map((k: string) => `\t${k} = '${k.toLowerCase()}',\n`).join('');
 
-// write type
+  const inplate = interpolateType(content);
 
-const keyContent = Array.from(keys)
-  .map((k: string) => `\t${k} = '${k.toLowerCase()}',\n`)
-  .join('');
+  fs.writeFileSync(path.resolve(SVG_COM_DIR, 'type.ts'), inplate);
+}
 
-const inplate = interpolateType(keyContent);
+async function lintFiles(globs: string[]) {
+  const eslint = new ESLint({ fix: true });
+  await eslint.lintFiles(globs).then(async (results) => {
+    ESLint.outputFixes(results);
+  });
+}
 
-fs.writeFileSync(path.resolve(SVG_COM_DIR, 'type.ts'), inplate);
+generateSvgTsx();
 
-export default {};
+generateSvgEnumType();
+
+lintFiles([path.resolve(SVG_PATHS_DIR, '*.tsx')]);
