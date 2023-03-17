@@ -46,6 +46,8 @@ module.exports = {
       'shadow-3': 'rgba(255, 255, 255, 0.3)',
       // button
       'btn-2': '#555B69',
+      // outline
+      'brand-a50': colorAlpha('#4262FF', 0.5),
     },
     backgroundImage: (theme) => ({
       // progress
@@ -85,7 +87,6 @@ module.exports = {
       3: theme('colors.text-3'),
       brand: theme('colors.brand'),
       red: theme('colors.red'),
-
       notsb: theme('colors.notsb'),
       'notsb-inverse': theme('colors.notsb-inverse'),
     }),
@@ -107,7 +108,6 @@ module.exports = {
       full: '9999px',
       none: '0',
     },
-
     fontWeight: {
       title: 800,
       medium: 600,
@@ -116,13 +116,9 @@ module.exports = {
     fontFamily: {
       scenario: ['helvetica neue', 'arial', 'PingFangSC', 'microsoft yahei'],
     },
-    outline: (theme) => ({
-      'brand-a50': colorAlpha(theme('colors.brand.DEFAULT'), 0.5),
-    }),
   },
   corePlugins: [
     'preflight',
-    'outline',
     'fontWeight',
     'backgroundImage',
     'backgroundColor',

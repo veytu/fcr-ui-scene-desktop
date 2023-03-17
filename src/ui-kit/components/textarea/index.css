@@ -10,7 +10,7 @@
 
 .fcr-textarea textarea {
   @apply fcr-text-1;
-  outline-width: 0;
+  outline: none;
   width: 100%;
   height: 100%;
   border: none;
@@ -29,9 +29,8 @@
 }
 
 .fcr-textarea.fcr-textarea--focused:not(.fcr-textarea--disabled) {
-  @apply fcr-border-brand fcr-outline-brand-a50;
-  outline-width: 3px;
-  outline-style: solid;
+  @apply fcr-border-brand;
+  box-shadow: 0 0 0 3px theme(colors.brand-a50);
 }
 
 .fcr-textarea-wc {
@@ -80,7 +79,7 @@
 
 .fcr-textarea.fcr-textarea-borderless.fcr-textarea--focused {
   @apply fcr-border-notsb-inverse;
-  outline: 0;
+  box-shadow: none;
 }
 
 .fcr-textarea.fcr-textarea-borderless .fcr-textarea-label {
