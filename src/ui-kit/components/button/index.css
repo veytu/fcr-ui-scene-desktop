@@ -133,8 +133,10 @@
 }
 
 /** Size **/
-.fcr-button-XL {
+
+.fcr-button-XL > p {
   @apply fcr-font-title;
+  line-height: 30px;
   font-size: 20px;
 }
 
@@ -149,13 +151,19 @@
 .fcr-button-XL:not(.fcr-button-icon-only) > div:last-child {
   padding-left: 10px;
 }
+.fcr-button-XL:not(.fcr-button-icon-only) svg {
+  width: 30px;
+  height: 30px;
+}
 .fcr-button-XL.fcr-button-icon-only svg {
   width: 56px;
   height: 56px;
 }
-.fcr-button-L {
+
+.fcr-button-L > p {
   @apply fcr-font-title;
   font-size: 16px;
+  line-height: 30px;
 }
 .fcr-button-L:not(.fcr-button-link) {
   min-width: 100px;
@@ -168,13 +176,18 @@
 .fcr-button-L:not(.fcr-button-icon-only) > div:last-child {
   padding-left: 10px;
 }
+.fcr-button-L:not(.fcr-button-icon-only) svg {
+  width: 30px;
+  height: 30px;
+}
 .fcr-button-L.fcr-button-icon-only svg {
   width: 48px;
   height: 48px;
 }
-.fcr-button-M {
-  @apply fcr-font-regular;
 
+.fcr-button-M > p {
+  @apply fcr-font-regular;
+  line-height: 24px;
   font-size: 16px;
 }
 .fcr-button-M:not(.fcr-button-link) {
@@ -188,12 +201,18 @@
 .fcr-button-M:not(.fcr-button-icon-only) > div:last-child {
   padding-left: 10px;
 }
+.fcr-button-M:not(.fcr-button-icon-only) svg {
+  width: 24px;
+  height: 24px;
+}
 .fcr-button-M.fcr-button-icon-only svg {
   width: 42px;
   height: 42px;
 }
-.fcr-button-S {
+
+.fcr-button-S > p {
   @apply fcr-font-regular;
+  line-height: 20px;
   font-size: 14px;
 }
 .fcr-button-S:not(.fcr-button-link) {
@@ -207,12 +226,18 @@
 .fcr-button-S:not(.fcr-button-icon-only) > div:last-child {
   padding-left: 10px;
 }
+.fcr-button-S:not(.fcr-button-icon-only) svg {
+  width: 20px;
+  height: 20px;
+}
 .fcr-button-S.fcr-button-icon-only svg {
   width: 36px;
   height: 36px;
 }
-.fcr-button-XS {
+
+.fcr-button-XS > p {
   @apply fcr-font-regular;
+  line-height: 16px;
   font-size: 14px;
 }
 .fcr-button-XS:not(.fcr-button-icon-only) > div:first-child {
@@ -226,12 +251,18 @@
   height: 32px;
   padding: 0 20px;
 }
+.fcr-button-XS:not(.fcr-button-icon-only) svg {
+  width: 16px;
+  height: 16px;
+}
 .fcr-button-XS.fcr-button-icon-only svg {
   width: 32px;
   height: 32px;
 }
-.fcr-button-XXS {
+
+.fcr-button-XXS > p {
   @apply fcr-font-regular;
+  line-height: 14px;
   font-size: 12px;
 }
 .fcr-button-XXS:not(.fcr-button-link) {
@@ -244,6 +275,10 @@
 }
 .fcr-button-XXS:not(.fcr-button-icon-only) > div:last-child {
   padding-left: 8px;
+}
+.fcr-button-XXS:not(.fcr-button-icon-only) svg {
+  width: 14px;
+  height: 14px;
 }
 .fcr-button-XXS.fcr-button-icon-only svg {
   width: 24px;
