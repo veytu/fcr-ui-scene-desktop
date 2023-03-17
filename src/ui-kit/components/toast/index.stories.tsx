@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 export default {
   title: 'Components/Toast',
 };
-export const Docs = ({ closeable, icon, action, text }: { closeable; icon; action; text }) => {
+export const Docs = ({ closable, icon, action, text }: { closable; icon; action; text }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
@@ -33,7 +33,7 @@ export const Docs = ({ closeable, icon, action, text }: { closeable; icon; actio
               toastProps: {
                 type: 'alarm',
                 content: 'test',
-                closeable: true,
+                closable: true,
               },
             });
           }}>
@@ -52,7 +52,7 @@ export const Docs = ({ closeable, icon, action, text }: { closeable; icon; actio
             : undefined
         }
         type="alarm"
-        closeable={closeable}
+        closable={closable}
         content={text}></FcrToast>
       <FcrToast
         action={
@@ -64,7 +64,7 @@ export const Docs = ({ closeable, icon, action, text }: { closeable; icon; actio
             : undefined
         }
         icon={icon ? SvgIconEnum.FCR_HOST : undefined}
-        closeable={closeable}
+        closable={closable}
         type="info"
         content={text}></FcrToast>
       <FcrToast
@@ -77,7 +77,7 @@ export const Docs = ({ closeable, icon, action, text }: { closeable; icon; actio
             : undefined
         }
         icon={icon ? SvgIconEnum.FCR_HOST : undefined}
-        closeable={closeable}
+        closable={closable}
         type="normal"
         content={text}></FcrToast>
       <FcrToast
@@ -90,7 +90,7 @@ export const Docs = ({ closeable, icon, action, text }: { closeable; icon; actio
             : undefined
         }
         icon={icon ? SvgIconEnum.FCR_QUESTION : undefined}
-        closeable={closeable}
+        closable={closable}
         type="warn"
         content={text}></FcrToast>
     </div>
@@ -101,7 +101,7 @@ Docs.argTypes = {
     type: 'string',
     defaultValue: 'You don’t have access to this file',
   },
-  closeable: {
+  closable: {
     type: 'boolean',
     defaultValue: false,
   },

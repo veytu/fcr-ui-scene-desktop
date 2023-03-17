@@ -14,26 +14,32 @@ interface FcrDialogProps {
   footer?: ReactNode;
   onOk?: () => void;
   closable?: boolean;
+  closeIcon?: ReactNode;
+  maskClosable?: boolean;
 }
 export const FcrDialog: FC<FcrDialogProps> = (props) => {
-  const { visible, onClose, children, title, closable, footer } = props;
+  const { visible, onClose, children, title, closable, footer, closeIcon, maskClosable } = props;
   return (
     <RcDialog
+      maskClosable={maskClosable}
       footer={null}
       prefixCls="fcr-dialog"
       animation={'zoom'}
       maskAnimation={'fade'}
-      closeIcon={
-        <div className={classNames('fcr-dialog-close-override')}>
+      closable={false}
+      visible={visible}
+      onClose={onClose}>
+      {closable && closeIcon ? (
+        closeIcon
+      ) : (
+        <div onClick={onClose} className={classNames('fcr-dialog-close')}>
           <SvgImg
             type={SvgIconEnum.FCR_CLOSE}
             size={18}
             colors={{ iconPrimary: colors['notsb-inverse'] }}></SvgImg>
         </div>
-      }
-      closable={closable}
-      visible={visible}
-      onClose={onClose}>
+      )}
+
       <div className={classNames('fcr-dialog-title')}>{title}</div>
       <div className={classNames('fcr-dialog-inner')}>{children}</div>
       <div className={classNames('fcr-dialog-footer')}>

@@ -19,7 +19,7 @@
   flex: 1;
   flex-shrink: 0;
 }
-.fcr-guide-tooltip-overlay-content-closeable {
+.fcr-guide-tooltip-overlay-content-closable {
   width: 40px;
   display: flex;
   align-items: center;

@@ -39,7 +39,7 @@ export const Placement = ({ type, trigger }: { type; trigger }) => {
       }}>
       {placementMap.map((placement) => {
         return (
-          <Component trigger={trigger} placement={placement} content={placement} closeable>
+          <Component trigger={trigger} placement={placement} content={placement} closable>
             <a
               style={{
                 width: 120,
@@ -102,7 +102,7 @@ export const Type = ({ trigger }: { trigger }) => {
         trigger={trigger}
         placement={'top'}
         content={'解除禁言'}
-        closeable>
+        closable>
         <a
           style={{
             width: 120,

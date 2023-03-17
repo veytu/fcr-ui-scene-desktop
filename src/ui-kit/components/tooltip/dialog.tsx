@@ -20,7 +20,7 @@ const defaultDialogOverlayInnerStyle: CSSProperties = {
 interface FcrDialogToolTipProps extends FcrToolTipProps {
   onClose?: () => void;
 }
-const DialogToolTipCloseableOverlayWrap: FC<Pick<FcrDialogToolTipProps, 'content' | 'onClose'>> = (
+const DialogToolTipClosableOverlayWrap: FC<Pick<FcrDialogToolTipProps, 'content' | 'onClose'>> = (
   props,
 ) => {
   const { content, onClose } = props;
@@ -52,9 +52,9 @@ export const FcrDialogToolTip: FC<FcrDialogToolTipProps> = (props) => {
           size={20}></SvgImg>
       }
       content={
-        <DialogToolTipCloseableOverlayWrap
+        <DialogToolTipClosableOverlayWrap
           onClose={onClose}
-          content={content}></DialogToolTipCloseableOverlayWrap>
+          content={content}></DialogToolTipClosableOverlayWrap>
       }
       overlayInnerStyle={{
         ...defaultDialogOverlayInnerStyle,

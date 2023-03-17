@@ -23,25 +23,25 @@ const defaultGuideOverlayInnerStyle: CSSProperties = {
 };
 
 interface FcrGuideToolTipProps extends FcrToolTipProps {
-  closeable?: boolean;
+  closable?: boolean;
   onClose?: () => void;
 }
-const GuideToolTipCloseableOverlayWrap: FC<
-  Pick<FcrGuideToolTipProps, 'closeable' | 'content' | 'onClose'>
+const GuideToolTipClosableOverlayWrap: FC<
+  Pick<FcrGuideToolTipProps, 'closable' | 'content' | 'onClose'>
 > = (props) => {
-  const { content, closeable, onClose } = props;
+  const { content, closable, onClose } = props;
   return (
     <div className={classNames('fcr-guide-tooltip-overlay-content')}>
       <div
         style={{
-          padding: closeable ? '0px 8px' : '0px 24px',
+          padding: closable ? '0px 8px' : '0px 24px',
         }}
         className={classNames('fcr-guide-tooltip-overlay-content-inner')}>
         {content}
       </div>
-      {closeable && (
+      {closable && (
         <div
-          className={classNames('fcr-guide-tooltip-overlay-content-closeable', 'fcr-divider')}
+          className={classNames('fcr-guide-tooltip-overlay-content-closable', 'fcr-divider')}
           onClick={onClose}>
           <SvgImg
             type={SvgIconEnum.FCR_CLOSE}
@@ -53,7 +53,7 @@ const GuideToolTipCloseableOverlayWrap: FC<
   );
 };
 export const FcrGuideToolTip: FC<FcrGuideToolTipProps> = (props) => {
-  const { closeable, content, onClose, ...others } = props;
+  const { closable, content, onClose, ...others } = props;
   return (
     <FcrToolTip
       arrowContent={
@@ -66,10 +66,10 @@ export const FcrGuideToolTip: FC<FcrGuideToolTipProps> = (props) => {
           size={16}></SvgImg>
       }
       content={
-        <GuideToolTipCloseableOverlayWrap
+        <GuideToolTipClosableOverlayWrap
           content={content}
           onClose={onClose}
-          closeable={closeable}></GuideToolTipCloseableOverlayWrap>
+          closable={closable}></GuideToolTipClosableOverlayWrap>
       }
       overlayInnerStyle={{
         ...defaultGuideOverlayInnerStyle,

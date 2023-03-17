@@ -13,7 +13,7 @@ export type FcrToastType = 'alarm' | 'warn' | 'info' | 'normal';
 interface FcrToastProps {
   type: FcrToastType;
   content: string;
-  closeable?: boolean;
+  closable?: boolean;
   icon?: SvgIconEnum;
   iconSize?: number;
   action?: {
@@ -23,11 +23,11 @@ interface FcrToastProps {
   onClose?: () => void;
 }
 export const FcrToast = (props: FcrToastProps) => {
-  const { content, icon, type, closeable, action, onClose } = props;
+  const { content, icon, type, closable, action, onClose } = props;
   return (
     <div
       style={{
-        paddingRight: closeable ? '0' : '20px',
+        paddingRight: closable ? '0' : '20px',
         paddingLeft: '20px',
       }}
       className={classNames('fcr-toast-container', `fcr-toast-${type.toLowerCase()}`)}>
@@ -38,7 +38,7 @@ export const FcrToast = (props: FcrToastProps) => {
       )}
       <div
         style={{
-          paddingRight: closeable ? '10px' : '0',
+          paddingRight: closable ? '10px' : '0',
         }}
         className={classNames('fcr-toast-container-content')}>
         <span>{content}</span>
@@ -50,7 +50,7 @@ export const FcrToast = (props: FcrToastProps) => {
           <span>{action.text}</span>
         </div>
       )}
-      {closeable && (
+      {closable && (
         <div onClick={onClose} className={classNames('fcr-toast-container-close', 'fcr-divider')}>
           <SvgImg
             type={SvgIconEnum.FCR_CLOSE}
