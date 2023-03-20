@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 import { SvgIconEnum } from './type';
 import { SvgImg } from '.';
-
+import { FcrClickableIcon, FcrPretestDeviceIcon } from './clickable-icon';
 const meta: Meta = {
   title: 'Components/SvgImg',
   component: SvgImg,
@@ -50,3 +50,33 @@ Docs.args = {
 };
 
 export default meta;
+
+export const ClickableIcon = ({ disabled }: { disabled: boolean }) => {
+  return (
+    <div>
+      <h1>Clickable Icon</h1>
+      <div
+        style={{ display: 'grid', gap: '20px', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))' }}>
+        <FcrClickableIcon disabled={disabled} icon={SvgIconEnum.FCR_CLOSE}></FcrClickableIcon>
+        <FcrPretestDeviceIcon
+          disabled={disabled}
+          status="active"
+          icon={SvgIconEnum.FCR_CAMERA}></FcrPretestDeviceIcon>
+        <FcrPretestDeviceIcon
+          disabled={disabled}
+          status="inactive"
+          icon={SvgIconEnum.FCR_CAMERA}></FcrPretestDeviceIcon>
+        <FcrPretestDeviceIcon
+          disabled={disabled}
+          status="idle"
+          icon={SvgIconEnum.FCR_CAMERA}></FcrPretestDeviceIcon>
+      </div>
+    </div>
+  );
+};
+ClickableIcon.argTypes = {
+  disabled: {
+    control: 'boolean',
+    defaultValue: false,
+  },
+};
