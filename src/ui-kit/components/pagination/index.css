@@ -1,0 +1,71 @@
+.fcr-pagination {
+  @apply fcr-bg-2 fcr-border-1 fcr-rounded-full;
+  border-width: 1px;
+  border-style: solid;
+  display: inline-flex;
+  padding: 2px 4px;
+  font-size: 14px;
+  height: 36px;
+}
+
+.fcr-pagination .fcr-pagination__prev,
+.fcr-pagination .fcr-pagination__next {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fcr-pagination .fcr-pagination__prev {
+  padding-right: 4px;
+}
+.fcr-pagination .fcr-pagination__next {
+  padding-left: 4px;
+}
+
+.fcr-pagination .fcr-pagination__btn {
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  --effect-color: theme(colors.brand.4);
+}
+
+.fcr-pagination .fcr-pagination__btn:hover {
+  @apply fcr-rounded-10;
+  cursor: pointer;
+  color: theme(colors.icon-2);
+  background: theme(colors.hover);
+}
+
+.fcr-pagination .fcr-pagination__btn:active {
+  @apply fcr-bg-brand-8;
+}
+
+.fcr-pagination .fcr-pagination__page {
+  @apply fcr-text-1;
+  padding: 0 8px;
+  font-weight: 700;
+  align-self: center;
+}
+
+.fcr-pagination.fcr-pagination-half-r {
+  @apply fcr-rounded-16;
+  height: 50px;
+  font-size: 20px;
+  padding: 9px;
+}
+
+.fcr-pagination__extra {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 9px;
+}
+
+.fcr-pagination-half-r .fcr-pagination__prev {
+  padding-left: 9px;
+}
+.fcr-pagination-half-r .fcr-pagination__next {
+  padding-right: 9px;
+}

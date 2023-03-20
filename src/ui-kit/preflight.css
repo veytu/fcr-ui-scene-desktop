@@ -13,19 +13,17 @@ html body {
   position: relative;
 }
 .fcr-divider::before {
+  @apply fcr-bg-gradient-3;
   content: '';
   width: 1px;
   height: calc(100% + 2px);
-  background: linear-gradient(
-    rgba(255, 255, 255, 0) 0%,
-    #ffffff 52.6%,
-    rgba(255, 255, 255, 0) 97.92%
-  );
   position: absolute;
   top: -1px;
   left: 0;
 }
-
+.fcr-btn-click-effect {
+  position: relative;
+}
 .fcr-btn-click-effect::after {
   content: '';
   position: absolute;

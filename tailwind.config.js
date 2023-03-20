@@ -10,7 +10,6 @@ module.exports = {
       red: colorDepth('#F5655C'),
       purple: colorDepth('#7C79FF'),
       pink: colorDepth('#EE4878'),
-      'btn-gray': colorDepth('#555B69'),
       white: '#ffffff',
       black: '#000000',
       green: '#16D1A4',
@@ -45,9 +44,11 @@ module.exports = {
       'shadow-1': 'rgba(255, 255, 255, 0.1)',
       'shadow-2': 'rgba(255, 255, 255, 0.2)',
       'shadow-3': 'rgba(255, 255, 255, 0.3)',
-
       // outline
       'brand-a50': colorAlpha('#4262FF', 0.5),
+      // button
+      'btn-gray': colorDepth('#555B69'),
+      
     },
     backgroundImage: (theme) => ({
       // progress
@@ -57,8 +58,10 @@ module.exports = {
       'gradient-2': `linear-gradient(90deg, ${theme('colors.custom-3')} 2.67%, ${theme(
         'colors.custom-4',
       )} 100%)`,
-      // devider
-      'gradient-3': `linear-gradient(90deg, ${theme('notsb')} 0%, ${theme('notsb-inverse')} 100%)`,
+      // divider
+      'gradient-3': `linear-gradient(${colorAlpha(theme('colors.notsb-inverse'), 0)} 0%, ${theme(
+        'colors.notsb-inverse',
+      )} 52.6%, ${colorAlpha(theme('colors.notsb-inverse'), 0)} 97.92%)`,
     }),
     backgroundColor: (theme) => ({
       1: theme('colors.block-1'),
