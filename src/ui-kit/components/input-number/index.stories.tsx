@@ -8,18 +8,12 @@ const meta: ComponentMeta<typeof InputNumber> = {
   args: {
     placeholder: 'please set number',
     min: -5,
-    max: 20,
+    max: 130,
+    value: 120
   },
 };
 
 export const Docs: ComponentStory<typeof InputNumber> = (props) => {
-  const [value, setValue] = useState<number>();
-  const handleChange = (val: number | null) => {
-    console.log(val);
-    if (val !== null) {
-      setValue(val);
-    }
-  };
   return (
     <div>
       <div
@@ -27,7 +21,28 @@ export const Docs: ComponentStory<typeof InputNumber> = (props) => {
           width: 200,
           marginBottom: 50,
         }}>
-        <InputNumber {...props} onChange={handleChange} />
+        <InputNumber {...props} size="large" />
+      </div>
+      <div
+        style={{
+          width: 200,
+          marginBottom: 50,
+        }}>
+        <InputNumber {...props} size="medium" />
+      </div>
+      <div
+        style={{
+          width: 46,
+          marginBottom: 50,
+        }}>
+        <InputNumber {...props} size="small" />
+      </div>
+      <div
+        style={{
+          width: 46,
+          marginBottom: 50,
+        }}>
+        <InputNumber {...props} size="small" disabled />
       </div>
     </div>
   );

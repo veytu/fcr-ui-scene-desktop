@@ -18,6 +18,10 @@
 .fcr-input-number.fcr-input-number-m {
   height: 36px;
 }
+.fcr-input-number.fcr-input-number-s {
+  height: 24px;
+  padding-left: 6px;
+}
 
 .fcr-input-number input {
   @apply fcr-text-1;
@@ -63,6 +67,8 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  opacity: 0;
+  transition: all 0.2s ease-in-out;
 }
 .fcr-input-number__divider {
   @apply fcr-border-1;
@@ -88,4 +94,16 @@
 
 .fcr-input-number__button--disabled {
   cursor: not-allowed;
+}
+
+.fcr-input-number:hover:not(.fcr-input-number--disabled) .fcr-input-number__button-group {
+  opacity: 1;
+}
+
+.fcr-input-number.fcr-input-number-s .fcr-input-number__divider,
+.fcr-input-number.fcr-input-number-s .fcr-input-number__button-group {
+  border: none;
+}
+.fcr-input-number.fcr-input-number-s .fcr-input-number__button {
+  padding: 0 4px;
 }
