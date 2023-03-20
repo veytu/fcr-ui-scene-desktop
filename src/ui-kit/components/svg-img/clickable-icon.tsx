@@ -6,21 +6,25 @@ import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
 const colors = themeVal('colors');
 
 interface FcrClickableIconProps {
+  size?: 'large' | 'small';
   icon: SvgIconEnum;
-  size?: number;
+  iconSize?: number;
   disabled?: boolean;
   classNames?: string;
   onClick?: () => void;
 }
 export const FcrClickableIcon: FC<FcrClickableIconProps> = (props) => {
-  const { icon, size, classNames, onClick, disabled } = props;
+  const { icon, size = 'small', classNames, onClick, disabled } = props;
 
   return (
     <button
       disabled={disabled}
       onClick={onClick}
-      className={classnames('fcr-clickabel-icon', classNames)}>
-      <SvgImg type={icon} colors={{ iconPrimary: colors?.['notsb-inverse'] }} size={size}></SvgImg>
+      className={classnames('fcr-clickabel-icon', `fcr-clickable-icon-${size}`, classNames)}>
+      <SvgImg
+        type={icon}
+        size={size === 'large' ? 32 : 20}
+        colors={{ iconPrimary: colors?.['notsb-inverse'] }}></SvgImg>
     </button>
   );
 };
@@ -39,6 +43,7 @@ export const FcrPretestDeviceIcon: FC<FcrPretestDeviceIconProps> = (props) => {
       disabled={disabled}
       onClick={onClick}
       icon={icon}
+      size="large"
       classNames={classnames(`fcr-pretest-device-icon-${status}`)}></FcrClickableIcon>
   );
 };

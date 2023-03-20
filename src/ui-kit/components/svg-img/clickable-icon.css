@@ -1,7 +1,4 @@
 .fcr-clickabel-icon {
-  @apply fcr-rounded-12;
-  width: 42px;
-  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,6 +6,16 @@
   border: 1px solid;
   outline: none;
   position: relative;
+}
+.fcr-clickable-icon-large {
+  @apply fcr-rounded-12;
+  width: 40px;
+  height: 40px;
+}
+.fcr-clickable-icon-small {
+  @apply fcr-rounded-10;
+  width: 30px;
+  height: 30px;
 }
 .fcr-clickabel-icon:disabled {
   cursor: not-allowed;
