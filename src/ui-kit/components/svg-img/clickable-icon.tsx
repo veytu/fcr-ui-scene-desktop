@@ -20,7 +20,12 @@ export const FcrClickableIcon: FC<FcrClickableIconProps> = (props) => {
     <button
       disabled={disabled}
       onClick={onClick}
-      className={classnames('fcr-clickabel-icon', `fcr-clickable-icon-${size}`, classNames)}>
+      className={classnames(
+        'fcr-clickabel-icon',
+        `fcr-clickable-icon-${size}`,
+        'fcr-btn-click-effect',
+        classNames,
+      )}>
       <SvgImg
         type={icon}
         size={size === 'large' ? 32 : 20}

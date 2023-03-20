@@ -13,14 +13,7 @@
 .fcr-button-block {
   width: 100%;
 }
-.fcr-button::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  opacity: 0;
-  transition: 0.3s;
-}
+
 .fcr-button:focus {
   outline: none;
 }
@@ -32,6 +25,7 @@
 /** primary button **/
 .fcr-button-primary {
   @apply fcr-bg-brand-6 fcr-text-1;
+  --effect-color: theme(colors.brand.4);
 }
 
 .fcr-button-primary:not(:disabled):hover {
@@ -40,17 +34,11 @@
 .fcr-button-primary:not(:disabled):active {
   @apply fcr-bg-brand-8;
 }
-.fcr-button-primary::after {
-  box-shadow: 0 0 0 6px theme(colors.brand.4);
-}
-.fcr-button-primary:not(:disabled):active:after {
-  box-shadow: none;
-  opacity: 0.5;
-  transition: 0s;
-}
+
 /** primary danger **/
 .fcr-button-primary.fcr-button-danger {
   @apply fcr-bg-red-6 fcr-text-1;
+  --effect-color: theme(colors.red.4);
 }
 
 .fcr-button-primary.fcr-button-danger:not(:disabled):hover {
@@ -59,18 +47,11 @@
 .fcr-button-primary.fcr-button-danger:not(:disabled):active {
   @apply fcr-bg-red-8;
 }
-.fcr-button-primary.fcr-button-danger::after {
-  box-shadow: 0 0 0 6px theme(colors.red.4);
-}
-.fcr-button-primary.fcr-button-danger:not(:disabled):active:after {
-  box-shadow: none;
-  opacity: 0.5;
-  transition: 0s;
-}
 
 /** primary gray **/
 .fcr-button-primary.fcr-button-gray {
   @apply fcr-bg-btn-gray-5  fcr-text-2;
+  --effect-color: theme(colors.btn-gray.4);
 }
 
 .fcr-button-primary.fcr-button-gray:not(:disabled):hover {
@@ -78,14 +59,6 @@
 }
 .fcr-button-primary.fcr-button-gray:not(:disabled):active {
   @apply fcr-bg-btn-gray-7;
-}
-.fcr-button-primary.fcr-button-gray::after {
-  box-shadow: 0 0 0 6px theme(colors.btn-gray.7);
-}
-.fcr-button-primary.fcr-button-gray:not(:disabled):active:after {
-  box-shadow: none;
-  opacity: 0.5;
-  transition: 0s;
 }
 
 /** secondary button **/
@@ -95,6 +68,7 @@
   border-style: solid;
   border-width: 1px;
   background: transparent;
+  --effect-color: theme(colors.brand.4);
 }
 .fcr-button-secondary:not(:disabled):hover {
   @apply fcr-bg-brand-6 fcr-border-brand-6;
@@ -102,19 +76,13 @@
 .fcr-button-secondary:not(:disabled):active {
   @apply fcr-bg-brand-8 fcr-border-brand-8;
 }
-.fcr-button-secondary::after {
-  box-shadow: 0 0 0 6px theme(colors.brand.4);
-}
-.fcr-button-secondary:not(:disabled):active:after {
-  box-shadow: none;
-  opacity: 0.5;
-  transition: 0s;
-}
+
 .fcr-button-secondary.fcr-button-danger {
   @apply fcr-border-red-6 fcr-text-red-6;
   border-style: solid;
   border-width: 1px;
   background: transparent;
+  --effect-color: theme(colors.red.4);
 }
 .fcr-button-secondary.fcr-button-danger:not(:disabled):hover {
   @apply fcr-bg-red-6 fcr-border-red-6 fcr-text-1;
@@ -122,34 +90,19 @@
 .fcr-button-secondary.fcr-button-danger:not(:disabled):active {
   @apply fcr-bg-red-8 fcr-border-red-8 fcr-text-1;
 }
-.fcr-button-secondary.fcr-button-danger::after {
-  box-shadow: 0 0 0 6px theme(colors.red.4);
-}
-.fcr-button-secondary.fcr-button-danger:not(:disabled):active:after {
-  box-shadow: none;
-  opacity: 0.5;
-  transition: 0s;
-}
 
 .fcr-button-secondary.fcr-button-gray {
   @apply fcr-border-btn-gray-5 fcr-text-2;
   border-style: solid;
   border-width: 1px;
   background: transparent;
+  --effect-color: theme(colors.btn-gray.7);
 }
 .fcr-button-secondary.fcr-button-gray:not(:disabled):hover {
   @apply fcr-bg-btn-gray-6 fcr-border-btn-gray-6 fcr-text-2;
 }
 .fcr-button-secondary.fcr-button-gray:not(:disabled):active {
   @apply fcr-bg-btn-gray-7 fcr-border-btn-gray-7 fcr-text-2;
-}
-.fcr-button-secondary.fcr-button-gray::after {
-  box-shadow: 0 0 0 6px theme(colors.btn-gray.7);
-}
-.fcr-button-secondary.fcr-button-gray:not(:disabled):active:after {
-  box-shadow: none;
-  opacity: 0.5;
-  transition: 0s;
 }
 
 /** text button **/

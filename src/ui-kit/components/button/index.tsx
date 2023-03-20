@@ -41,6 +41,7 @@ export const FcrButton: FC<FcrButtonProps> = (props) => {
         `fcr-button-${type}`,
         `fcr-button-${shape}`,
         `fcr-button-${size}`,
+        'fcr-btn-click-effect',
         {
           [`fcr-button-${styleType}`]: !!styleType,
           'fcr-button-icon-only': !props.children,
