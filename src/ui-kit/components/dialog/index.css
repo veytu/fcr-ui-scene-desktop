@@ -15,10 +15,9 @@
   outline: 0;
 }
 .fcr-dialog-title {
-  margin: 0;
-  font-size: 14px;
-  line-height: 21px;
-  font-weight: bold;
+  @apply fcr-font-title fcr-text-1;
+  font-size: 16px;
+  line-height: 20px;
 }
 .fcr-dialog-content {
   @apply fcr-bg-2 fcr-shadow-3 fcr-rounded-24;
@@ -42,8 +41,30 @@
 .fcr-dialog-body {
   padding: 36px 32px 24px;
 }
-.fcr-dialog-footer {
+.fcr-dialog-inner-wrap {
+  display: flex;
+  flex-direction: row;
 }
+.fcr-dialog-inner-icon {
+  padding-right: 10px;
+}
+.fcr-dialog-inner {
+  @apply fcr-text-1 fcr-font-regular;
+  font-size: 14px;
+  line-height: 150%;
+  word-break: break-all;
+  padding: 12px 0 24px;
+}
+.fcr-dialog-footer {
+  display: flex;
+  justify-content: space-between;
+}
+.fcr-dialog-footer-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .fcr-dialog-zoom-enter,
 .fcr-dialog-zoom-appear {
   opacity: 0;
