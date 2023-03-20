@@ -1,0 +1,44 @@
+.fcr-confirm-dialog-title {
+  @apply fcr-font-title fcr-text-1;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.fcr-confirm-dialog-close {
+  @apply fcr-rounded-full fcr-bg-1;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+.fcr-confirm-dialog-close:hover {
+  @apply fcr-bg-brand-6;
+}
+.fcr-confirm-dialog-inner-wrap {
+  display: flex;
+  flex-direction: row;
+}
+.fcr-confirm-dialog-inner-icon {
+  padding-right: 10px;
+}
+.fcr-confirm-dialog-inner {
+  @apply fcr-text-1 fcr-font-regular;
+  font-size: 14px;
+  line-height: 150%;
+  word-break: break-all;
+  padding: 12px 0 24px;
+}
+.fcr-confirm-dialog-footer {
+  display: flex;
+  justify-content: space-between;
+}
+.fcr-confirm-dialog-footer-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

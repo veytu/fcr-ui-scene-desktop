@@ -10,6 +10,7 @@ module.exports = {
       red: colorDepth('#F5655C'),
       purple: colorDepth('#7C79FF'),
       pink: colorDepth('#EE4878'),
+      'btn-gray': colorDepth('#555B69'),
       white: '#ffffff',
       black: '#000000',
       green: '#16D1A4',
@@ -44,8 +45,7 @@ module.exports = {
       'shadow-1': 'rgba(255, 255, 255, 0.1)',
       'shadow-2': 'rgba(255, 255, 255, 0.2)',
       'shadow-3': 'rgba(255, 255, 255, 0.3)',
-      // button
-      'btn-2': '#555B69',
+
       // outline
       'brand-a50': colorAlpha('#4262FF', 0.5),
     },
@@ -73,13 +73,13 @@ module.exports = {
       red: theme('colors.red'),
       yellowwarm: theme('colors.yellowwarm'),
       notsb: theme('colors.notsb'),
-      'btn-2': theme('colors.btn-2'),
+      'btn-gray': theme('colors.btn-gray'),
     }),
     borderColor: (theme) => ({
       1: theme('colors.line-1'),
       brand: theme('colors.brand'),
       red: theme('colors.red'),
-      'btn-2': theme('colors.btn-2'),
+      'btn-gray': theme('colors.btn-gray'),
 
       'notsb-inverse': theme('colors.notsb-inverse'),
     }),

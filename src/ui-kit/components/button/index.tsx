@@ -6,7 +6,7 @@ type FcrButtonSize = 'XL' | 'L' | 'M' | 'S' | 'XS' | 'XXS';
 type FcrButtonType = 'primary' | 'secondary' | 'text' | 'link';
 type FcrButtonShape = 'circle' | 'rounded';
 type FcrButtonStyleType = 'danger' | 'gray';
-interface FcrButtonProps {
+export interface FcrButtonProps {
   size?: FcrButtonSize;
   type?: FcrButtonType;
   shape?: FcrButtonShape;
@@ -16,10 +16,12 @@ interface FcrButtonProps {
   loading?: boolean;
   disabled?: boolean;
   onClick?: () => void;
+  block?: boolean;
 }
 
 export const FcrButton: FC<FcrButtonProps> = (props) => {
   const {
+    block,
     loading,
     type = 'primary',
     shape = 'circle',
@@ -42,6 +44,7 @@ export const FcrButton: FC<FcrButtonProps> = (props) => {
         {
           [`fcr-button-${styleType}`]: !!styleType,
           'fcr-button-icon-only': !props.children,
+          'fcr-button-block': block,
         },
       )}>
       {preIcon && (
