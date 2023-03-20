@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { ChangeEvent, FC, useRef, useState } from 'react';
+import React, { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 import isNumber from 'lodash/isNumber';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 
@@ -77,6 +77,13 @@ export const InputNumber: FC<InputNumberProps> = ({
   const lastValidNum = useRef<number | null>();
   const inputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    if (isNumber(value)) {
+      setInnerVal(`${value}`);
+      lastValidNum.current = value;
+    }
+  }, [value]);
+
   const getValidNumber = (n: number) => {
     if (isNumber(max)) {
       n = Math.min(max, n);
@@ -140,11 +147,14 @@ export const InputNumber: FC<InputNumberProps> = ({
     'fcr-input-number--focused': focused,
     'fcr-input-number-l': size === 'large',
     'fcr-input-number-m': size === 'medium',
-    'fcr-input-number-s': size === 'medium',
+    'fcr-input-number-s': size === 'small',
     'fcr-input-number--disabled': disabled,
   });
 
   const handleAdd = (e: React.MouseEvent) => {
+    if (disabled) {
+      return;
+    }
     e.stopPropagation();
     setFocused(true);
     let n = (lastValidNum.current ?? 0) + step;
@@ -156,6 +166,9 @@ export const InputNumber: FC<InputNumberProps> = ({
     onChange(n);
   };
   const handleSubtract = (e: React.MouseEvent) => {
+    if (disabled) {
+      return;
+    }
     e.stopPropagation();
     setFocused(true);
     let n = (lastValidNum.current ?? 0) - step;
@@ -172,10 +185,12 @@ export const InputNumber: FC<InputNumberProps> = ({
   });
 
   const addCls = classNames('fcr-input-number__button', {
-    'fcr-input-number__button--disabled': isNumber(max) && (lastValidNum.current ?? 0) >= max,
+    'fcr-input-number__button--disabled':
+      disabled || (isNumber(max) && (lastValidNum.current ?? 0) >= max),
   });
   const subCls = classNames('fcr-input-number__button', {
-    'fcr-input-number__button--disabled': isNumber(min) && (lastValidNum.current ?? 0) <= min,
+    'fcr-input-number__button--disabled':
+      disabled || (isNumber(min) && (lastValidNum.current ?? 0) <= min),
   });
 
   return (
