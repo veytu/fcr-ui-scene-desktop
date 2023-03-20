@@ -1,4 +1,3 @@
-import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
 import classNames from 'classnames';
 
 import { FC, ReactNode } from 'react';
@@ -7,7 +6,6 @@ import { SvgIconEnum, SvgImg } from '../svg-img';
 import { FcrCheckbox, FcrCheckboxProps } from '../checkbox';
 import { FcrBaseDialog } from '.';
 import './confirm-dialog.css';
-const colors = themeVal('colors');
 
 interface FcrConfirmDialogProps {
   visible?: boolean;
@@ -43,20 +41,12 @@ export const FcrConfirmDialog: FC<FcrConfirmDialogProps> = (props) => {
   } = props;
   return (
     <FcrBaseDialog
+      closable={closable}
+      closeIcon={closeIcon}
       width={width || 415}
       maskClosable={maskClosable}
       visible={visible}
       onClose={onClose}>
-      {closable && closeIcon ? (
-        closeIcon
-      ) : (
-        <div onClick={onClose} className={classNames('fcr-confirm-dialog-close')}>
-          <SvgImg
-            type={SvgIconEnum.FCR_CLOSE}
-            size={18}
-            colors={{ iconPrimary: colors['notsb-inverse'] }}></SvgImg>
-        </div>
-      )}
       <div className="fcr-confirm-dialog-inner-wrap">
         {icon && <div className="fcr-confirm-dialog-inner-icon">{icon}</div>}
         <div></div>

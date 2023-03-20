@@ -40,6 +40,7 @@ export const FcrClassDialog: FC<FcrClassDialogProps> = (props) => {
   } = props;
   return (
     <FcrBaseDialog
+      closable={false}
       classNames="fcr-class-dialog"
       width={width || 344}
       maskClosable={maskClosable}

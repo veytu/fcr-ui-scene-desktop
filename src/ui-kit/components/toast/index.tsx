@@ -23,7 +23,7 @@ interface FcrToastProps {
   onClose?: () => void;
 }
 export const FcrToast = (props: FcrToastProps) => {
-  const { content, icon, type, closable, action, onClose } = props;
+  const { content, icon, type = 'normal', closable, action, onClose } = props;
   return (
     <div
       style={{
@@ -54,7 +54,7 @@ export const FcrToast = (props: FcrToastProps) => {
         <div onClick={onClose} className={classNames('fcr-toast-container-close', 'fcr-divider')}>
           <SvgImg
             type={SvgIconEnum.FCR_CLOSE}
-            colors={{ iconPrimary: colors['white'] }}
+            colors={{ iconPrimary: type === 'normal' ? colors['notsb'] : colors['white'] }}
             size={20}></SvgImg>
         </div>
       )}
