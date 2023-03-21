@@ -5,6 +5,7 @@ import { SvgIconEnum, SvgImg } from '../svg-img';
 import './index.css';
 
 export type DropdownProps = {
+  defaultValue?: string;
   value?: string;
   placeholder?: string;
   options?: { text: string; value: string }[];
@@ -15,6 +16,7 @@ export type DropdownProps = {
 export const Dropdown: FC<DropdownProps> = ({
   placeholder,
   options,
+  defaultValue,
   value,
   size = 'medium',
   onChange = () => {},
@@ -26,7 +28,6 @@ export const Dropdown: FC<DropdownProps> = ({
     'fcr-dropdown-m': size === 'medium',
     'fcr-dropdown-s': size === 'small',
   });
-  const selectedCls = classNames('fcr-dropdown__selected');
 
   const handleClick = () => {
     setFocused(!focused);
@@ -40,15 +41,20 @@ export const Dropdown: FC<DropdownProps> = ({
     setFocused(false);
   });
 
-  const selectedText = useMemo(
-    () => options?.find(({ value: ov }) => value === ov)?.text ?? placeholder,
-    [value, options, placeholder],
-  );
+  const { isUnselected, selectedText } = useMemo(() => {
+    const selectedOption = options?.find(({ value: ov }) => value === ov);
+
+    return { selectedText: selectedOption?.text ?? placeholder, isUnselected: !selectedOption };
+  }, [value, options, placeholder]);
+
+  const selectedCls = classNames('fcr-dropdown__selected', {
+    'fcr-dropdown__selected--unselected': isUnselected,
+  });
 
   return (
     <div className={cls} onClick={handleClick} ref={ref}>
       <div className={selectedCls}>
-        <span>{selectedText}</span>
+        <span className="">{selectedText}</span>
         <SvgImg className="fcr-dropdown__icon" type={SvgIconEnum.FCR_DROPDOWN} size={24} />
       </div>
       {/* options */}

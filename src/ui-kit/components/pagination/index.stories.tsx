@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import { HalfRoundedPagination, Pagination } from '.';
+import { FloatPagination, HalfRoundedPagination, Pagination } from '.';
 
 const meta: ComponentMeta<typeof Pagination> = {
   title: 'Components/Pagination',
@@ -30,6 +30,19 @@ export const Docs: ComponentStory<typeof Pagination> = (props) => {
           marginBottom: 50,
         }}>
         <HalfRoundedPagination {...props} current={current} onChange={handleChange} />
+      </div>
+      <div
+        style={{
+          height: 300,
+          width: 300,
+          marginBottom: 50,
+          background: '#111',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'relative',
+        }}>
+        <FloatPagination {...props} current={current} onChange={handleChange} />
       </div>
     </div>
   );
