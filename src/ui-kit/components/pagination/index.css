@@ -51,7 +51,7 @@
 }
 
 .fcr-pagination.fcr-pagination-half-r {
-  @apply fcr-rounded-16;
+  @apply fcr-rounded-16 fcr-shadow-1;
   height: 50px;
   font-size: 20px;
   padding: 9px;
