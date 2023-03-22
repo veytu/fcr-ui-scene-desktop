@@ -1,0 +1,13 @@
+.fcr-status-bar {
+  width: 100%;
+  height: 57px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.fcr-status-bar-item-wrapper {
+  @apply fcr-bg-2 fcr-border-1;
+  height: 32px;
+  border-width: 1px;
+  border-style: solid;
+}
