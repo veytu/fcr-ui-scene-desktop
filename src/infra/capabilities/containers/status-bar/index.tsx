@@ -2,6 +2,8 @@ import { SvgIconEnum, SvgImg } from '@onlineclass/ui-kit/components/svg-img';
 import { FC } from 'react';
 import classnames from 'classnames';
 import { FcrToolTip } from '@onlineclass/ui-kit/components/tooltip';
+import { FcrDoubleDeckPopover } from '@onlineclass/ui-kit/components/popover';
+
 export const FcrStatusBar = () => {
   return (
     <div className="fcr-status-bar">
@@ -9,6 +11,7 @@ export const FcrStatusBar = () => {
         <div>
           <SvgImg type={SvgIconEnum.FCR_BTN_LOADING} size={32}></SvgImg>
         </div>
+        <FcrStatusBarInfo />
       </div>
       <div className="fcr-status-bar-right"></div>
     </div>
@@ -22,11 +25,13 @@ const FcrStatusBarItemWrapper: FC = (props) => {
 const FcrStatusBarInfo: FC = () => {
   return (
     <FcrStatusBarItemWrapper>
-      <FcrToolTip>
-        <div className="fcr-status-bar-info-network">
-          <SvgImg type={SvgIconEnum.FCR_V2_SIGNAL_GOOD}></SvgImg>
-        </div>
-      </FcrToolTip>
+      <FcrDoubleDeckPopover trigger="click">
+        <FcrToolTip trigger="hover" content="Show Network Details">
+          <div className="fcr-status-bar-info-network">
+            <SvgImg type={SvgIconEnum.FCR_V2_SIGNAL_GOOD}></SvgImg>
+          </div>
+        </FcrToolTip>
+      </FcrDoubleDeckPopover>
 
       <div className={classnames('fcr-status-bar-info-id', 'fcr-divider')}>
         <span>ID:</span>
