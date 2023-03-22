@@ -1,0 +1,14 @@
+.fcr-checkbox {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+}
+
+.fcr-checkbox > span {
+  @apply fcr-text-2 fcr-font-regular;
+  font-size: 14px;
+  line-height: 14px;
+  padding: 7px;
+  user-select: none;
+}

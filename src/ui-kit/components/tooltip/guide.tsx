@@ -23,7 +23,23 @@ const defaultGuideOverlayInnerStyle: CSSProperties = {
 };
 
 interface FcrGuideToolTipProps extends FcrToolTipProps {
+  /**
+   * 是否显示关闭按钮
+   */
+  /** @en
+   * Size of the input box:
+   * medium
+   * large
+   */
   closable?: boolean;
+  /**
+   * 点击关闭按钮的回调
+   */
+  /** @en
+   * Size of the input box:
+   * medium
+   * large
+   */
   onClose?: () => void;
 }
 const GuideToolTipClosableOverlayWrap: FC<

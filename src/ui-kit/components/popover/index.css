@@ -1,0 +1,10 @@
+.fcr-double-deck-popover-overlay {
+  min-height: 239px;
+  border-radius: inherit;
+}
+.fcr-double-deck-popover-top {
+  @apply fcr-bg-4;
+  width: 100%;
+  min-height: 146px;
+  border-radius: inherit;
+}

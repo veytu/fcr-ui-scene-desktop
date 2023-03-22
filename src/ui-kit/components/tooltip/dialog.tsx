@@ -18,6 +18,14 @@ const defaultDialogOverlayInnerStyle: CSSProperties = {
 };
 
 interface FcrDialogToolTipProps extends FcrToolTipProps {
+  /**
+   * 点击关闭按钮的回调
+   */
+  /** @en
+   * Size of the input box:
+   * medium
+   * large
+   */
   onClose?: () => void;
 }
 const DialogToolTipClosableOverlayWrap: FC<Pick<FcrDialogToolTipProps, 'content' | 'onClose'>> = (
@@ -43,7 +51,6 @@ export const FcrDialogToolTip: FC<FcrDialogToolTipProps> = (props) => {
       overlayClassName="fcr-tooltip-border-width-2"
       arrowContent={
         <SvgImg
-          //todo icon
           type={SvgIconEnum.FCR_TOOLTIP_ARROW_2}
           colors={{
             iconPrimary: colors['block-2'],

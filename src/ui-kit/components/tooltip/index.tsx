@@ -24,29 +24,94 @@ const calcOverlayOffset = (placement: string) => {
 const colors = themeVal('colors');
 const borderRadius = themeVal('borderRadius');
 const borderColor = themeVal('borderColor');
-const boxShadow = themeVal('boxShadow');
 const defaultOverlayInnerStyle: CSSProperties = {
   padding: '0 10px',
-  background: `${colors['black']}`,
-  border: `1px solid ${borderColor[1]}`,
+  background: `${colors?.['black']}`,
+  border: `1px solid ${borderColor?.[1]}`,
   fontFamily: 'Helvetica Neue',
   fontStyle: 'normal',
   fontWeight: '400',
   fontSize: '14px',
   lineHeight: '32px',
-  color: colors['text-1'],
-  borderRadius: `${borderRadius[8]}`,
+  color: colors?.['text-1'],
+  borderRadius: `${borderRadius?.[8]}`,
 };
 
 type FcrToolTipActionType = 'hover' | 'focus' | 'click' | 'contextMenu';
 export interface FcrToolTipProps {
+  /**
+   * 卡片内容
+   */
+  /** @en
+   * Size of the input box:
+   * medium
+   * large
+   */
   content?: ReactNode;
+  /**
+   * 触发行为，可选 hover | focus | click | contextMenu
+   */
+  /** @en
+   * Size of the input box:
+   * medium
+   * large
+   */
+
   trigger?: FcrToolTipActionType;
+  /**
+   * 气泡框位置，可选 top left right bottom topLeft topRight bottomLeft bottomRight leftTop leftBottom rightTop rightBottom
+   */
+  /** @en
+   * Size of the input box:
+   * medium
+   * large
+   */
   placement?: string;
+  /**
+   * 自定义箭头
+   */
+  /** @en
+   * Size of the input box:
+   * medium
+   * large
+   */
   arrowContent?: ReactNode;
+  /**
+   * 卡片内容区域的样式对象
+   */
+  /** @en
+   * Size of the input box:
+   * medium
+   * large
+   */
   overlayInnerStyle?: CSSProperties;
+  /**
+   * 气泡的显示状态
+   */
+  /** @en
+   * Size of the input box:
+   * medium
+   * large
+   */
   visible?: boolean;
+  /**
+   * 卡片类名
+   */
+  /** @en
+   * Size of the input box:
+   * medium
+   * large
+   */
   overlayClassName?: string;
+  /**
+   * 修改箭头的显示状态
+   */
+  /** @en
+   * Size of the input box:
+   * medium
+   * large
+   */
+  showArrow?: boolean;
 }
 
 export const FcrToolTip: FC<FcrToolTipProps> = (props) => {
@@ -58,21 +123,25 @@ export const FcrToolTip: FC<FcrToolTipProps> = (props) => {
     arrowContent,
     overlayInnerStyle,
     overlayClassName,
+    showArrow = true,
     ...others
   } = props;
   return (
     <ToolTip
+      prefixCls="fcr-tooltip"
       overlayClassName={overlayClassName}
       arrowContent={
-        arrowContent || (
-          <SvgImg
-            type={SvgIconEnum.FCR_TOOLTIP_ARROW}
-            colors={{
-              iconPrimary: colors['black'],
-              iconSecondary: colors['line-1'],
-            }}
-            size={16}></SvgImg>
-        )
+        showArrow === false
+          ? null
+          : arrowContent || (
+              <SvgImg
+                type={SvgIconEnum.FCR_TOOLTIP_ARROW}
+                colors={{
+                  iconPrimary: colors?.['black'],
+                  iconSecondary: colors?.['line-1'],
+                }}
+                size={16}></SvgImg>
+            )
       }
       align={{ offset: calcOverlayOffset(placement) }}
       trigger={trigger}

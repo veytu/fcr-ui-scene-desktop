@@ -41,9 +41,30 @@
   font-size: 16px;
   line-height: 130%;
 }
+
 .fcr-toast-container-action > span {
   @apply fcr-text-1;
   font-size: 16px;
+}
+.fcr-toast-normal .fcr-toast-container-content > span {
+  @apply fcr-text-notsb;
+  font-size: 16px;
+  line-height: 130%;
+}
+
+.fcr-toast-normal .fcr-toast-container-action > span {
+  @apply fcr-text-notsb;
+  font-size: 16px;
+}
+.fcr-toast-normal .fcr-divider::before {
+  content: '';
+  width: 1px;
+  height: calc(100% + 2px);
+  background: linear-gradient(rgba(0, 0, 0, 0) 0%, #000000 52.6%, rgba(0, 0, 0, 0) 97.92%);
+
+  position: absolute;
+  top: -1px;
+  left: 0;
 }
 .fcr-toast-container-close {
   width: 42px;
@@ -54,9 +75,9 @@
   cursor: pointer;
 }
 .fcr-toast-normal {
-  @apply fcr-bg-notsb;
+  @apply fcr-bg-notsb-inverse;
 }
-.fcr-toast-alarm {
+.fcr-toast-error {
   @apply fcr-bg-red-6;
 }
 .fcr-toast-warn {

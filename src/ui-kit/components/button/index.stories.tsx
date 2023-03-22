@@ -1,30 +1,13 @@
-import React, { FC, useState } from 'react';
-import { Meta } from '@storybook/react';
-import { FcrButton } from '.';
+import React, { FC, ReactNode, useState } from 'react';
+import { ComponentStory, Meta } from '@storybook/react';
+import { FcrButton, FcrButtonProps } from '.';
 import { SvgIconEnum } from '../svg-img';
 const meta: Meta = {
   title: 'Components/Button',
 };
 const sizes = ['XL', 'L', 'M', 'S', 'XS', 'XXS'];
-export const Docs = ({
-  text,
-  type,
-  shape,
-  preIcon,
-  postIcon,
-  disabled,
-  styleType,
-  loading,
-}: {
-  text;
-  type;
-  shape;
-  preIcon;
-  postIcon;
-  disabled;
-  styleType;
-  loading;
-}) => {
+export const Doc = (props: FcrButtonProps & { text: ReactNode }) => {
+  const { text, type, shape, preIcon, postIcon, disabled, styleType, loading } = props;
   return (
     <div>
       <div>
@@ -69,7 +52,7 @@ export const Docs = ({
     </div>
   );
 };
-Docs.argTypes = {
+Doc.argTypes = {
   text: {
     control: 'text',
     defaultValue: 'text',
