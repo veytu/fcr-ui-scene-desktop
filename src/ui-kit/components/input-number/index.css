@@ -1,5 +1,5 @@
 .fcr-input-number {
-  @apply fcr-bg-8 fcr-rounded-10 fcr-border-1;
+  @apply fcr-bg-8 fcr-border-1;
   position: relative;
   transition: all 0.2s ease-in-out;
   border-width: 1px;
@@ -13,12 +13,15 @@
 }
 
 .fcr-input-number.fcr-input-number-l {
+  @apply fcr-rounded-12;
   height: 48px;
 }
 .fcr-input-number.fcr-input-number-m {
+  @apply fcr-rounded-10;
   height: 36px;
 }
 .fcr-input-number.fcr-input-number-s {
+  @apply fcr-rounded-8;
   height: 24px;
   padding-left: 6px;
 }
