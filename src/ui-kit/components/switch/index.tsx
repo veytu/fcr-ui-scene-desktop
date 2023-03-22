@@ -4,17 +4,11 @@ import './index.css';
 
 type SwitchProps = {
   /**
-   *
+   * 开关状态的标签
+   * { on: '开', off: '关' }
    */
   /** @en
-   *
-   */
-  defaultValue?: boolean;
-  /**
-   *
-   */
-  /** @en
-   *
+   * Labels for the switch's states
    */
   labels?: Record<'on' | 'off', string>;
   /**
@@ -35,8 +29,8 @@ type SwitchProps = {
   onChange?: (val: boolean) => void;
 };
 
-export const Switch: FC<SwitchProps> = ({ defaultValue, labels, value, onChange = () => {} }) => {
-  const [toggle, setToggle] = useState(defaultValue);
+export const Switch: FC<SwitchProps> = ({ labels, value, onChange = () => {} }) => {
+  const [toggle, setToggle] = useState(value);
   const cls = classNames('fcr-switch', {
     'fcr-switch--on': toggle,
     'fcr-switch--off': !toggle,

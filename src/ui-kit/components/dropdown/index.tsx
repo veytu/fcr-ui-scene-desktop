@@ -5,18 +5,54 @@ import { SvgIconEnum, SvgImg } from '../svg-img';
 import './index.css';
 
 export type DropdownProps = {
-  defaultValue?: string;
+  /**
+   * 下拉框选中的值
+   */
+  /** @en
+   * The dropdown selected value
+   */
   value?: string;
+  /**
+   * 下拉框的提示符
+   */
+  /** @en
+   * Placeholder of the dropdown
+   */
   placeholder?: string;
+  /**
+   * 下拉框选项
+   */
+  /** @en
+   * The dropdown options
+   */
   options?: { text: string; value: string }[];
+  /**
+   * 输入框的尺寸：
+   * small - 小
+   * medium - 中等(default)
+   * large - 大
+   */
+  /** @en
+   * Size of the dropdown:
+   * small
+   * medium
+   * large
+   */
   size?: 'large' | 'medium' | 'small';
+  /**
+   * 值变更事件
+   * @param value 变更值
+   */
+  /** @en
+   * Change event of the input's value
+   * @param value changed value
+   */
   onChange?: (value: string) => void;
 };
 
 export const Dropdown: FC<DropdownProps> = ({
   placeholder,
   options,
-  defaultValue,
   value,
   size = 'medium',
   onChange = () => {},

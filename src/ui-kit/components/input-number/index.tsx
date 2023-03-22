@@ -22,14 +22,25 @@ export type InputNumberProps = {
    */
   value?: number;
   /**
-   * 步长
+   * 每次点变更的值
    */
   /**@en
-   * step
+   * the value that changes each time click
    */
   step?: number;
-
+  /**
+   * 输入框最小值
+   */
+  /** @en
+   * Min value of the input
+   */
   min?: number;
+  /**
+   * 输入框最大值
+   */
+  /** @en
+   * Max value of the input
+   */
   max?: number;
   /**
    * 输入框是否禁用
