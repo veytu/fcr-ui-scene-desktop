@@ -16,8 +16,6 @@ module.exports = {
       yellow: '#FFC700',
       yellowwarm: '#FFB554',
       transparent: 'transparent',
-      notsb: '#000000',
-      'notsb-inverse': '#ffffff',
       'custom-1': '#4262FF',
       'custom-2': '#7C79FF',
       'custom-3': '#64BB5C',
@@ -48,7 +46,9 @@ module.exports = {
       'brand-a50': colorAlpha('#4262FF', 0.5),
       // button
       'btn-gray': colorDepth('#555B69'),
-      
+      //
+      notsb: '#000000',
+      'notsb-inverse': '#ffffff',
     },
     backgroundImage: (theme) => ({
       // progress

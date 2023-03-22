@@ -51,7 +51,7 @@ export const Docs = ({ closable, icon, action, text }: { closable; icon; action;
               }
             : undefined
         }
-        type="alarm"
+        type="error"
         closable={closable}
         content={text}></FcrToast>
       <FcrToast

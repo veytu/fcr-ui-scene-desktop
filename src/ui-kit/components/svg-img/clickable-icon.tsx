@@ -14,10 +14,11 @@ interface FcrClickableIconProps {
   onClick?: () => void;
 }
 export const FcrClickableIcon: FC<FcrClickableIconProps> = (props) => {
-  const { icon, size = 'small', classNames, onClick, disabled } = props;
+  const { icon, size = 'small', classNames, onClick, disabled, ...otherProps } = props;
 
   return (
     <button
+      {...otherProps}
       disabled={disabled}
       onClick={onClick}
       className={classnames(
@@ -41,10 +42,11 @@ interface FcrPretestDeviceIconProps {
   status: 'active' | 'inactive' | 'idle';
 }
 export const FcrPretestDeviceIcon: FC<FcrPretestDeviceIconProps> = (props) => {
-  const { status, icon, onClick, disabled } = props;
+  const { status, icon, onClick, disabled, ...otherProps } = props;
 
   return (
     <FcrClickableIcon
+      {...otherProps}
       disabled={disabled}
       onClick={onClick}
       icon={icon}

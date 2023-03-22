@@ -1,6 +1,6 @@
 /** left **/
 
-.rc-tooltip-placement-left .rc-tooltip-arrow svg {
+.fcr-tooltip-placement-left .fcr-tooltip-arrow svg {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -8,39 +8,39 @@
   right: -9px;
   transform: rotate(-90deg);
 }
-.rc-tooltip-placement-leftTop .rc-tooltip-arrow svg {
+.fcr-tooltip-placement-leftTop .fcr-tooltip-arrow svg {
   position: absolute;
   top: -2px;
   right: -9.2px;
   transform: rotate(-90deg);
 }
-.rc-tooltip-placement-leftBottom .rc-tooltip-arrow svg {
+.fcr-tooltip-placement-leftBottom .fcr-tooltip-arrow svg {
   position: absolute;
   bottom: -2px;
   right: -9px;
   transform: rotate(-90deg);
 }
 /** bottom **/
-.rc-tooltip-placement-bottom .rc-tooltip-arrow svg {
+.fcr-tooltip-placement-bottom .fcr-tooltip-arrow svg {
   transform: rotate(180deg);
   position: absolute;
   left: -8px;
   top: -9px;
 }
-.rc-tooltip-placement-bottomLeft .rc-tooltip-arrow svg {
+.fcr-tooltip-placement-bottomLeft .fcr-tooltip-arrow svg {
   transform: rotate(180deg);
   position: absolute;
   left: -8px;
   top: -9px;
 }
-.rc-tooltip-placement-bottomRight .rc-tooltip-arrow svg {
+.fcr-tooltip-placement-bottomRight .fcr-tooltip-arrow svg {
   transform: rotate(180deg);
   position: absolute;
   left: -8px;
   top: -9px;
 }
 /** right **/
-.rc-tooltip-placement-right .rc-tooltip-arrow svg {
+.fcr-tooltip-placement-right .fcr-tooltip-arrow svg {
   transform: rotate(90deg);
   position: absolute;
   left: -9px;
@@ -48,30 +48,30 @@
   bottom: 0;
   margin: auto;
 }
-.rc-tooltip-placement-rightTop .rc-tooltip-arrow svg {
+.fcr-tooltip-placement-rightTop .fcr-tooltip-arrow svg {
   transform: rotate(90deg);
   position: absolute;
   left: -9px;
   top: -3px;
 }
-.rc-tooltip-placement-rightBottom .rc-tooltip-arrow svg {
+.fcr-tooltip-placement-rightBottom .fcr-tooltip-arrow svg {
   transform: rotate(90deg);
   position: absolute;
   left: -9px;
   bottom: -3px;
 }
 /** top **/
-.rc-tooltip-placement-top .rc-tooltip-arrow svg {
+.fcr-tooltip-placement-top .fcr-tooltip-arrow svg {
   position: absolute;
   left: -7px;
   top: -7px;
 }
-.rc-tooltip-placement-topLeft .rc-tooltip-arrow svg {
+.fcr-tooltip-placement-topLeft .fcr-tooltip-arrow svg {
   position: absolute;
   left: -7px;
   top: -7px;
 }
-.rc-tooltip-placement-topRight .rc-tooltip-arrow svg {
+.fcr-tooltip-placement-topRight .fcr-tooltip-arrow svg {
   position: absolute;
   left: -7px;
   top: -7px;
@@ -79,7 +79,7 @@
 /**  ---- boarder-width-2  ----- **/
 /** left **/
 
-.fcr-tooltip-border-width-2.rc-tooltip-placement-left .rc-tooltip-arrow svg {
+.fcr-tooltip-border-width-2.fcr-tooltip-placement-left .fcr-tooltip-arrow svg {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -87,39 +87,39 @@
   right: -6px;
   transform: rotate(-90deg);
 }
-.fcr-tooltip-border-width-2.rc-tooltip-placement-leftTop .rc-tooltip-arrow svg {
+.fcr-tooltip-border-width-2.fcr-tooltip-placement-leftTop .fcr-tooltip-arrow svg {
   position: absolute;
   top: -2px;
   right: -6px;
   transform: rotate(-90deg);
 }
-.fcr-tooltip-border-width-2.rc-tooltip-placement-leftBottom .rc-tooltip-arrow svg {
+.fcr-tooltip-border-width-2.fcr-tooltip-placement-leftBottom .fcr-tooltip-arrow svg {
   position: absolute;
   bottom: -2px;
   right: -6px;
   transform: rotate(-90deg);
 }
 /** bottom **/
-.fcr-tooltip-border-width-2.rc-tooltip-placement-bottom .rc-tooltip-arrow svg {
+.fcr-tooltip-border-width-2.fcr-tooltip-placement-bottom .fcr-tooltip-arrow svg {
   transform: rotate(180deg);
   position: absolute;
   left: -8px;
   top: -6px;
 }
-.fcr-tooltip-border-width-2.rc-tooltip-placement-bottomLeft .rc-tooltip-arrow svg {
+.fcr-tooltip-border-width-2.fcr-tooltip-placement-bottomLeft .fcr-tooltip-arrow svg {
   transform: rotate(180deg);
   position: absolute;
   left: -8px;
   top: -6px;
 }
-.fcr-tooltip-border-width-2.rc-tooltip-placement-bottomRight .rc-tooltip-arrow svg {
+.fcr-tooltip-border-width-2.fcr-tooltip-placement-bottomRight .fcr-tooltip-arrow svg {
   transform: rotate(180deg);
   position: absolute;
   left: -8px;
   top: -6px;
 }
 /** right **/
-.fcr-tooltip-border-width-2.rc-tooltip-placement-right .rc-tooltip-arrow svg {
+.fcr-tooltip-border-width-2.fcr-tooltip-placement-right .fcr-tooltip-arrow svg {
   transform: rotate(90deg);
   position: absolute;
   left: -6px;
@@ -127,31 +127,31 @@
   bottom: 0;
   margin: auto;
 }
-.fcr-tooltip-border-width-2.rc-tooltip-placement-rightTop .rc-tooltip-arrow svg {
+.fcr-tooltip-border-width-2.fcr-tooltip-placement-rightTop .fcr-tooltip-arrow svg {
   transform: rotate(90deg);
   position: absolute;
   left: -6px;
   top: -3px;
 }
-.fcr-tooltip-border-width-2.rc-tooltip-placement-rightBottom .rc-tooltip-arrow svg {
+.fcr-tooltip-border-width-2.fcr-tooltip-placement-rightBottom .fcr-tooltip-arrow svg {
   transform: rotate(90deg);
   position: absolute;
   left: -6px;
   bottom: -3px;
 }
 /** top **/
-.fcr-tooltip-border-width-2.rc-tooltip-placement-top .rc-tooltip-arrow svg {
+.fcr-tooltip-border-width-2.fcr-tooltip-placement-top .fcr-tooltip-arrow svg {
   position: absolute;
   left: -7px;
   top: -14px;
 }
-.fcr-tooltip-border-width-2.rc-tooltip-placement-topLeft .rc-tooltip-arrow svg {
+.fcr-tooltip-border-width-2.fcr-tooltip-placement-topLeft .fcr-tooltip-arrow svg {
   position: absolute;
   left: -7px;
   top: -14px;
 }
-.fcr-tooltip-border-width-2.fcr-tooltip-border-width-2.rc-tooltip-placement-topRight
-  .rc-tooltip-arrow
+.fcr-tooltip-border-width-2.fcr-tooltip-border-width-2.fcr-tooltip-placement-topRight
+  .fcr-tooltip-arrow
   svg {
   position: absolute;
   left: -7px;

@@ -7,7 +7,7 @@ const meta: Meta = {
   title: 'Components/Dialog',
 };
 
-export const Docs = (props) => {
+export const Docs = () => {
   const [visible, setVisible] = useState(false);
   const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
   const [classDialogVisible, setClassDialogVisible] = useState(false);

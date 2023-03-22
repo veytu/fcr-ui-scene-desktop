@@ -4,23 +4,66 @@ import { FC, ReactNode } from 'react';
 import { FcrButton } from '../button';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import { FcrCheckbox, FcrCheckboxProps } from '../checkbox';
-import { FcrBaseDialog } from '.';
+import { FcrBaseDialog, FcrBaseDialogProps } from '.';
 import './confirm-dialog.css';
 
-interface FcrConfirmDialogProps {
-  visible?: boolean;
-  onClose?: () => void;
+interface FcrConfirmDialogProps extends FcrBaseDialogProps {
+  /**
+   * 对话框标题
+   */
+  /** @en
+   * The dialog's title.
+   */
   title?: ReactNode;
+  /**
+   * 对话框底部元素
+   */
+  /** @en
+   * Footer content
+   */
   footer?: ReactNode;
+  /**
+   * 点击对话框确认按钮回调
+   */
+  /** @en
+   * Specify a function that will be called when a user clicks the OK button
+   */
   onOk?: () => void;
-  closable?: boolean;
-  closeIcon?: ReactNode;
-  maskClosable?: boolean;
+
+  /**
+   * 是否展示对话框checkbox
+   */
+  /** @en
+   * Wheter the chekcbox is visibleon bottom left of the dialog or not.
+   */
   checkable?: boolean;
+  /**
+   * 对话框checkbox属性
+   */
+  /** @en
+   * The checkbox props.
+   */
   checkedProps?: FcrCheckboxProps;
-  width?: number;
+  /**
+   * 对话框确认按钮文案
+   */
+  /** @en
+   * Text of the OK button
+   */
   okText?: ReactNode;
+  /**
+   * 对话框取消按钮文案
+   */
+  /** @en
+   * Text of the cancel button
+   */
   cancelText?: ReactNode;
+  /**
+   * 对话框图标
+   */
+  /** @en
+   * Set the icon on the left of the dialog title and content.
+   */
   icon?: ReactNode;
 }
 export const FcrConfirmDialog: FC<FcrConfirmDialogProps> = (props) => {
@@ -38,6 +81,8 @@ export const FcrConfirmDialog: FC<FcrConfirmDialogProps> = (props) => {
     checkedProps,
     width,
     icon,
+    okText,
+    cancelText,
   } = props;
   return (
     <FcrBaseDialog
@@ -61,10 +106,10 @@ export const FcrConfirmDialog: FC<FcrConfirmDialogProps> = (props) => {
         {footer || (
           <div className={classNames('fcr-confirm-dialog-footer-btns')}>
             <FcrButton onClick={onClose} size="S" styleType="gray">
-              Cancel
+              {cancelText || 'Cancel'}
             </FcrButton>
             <FcrButton onClick={onOk} size="S">
-              Ok
+              {okText || 'Ok'}
             </FcrButton>
           </div>
         )}

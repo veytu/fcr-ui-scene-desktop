@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
-import { Meta } from '@storybook/react';
-import { FcrToolTip } from '.';
+import { ComponentStory, Meta } from '@storybook/react';
+import { FcrToolTip, FcrToolTipProps } from '.';
 import { FcrGuideToolTip } from './guide';
 import { FcrInfoToolTip } from './info';
 import { FcrDialogToolTip } from './dialog';
@@ -27,7 +27,13 @@ const placementMap = [
   'bottomLeft',
   'bottomRight',
 ];
-export const Placement = ({ type, trigger }: { type; trigger }) => {
+export const Placement = (
+  props: FcrToolTipProps & {
+    children?: React.ReactNode;
+    type: keyof typeof tooltipMap;
+  },
+) => {
+  const { type, trigger } = props;
   const Component = tooltipMap[type];
   return (
     <div
@@ -72,7 +78,8 @@ Placement.argTypes = {
 };
 export default meta;
 
-export const Type = ({ trigger }: { trigger }) => {
+export const Type: ComponentStory<typeof FcrToolTip> = (props) => {
+  const { trigger } = props;
   return (
     <div
       style={{

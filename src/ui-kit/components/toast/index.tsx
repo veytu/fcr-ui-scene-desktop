@@ -9,17 +9,72 @@ import { v4 as uuidv4 } from 'uuid';
 const colors = themeVal('colors');
 
 import './index.css';
-export type FcrToastType = 'alarm' | 'warn' | 'info' | 'normal';
+export type FcrToastType = 'error' | 'warn' | 'info' | 'normal';
 interface FcrToastProps {
+  /**
+   * 消息提示框类型，可选值为 'error'(错误) | 'warn'(警告) | 'info'（消息） | 'normal'（普通）
+   */
+  /** @en
+   * The type of toast, can be set to 'error' | 'warn' | 'info' | 'normal'.
+   */
   type: FcrToastType;
+  /**
+   * 消息提示内容
+   */
+  /** @en
+   * The content of toast.
+   */
   content: string;
+  /**
+   * 消息是否显示关闭按钮
+   */
+  /** @en
+   * wheter a close button is visible on right of the toast or not.
+   */
   closable?: boolean;
+  /**
+   * 消息内容前显示的图标
+   */
+  /** @en
+   *
+   */
   icon?: SvgIconEnum;
-  iconSize?: number;
+  /**
+   * 消息中的额外操作选项
+   */
+  /** @en
+   * Size of the input box:
+   * medium
+   * large
+   */
   action?: {
+    /**
+     * 消息中的额外操作选项文案
+     */
+    /** @en
+     * Size of the input box:
+     * medium
+     * large
+     */
     text: string;
+    /**
+     * 消息中的额外操作选项点击回调
+     */
+    /** @en
+     * Size of the input box:
+     * medium
+     * large
+     */
     onClick: () => void;
   };
+  /**
+   * 点击关闭按钮的回调
+   */
+  /** @en
+   * Size of the input box:
+   * medium
+   * large
+   */
   onClose?: () => void;
 }
 export const FcrToast = (props: FcrToastProps) => {
@@ -33,7 +88,10 @@ export const FcrToast = (props: FcrToastProps) => {
       className={classNames('fcr-toast-container', `fcr-toast-${type.toLowerCase()}`)}>
       {icon && (
         <div className={classNames('fcr-toast-container-icon')}>
-          <SvgImg type={icon} colors={{ iconPrimary: colors['icon-1'] }} size={24}></SvgImg>
+          <SvgImg
+            type={icon}
+            colors={{ iconPrimary: type === 'normal' ? colors['notsb'] : colors['icon-1'] }}
+            size={24}></SvgImg>
         </div>
       )}
       <div
@@ -54,7 +112,7 @@ export const FcrToast = (props: FcrToastProps) => {
         <div onClick={onClose} className={classNames('fcr-toast-container-close', 'fcr-divider')}>
           <SvgImg
             type={SvgIconEnum.FCR_CLOSE}
-            colors={{ iconPrimary: type === 'normal' ? colors['notsb'] : colors['white'] }}
+            colors={{ iconPrimary: type === 'normal' ? colors['notsb'] : colors['icon-1'] }}
             size={20}></SvgImg>
         </div>
       )}

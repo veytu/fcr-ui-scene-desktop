@@ -77,7 +77,7 @@
 .fcr-toast-normal {
   @apply fcr-bg-notsb-inverse;
 }
-.fcr-toast-alarm {
+.fcr-toast-error {
   @apply fcr-bg-red-6;
 }
 .fcr-toast-warn {
