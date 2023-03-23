@@ -3,40 +3,40 @@ import { FC } from 'react';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import './index.css';
 
-type FcrButtonSize = 'XL' | 'L' | 'M' | 'S' | 'XS' | 'XXS';
-type FcrButtonType = 'primary' | 'secondary' | 'text' | 'link';
-type FcrButtonShape = 'circle' | 'rounded';
-type FcrButtonStyleType = 'danger' | 'gray';
+type ButtonSize = 'XL' | 'L' | 'M' | 'S' | 'XS' | 'XXS';
+type ButtonType = 'primary' | 'secondary' | 'text' | 'link';
+type ButtonShape = 'circle' | 'rounded';
+type ButtonStyleType = 'danger' | 'gray';
 
-export interface FcrButtonProps {
+export interface ButtonProps {
   /**
    * 按钮尺寸，可选值为 'XL' | 'L' | 'M' | 'S' | 'XS' | 'XXS'，默认为'L'
    */
   /** @en
    * Set the size of button, can be set to 'XL' | 'L' | 'M' | 'S' | 'XS' | 'XXS', default value is 'L'.
    */
-  size?: FcrButtonSize;
+  size?: ButtonSize;
   /**
    * 按钮类型，可选值为 'primary' | 'secondary' | 'text' | 'link'，默认为'primary'
    */
   /** @en
    * Set the type of button,can be set to 'primary' | 'secondary' | 'text' | 'link', default value is 'primary'.
    */
-  type?: FcrButtonType;
+  type?: ButtonType;
   /**
    * 按钮形状，可选值为 'circle' | 'rounded'，默认为'circle'
    */
   /** @en
    * Set the shape of button,can be set to 'circle' | 'rounded', default value is 'circle'.
    */
-  shape?: FcrButtonShape;
+  shape?: ButtonShape;
   /**
    * 按钮样式类型，可选值为 'danger' | 'gray'
    */
   /** @en
    * Set the style type of button, can be set to 'danger' | 'gray'.
    */
-  styleType?: FcrButtonStyleType;
+  styleType?: ButtonStyleType;
   /**
    * 设置按钮前置图标
    */
@@ -81,7 +81,7 @@ export interface FcrButtonProps {
    */
   block?: boolean;
 }
-export const FcrButton: FC<FcrButtonProps> = (props) => {
+export const Button: FC<ButtonProps> = (props) => {
   const {
     block,
     loading,

@@ -1,11 +1,11 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { SvgIconEnum, SvgImg } from '.';
 import classnames from 'classnames';
 import './clickable-icon.css';
 import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
 const colors = themeVal('colors');
 
-interface FcrClickableIconProps {
+interface ClickableIconProps {
   size?: 'large' | 'small';
   icon: SvgIconEnum;
   iconSize?: number;
@@ -13,7 +13,7 @@ interface FcrClickableIconProps {
   classNames?: string;
   onClick?: () => void;
 }
-export const FcrClickableIcon: FC<FcrClickableIconProps> = (props) => {
+export const ClickableIcon: FC<ClickableIconProps> = (props) => {
   const { icon, size = 'small', classNames, onClick, disabled, ...otherProps } = props;
 
   return (
@@ -34,23 +34,23 @@ export const FcrClickableIcon: FC<FcrClickableIconProps> = (props) => {
     </button>
   );
 };
-interface FcrPretestDeviceIconProps {
+interface PretestDeviceIconProps {
   icon: SvgIconEnum;
   onClick?: () => void;
   disabled?: boolean;
   classNames?: string;
   status: 'active' | 'inactive' | 'idle';
 }
-export const FcrPretestDeviceIcon: FC<FcrPretestDeviceIconProps> = (props) => {
+export const FcrPretestDeviceIcon: FC<PretestDeviceIconProps> = (props) => {
   const { status, icon, onClick, disabled, ...otherProps } = props;
 
   return (
-    <FcrClickableIcon
+    <ClickableIcon
       {...otherProps}
       disabled={disabled}
       onClick={onClick}
       icon={icon}
       size="large"
-      classNames={classnames(`fcr-pretest-device-icon-${status}`)}></FcrClickableIcon>
+      classNames={classnames(`fcr-pretest-device-icon-${status}`)}></ClickableIcon>
   );
 };

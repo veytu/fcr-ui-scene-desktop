@@ -1,14 +1,9 @@
-import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
-import classNames from 'classnames';
-import RcDialog from 'rc-dialog';
-import './class-dialog.css';
 import { FC, ReactNode } from 'react';
-import { FcrButton, FcrButtonProps } from '../button';
-import { FcrCheckboxProps } from '../checkbox';
-import { FcrBaseDialog, FcrBaseDialogProps } from '.';
-const colors = themeVal('colors');
+import { Button, ButtonProps } from '../button';
+import { BaseDialog, BaseDialogProps } from '.';
+import './class-dialog.css';
 
-interface FcrClassDialogProps extends FcrBaseDialogProps {
+interface ClassDialogProps extends BaseDialogProps {
   /**
    * 对话框标题
    */
@@ -44,7 +39,7 @@ interface FcrClassDialogProps extends FcrBaseDialogProps {
   /** @en
    * Set the action buttons on the bottom of the dialog content.
    */
-  actions?: (FcrButtonProps & { text?: string })[];
+  actions?: (ButtonProps & { text?: string })[];
   /**
    * 是否显示取消按钮
    */
@@ -53,7 +48,7 @@ interface FcrClassDialogProps extends FcrBaseDialogProps {
    */
   cancelBtn?: boolean;
 }
-export const FcrClassDialog: FC<FcrClassDialogProps> = (props) => {
+export const ClassDialog: FC<ClassDialogProps> = (props) => {
   const {
     visible,
     onClose,
@@ -67,7 +62,7 @@ export const FcrClassDialog: FC<FcrClassDialogProps> = (props) => {
     cancelBtn,
   } = props;
   return (
-    <FcrBaseDialog
+    <BaseDialog
       closable={false}
       classNames="fcr-class-dialog"
       width={width || 344}
@@ -84,22 +79,22 @@ export const FcrClassDialog: FC<FcrClassDialogProps> = (props) => {
         <div className="fcr-class-dialog-title">{title}</div>
         <div className="fcr-class-dialog-content">{content}</div>
         <div className="fcr-class-dialog-actions">
-          {actions?.map((btnProps) => {
+          {actions?.map((btnProps, index) => {
             return (
-              <FcrButton size="S" block {...btnProps}>
+              <Button key={index.toString()} size="S" block {...btnProps}>
                 {btnProps.text || 'Text'}
-              </FcrButton>
+              </Button>
             );
           })}
         </div>
         {cancelBtn && (
           <div className="fcr-class-dialog-cancel" onClick={onClose}>
-            <FcrButton styleType="gray" size="S" block>
+            <Button styleType="gray" size="S" block>
               Cancel
-            </FcrButton>
+            </Button>
           </div>
         )}
       </div>
-    </FcrBaseDialog>
+    </BaseDialog>
   );
 };

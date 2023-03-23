@@ -1,6 +1,6 @@
 import React from 'react';
-import { FcrDoubleDeckPopover, FcrPopover } from '.';
-import { FcrButton } from '../button';
+import { DoubleDeckPopover, Popover } from '.';
+import { Button } from '../button';
 
 export default {
   title: 'Components/Popover',
@@ -8,12 +8,12 @@ export default {
 export const Docs = () => {
   return (
     <div>
-      <FcrPopover>
-        <FcrButton size="XS">FcrPopover</FcrButton>
-      </FcrPopover>
-      <FcrDoubleDeckPopover>
-        <FcrButton size="XS">FcrDoubleDeckPopover</FcrButton>
-      </FcrDoubleDeckPopover>
+      <Popover>
+        <Button size="XS">FcrPopover</Button>
+      </Popover>
+      <DoubleDeckPopover>
+        <Button size="XS">FcrDoubleDeckPopover</Button>
+      </DoubleDeckPopover>
     </div>
   );
 };

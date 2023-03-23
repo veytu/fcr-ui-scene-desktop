@@ -1,5 +1,5 @@
 import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
-import ToolTip from 'rc-tooltip';
+import RcToolTip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { CSSProperties, FC, ReactElement, ReactNode } from 'react';
 import { SvgIconEnum, SvgImg } from '../svg-img';
@@ -37,8 +37,8 @@ const defaultOverlayInnerStyle: CSSProperties = {
   borderRadius: `${borderRadius?.[8]}`,
 };
 
-type FcrToolTipActionType = 'hover' | 'focus' | 'click' | 'contextMenu';
-export interface FcrToolTipProps {
+type ToolTipActionType = 'hover' | 'focus' | 'click' | 'contextMenu';
+export interface ToolTipProps {
   /**
    * 卡片内容
    */
@@ -57,7 +57,7 @@ export interface FcrToolTipProps {
    * large
    */
 
-  trigger?: FcrToolTipActionType;
+  trigger?: ToolTipActionType;
   /**
    * 气泡框位置，可选 top left right bottom topLeft topRight bottomLeft bottomRight leftTop leftBottom rightTop rightBottom
    */
@@ -114,7 +114,7 @@ export interface FcrToolTipProps {
   showArrow?: boolean;
 }
 
-export const FcrToolTip: FC<FcrToolTipProps> = (props) => {
+export const ToolTip: FC<ToolTipProps> = (props) => {
   const {
     content,
     children,
@@ -127,7 +127,7 @@ export const FcrToolTip: FC<FcrToolTipProps> = (props) => {
     ...others
   } = props;
   return (
-    <ToolTip
+    <RcToolTip
       prefixCls="fcr-tooltip"
       overlayClassName={overlayClassName}
       arrowContent={
@@ -154,6 +154,6 @@ export const FcrToolTip: FC<FcrToolTipProps> = (props) => {
       }}
       {...others}>
       {(children as ReactElement) || <></>}
-    </ToolTip>
+    </RcToolTip>
   );
 };

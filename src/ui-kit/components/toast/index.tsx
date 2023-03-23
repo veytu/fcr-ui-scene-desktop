@@ -1,6 +1,6 @@
 import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
 import classNames from 'classnames';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import ReactDOM, { unmountComponentAtNode } from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
@@ -9,15 +9,15 @@ import { v4 as uuidv4 } from 'uuid';
 const colors = themeVal('colors');
 
 import './index.css';
-export type FcrToastType = 'error' | 'warn' | 'info' | 'normal';
-interface FcrToastProps {
+export type ToastType = 'error' | 'warn' | 'info' | 'normal';
+interface ToastProps {
   /**
    * 消息提示框类型，可选值为 'error'(错误) | 'warn'(警告) | 'info'（消息） | 'normal'（普通）
    */
   /** @en
    * The type of toast, can be set to 'error' | 'warn' | 'info' | 'normal'.
    */
-  type: FcrToastType;
+  type: ToastType;
   /**
    * 消息提示内容
    */
@@ -77,7 +77,7 @@ interface FcrToastProps {
    */
   onClose?: () => void;
 }
-export const FcrToast = (props: FcrToastProps) => {
+export const Toast = (props: ToastProps) => {
   const { content, icon, type = 'normal', closable, action, onClose } = props;
   return (
     <div
@@ -121,7 +121,7 @@ export const FcrToast = (props: FcrToastProps) => {
 };
 
 export const ToastTransitionGroup = (
-  props: { onEnded?: () => void; duration?: number; position?: 'top' | 'bottom' } & FcrToastProps,
+  props: { onEnded?: () => void; duration?: number; position?: 'top' | 'bottom' } & ToastProps,
 ) => {
   const { onEnded, duration = 3000, position = 'top', ...others } = props;
   const [active, setActive] = useState(false);
@@ -147,12 +147,12 @@ export const ToastTransitionGroup = (
         style={{
           width: 'fit-content',
         }}>
-        <FcrToast
+        <Toast
           {...others}
           onClose={() => {
             setActive(false);
             others.onClose?.();
-          }}></FcrToast>
+          }}></Toast>
       </div>
     </CSSTransition>
   );
@@ -160,14 +160,14 @@ export const ToastTransitionGroup = (
 interface ToastConfig {
   id?: string;
   persist?: boolean;
-  toastProps: FcrToastProps;
+  toastProps: ToastProps;
   duration?: number;
 }
 interface RenderableToast extends ToastConfig {
   portal?: HTMLElement;
 }
 
-export class Toast {
+export class ToastApi {
   private static get _presistToastContainer() {
     return document.querySelector(`.${this._presistToastContainerCls}`);
   }

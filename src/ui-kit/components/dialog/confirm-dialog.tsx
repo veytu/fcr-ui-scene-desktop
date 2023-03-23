@@ -1,13 +1,11 @@
 import classNames from 'classnames';
-
 import { FC, ReactNode } from 'react';
-import { FcrButton } from '../button';
-import { SvgIconEnum, SvgImg } from '../svg-img';
-import { FcrCheckbox, FcrCheckboxProps } from '../checkbox';
-import { FcrBaseDialog, FcrBaseDialogProps } from '.';
+import { Button } from '../button';
+import { Checkbox, CheckboxProps } from '../checkbox';
+import { BaseDialog, BaseDialogProps } from '.';
 import './confirm-dialog.css';
 
-interface FcrConfirmDialogProps extends FcrBaseDialogProps {
+interface ConfirmDialogProps extends BaseDialogProps {
   /**
    * 对话框标题
    */
@@ -43,7 +41,7 @@ interface FcrConfirmDialogProps extends FcrBaseDialogProps {
   /** @en
    * The checkbox props.
    */
-  checkedProps?: FcrCheckboxProps;
+  checkedProps?: CheckboxProps;
   /**
    * 对话框确认按钮文案
    */
@@ -66,7 +64,7 @@ interface FcrConfirmDialogProps extends FcrBaseDialogProps {
    */
   icon?: ReactNode;
 }
-export const FcrConfirmDialog: FC<FcrConfirmDialogProps> = (props) => {
+export const ConfirmDialog: FC<ConfirmDialogProps> = (props) => {
   const {
     visible,
     onClose,
@@ -85,7 +83,7 @@ export const FcrConfirmDialog: FC<FcrConfirmDialogProps> = (props) => {
     cancelText,
   } = props;
   return (
-    <FcrBaseDialog
+    <BaseDialog
       closable={closable}
       closeIcon={closeIcon}
       width={width || 415}
@@ -102,18 +100,18 @@ export const FcrConfirmDialog: FC<FcrConfirmDialogProps> = (props) => {
       </div>
 
       <div className={classNames('fcr-confirm-dialog-footer')}>
-        {checkable && <FcrCheckbox {...checkedProps} />}
+        {checkable && <Checkbox {...checkedProps} />}
         {footer || (
           <div className={classNames('fcr-confirm-dialog-footer-btns')}>
-            <FcrButton onClick={onClose} size="S" styleType="gray">
+            <Button onClick={onClose} size="S" styleType="gray">
               {cancelText || 'Cancel'}
-            </FcrButton>
-            <FcrButton onClick={onOk} size="S">
+            </Button>
+            <Button onClick={onOk} size="S">
               {okText || 'Ok'}
-            </FcrButton>
+            </Button>
           </div>
         )}
       </div>
-    </FcrBaseDialog>
+    </BaseDialog>
   );
 };

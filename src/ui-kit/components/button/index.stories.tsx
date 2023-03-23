@@ -1,31 +1,31 @@
-import React, { FC, ReactNode, useState } from 'react';
-import { ComponentStory, Meta } from '@storybook/react';
-import { FcrButton, FcrButtonProps } from '.';
+import React, { ReactNode } from 'react';
+import { Meta } from '@storybook/react';
+import { Button, ButtonProps } from '.';
 import { SvgIconEnum } from '../svg-img';
 const meta: Meta = {
   title: 'Components/Button',
 };
 const sizes = ['XL', 'L', 'M', 'S', 'XS', 'XXS'];
-export const Doc = (props: FcrButtonProps & { text: ReactNode }) => {
+export const Doc = (props: ButtonProps & { text: ReactNode }) => {
   const { text, type, shape, preIcon, postIcon, disabled, styleType, loading } = props;
   return (
     <div>
       <div>
         <h3>type</h3>
         <div style={{ display: 'flex', gap: '10px' }}>
-          <FcrButton styleType="danger" type="primary">
+          <Button styleType="danger" type="primary">
             primary
-          </FcrButton>
-          <FcrButton type="secondary">secondary</FcrButton>
-          <FcrButton type="text">text</FcrButton>
-          <FcrButton type="link">link</FcrButton>
+          </Button>
+          <Button type="secondary">secondary</Button>
+          <Button type="text">text</Button>
+          <Button type="link">link</Button>
         </div>
       </div>
       <div>
         <h3>shape</h3>
         <div style={{ display: 'flex', gap: '10px' }}>
-          <FcrButton shape="circle">circle</FcrButton>
-          <FcrButton shape="rounded">rounded</FcrButton>
+          <Button shape="circle">circle</Button>
+          <Button shape="rounded">rounded</Button>
         </div>
       </div>
       <div>
@@ -33,7 +33,7 @@ export const Doc = (props: FcrButtonProps & { text: ReactNode }) => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {sizes.map((size) => {
             return (
-              <FcrButton
+              <Button
                 key={size}
                 loading={loading}
                 disabled={disabled}
@@ -42,9 +42,9 @@ export const Doc = (props: FcrButtonProps & { text: ReactNode }) => {
                 preIcon={preIcon && SvgIconEnum.FCR_HOST}
                 postIcon={postIcon && SvgIconEnum.FCR_HOST}
                 styleType={styleType}
-                size={size}>
+                {...props}>
                 {text}
-              </FcrButton>
+              </Button>
             );
           })}
         </div>
