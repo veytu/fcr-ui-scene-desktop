@@ -1,0 +1,40 @@
+.fcr-share {
+  padding: 22px 24px 16px;
+}
+.fcr-share-title {
+  @apply fcr-text-1 fcr-font-title;
+  font-size: 16px;
+  line-height: 16px;
+  padding-bottom: 29px;
+}
+.fcr-share-room-name {
+  @apply fcr-text-1 fcr-font-regular;
+  font-size: 13px;
+  line-height: 13px;
+  padding-bottom: 23px;
+}
+.fcr-share-room-id {
+  @apply fcr-text-1 fcr-font-regular;
+  font-size: 13px;
+  line-height: 13px;
+  padding-bottom: 23px;
+  display: flex;
+  flex-direction: row;
+  gap: 9px;
+  align-items: center;
+}
+.fcr-share-room-id > span:nth-child(2) {
+  @apply fcr-font-medium;
+}
+.fcr-share-room-link {
+  @apply fcr-text-1 fcr-font-regular;
+  font-size: 13px;
+  line-height: 13px;
+  padding-bottom: 17px;
+  display: flex;
+  flex-direction: row;
+  gap: 9px;
+}
+.fcr-share-room-link > span:last-child {
+  @apply fcr-text-2;
+}

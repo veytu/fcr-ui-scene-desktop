@@ -1,4 +1,4 @@
-import { CSSProperties, FC, ReactNode } from 'react';
+import { CSSProperties, FC, ReactNode, useState } from 'react';
 import { ToolTip, ToolTipProps } from '../tooltip';
 import classnames from 'classnames';
 import './index.css';
@@ -85,5 +85,72 @@ export const DoubleDeckPopover: FC<DoubleDeckPopoverProps> = (props) => {
       }>
       {children}
     </Popover>
+  );
+};
+const usePopoverVisibleState = () => {
+  const [clicked, setClicked] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  const handleHoverChange = (open: boolean) => {
+    if (clicked) return;
+    setHovered(open);
+    setClicked(false);
+  };
+
+  const handleClickChange = (open: boolean) => {
+    setHovered(false);
+    setClicked(open);
+  };
+  return {
+    clicked,
+    hovered,
+    handleHoverChange,
+    handleClickChange,
+  };
+};
+interface FcrPopoverWithTooltip {
+  popoverProps?: PopoverProps;
+  toolTipProps?: ToolTipProps;
+}
+export const PopoverWithTooltip: FC<FcrPopoverWithTooltip> = (props) => {
+  const { popoverProps, toolTipProps, children } = props;
+  const { clicked, hovered, handleHoverChange, handleClickChange } = usePopoverVisibleState();
+  return (
+    <ToolTip
+      {...toolTipProps}
+      visible={hovered}
+      trigger="hover"
+      onVisibleChange={handleHoverChange}>
+      <Popover
+        {...popoverProps}
+        visible={clicked}
+        trigger="click"
+        onVisibleChange={handleClickChange}>
+        <div className={classnames({ 'fcr-popover-trigger-opened': clicked })}>{children}</div>
+      </Popover>
+    </ToolTip>
+  );
+};
+interface FcrDoubleDeckPopoverWithTooltip {
+  doulebDeckPopoverProps?: DoubleDeckPopoverProps;
+  toolTipProps?: ToolTipProps;
+}
+export const DoubleDeckPopoverWithTooltip: FC<FcrDoubleDeckPopoverWithTooltip> = (props) => {
+  const { doulebDeckPopoverProps, toolTipProps, children } = props;
+  const { clicked, hovered, handleHoverChange, handleClickChange } = usePopoverVisibleState();
+  return (
+    <ToolTip
+      {...toolTipProps}
+      trigger="hover"
+      visible={hovered}
+      onVisibleChange={handleHoverChange}>
+      <DoubleDeckPopover
+        {...doulebDeckPopoverProps}
+        visible={clicked}
+        trigger="click"
+        onVisibleChange={handleClickChange}>
+        <div className={classnames({ 'fcr-popover-trigger-opened': clicked })}>{children}</div>
+      </DoubleDeckPopover>
+    </ToolTip>
   );
 };
