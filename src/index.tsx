@@ -1,7 +1,7 @@
 import { render, unmountComponentAtNode } from 'react-dom';
-import { Logger } from 'agora-rte-sdk';
 import { LaunchOption } from './type';
 import { App } from './app';
+import { Logger } from 'agora-common-libs';
 
 /**
  * Online class SDK

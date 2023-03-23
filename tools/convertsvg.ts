@@ -3,8 +3,8 @@ import path from 'path';
 import htmlParser from 'node-html-parser';
 import { ESLint } from 'eslint';
 
-const SVG_COM_DIR = path.resolve(__dirname, 'components/svg-img');
-const SVG_PATHS_DIR = path.resolve(__dirname, 'components/svg-img/paths');
+const SVG_COM_DIR = path.resolve(__dirname, 'src/components/svg-img');
+const SVG_PATHS_DIR = path.resolve(__dirname, 'src/components/svg-img/paths');
 
 function interpolateIcon(tag: string, viewBox: string, needWrap: boolean) {
   const template = `

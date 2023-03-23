@@ -1,7 +1,9 @@
 import resolveConfig from 'tailwindcss/resolveConfig';
 import { TailwindConfig } from 'tailwindcss/tailwind-config';
 import get from 'lodash/get';
-import tailwindConfig from /* preval */ '../../tailwind.config';
+import tailwindConfig from '../../tailwind.config';
+
+
 
 const fullConfig = resolveConfig(tailwindConfig as unknown as TailwindConfig);
 

@@ -1,5 +1,6 @@
 const path = require('path');
 const { ROOT_PATH } = require('.');
+
 module.exports.base = [
   {
     test: /\.ts(x)?$/,
@@ -47,7 +48,6 @@ module.exports.base = [
                 loose: true,
               },
             ],
-            'preval',
           ],
         },
       },
@@ -56,6 +56,29 @@ module.exports.base = [
   {
     test: /\.svga$/,
     use: { loader: 'url-loader' },
+  },
+];
+
+module.exports.dev = [
+  {
+    test: /\.css$/i,
+    use: [
+      {
+        loader: 'style-loader',
+      },
+      {
+        loader: 'css-loader',
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          postcssOptions: {
+            ident: 'postcss',
+            config: path.resolve(ROOT_PATH, 'postcss.config.js'),
+          },
+        },
+      },
+    ],
   },
 ];
 

@@ -3,7 +3,7 @@ import { Classroom } from './scenarios/classroom';
 import { Pretest } from './scenarios/pretest';
 
 export const App = () => {
-  const [pretest, setPretest] = useState(false);
+  const [pretest, setPretest] = useState(true);
 
   return (
     <React.Fragment>

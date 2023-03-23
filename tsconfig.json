@@ -27,7 +27,7 @@
     "baseUrl": ".",
     "paths": {
       "@onlineclass/*": ["src/*"],
-      "agora-onlineclass-sdk": ["src/infra/api"]
+      "@res/*": ["src/resources/*"]
     }
   },
   "include": ["src"],
