@@ -85,6 +85,5 @@ module.exports.colorDepth = (baseColor) => {
 };
 
 module.exports.colorAlpha = (baseColor, alpha) => {
-  console.log(baseColor, 'baseColor');
   return tinycolor(baseColor).setAlpha(alpha).toRgbString();
 };
