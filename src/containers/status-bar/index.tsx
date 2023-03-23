@@ -1,10 +1,10 @@
 import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
 import { FC } from 'react';
 import classnames from 'classnames';
-import { FcrToolTip } from '@onlineclass/components/tooltip';
-import { FcrDoubleDeckPopover } from '@onlineclass/components/popover';
+import { ToolTip } from '@onlineclass/components/tooltip';
+import { DoubleDeckPopover } from '@onlineclass/components/popover';
 
-export const FcrStatusBar = () => {
+export const StatusBar = () => {
   return (
     <div className="fcr-status-bar">
       <div className="fcr-status-bar-left">
@@ -18,26 +18,26 @@ export const FcrStatusBar = () => {
   );
 };
 
-const FcrStatusBarItemWrapper: FC = (props) => {
+const StatusBarItemWrapper: FC = (props) => {
   const { children } = props;
   return <div className="fcr-status-bar-item-wrapper">{children}</div>;
 };
 const FcrStatusBarInfo: FC = () => {
   return (
-    <FcrStatusBarItemWrapper>
-      <FcrDoubleDeckPopover trigger="click">
-        <FcrToolTip trigger="hover" content="Show Network Details">
+    <StatusBarItemWrapper>
+      <DoubleDeckPopover trigger="click">
+        <ToolTip trigger="hover" content="Show Network Details">
           <div className="fcr-status-bar-info-network">
             <SvgImg type={SvgIconEnum.FCR_V2_SIGNAL_GOOD}></SvgImg>
           </div>
-        </FcrToolTip>
-      </FcrDoubleDeckPopover>
+        </ToolTip>
+      </DoubleDeckPopover>
 
       <div className={classnames('fcr-status-bar-info-id', 'fcr-divider')}>
         <span>ID:</span>
         <span>234 223 223</span>
       </div>
       <div className="fcr-status-bar-info-share"></div>
-    </FcrStatusBarItemWrapper>
+    </StatusBarItemWrapper>
   );
 };
