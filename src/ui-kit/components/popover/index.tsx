@@ -1,5 +1,5 @@
 import { CSSProperties, FC, ReactNode } from 'react';
-import { FcrToolTip, FcrToolTipProps } from '../tooltip';
+import { ToolTip, ToolTipProps } from '../tooltip';
 import classnames from 'classnames';
 import './index.css';
 import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
@@ -22,7 +22,7 @@ const defaultSmallPopoverOverlayInnerStyle: CSSProperties = {
   borderRadius: `${borderRadius?.[8]}`,
   overflow: 'hidden',
 };
-interface FcrPopoverProps extends FcrToolTipProps {
+interface PopoverProps extends ToolTipProps {
   /**
    * 气泡操作面板的尺寸，可选值为 large | small
    */
@@ -31,7 +31,7 @@ interface FcrPopoverProps extends FcrToolTipProps {
    */
   size?: 'large' | 'small';
 }
-export const FcrPopover: FC<FcrPopoverProps> = (props) => {
+export const Popover: FC<PopoverProps> = (props) => {
   const {
     children,
     overlayClassName,
@@ -41,7 +41,7 @@ export const FcrPopover: FC<FcrPopoverProps> = (props) => {
     ...otherProps
   } = props;
   return (
-    <FcrToolTip
+    <ToolTip
       {...otherProps}
       overlayClassName={classnames('fcr-popover', overlayClassName)}
       showArrow={showArrow || false}
@@ -52,10 +52,10 @@ export const FcrPopover: FC<FcrPopoverProps> = (props) => {
         ...overlayInnerStyle,
       }}>
       {children}
-    </FcrToolTip>
+    </ToolTip>
   );
 };
-interface FcrDoubleDeckPopoverProps extends FcrToolTipProps {
+interface DoubleDeckPopoverProps extends ToolTipProps {
   /**
    * popover上部分的内容
    */
@@ -71,10 +71,10 @@ interface FcrDoubleDeckPopoverProps extends FcrToolTipProps {
    */
   bottomDeckContent?: ReactNode;
 }
-export const FcrDoubleDeckPopover: FC<FcrDoubleDeckPopoverProps> = (props) => {
+export const DoubleDeckPopover: FC<DoubleDeckPopoverProps> = (props) => {
   const { children, bottomDeckContent, topDeckContent, ...otherProps } = props;
   return (
-    <FcrPopover
+    <Popover
       {...otherProps}
       size="large"
       content={
@@ -84,6 +84,6 @@ export const FcrDoubleDeckPopover: FC<FcrDoubleDeckPopoverProps> = (props) => {
         </div>
       }>
       {children}
-    </FcrPopover>
+    </Popover>
   );
 };

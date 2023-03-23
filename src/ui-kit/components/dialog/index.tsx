@@ -1,14 +1,13 @@
-import { FcrConfirmDialog } from './confirm-dialog';
-import { FcrClassDialog } from './class-dialog';
+import { ConfirmDialog } from './confirm-dialog';
+import { ClassDialog } from './class-dialog';
 import { FC, ReactNode } from 'react';
 import RcDialog from 'rc-dialog';
 import './index.css';
 import classnames from 'classnames';
-
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
 const colors = themeVal('colors');
-export interface FcrBaseDialogProps {
+export interface BaseDialogProps {
   /**
    * 对话框是否显示
    */
@@ -59,7 +58,7 @@ export interface FcrBaseDialogProps {
    */
   closeIcon?: ReactNode;
 }
-const FcrBaseDialog: FC<FcrBaseDialogProps> = (props) => {
+const BaseDialog: FC<BaseDialogProps> = (props) => {
   const {
     visible,
     onClose,
@@ -98,4 +97,4 @@ const FcrBaseDialog: FC<FcrBaseDialogProps> = (props) => {
     </RcDialog>
   );
 };
-export { FcrConfirmDialog, FcrClassDialog, FcrBaseDialog };
+export { ConfirmDialog, ClassDialog, BaseDialog };

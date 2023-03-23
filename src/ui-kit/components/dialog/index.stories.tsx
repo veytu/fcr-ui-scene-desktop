@@ -1,8 +1,8 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { Meta } from '@storybook/react';
-import { FcrBaseDialog, FcrClassDialog, FcrConfirmDialog } from '.';
+import { BaseDialog, ClassDialog, ConfirmDialog } from '.';
 import { SvgIconEnum, SvgImg } from '../svg-img';
-import { FcrButton } from '../button';
+import { Button } from '../button';
 const meta: Meta = {
   title: 'Components/Dialog',
 };
@@ -14,12 +14,12 @@ export const Docs = () => {
 
   return (
     <div>
-      <FcrButton onClick={() => setVisible(true)}>open base dialog</FcrButton>
-      <FcrButton onClick={() => setConfirmDialogVisible(true)}>open confirm dialog</FcrButton>
-      <FcrButton onClick={() => setClassDialogVisible(true)}>open class dialog</FcrButton>
+      <Button onClick={() => setVisible(true)}>open base dialog</Button>
+      <Button onClick={() => setConfirmDialogVisible(true)}>open confirm dialog</Button>
+      <Button onClick={() => setClassDialogVisible(true)}>open class dialog</Button>
 
-      <FcrBaseDialog visible={visible} onClose={() => setVisible(false)}></FcrBaseDialog>
-      <FcrConfirmDialog
+      <BaseDialog visible={visible} onClose={() => setVisible(false)}></BaseDialog>
+      <ConfirmDialog
         icon={<SvgImg type={SvgIconEnum.FCR_FILE_ALF} size={50}></SvgImg>}
         checkedProps={{
           label: '不再显示',
@@ -31,8 +31,8 @@ export const Docs = () => {
         visible={confirmDialogVisible}
         onClose={() => setConfirmDialogVisible(false)}>
         <div>此白板将移到垃圾桶，协作组将不再拥有其访问权限。</div>
-      </FcrConfirmDialog>
-      <FcrClassDialog
+      </ConfirmDialog>
+      <ClassDialog
         imgUrl=" "
         maskClosable={false}
         visible={classDialogVisible}
@@ -46,12 +46,9 @@ export const Docs = () => {
             styleType: 'danger',
             onClick: () => setClassDialogVisible(false),
           },
-        ]}></FcrClassDialog>
+        ]}></ClassDialog>
     </div>
   );
 };
 
 export default meta;
-/* <FcrBaseDialog
-        
-// </FcrBaseDialog> */

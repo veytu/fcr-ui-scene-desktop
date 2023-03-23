@@ -3,12 +3,11 @@ import { CSSProperties, FC } from 'react';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import './index.css';
 import './arrow.css';
-import { FcrToolTip, FcrToolTipProps } from '.';
+import { ToolTip, ToolTipProps } from '.';
 import classNames from 'classnames';
 import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
 const colors = themeVal('colors');
 const borderRadius = themeVal('borderRadius');
-const boxShadow = themeVal('boxShadow');
 const defaultDialogOverlayInnerStyle: CSSProperties = {
   padding: '0',
   background: `${colors['block-2']}`,
@@ -17,7 +16,7 @@ const defaultDialogOverlayInnerStyle: CSSProperties = {
   borderRadius: `${borderRadius[12]}`,
 };
 
-interface FcrDialogToolTipProps extends FcrToolTipProps {
+interface FcrDialogToolTipProps extends ToolTipProps {
   /**
    * 点击关闭按钮的回调
    */
@@ -47,7 +46,7 @@ const DialogToolTipClosableOverlayWrap: FC<Pick<FcrDialogToolTipProps, 'content'
 export const FcrDialogToolTip: FC<FcrDialogToolTipProps> = (props) => {
   const { content, onClose, ...others } = props;
   return (
-    <FcrToolTip
+    <ToolTip
       overlayClassName="fcr-tooltip-border-width-2"
       arrowContent={
         <SvgImg
@@ -67,6 +66,6 @@ export const FcrDialogToolTip: FC<FcrDialogToolTipProps> = (props) => {
         ...defaultDialogOverlayInnerStyle,
         ...props.overlayInnerStyle,
       }}
-      {...others}></FcrToolTip>
+      {...others}></ToolTip>
   );
 };

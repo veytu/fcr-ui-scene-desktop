@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { FcrCheckbox } from '.';
+import { Checkbox } from '.';
 
 const meta: Meta = {
   title: 'Components/Checkbox',
@@ -9,7 +9,7 @@ const meta: Meta = {
 export const Docs = () => {
   return (
     <div>
-      <FcrCheckbox label="请选择"></FcrCheckbox>
+      <Checkbox label="Agree terms of service"></Checkbox>
     </div>
   );
 };

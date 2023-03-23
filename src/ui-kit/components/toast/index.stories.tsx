@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 import React from 'react';
-import { FcrToast, Toast } from '.';
-import { FcrButton } from '../button';
+import { Toast, ToastApi } from '.';
+import { Button } from '../button';
 import { SvgIconEnum } from '../svg-img';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -12,9 +12,9 @@ export const Docs = ({ closable, icon, action, text }: { closable; icon; action;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
-        <FcrButton
+        <Button
           onClick={() => {
-            Toast.open({
+            ToastApi.open({
               id: uuidv4(),
               toastProps: {
                 type: 'info',
@@ -23,25 +23,25 @@ export const Docs = ({ closable, icon, action, text }: { closable; icon; action;
             });
           }}>
           show toast
-        </FcrButton>
-        <FcrButton
+        </Button>
+        <Button
           onClick={() => {
-            Toast.open({
+            ToastApi.open({
               id: uuidv4(),
               persist: true,
               duration: 15000,
               toastProps: {
-                type: 'alarm',
+                type: 'warn',
                 content: 'test',
                 closable: true,
               },
             });
           }}>
           show presist toast
-        </FcrButton>
+        </Button>
       </div>
 
-      <FcrToast
+      <Toast
         icon={icon ? SvgIconEnum.FCR_HOST : undefined}
         action={
           action
@@ -53,8 +53,8 @@ export const Docs = ({ closable, icon, action, text }: { closable; icon; action;
         }
         type="error"
         closable={closable}
-        content={text}></FcrToast>
-      <FcrToast
+        content={text}></Toast>
+      <Toast
         action={
           action
             ? {
@@ -66,8 +66,8 @@ export const Docs = ({ closable, icon, action, text }: { closable; icon; action;
         icon={icon ? SvgIconEnum.FCR_HOST : undefined}
         closable={closable}
         type="info"
-        content={text}></FcrToast>
-      <FcrToast
+        content={text}></Toast>
+      <Toast
         action={
           action
             ? {
@@ -79,8 +79,8 @@ export const Docs = ({ closable, icon, action, text }: { closable; icon; action;
         icon={icon ? SvgIconEnum.FCR_HOST : undefined}
         closable={closable}
         type="normal"
-        content={text}></FcrToast>
-      <FcrToast
+        content={text}></Toast>
+      <Toast
         action={
           action
             ? {
@@ -92,7 +92,7 @@ export const Docs = ({ closable, icon, action, text }: { closable; icon; action;
         icon={icon ? SvgIconEnum.FCR_QUESTION : undefined}
         closable={closable}
         type="warn"
-        content={text}></FcrToast>
+        content={text}></Toast>
     </div>
   );
 };
