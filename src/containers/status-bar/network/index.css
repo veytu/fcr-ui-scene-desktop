@@ -1,0 +1,44 @@
+.fcr-network-connection {
+  padding: 22px 26px 24px;
+}
+.fcr-network-connection-title {
+  @apply fcr-text-1 fcr-font-medium;
+  font-size: 16px;
+  line-height: 16px;
+  padding-bottom: 18px;
+}
+.fcr-network-connection-status {
+  @apply fcr-text-1 fcr-font-medium;
+  font-size: 22px;
+  line-height: 22px;
+}
+.fcr-network-connection-detail {
+  padding: 12px 24px 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.fcr-network-connection-detail-key {
+  flex-shrink: 0;
+}
+.fcr-network-connection-detail-key,
+.fcr-network-connection-detail-value {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.fcr-network-connection-detail-key > div {
+  @apply fcr-text-2 fcr-font-regular;
+  font-size: 13px;
+  line-height: 13px;
+}
+.fcr-network-connection-detail-value > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+}
+.fcr-network-connection-detail-value > div > span {
+  @apply fcr-font-medium fcr-text-1;
+  font-size: 13px;
+  line-height: 13px;
+}

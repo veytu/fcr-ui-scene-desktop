@@ -5,7 +5,7 @@ import { SvgIconEnum, SvgImg } from '../svg-img';
 import './index.css';
 import './arrow.css';
 
-import { FcrToolTip, FcrToolTipProps } from '.';
+import { ToolTip, ToolTipProps } from '.';
 const colors = themeVal('colors');
 const borderRadius = themeVal('borderRadius');
 const defaultInfoOverlayInnerStyle: CSSProperties = {
@@ -20,12 +20,10 @@ const defaultInfoOverlayInnerStyle: CSSProperties = {
   textAlign: 'center',
 };
 
-interface FcrInfoToolTipProps extends FcrToolTipProps {}
-
-export const FcrInfoToolTip: FC<FcrInfoToolTipProps> = (props) => {
+export const InfoToolTip: FC<ToolTipProps> = (props) => {
   const { content, ...others } = props;
   return (
-    <FcrToolTip
+    <ToolTip
       overlayClassName="fcr-tooltip-border-width-2"
       arrowContent={
         <SvgImg
@@ -41,6 +39,6 @@ export const FcrInfoToolTip: FC<FcrInfoToolTipProps> = (props) => {
         ...defaultInfoOverlayInnerStyle,
         ...props.overlayInnerStyle,
       }}
-      {...others}></FcrToolTip>
+      {...others}></ToolTip>
   );
 };

@@ -1,13 +1,119 @@
 .fcr-status-bar {
+  @apply fcr-bg-1;
   width: 100%;
   height: 57px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  align-items: center;
+  padding: 0 20px;
 }
+.fcr-status-bar-left,
+.fcr-status-bar-right {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 .fcr-status-bar-item-wrapper {
-  @apply fcr-bg-2 fcr-border-1;
+  @apply fcr-bg-2 fcr-border-1 fcr-rounded-8;
   height: 32px;
   border-width: 1px;
   border-style: solid;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+  user-select: none;
+}
+
+.fcr-status-bar-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.fcr-status-bar-info-network,
+.fcr-status-bar-info-share {
+  height: 32px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fcr-status-bar-info-id {
+  @apply fcr-font-medium fcr-text-1;
+  font-size: 13px;
+  padding-left: 10px;
+  padding-right: 8px;
+}
+.fcr-status-bar-info-id > span:first-child {
+  padding-right: 2px;
+}
+
+.fcr-status-bar-room-name {
+  @apply fcr-text-1 fcr-font-regular;
+  max-width: 114px;
+  padding: 0 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.2s;
+}
+.fcr-status-bar-room-name:hover {
+  max-width: 500px;
+}
+
+.fcr-status-bar-fullscreen {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fcr-status-bar-fullscreen:hover {
+  @apply fcr-bg-brand-6;
+}
+
+.fcr-status-bar-layout {
+  height: 32px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 4px;
+}
+.fcr-status-bar-layout > span {
+  @apply fcr-text-1;
+  font-size: 16px;
+}
+.fcr-status-bar-class-duration {
+  @apply fcr-font-title fcr-text-1;
+  font-size: 16px;
+  padding: 0 11px;
+}
+.fcr-status-bar-record {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.fcr-status-bar-record-status {
+  display: flex;
+  flex-direction: row;
+  padding-left: 4px;
+  padding-right: 8px;
+}
+.fcr-status-bar-record-status > span {
+  @apply fcr-font-regular fcr-text-1;
+  font-size: 16px;
+}
+.fcr-status-bar-record-action {
+  height: 32px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+}
+.fcr-status-bar-record-action:hover {
+  @apply fcr-bg-brand-6;
 }

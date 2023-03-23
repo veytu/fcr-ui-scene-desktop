@@ -6,7 +6,7 @@ import './index.css';
 import './arrow.css';
 
 import classNames from 'classnames';
-import { FcrToolTip, FcrToolTipProps } from '.';
+import { ToolTip, ToolTipProps } from '.';
 const colors = themeVal('colors');
 const borderRadius = themeVal('borderRadius');
 const defaultGuideOverlayInnerStyle: CSSProperties = {
@@ -22,7 +22,7 @@ const defaultGuideOverlayInnerStyle: CSSProperties = {
   borderRadius: `${borderRadius[8]}`,
 };
 
-interface FcrGuideToolTipProps extends FcrToolTipProps {
+interface FcrGuideToolTipProps extends ToolTipProps {
   /**
    * 是否显示关闭按钮
    */
@@ -71,7 +71,7 @@ const GuideToolTipClosableOverlayWrap: FC<
 export const FcrGuideToolTip: FC<FcrGuideToolTipProps> = (props) => {
   const { closable, content, onClose, ...others } = props;
   return (
-    <FcrToolTip
+    <ToolTip
       arrowContent={
         <SvgImg
           type={SvgIconEnum.FCR_TOOLTIP_ARROW}
@@ -91,6 +91,6 @@ export const FcrGuideToolTip: FC<FcrGuideToolTipProps> = (props) => {
         ...defaultGuideOverlayInnerStyle,
         ...props.overlayInnerStyle,
       }}
-      {...others}></FcrToolTip>
+      {...others}></ToolTip>
   );
 };

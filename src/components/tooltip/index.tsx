@@ -1,6 +1,6 @@
 import { themeVal } from '@onlineclass/utils/tailwindcss';
 import RcToolTip from 'rc-tooltip';
-import 'rc-tooltip/assets/bootstrap_white.css';
+import { CSSMotionProps } from 'rc-motion';
 import { CSSProperties, FC, ReactElement, ReactNode } from 'react';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import './index.css';
@@ -112,6 +112,8 @@ export interface ToolTipProps {
    * large
    */
   showArrow?: boolean;
+  onVisibleChange?: (visible: boolean) => void;
+  motion?: CSSMotionProps;
 }
 
 export const ToolTip: FC<ToolTipProps> = (props) => {
@@ -124,10 +126,13 @@ export const ToolTip: FC<ToolTipProps> = (props) => {
     overlayInnerStyle,
     overlayClassName,
     showArrow = true,
+    onVisibleChange,
+    motion,
     ...others
   } = props;
   return (
     <RcToolTip
+      onVisibleChange={onVisibleChange}
       prefixCls="fcr-tooltip"
       overlayClassName={overlayClassName}
       arrowContent={
@@ -148,10 +153,12 @@ export const ToolTip: FC<ToolTipProps> = (props) => {
       placement={placement}
       overlay={content}
       overlayInnerStyle={{ ...defaultOverlayInnerStyle, ...overlayInnerStyle }}
-      motion={{
-        motionAppear: true,
-        motionName: 'fcr-tooltip-anim',
-      }}
+      motion={
+        motion || {
+          motionAppear: true,
+          motionName: 'fcr-tooltip-anim',
+        }
+      }
       {...others}>
       {(children as ReactElement) || <></>}
     </RcToolTip>

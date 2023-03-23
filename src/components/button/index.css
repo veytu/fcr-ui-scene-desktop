@@ -306,7 +306,12 @@
   min-width: 0;
   padding: 0 12px;
 }
-
+.fcr-button.fcr-button-XXS.fcr-button-icon-only,
+.fcr-button.fcr-button-XS.fcr-button-icon-only {
+  max-width: none;
+  min-width: 0;
+  padding: 0 8px;
+}
 .fcr-button-loading {
   animation: loadingCircle 1s infinite linear;
 }
