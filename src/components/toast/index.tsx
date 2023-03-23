@@ -1,4 +1,4 @@
-import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
+import { themeVal } from '@onlineclass/utils/tailwindcss';
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { SvgIconEnum, SvgImg } from '../svg-img';

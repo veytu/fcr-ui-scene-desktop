@@ -3,7 +3,7 @@ import classnames from 'classnames';
 
 import { getPath, getViewBox, PathOptions } from './svg-dict';
 import { SvgIconEnum } from './type';
-import { themeVal } from '../../tailwindcss';
+import { themeVal } from '../../utils/tailwindcss';
 
 export type SvgImgProps = {
   type: SvgIconEnum;

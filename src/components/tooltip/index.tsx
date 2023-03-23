@@ -1,4 +1,4 @@
-import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
+import { themeVal } from '@onlineclass/utils/tailwindcss';
 import RcToolTip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { CSSProperties, FC, ReactElement, ReactNode } from 'react';

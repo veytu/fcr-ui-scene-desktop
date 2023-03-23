@@ -5,7 +5,7 @@ import RcDialog from 'rc-dialog';
 import './index.css';
 import classnames from 'classnames';
 import { SvgIconEnum, SvgImg } from '../svg-img';
-import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
+import { themeVal } from '@onlineclass/utils/tailwindcss';
 const colors = themeVal('colors');
 export interface BaseDialogProps {
   /**

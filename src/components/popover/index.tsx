@@ -2,7 +2,7 @@ import { CSSProperties, FC, ReactNode } from 'react';
 import { ToolTip, ToolTipProps } from '../tooltip';
 import classnames from 'classnames';
 import './index.css';
-import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
+import { themeVal } from '@onlineclass/utils/tailwindcss';
 const colors = themeVal('colors');
 const borderRadius = themeVal('borderRadius');
 const borderColor = themeVal('borderColor');

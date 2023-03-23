@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { SvgIconEnum, SvgImg } from '.';
 import classnames from 'classnames';
 import './clickable-icon.css';
-import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
+import { themeVal } from '@onlineclass/utils/tailwindcss';
 const colors = themeVal('colors');
 
 interface ClickableIconProps {

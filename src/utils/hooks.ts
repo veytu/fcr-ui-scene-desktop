@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { clickAnywhere } from './utils';
+import { clickAnywhere } from '.';
 
 export const useClickAnywhere = (cb: () => void) => {
   const ref = useRef<HTMLDivElement>(null);

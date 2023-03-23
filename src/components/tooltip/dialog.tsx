@@ -5,7 +5,7 @@ import './index.css';
 import './arrow.css';
 import { ToolTip, ToolTipProps } from '.';
 import classNames from 'classnames';
-import { themeVal } from '@onlineclass/ui-kit/tailwindcss';
+import { themeVal } from '@onlineclass/utils/tailwindcss';
 const colors = themeVal('colors');
 const borderRadius = themeVal('borderRadius');
 const defaultDialogOverlayInnerStyle: CSSProperties = {

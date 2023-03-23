@@ -1,8 +1,8 @@
-import { SvgIconEnum, SvgImg } from '@onlineclass/ui-kit/components/svg-img';
+import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
 import { FC } from 'react';
 import classnames from 'classnames';
-import { FcrToolTip } from '@onlineclass/ui-kit/components/tooltip';
-import { FcrDoubleDeckPopover } from '@onlineclass/ui-kit/components/popover';
+import { FcrToolTip } from '@onlineclass/components/tooltip';
+import { FcrDoubleDeckPopover } from '@onlineclass/components/popover';
 
 export const FcrStatusBar = () => {
   return (

@@ -4,7 +4,7 @@ import isNumber from 'lodash/isNumber';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 
 import './index.css';
-import { useClickAnywhere } from '@onlineclass/ui-kit/hooks';
+import { useClickAnywhere } from '@onlineclass/utils/hooks';
 
 export type InputNumberProps = {
   /**
