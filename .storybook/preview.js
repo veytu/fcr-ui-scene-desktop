@@ -1,4 +1,4 @@
-import '@onlineclass/ui-kit/preflight.css';
+import '@onlineclass/preflight.css';
 
 const themes = {
   light: {

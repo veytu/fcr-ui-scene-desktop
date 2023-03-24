@@ -4,24 +4,24 @@ import classnames from 'classnames';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import { themeVal } from '@onlineclass/utils/tailwindcss';
 const colors = themeVal('colors');
-export interface CheckboxProps {
+export interface RadioProps {
   label?: ReactNode;
   checked?: boolean;
   onChange?: (checked: boolean) => void;
   styleType?: 'brand' | 'white';
 }
-export const Checkbox: FC<CheckboxProps> = (props) => {
+export const Radio: FC<RadioProps> = (props) => {
   const { label, onChange, styleType = 'brand', ...inputProps } = props;
   return (
-    <label className={classnames('fcr-checkbox', `fcr-checkbox-${styleType}`)}>
-      <span className="fcr-checkbox-input-wrapper">
+    <label className={classnames('fcr-radio', `fcr-radio-${styleType}`)}>
+      <span className="fcr-radio-input-wrapper">
         <input
           {...inputProps}
           onChange={(e) => {
             onChange?.(e.target.checked);
           }}
-          type="checkbox"></input>
-        <span className="fcr-btn-click-effect fcr-checkbox-inner">
+          type="radio"></input>
+        <span className="fcr-radio-inner fcr-btn-click-effect">
           <SvgImg
             type={SvgIconEnum.FCR_CHECKBOX_CHECK}
             colors={{
@@ -30,7 +30,7 @@ export const Checkbox: FC<CheckboxProps> = (props) => {
             size={12}></SvgImg>
         </span>
       </span>
-      <span className="fcr-checkbox-label">{label}</span>
+      <span className="fcr-radio-label">{label}</span>
     </label>
   );
 };

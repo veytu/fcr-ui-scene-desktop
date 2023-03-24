@@ -1,19 +1,19 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { Checkbox } from '.';
+import { Radio } from '.';
 
 const meta: Meta = {
-  title: 'Components/Checkbox',
+  title: 'Components/Radio',
 };
 
 export const Docs = () => {
   return (
     <>
       <div>
-        <Checkbox label="Agree terms of service"></Checkbox>
+        <Radio label="Agree terms of service"></Radio>
       </div>
       <div>
-        <Checkbox styleType="white" label="Agree terms of service"></Checkbox>
+        <Radio styleType="white" label="Agree terms of service"></Radio>
       </div>
     </>
   );

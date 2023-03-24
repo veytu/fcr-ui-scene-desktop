@@ -73,6 +73,7 @@ module.exports = {
       7: theme('colors.block-7'),
       8: theme('colors.block-8'),
       brand: theme('colors.brand'),
+      white: theme('colors.white'),
       red: theme('colors.red'),
       yellowwarm: theme('colors.yellowwarm'),
       purple: theme('colors.purple'),
@@ -83,6 +84,7 @@ module.exports = {
     }),
     borderColor: (theme) => ({
       1: theme('colors.line-1'),
+      '1-a50': colorAlpha(theme('colors.line-1')),
       brand: theme('colors.brand'),
       red: theme('colors.red'),
       purple: theme('colors.purple'),

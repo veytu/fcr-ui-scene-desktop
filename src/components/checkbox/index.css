@@ -1,14 +1,55 @@
 .fcr-checkbox {
-  display: inline-flex;
+  display: flex;
   flex-direction: row;
   align-items: center;
   cursor: pointer;
+  width: fit-content;
 }
-
-.fcr-checkbox > span {
+.fcr-checkbox-input-wrapper {
+  @apply fcr-border-1-a50 fcr-rounded-8;
+  width: 24px;
+  height: 24px;
+  border-width: 4px;
+  border-style: solid;
+  position: relative;
+}
+.fcr-checkbox-input-wrapper > input {
+  @apply fcr-rounded-8;
+  width: 16px;
+  height: 16px;
+  opacity: 0;
+}
+.fcr-checkbox-inner {
+  @apply fcr-rounded-4 fcr-bg-white;
+  width: 16px;
+  height: 16px;
+  position: absolute !important;
+  left: 0;
+  top: 0;
+  --effect-color: theme(colors.brand.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fcr-checkbox-inner svg {
+  opacity: 0;
+}
+.fcr-checkbox-input-wrapper > input:checked ~ .fcr-checkbox-inner svg {
+  opacity: 1;
+}
+.fcr-checkbox-label {
   @apply fcr-text-2 fcr-font-regular;
   font-size: 14px;
   line-height: 14px;
-  padding: 7px;
+  padding: 0 7px;
   user-select: none;
+}
+
+.fcr-checkbox-brand .fcr-checkbox-input-wrapper > input:checked ~ .fcr-checkbox-inner {
+  @apply fcr-bg-brand-6;
+}
+.fcr-checkbox-input-wrapper > input:active ~ .fcr-btn-click-effect::after {
+  box-shadow: none;
+  opacity: 0.5;
+  transition: 0s;
 }

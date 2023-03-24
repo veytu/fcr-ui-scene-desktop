@@ -40,3 +40,16 @@
   flex-direction: row;
   gap: 20px;
 }
+.fcr-layout-switch-card-icon {
+  @apply fcr-bg-2 fcr-rounded-8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 116px;
+  height: 72px;
+}
+.fcr-layout-switch-card-checkbox {
+  padding-top: 2px;
+  padding-left: 4px;
+  padding-bottom: 6px;
+}

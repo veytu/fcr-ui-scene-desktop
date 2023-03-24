@@ -1,4 +1,4 @@
-import { Checkbox } from '@onlineclass/components/checkbox';
+import { Radio } from '@onlineclass/components/radio';
 import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
 import classnames from 'classnames';
 import { useState } from 'react';
@@ -7,15 +7,15 @@ import './index.css';
 const layoutMap = {
   top: {
     label: 'List on top',
-    icon: SvgIconEnum.FCR_TOPWINDOWS,
+    icon: SvgIconEnum.FCR_LIST_ON_TOP_BIG,
   },
   right: {
     label: 'List on right',
-    icon: SvgIconEnum.FCR_RIGHTWINDOWS,
+    icon: SvgIconEnum.FCR_LIST_ON_RIGHT_BIG,
   },
   grid: {
     label: 'Grid',
-    icon: SvgIconEnum.FCR_FOURWINDOWS,
+    icon: SvgIconEnum.FCR_GRID_BIG,
   },
 };
 
@@ -71,7 +71,7 @@ const LayoutCard = ({
       onClick={onClick}
       className={classnames('fcr-layout-switch-card', { 'fcr-layout-switch-card-active': active })}>
       <div className="fcr-layout-switch-card-checkbox">
-        <Checkbox label={label} checked={active}></Checkbox>
+        <Radio label={label} checked={active}></Radio>
       </div>
       <div className="fcr-layout-switch-card-icon">
         <SvgImg style={{ width: 100, height: 56 }} type={icon}></SvgImg>
