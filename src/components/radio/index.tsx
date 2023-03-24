@@ -9,13 +9,15 @@ export interface RadioProps {
   checked?: boolean;
   onChange?: (checked: boolean) => void;
   styleType?: 'brand' | 'white';
+  name?: string;
 }
 export const Radio: FC<RadioProps> = (props) => {
-  const { label, onChange, styleType = 'brand', ...inputProps } = props;
+  const { label, onChange, styleType = 'brand', name, ...inputProps } = props;
   return (
     <label className={classnames('fcr-radio', `fcr-radio-${styleType}`)}>
       <span className="fcr-radio-input-wrapper">
         <input
+          name={name}
           {...inputProps}
           onChange={(e) => {
             onChange?.(e.target.checked);

@@ -22,7 +22,7 @@ const defaultSmallPopoverOverlayInnerStyle: CSSProperties = {
   borderRadius: `${borderRadius?.[8]}`,
   overflow: 'hidden',
 };
-interface PopoverProps extends ToolTipProps {
+export interface PopoverProps extends ToolTipProps {
   /**
    * 气泡操作面板的尺寸，可选值为 large | small
    */

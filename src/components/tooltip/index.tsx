@@ -114,6 +114,7 @@ export interface ToolTipProps {
   showArrow?: boolean;
   onVisibleChange?: (visible: boolean) => void;
   motion?: CSSMotionProps;
+  getTooltipContainer?: (node: HTMLElement) => HTMLElement;
 }
 
 export const ToolTip: FC<ToolTipProps> = (props) => {
@@ -128,10 +129,12 @@ export const ToolTip: FC<ToolTipProps> = (props) => {
     showArrow = true,
     onVisibleChange,
     motion,
+    getTooltipContainer,
     ...others
   } = props;
   return (
     <RcToolTip
+      getTooltipContainer={getTooltipContainer}
       onVisibleChange={onVisibleChange}
       prefixCls="fcr-tooltip"
       overlayClassName={overlayClassName}
