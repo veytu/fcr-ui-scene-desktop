@@ -1,7 +1,15 @@
 import { render, unmountComponentAtNode } from 'react-dom';
-import { LaunchOption } from './type';
+import { ConvertMediaOptionsConfig, LaunchMediaOptions, LaunchOption } from './type';
 import { App } from './app';
 import { Logger } from 'agora-common-libs';
+import {
+  EduClassroomConfig,
+  EduMediaEncryptionMode,
+  EduRegion,
+  EduRoleTypeEnum,
+  Platform,
+} from 'agora-edu-core';
+import { initializeBuiltInExtensions } from './utils/rtc-extensions';
 
 /**
  * Online class SDK
@@ -20,6 +28,73 @@ export class AgoraOnlineclassSDK {
    * @returns
    */
   static launch(dom: HTMLElement, launchOption: LaunchOption) {
+    const {
+      appId,
+      userUuid,
+      userName,
+      roleType,
+      roomUuid,
+      roomName,
+      roomType,
+      duration,
+      userFlexProperties,
+      rtmToken,
+      startTime,
+      recordUrl,
+      latencyLevel,
+      region,
+      mediaOptions,
+      platform,
+      pretest,
+      recordRetryTimeout,
+      sdkDomain,
+    } = launchOption;
+    const sessionInfo = {
+      userUuid,
+      userName,
+      role: roleType,
+      roomUuid,
+      roomName,
+      roomType,
+      duration,
+      flexProperties: userFlexProperties,
+      token: rtmToken,
+      startTime,
+    };
+    const { virtualBackgroundExtension, beautyEffectExtensionInstance, aiDenoiserInstance } =
+      initializeBuiltInExtensions();
+    const config = new EduClassroomConfig(
+      appId,
+      sessionInfo,
+      recordUrl || '',
+      {
+        latencyLevel,
+        region: this._convertRegion(region),
+        rtcConfigs: {
+          ...this._convertMediaOptions(mediaOptions),
+          ...{
+            noDevicePermission: roleType === EduRoleTypeEnum.invisible || platform === Platform.H5,
+          },
+        },
+        rtcSDKExtensions: [
+          virtualBackgroundExtension,
+          beautyEffectExtensionInstance,
+          aiDenoiserInstance,
+        ],
+      },
+      platform,
+      Object.assign(
+        { openCameraDeviceAfterLaunch: pretest, openRecordingDeviceAfterLaunch: pretest },
+        recordRetryTimeout ? { recordRetryTimeout } : {},
+      ),
+    );
+    if (sdkDomain) {
+      config.host = sdkDomain;
+    }
+    config.ignoreUrlRegionPrefix = ['dev', 'pre'].some((v) => config.host.includes(v));
+
+    EduClassroomConfig.setConfig(config);
+
     Logger.info('[AgoraEduSDK]launched with options:', launchOption);
 
     const startTs = Date.now();
@@ -43,4 +118,58 @@ export class AgoraOnlineclassSDK {
    * @param params
    */
   static setParameters(params: string) {}
+  private static _convertRegion(region: string): EduRegion {
+    switch (region.toUpperCase()) {
+      case 'CN':
+        return EduRegion.CN;
+      case 'AS':
+        return EduRegion.AP;
+      case 'EU':
+        return EduRegion.EU;
+      case 'NA':
+        return EduRegion.NA;
+    }
+    return region as EduRegion;
+  }
+  private static _convertMediaOptions(opts?: LaunchMediaOptions): ConvertMediaOptionsConfig {
+    const config: ConvertMediaOptionsConfig = {};
+    if (opts) {
+      const {
+        cameraEncoderConfiguration,
+        screenShareEncoderConfiguration,
+        encryptionConfig,
+        lowStreamCameraEncoderConfiguration,
+        channelProfile,
+        web,
+      } = opts;
+      if (cameraEncoderConfiguration) {
+        config.defaultCameraEncoderConfigurations = {
+          ...cameraEncoderConfiguration,
+        };
+      }
+      if (screenShareEncoderConfiguration) {
+        config.defaultScreenEncoderConfigurations = {
+          ...screenShareEncoderConfiguration,
+        };
+      }
+      if (encryptionConfig) {
+        config.encryption = {
+          mode: encryptionConfig.mode as unknown as EduMediaEncryptionMode,
+          key: encryptionConfig.key,
+        };
+      }
+      if (lowStreamCameraEncoderConfiguration) {
+        config.defaultLowStreamCameraEncoderConfigurations = {
+          ...lowStreamCameraEncoderConfiguration,
+        };
+      }
+      if (typeof channelProfile !== 'undefined') {
+        config.channelProfile = channelProfile;
+      }
+      if (web) {
+        config.web = web;
+      }
+    }
+    return config;
+  }
 }

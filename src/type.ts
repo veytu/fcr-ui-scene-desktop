@@ -1,6 +1,13 @@
-import { EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
-import { AgoraLatencyLevel } from 'agora-rte-sdk';
+import {
+  EduRegion,
+  EduRoleTypeEnum,
+  EduRoomTypeEnum,
+  EduRtcConfig,
+  Platform,
+} from 'agora-edu-core';
+import { AGMediaOptions, AgoraLatencyLevel, AGVideoEncoderConfiguration } from 'agora-rte-sdk';
 import { FcrMultiThemeMode } from 'agora-common-libs';
+import { IBaseProcessor, IExtension } from 'agora-rte-extension';
 
 /**
  * 启动参数
@@ -9,6 +16,9 @@ import { FcrMultiThemeMode } from 'agora-common-libs';
  * Options to launch SDK
  */
 export type LaunchOption = {
+  appId: string;
+  region: EduRegion;
+  sdkDomain: string;
   /**
    * 用户uuid
    */
@@ -156,6 +166,8 @@ export type LaunchOption = {
    *
    */
   webrtcExtensionBaseUrl?: string;
+  mediaOptions?: LaunchMediaOptions;
+  platform?: Platform;
 };
 
 /**
@@ -260,3 +272,18 @@ export type CoursewareItem = {
  *
  */
 export type CoursewareList = CoursewareItem[];
+export type ConvertMediaOptionsConfig = EduRtcConfig & {
+  defaultLowStreamCameraEncoderConfigurations?: AGVideoEncoderConfiguration;
+};
+export type LaunchMediaOptions = AGMediaOptions & {
+  lowStreamCameraEncoderConfiguration?: AGVideoEncoderConfiguration;
+};
+export type ExtensionInitializer = {
+  createInstance: () => IExtension<IBaseProcessor>;
+  createProcessor: (extension: IExtension<IBaseProcessor>) => Promise<IBaseProcessor>;
+};
+
+export type ProcessorInitializer<T extends IBaseProcessor> = {
+  name: string;
+  createProcessor: () => Promise<T>;
+};

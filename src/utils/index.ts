@@ -1,4 +1,5 @@
 const callbacks = new Set<() => void>();
+declare const NODE_ENV: string;
 
 export const clickAnywhere = (el: HTMLElement, cb: () => void) => {
   const propaHandler = (e: MouseEvent) => {
@@ -27,3 +28,4 @@ export const clickAnywhere = (el: HTMLElement, cb: () => void) => {
     callbacks.delete(cb);
   };
 };
+export const isProduction = NODE_ENV === 'production';

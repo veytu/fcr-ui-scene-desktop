@@ -26,10 +26,7 @@ const ActionBarDevice: FC<ActionBarDeviceProps> = (props) => {
           <SvgImg type={mute ? muteIcon : unmuteIcon} size={36}></SvgImg>
           <div className="fcr-action-bar-device-text">{mute ? muteText : unmuteText}</div>
         </div>
-        <Popover
-          getTooltipContainer={() => document.body}
-          content={<DeviceListPopoverContent></DeviceListPopoverContent>}
-          trigger="click">
+        <Popover content={<DeviceListPopoverContent></DeviceListPopoverContent>} trigger="click">
           <div
             onClick={(e) => {
               e.stopPropagation();
@@ -45,7 +42,11 @@ const ActionBarDevice: FC<ActionBarDeviceProps> = (props) => {
 
 const DeviceListPopoverContent = () => {
   return (
-    <div className="fcr-device-popover-content">
+    <div
+      className="fcr-device-popover-content"
+      onClick={(e) => {
+        e.stopPropagation();
+      }}>
       <div className="fcr-device-popover-content-device-list">
         <div className="fcr-device-popover-content-device">
           <div className="fcr-device-popover-content-device-label">Local Camera</div>

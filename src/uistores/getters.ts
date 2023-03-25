@@ -1,3 +1,5 @@
+import { EduClassroomStore } from 'agora-edu-core';
+
 export class Getters {
-    
+  constructor(private _classroomStore: EduClassroomStore) {}
 }

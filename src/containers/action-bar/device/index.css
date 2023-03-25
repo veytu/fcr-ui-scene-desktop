@@ -28,6 +28,10 @@
 .fcr-action-bar-device-extra:hover {
   @apply fcr-bg-5;
 }
+.fcr-action-bar-device-extra:hover svg {
+  transform: translateY(-3px);
+  transition: all 0.2s;
+}
 .fcr-device-popover-content-device {
   padding-top: 20px;
 }

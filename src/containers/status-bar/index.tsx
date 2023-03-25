@@ -7,6 +7,7 @@ import './index.css';
 import { NetworkDetail, NetworkConnection } from './network';
 import { Share } from './share';
 import { LayoutSwitch } from './layout-switch';
+import { EduClassroomConfig } from 'agora-edu-core';
 export const StatusBar = () => {
   return (
     <div className="fcr-status-bar">
@@ -36,6 +37,7 @@ const StatusBarItemWrapper: FC = (props) => {
   );
 };
 const StatusBarInfo: FC = () => {
+  const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
   return (
     <StatusBarItemWrapper>
       <div className="fcr-status-bar-info">
@@ -52,7 +54,7 @@ const StatusBarInfo: FC = () => {
         </DoubleDeckPopoverWithTooltip>
         <div className={classnames('fcr-status-bar-info-id', 'fcr-divider')}>
           <span>ID:</span>
-          <span>234 223 223</span>
+          <span>{roomUuid}</span>
         </div>
         <PopoverWithTooltip
           popoverProps={{
@@ -71,11 +73,11 @@ const StatusBarInfo: FC = () => {
   );
 };
 const StatusBarRoomName = () => {
+  const { roomName } = EduClassroomConfig.shared.sessionInfo;
+
   return (
     <StatusBarItemWrapper>
-      <div className={classnames('fcr-status-bar-room-name')}>
-        How to build a good model with C4D？
-      </div>
+      <div className={classnames('fcr-status-bar-room-name')}>{roomName}</div>
     </StatusBarItemWrapper>
   );
 };
