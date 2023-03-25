@@ -10,7 +10,9 @@ import {
   Platform,
 } from 'agora-edu-core';
 import { initializeBuiltInExtensions } from './utils/rtc-extensions';
-
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 /**
  * Online class SDK
  */

@@ -7,7 +7,11 @@ import './index.css';
 import { NetworkDetail, NetworkConnection } from './network';
 import { Share } from './share';
 import { LayoutSwitch } from './layout-switch';
-import { EduClassroomConfig } from 'agora-edu-core';
+import { observer } from 'mobx-react';
+import { useStore } from '@onlineclass/utils/hooks';
+import { themeVal } from '@onlineclass/utils/tailwindcss';
+const colors = themeVal('colors');
+
 export const StatusBar = () => {
   return (
     <div className="fcr-status-bar">
@@ -37,7 +41,9 @@ const StatusBarItemWrapper: FC = (props) => {
   );
 };
 const StatusBarInfo: FC = () => {
-  const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
+  const {
+    statusBarUIStore: { roomUuid },
+  } = useStore();
   return (
     <StatusBarItemWrapper>
       <div className="fcr-status-bar-info">
@@ -73,8 +79,9 @@ const StatusBarInfo: FC = () => {
   );
 };
 const StatusBarRoomName = () => {
-  const { roomName } = EduClassroomConfig.shared.sessionInfo;
-
+  const {
+    statusBarUIStore: { roomName },
+  } = useStore();
   return (
     <StatusBarItemWrapper>
       <div className={classnames('fcr-status-bar-room-name')}>{roomName}</div>
@@ -133,29 +140,40 @@ const Layout = () => {
     </StatusBarItemWrapper>
   );
 };
-const ClassDuration = () => {
+const ClassDuration = observer(() => {
+  const {
+    statusBarUIStore: { classStatusText },
+  } = useStore();
   return (
     <ToolTip content={'Class time'}>
       <StatusBarItemWrapper>
-        <div className="fcr-status-bar-class-duration">59:59</div>
+        <div className="fcr-status-bar-class-duration">{classStatusText}</div>
       </StatusBarItemWrapper>
     </ToolTip>
   );
-};
-const RecordStatus = () => {
+});
+const RecordStatus = observer(() => {
+  const {
+    statusBarUIStore: { isRecording },
+  } = useStore();
   return (
     <StatusBarItemWrapper>
       <div className="fcr-status-bar-record">
         <div className="fcr-status-bar-record-status">
-          <SvgImg type={SvgIconEnum.FCR_RECORDING_STOP}></SvgImg>
+          <SvgImg
+            colors={{
+              iconPrimary: isRecording ? colors['red.6'] : colors['notsb-inverse'],
+            }}
+            type={SvgIconEnum.FCR_RECORDING_STOP}></SvgImg>
           <span>Recording</span>
         </div>
         <ToolTip content="Click to pause">
           <div className="fcr-status-bar-record-action fcr-divider">
-            <SvgImg type={SvgIconEnum.FCR_STOP}></SvgImg>
+            <SvgImg
+              type={isRecording ? SvgIconEnum.FCR_STOP : SvgIconEnum.FCR_RECORDING_PLAY}></SvgImg>
           </div>
         </ToolTip>
       </div>
     </StatusBarItemWrapper>
   );
-};
+});

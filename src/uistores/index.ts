@@ -12,6 +12,7 @@ import { AGError, bound } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
 import { Getters } from './getters';
 import { LayoutUIStore } from './layout';
+import { StatusBarUIStore } from './status-bar';
 
 export class OnlineclassUIStore {
   private _installed = false;
@@ -19,10 +20,12 @@ export class OnlineclassUIStore {
   classroomStore: EduClassroomStore;
 
   layoutUIStore: LayoutUIStore;
+  statusBarUIStore: StatusBarUIStore;
   constructor() {
     this.classroomStore = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass);
     this._getters = new Getters(this.classroomStore);
     this.layoutUIStore = new LayoutUIStore(this.classroomStore, this._getters);
+    this.statusBarUIStore = new StatusBarUIStore(this.classroomStore, this._getters);
   }
   @bound
   initialize() {
