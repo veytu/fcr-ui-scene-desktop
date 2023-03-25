@@ -18,6 +18,7 @@
   @apply fcr-bg-transparent fcr-rounded-8;
   width: fit-content;
   height: 52px;
+  user-select: none;
 }
 .fcr-action-bar-item-wrapper:hover,
 .fcr-action-bar-item-active {

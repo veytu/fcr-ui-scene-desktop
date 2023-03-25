@@ -7,6 +7,13 @@ import { CameraDevice, MicrophoenDevice } from './device';
 import classnames from 'classnames';
 import { ToolBox } from './toolbox';
 import { Whiteboard } from './whiteboard';
+import { ScreenShare } from './screen-share';
+import { Record } from './record';
+import { RaiseHands } from './raise-hands';
+import { Chat } from './chat';
+import { Participants } from './participants';
+import { Setting } from './setting';
+import { Leave } from './leave';
 export const ActionBar = () => {
   return (
     <div className="fcr-action-bar">
@@ -17,10 +24,15 @@ export const ActionBar = () => {
       <div className="fcr-action-bar-mid">
         <ToolBox></ToolBox>
         <Whiteboard></Whiteboard>
+        <ScreenShare></ScreenShare>
+        <Record></Record>
       </div>
       <div className="fcr-action-bar-right">
-        <MicrophoenDevice></MicrophoenDevice>
-        <CameraDevice></CameraDevice>
+        <RaiseHands></RaiseHands>
+        <Chat></Chat>
+        <Participants></Participants>
+        <Setting></Setting>
+        <Leave></Leave>
       </div>
     </div>
   );
@@ -40,11 +52,14 @@ interface ActionBarItemProps {
   classNames?: string;
   icon: SvgIconEnum;
   text: string;
+  active?: boolean;
 }
 export const ActionBarItem: FC<ActionBarItemProps> = (props) => {
-  const { classNames, text, icon, ...others } = props;
+  const { classNames, text, icon, active = false, ...others } = props;
   return (
-    <ActionBarItemWrapper {...others} classNames={classNames}>
+    <ActionBarItemWrapper
+      {...others}
+      classNames={classnames(classNames, { 'fcr-action-bar-item-active': active })}>
       <div className="fcr-action-bar-item">
         <div className="fcr-action-bar-item-icon">
           <SvgImg size={36} type={icon}></SvgImg>
@@ -67,10 +82,7 @@ export const ActionBarItemWithPopover: FC<ActionBarItemWithPopoverProps> = (prop
         setPopoverOpend(visible);
         popoverProps?.onVisibleChange?.(visible);
       }}>
-      <ActionBarItem
-        icon={icon}
-        text={text}
-        classNames={classnames({ 'fcr-action-bar-item-active': popoverOpened })}></ActionBarItem>
+      <ActionBarItem active={popoverOpened} icon={icon} text={text}></ActionBarItem>
     </Popover>
   );
 };
