@@ -1,4 +1,4 @@
-import { useClickAnywhere } from '@onlineclass/utils/hooks';
+import { useClickAnywhere } from '@onlineclass/utils/hooks/use-click-anywhere';
 import classNames from 'classnames';
 import React, { FC, useMemo, useState } from 'react';
 import { SvgIconEnum, SvgImg } from '../svg-img';

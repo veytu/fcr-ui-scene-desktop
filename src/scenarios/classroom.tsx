@@ -1,5 +1,5 @@
 import { ActionBar } from '@onlineclass/containers/action-bar';
-import { useStore } from '@onlineclass/utils/hooks';
+import { useStore } from '@onlineclass/utils/hooks/use-store';
 import React, { useEffect } from 'react';
 import { StatusBar } from '../containers/status-bar';
 

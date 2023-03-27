@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import { themeVal } from '@onlineclass/utils/tailwindcss';
 import './index.css';
-import { useStore } from '@onlineclass/utils/hooks';
+import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { AGNetworkQuality } from 'agora-rte-sdk';
 const colors = themeVal('colors');
 const connectionStatus = {

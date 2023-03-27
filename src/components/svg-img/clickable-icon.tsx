@@ -41,7 +41,7 @@ interface PretestDeviceIconProps {
   classNames?: string;
   status: 'active' | 'inactive' | 'idle';
 }
-export const FcrPretestDeviceIcon: FC<PretestDeviceIconProps> = (props) => {
+export const PretestDeviceIcon: FC<PretestDeviceIconProps> = (props) => {
   const { status, icon, onClick, disabled, ...otherProps } = props;
 
   return (

@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 import { SvgIconEnum } from './type';
 import { SvgImg } from '.';
-import { FcrClickableIcon, FcrPretestDeviceIcon } from './clickable-icon';
+import { ClickableIcon, PretestDeviceIcon } from './clickable-icon';
 const meta: Meta = {
   title: 'Components/SvgImg',
   component: SvgImg,
@@ -51,30 +51,30 @@ Docs.args = {
 
 export default meta;
 
-export const ClickableIcon = ({ disabled }: { disabled: boolean }) => {
+export const Clickable = ({ disabled }: { disabled: boolean }) => {
   return (
     <div>
       <h1>Clickable Icon</h1>
       <div
         style={{ display: 'grid', gap: '20px', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))' }}>
-        <FcrClickableIcon disabled={disabled} icon={SvgIconEnum.FCR_CLOSE}></FcrClickableIcon>
-        <FcrPretestDeviceIcon
+        <ClickableIcon disabled={disabled} icon={SvgIconEnum.FCR_CLOSE}></ClickableIcon>
+        <PretestDeviceIcon
           disabled={disabled}
           status="active"
-          icon={SvgIconEnum.FCR_CAMERA}></FcrPretestDeviceIcon>
-        <FcrPretestDeviceIcon
+          icon={SvgIconEnum.FCR_CAMERA}></PretestDeviceIcon>
+        <PretestDeviceIcon
           disabled={disabled}
           status="inactive"
-          icon={SvgIconEnum.FCR_CAMERA}></FcrPretestDeviceIcon>
-        <FcrPretestDeviceIcon
+          icon={SvgIconEnum.FCR_CAMERA}></PretestDeviceIcon>
+        <PretestDeviceIcon
           disabled={disabled}
           status="idle"
-          icon={SvgIconEnum.FCR_CAMERA}></FcrPretestDeviceIcon>
+          icon={SvgIconEnum.FCR_CAMERA}></PretestDeviceIcon>
       </div>
     </div>
   );
 };
-ClickableIcon.argTypes = {
+Clickable.argTypes = {
   disabled: {
     control: 'boolean',
     defaultValue: false,

@@ -4,7 +4,7 @@ import { Layout } from '@onlineclass/uistores/type';
 import classnames from 'classnames';
 import './index.css';
 import { observer } from 'mobx-react';
-import { useStore } from '@onlineclass/utils/hooks';
+import { useStore } from '@onlineclass/utils/hooks/use-store';
 
 export const LayoutSwitch = () => {
   return (

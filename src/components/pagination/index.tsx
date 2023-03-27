@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import './index.css';
-import { FcrClickableIcon } from '../svg-img/clickable-icon';
+import { ClickableIcon } from '../svg-img/clickable-icon';
 
 type PaginationProps = {
   current: number;
@@ -103,7 +103,7 @@ export const HalfRoundedPagination: FC<PaginationProps> = ({
   return (
     <div className={cls}>
       <div className="fcr-pagination__extra">
-        <FcrClickableIcon icon={SvgIconEnum.FCR_V2_PHONE_MORE1} />
+        <ClickableIcon icon={SvgIconEnum.FCR_V2_PHONE_MORE1} />
       </div>
       <div className="fcr-divider" />
       <div className="fcr-pagination__prev">

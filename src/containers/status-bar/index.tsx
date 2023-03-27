@@ -8,7 +8,7 @@ import { NetworkDetail, NetworkConnection } from './network';
 import { Share } from './share';
 import { LayoutSwitch } from './layout-switch';
 import { observer } from 'mobx-react';
-import { useStore } from '@onlineclass/utils/hooks';
+import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { themeVal } from '@onlineclass/utils/tailwindcss';
 const colors = themeVal('colors');
 
