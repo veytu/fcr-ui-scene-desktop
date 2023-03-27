@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React from 'react';
 import { ComponentStory, Meta } from '@storybook/react';
 import { ToolTip, ToolTipProps } from '.';
 import { GuideToolTip } from './guide';
@@ -43,7 +43,7 @@ export const Placement = (
         gap: 30,
         padding: 50,
       }}>
-      {placementMap.map((placement) => {
+      {placementMap.map((placement, index) => {
         return (
           <Component
             key={placement}
@@ -84,6 +84,7 @@ Placement.argTypes = {
 export default meta;
 
 export const Type: ComponentStory<typeof ToolTip> = (props) => {
+  // eslint-disable-next-line react/prop-types
   const { trigger } = props;
   return (
     <div

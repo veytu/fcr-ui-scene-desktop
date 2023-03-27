@@ -24,23 +24,25 @@
   @apply fcr-text-2;
 }
 
-.fcr-dropdown.fcr-dropdown-l .fcr-dropdown__selected,
+.fcr-dropdown.fcr-dropdown-l .fcr-dropdown__selected {
+  padding: 11px 6px 11px 12px;
+}
 .fcr-dropdown.fcr-dropdown-l .fcr-dropdown__option {
-  padding: 12px 6px 12px 12px;
+  padding: 15px 6px 15px 12px;
 }
 
 .fcr-dropdown.fcr-dropdown-m .fcr-dropdown__selected {
-  padding: 8px 12px;
+  padding: 5px 12px;
 }
 .fcr-dropdown.fcr-dropdown-m .fcr-dropdown__option {
   padding: 12px;
 }
 
 .fcr-dropdown.fcr-dropdown-s .fcr-dropdown__selected {
-  padding: 3px 6px;
+  padding: 2px 6px;
 }
 .fcr-dropdown.fcr-dropdown-s .fcr-dropdown__option {
-  padding: 8px 6px;
+  padding: 6px 6px;
 }
 
 .fcr-dropdown.fcr-dropdown-s .fcr-dropdown__icon {

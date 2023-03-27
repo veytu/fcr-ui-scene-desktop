@@ -1,0 +1,45 @@
+.fcr-vertical-slider {
+  height: 100%;
+  position: relative;
+  display: inline-block;
+}
+
+.fcr-vertical-slider .rc-slider-vertical {
+  padding: 0;
+  width: 10px;
+}
+
+.fcr-vertical-slider .rc-slider-vertical .rc-slider-handle {
+  height: 16px;
+  width: 16px;
+  margin-left: -3px;
+  border-color: theme(colors.white);
+  box-shadow: none;
+}
+
+.fcr-vertical-slider .rc-slider-vertical .rc-slider-rail {
+  width: 10px;
+}
+
+.fcr-vertical-slider .rc-slider-vertical .rc-slider-track {
+  left: 0;
+  width: 10px;
+  background: theme(colors.brand.6);
+}
+
+.fcr-vertical-slider .rc-slider-vertical .rc-slider-handle::after {
+  @apply fcr-rounded-full;
+  content: '';
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  opacity: 0;
+  left: -7px;
+  top: -7px;
+  transition: all 0.3s;
+  background: theme(colors.white);
+}
+
+.fcr-vertical-slider .rc-slider-handle:hover::after {
+  opacity: 0.4;
+}

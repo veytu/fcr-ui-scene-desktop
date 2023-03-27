@@ -49,6 +49,10 @@ module.exports = {
       //
       notsb: '#000000',
       'notsb-inverse': '#ffffff',
+
+      'black-a40': colorAlpha('#000000', 0.4),
+      'black-a50': colorAlpha('#000000', 0.5),
+      'black-a80': colorAlpha('#000000', 0.8),
     },
     backgroundImage: (theme) => ({
       // progress

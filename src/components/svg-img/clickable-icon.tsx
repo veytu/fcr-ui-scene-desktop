@@ -42,7 +42,7 @@ interface PretestDeviceIconProps {
   status: 'active' | 'inactive' | 'idle';
 }
 export const PretestDeviceIcon: FC<PretestDeviceIconProps> = (props) => {
-  const { status, icon, onClick, disabled, ...otherProps } = props;
+  const { status, icon, onClick, disabled, classNames, ...otherProps } = props;
 
   return (
     <ClickableIcon
@@ -51,6 +51,6 @@ export const PretestDeviceIcon: FC<PretestDeviceIconProps> = (props) => {
       onClick={onClick}
       icon={icon}
       size="large"
-      classNames={classnames(`fcr-pretest-device-icon-${status}`)}></ClickableIcon>
+      classNames={classnames(`fcr-pretest-device-icon-${status}`, classNames)}></ClickableIcon>
   );
 };

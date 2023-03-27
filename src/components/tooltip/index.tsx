@@ -115,6 +115,7 @@ export interface ToolTipProps {
   onVisibleChange?: (visible: boolean) => void;
   motion?: CSSMotionProps;
   getTooltipContainer?: (node: HTMLElement) => HTMLElement;
+  children?: React.ReactNode;
 }
 
 export const ToolTip: FC<ToolTipProps> = (props) => {

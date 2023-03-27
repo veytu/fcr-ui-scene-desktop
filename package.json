@@ -10,15 +10,17 @@
     "convertsvg": "ts-node --skipProject tools/convertsvg"
   },
   "dependencies": {
-    "@types/react-dom": "^18.0.11",
-    "@types/react-transition-group": "^4.4.5",
-    "@types/uuid": "^9.0.1",
+    "@types/react": "17.0.44",
+    "@types/react-dom": "16.9.2",
+    "@types/react-transition-group": "4.4.1",
+    "@types/uuid": "3.4.6",
     "agora-common-libs": "2.8.1",
     "agora-edu-core": "2.8.21",
-    "rc-dialog": "^9.1.0",
+    "rc-dialog": "9.1.0",
     "rc-tooltip": "5.1.1",
+    "rc-slider": "9.7.1",
     "react": "17.0.0",
-    "react-copy-to-clipboard": "^5.1.0",
+    "react-copy-to-clipboard": "5.1.0",
     "react-dom": "17.0.0",
     "react-draggable": "4.4.3",
     "react-helmet": "6.1.0",
@@ -29,14 +31,13 @@
     "react-spring": "9.4.4",
     "react-transition-group": "4.4.1",
     "react-use-measure": "2.1.1",
-    "uuid": "^9.0.0"
+    "uuid": "3.3.3"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "6.5.13",
     "@storybook/addon-links": "6.5.13",
     "@storybook/addon-postcss": "2.0.0",
     "@storybook/react": "6.5.13",
-    "@types/react": "17.0.0",
     "@types/tailwindcss": "2.2.4",
     "autoprefixer": "10.4.14",
     "node-html-parser": "6.1.5",

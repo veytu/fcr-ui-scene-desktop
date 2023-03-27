@@ -1,14 +1,5 @@
 import '@onlineclass/preflight.css';
 
-const themes = {
-  light: {
-    iconPrimary: '#eee',
-  },
-  dark: {
-    iconPrimary: '#fff',
-  },
-};
-
 export const globalTypes = {
   locale: {
     name: 'Locale',
