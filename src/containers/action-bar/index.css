@@ -1,0 +1,37 @@
+.fcr-action-bar {
+  @apply fcr-bg-2;
+  width: 100%;
+  height: 66px;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.fcr-action-bar-left,
+.fcr-action-bar-mid,
+.fcr-action-bar-right {
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+}
+.fcr-action-bar-item-wrapper {
+  @apply fcr-bg-transparent fcr-rounded-8;
+  width: fit-content;
+  height: 52px;
+  user-select: none;
+}
+.fcr-action-bar-item-wrapper:hover,
+.fcr-action-bar-item-active {
+  @apply fcr-bg-4;
+}
+.fcr-action-bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 58px;
+}
+.fcr-action-bar-item-text {
+  @apply fcr-text-2 fcr-font-regular;
+  font-size: 10px;
+  line-height: 12px;
+}

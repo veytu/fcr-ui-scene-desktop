@@ -12,7 +12,7 @@
 }
 .fcr-layout-switch-card {
   @apply fcr-rounded-12 fcr-bg-4;
-  width: 132px;
+  width: 130px;
   height: 114px;
   position: relative;
   padding: 8px;
@@ -20,11 +20,11 @@
 .fcr-layout-switch-card::after {
   @apply fcr-border-brand-5 fcr-rounded-16;
   content: '';
-  width: 141px;
-  height: 123px;
+  width: 140px;
+  height: 124px;
   position: absolute;
-  left: -4px;
-  top: -4px;
+  left: -5px;
+  top: -5px;
   border-width: 3px;
   border-style: solid;
   opacity: 0;
@@ -39,4 +39,17 @@
   display: flex;
   flex-direction: row;
   gap: 20px;
+}
+.fcr-layout-switch-card-icon {
+  @apply fcr-bg-2 fcr-rounded-8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 116px;
+  height: 72px;
+}
+.fcr-layout-switch-card-checkbox {
+  padding-top: 2px;
+  padding-left: 4px;
+  padding-bottom: 6px;
 }

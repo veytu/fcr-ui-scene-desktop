@@ -1,81 +1,61 @@
-import { Checkbox } from '@onlineclass/components/checkbox';
+import { Radio } from '@onlineclass/components/radio';
 import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
+import { Layout } from '@onlineclass/uistores/type';
 import classnames from 'classnames';
-import { useState } from 'react';
 import './index.css';
-
-const layoutMap = {
-  top: {
-    label: 'List on top',
-    icon: SvgIconEnum.FCR_TOPWINDOWS,
-  },
-  right: {
-    label: 'List on right',
-    icon: SvgIconEnum.FCR_RIGHTWINDOWS,
-  },
-  grid: {
-    label: 'Grid',
-    icon: SvgIconEnum.FCR_FOURWINDOWS,
-  },
-};
+import { observer } from 'mobx-react';
+import { useStore } from '@onlineclass/utils/hooks';
 
 export const LayoutSwitch = () => {
-  const [layout, setLayout] = useState('top');
   return (
     <div className="fcr-layout-switch">
       <div className="fcr-layout-switch-speaker-view">
         <div className="fcr-layout-switch-title">Speaker View</div>
         <div className="fcr-layout-switch-view-wrap">
-          <LayoutCard
-            active={layout === 'top'}
-            {...layoutMap.top}
-            onClick={() => {
-              setLayout('top');
-            }}></LayoutCard>
-          <LayoutCard
-            active={layout === 'right'}
-            {...layoutMap.right}
-            onClick={() => {
-              setLayout('right');
-            }}></LayoutCard>
+          <LayoutCard layout={Layout.ListOnTop}></LayoutCard>
+          <LayoutCard layout={Layout.ListOnRight}></LayoutCard>
         </div>
       </div>
       <div className="fcr-layout-switch-grid">
         <div className="fcr-layout-switch-title">Grid</div>
         <div className="fcr-layout-switch-view-wrap">
-          <LayoutCard
-            active={layout === 'grid'}
-            {...layoutMap.grid}
-            onClick={() => {
-              setLayout('grid');
-            }}></LayoutCard>
+          <LayoutCard layout={Layout.Grid}></LayoutCard>
         </div>
       </div>
     </div>
   );
 };
+const layoutMap = {
+  [Layout.ListOnTop]: {
+    label: 'List on top',
+    icon: SvgIconEnum.FCR_LIST_ON_TOP_BIG,
+  },
+  [Layout.ListOnRight]: {
+    label: 'List on right',
+    icon: SvgIconEnum.FCR_LIST_ON_RIGHT_BIG,
+  },
+  [Layout.Grid]: {
+    label: 'Grid',
+    icon: SvgIconEnum.FCR_GRID_BIG,
+  },
+};
 
-const LayoutCard = ({
-  label,
-  active,
-  icon,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  icon: SvgIconEnum;
-  onClick: () => void;
-}) => {
+const LayoutCard = observer(({ layout }: { layout: Layout }) => {
+  const {
+    layoutUIStore: { layout: currentLayout, setLayout },
+  } = useStore();
+  const { label, icon } = layoutMap[layout];
+  const active = currentLayout === layout;
   return (
     <div
-      onClick={onClick}
+      onClick={() => setLayout(layout)}
       className={classnames('fcr-layout-switch-card', { 'fcr-layout-switch-card-active': active })}>
       <div className="fcr-layout-switch-card-checkbox">
-        <Checkbox label={label} checked={active}></Checkbox>
+        <Radio label={label} checked={active}></Radio>
       </div>
       <div className="fcr-layout-switch-card-icon">
         <SvgImg style={{ width: 100, height: 56 }} type={icon}></SvgImg>
       </div>
     </div>
   );
-};
+});

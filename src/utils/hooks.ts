@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useContext } from 'react';
 import { clickAnywhere } from '.';
-
+import { OnlineclassContext } from '@onlineclass/uistores/context';
 export const useClickAnywhere = (cb: () => void) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -12,3 +12,4 @@ export const useClickAnywhere = (cb: () => void) => {
 
   return ref;
 };
+export const useStore = () => useContext(OnlineclassContext.shared);

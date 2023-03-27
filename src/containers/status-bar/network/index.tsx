@@ -1,23 +1,40 @@
-import { SvgImg } from '@onlineclass/components/svg-img';
+import { observer } from 'mobx-react';
 import { themeVal } from '@onlineclass/utils/tailwindcss';
 import './index.css';
+import { useStore } from '@onlineclass/utils/hooks';
+import { AGNetworkQuality } from 'agora-rte-sdk';
 const colors = themeVal('colors');
 const connectionStatus = {
-  Excellent: {
+  [AGNetworkQuality.great]: {
     color: colors['green'],
     text: 'Excellent 👍',
   },
-  Average: {
+  [AGNetworkQuality.good]: {
+    color: colors['green'],
+    text: 'Excellent 👍',
+  },
+  [AGNetworkQuality.poor]: {
     color: colors['yellow'],
     text: 'Average 💪',
   },
-  Poor: {
+  [AGNetworkQuality.bad]: {
     color: colors['red.6'],
     text: 'Poor 😭',
   },
+  [AGNetworkQuality.down]: {
+    color: colors['red.6'],
+    text: 'Poor 😭',
+  },
+  [AGNetworkQuality.unknown]: {
+    color: colors['text-1'],
+    text: 'Unknow',
+  },
 };
-export const NetworkConnection = () => {
-  const currentStatus = connectionStatus['Excellent'];
+export const NetworkConnection = observer(() => {
+  const {
+    statusBarUIStore: { networkQuality },
+  } = useStore();
+  const currentStatus = connectionStatus[networkQuality];
   return (
     <div className="fcr-network-connection">
       <div className="fcr-network-connection-title">Network Connection</div>
@@ -26,8 +43,11 @@ export const NetworkConnection = () => {
       </div>
     </div>
   );
-};
-export const NetworkDetail = () => {
+});
+export const NetworkDetail = observer(() => {
+  const {
+    statusBarUIStore: { delay, packetLoss },
+  } = useStore();
   return (
     <div className="fcr-network-connection-detail">
       <div className="fcr-network-connection-detail-key">
@@ -36,13 +56,13 @@ export const NetworkDetail = () => {
       </div>
       <div className="fcr-network-connection-detail-value">
         <div>
-          <span>0ms</span>
+          <span>{delay}</span>
         </div>
         <div>
-          <span>0.00%</span>
-          <span>0.00%</span>
+          <span>{packetLoss}</span>
+          <span>{packetLoss}</span>
         </div>
       </div>
     </div>
   );
-};
+});

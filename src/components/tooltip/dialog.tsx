@@ -16,7 +16,7 @@ const defaultDialogOverlayInnerStyle: CSSProperties = {
   borderRadius: `${borderRadius[12]}`,
 };
 
-interface FcrDialogToolTipProps extends ToolTipProps {
+interface DialogToolTipProps extends ToolTipProps {
   /**
    * 点击关闭按钮的回调
    */
@@ -27,7 +27,7 @@ interface FcrDialogToolTipProps extends ToolTipProps {
    */
   onClose?: () => void;
 }
-const DialogToolTipClosableOverlayWrap: FC<Pick<FcrDialogToolTipProps, 'content' | 'onClose'>> = (
+const DialogToolTipClosableOverlayWrap: FC<Pick<DialogToolTipProps, 'content' | 'onClose'>> = (
   props,
 ) => {
   const { content, onClose } = props;
@@ -43,7 +43,7 @@ const DialogToolTipClosableOverlayWrap: FC<Pick<FcrDialogToolTipProps, 'content'
     </div>
   );
 };
-export const FcrDialogToolTip: FC<FcrDialogToolTipProps> = (props) => {
+export const DialogToolTip: FC<DialogToolTipProps> = (props) => {
   const { content, onClose, ...others } = props;
   return (
     <ToolTip

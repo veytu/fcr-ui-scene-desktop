@@ -8,9 +8,14 @@ const meta: Meta = {
 
 export const Docs = () => {
   return (
-    <div>
-      <Checkbox label="Agree terms of service"></Checkbox>
-    </div>
+    <>
+      <div>
+        <Checkbox label="Agree terms of service"></Checkbox>
+      </div>
+      <div>
+        <Checkbox styleType="white" label="Agree terms of service"></Checkbox>
+      </div>
+    </>
   );
 };
 

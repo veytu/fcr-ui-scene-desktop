@@ -3,12 +3,12 @@ import { ComponentStory, Meta } from '@storybook/react';
 import { ToolTip, ToolTipProps } from '.';
 import { GuideToolTip } from './guide';
 import { InfoToolTip } from './info';
-import { FcrDialogToolTip } from './dialog';
+import { DialogToolTip } from './dialog';
 const tooltipMap = {
   normal: ToolTip,
   guide: GuideToolTip,
   info: InfoToolTip,
-  dialog: FcrDialogToolTip,
+  dialog: DialogToolTip,
 };
 const meta: Meta = {
   title: 'Components/ToolTip',
@@ -46,7 +46,7 @@ export const Placement = (
       {placementMap.map((placement, index) => {
         return (
           <Component
-            key={index.toString()}
+            key={placement}
             trigger={trigger}
             placement={placement}
             content={placement}
@@ -143,7 +143,7 @@ export const Type: ComponentStory<typeof ToolTip> = (props) => {
           info
         </a>
       </InfoToolTip>
-      <FcrDialogToolTip
+      <DialogToolTip
         trigger={trigger}
         placement={'top'}
         content={'🙋 有1人举手，请点击查看'}
@@ -162,7 +162,7 @@ export const Type: ComponentStory<typeof ToolTip> = (props) => {
           }}>
           dialog
         </a>
-      </FcrDialogToolTip>
+      </DialogToolTip>
     </div>
   );
 };

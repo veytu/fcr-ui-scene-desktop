@@ -1,0 +1,55 @@
+.fcr-radio {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  width: fit-content;
+}
+.fcr-radio-input-wrapper {
+  @apply fcr-border-1-a50 fcr-rounded-full;
+  width: 20px;
+  height: 20px;
+  border-width: 3px;
+  border-style: solid;
+  position: relative;
+}
+.fcr-radio-input-wrapper > input {
+  @apply fcr-rounded-full;
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+}
+.fcr-radio-inner {
+  @apply fcr-rounded-full fcr-bg-white;
+  width: 14px;
+  height: 14px;
+  position: absolute !important;
+  left: 0;
+  top: 0;
+  --effect-color: theme(colors.brand.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fcr-radio-inner svg {
+  opacity: 0;
+}
+.fcr-radio-input-wrapper > input:checked ~ .fcr-radio-inner svg {
+  opacity: 1;
+}
+.fcr-radio-label {
+  @apply fcr-text-2 fcr-font-regular;
+  font-size: 14px;
+  line-height: 14px;
+  padding: 0 7px;
+  user-select: none;
+}
+
+.fcr-radio-brand .fcr-radio-input-wrapper > input:checked ~ .fcr-radio-inner {
+  @apply fcr-bg-brand-6;
+}
+.fcr-radio-input-wrapper > input:active ~ .fcr-btn-click-effect::after {
+  box-shadow: none;
+  opacity: 0.5;
+  transition: 0s;
+}

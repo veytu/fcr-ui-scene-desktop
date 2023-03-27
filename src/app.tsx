@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Classroom } from './scenarios/classroom';
 import { Pretest } from './scenarios/pretest';
 import './preflight.css';
+import { useStore } from './utils/hooks';
 export const App = () => {
-  const [pretest, setPretest] = useState(true);
-
+  const { initialize, destroy } = useStore();
+  const [pretest, setPretest] = useState(false);
+  const [initialized, setInitialized] = useState(false);
+  useEffect(() => {
+    initialize();
+    setInitialized(true);
+    return destroy;
+  }, []);
   return (
-    <React.Fragment>
-      {pretest && <Pretest />}
-      {!pretest && <Classroom />}
-    </React.Fragment>
+    initialized && (
+      <React.Fragment>
+        {pretest && <Pretest />}
+        {!pretest && <Classroom />}
+      </React.Fragment>
+    )
   );
 };
