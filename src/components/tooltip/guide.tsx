@@ -22,7 +22,7 @@ const defaultGuideOverlayInnerStyle: CSSProperties = {
   borderRadius: `${borderRadius[8]}`,
 };
 
-interface FcrGuideToolTipProps extends ToolTipProps {
+interface GuideToolTipProps extends ToolTipProps {
   /**
    * 是否显示关闭按钮
    */
@@ -43,7 +43,7 @@ interface FcrGuideToolTipProps extends ToolTipProps {
   onClose?: () => void;
 }
 const GuideToolTipClosableOverlayWrap: FC<
-  Pick<FcrGuideToolTipProps, 'closable' | 'content' | 'onClose'>
+  Pick<GuideToolTipProps, 'closable' | 'content' | 'onClose'>
 > = (props) => {
   const { content, closable, onClose } = props;
   return (
@@ -68,7 +68,7 @@ const GuideToolTipClosableOverlayWrap: FC<
     </div>
   );
 };
-export const FcrGuideToolTip: FC<FcrGuideToolTipProps> = (props) => {
+export const GuideToolTip: FC<GuideToolTipProps> = (props) => {
   const { closable, content, onClose, ...others } = props;
   return (
     <ToolTip

@@ -1,13 +1,4 @@
-import '@onlineclass/ui-kit/preflight.css';
-
-const themes = {
-  light: {
-    iconPrimary: '#eee',
-  },
-  dark: {
-    iconPrimary: '#fff',
-  },
-};
+import '@onlineclass/preflight.css';
 
 export const globalTypes = {
   locale: {

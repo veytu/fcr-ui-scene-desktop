@@ -1,13 +1,13 @@
-import React, { FC, useState } from 'react';
+import React from 'react';
 import { ComponentStory, Meta } from '@storybook/react';
-import { FcrToolTip, FcrToolTipProps } from '.';
-import { FcrGuideToolTip } from './guide';
-import { FcrInfoToolTip } from './info';
+import { ToolTip, ToolTipProps } from '.';
+import { GuideToolTip } from './guide';
+import { InfoToolTip } from './info';
 import { FcrDialogToolTip } from './dialog';
 const tooltipMap = {
-  normal: FcrToolTip,
-  guide: FcrGuideToolTip,
-  info: FcrInfoToolTip,
+  normal: ToolTip,
+  guide: GuideToolTip,
+  info: InfoToolTip,
   dialog: FcrDialogToolTip,
 };
 const meta: Meta = {
@@ -28,7 +28,7 @@ const placementMap = [
   'bottomRight',
 ];
 export const Placement = (
-  props: FcrToolTipProps & {
+  props: ToolTipProps & {
     children?: React.ReactNode;
     type: keyof typeof tooltipMap;
   },
@@ -43,9 +43,14 @@ export const Placement = (
         gap: 30,
         padding: 50,
       }}>
-      {placementMap.map((placement) => {
+      {placementMap.map((placement, index) => {
         return (
-          <Component trigger={trigger} placement={placement} content={placement} closable>
+          <Component
+            key={index.toString()}
+            trigger={trigger}
+            placement={placement}
+            content={placement}
+            closable>
             <a
               style={{
                 width: 120,
@@ -78,7 +83,8 @@ Placement.argTypes = {
 };
 export default meta;
 
-export const Type: ComponentStory<typeof FcrToolTip> = (props) => {
+export const Type: ComponentStory<typeof ToolTip> = (props) => {
+  // eslint-disable-next-line react/prop-types
   const { trigger } = props;
   return (
     <div
@@ -88,7 +94,7 @@ export const Type: ComponentStory<typeof FcrToolTip> = (props) => {
         gap: '40px',
         flexDirection: 'row',
       }}>
-      <FcrToolTip trigger={trigger} placement={'top'} content={'关闭摄像头'}>
+      <ToolTip trigger={trigger} placement={'top'} content={'关闭摄像头'}>
         <a
           style={{
             width: 120,
@@ -101,8 +107,8 @@ export const Type: ComponentStory<typeof FcrToolTip> = (props) => {
           }}>
           normal
         </a>
-      </FcrToolTip>
-      <FcrGuideToolTip
+      </ToolTip>
+      <GuideToolTip
         onClose={() => {
           console.log('onClose');
         }}
@@ -122,8 +128,8 @@ export const Type: ComponentStory<typeof FcrToolTip> = (props) => {
           }}>
           guide
         </a>
-      </FcrGuideToolTip>
-      <FcrInfoToolTip trigger={trigger} placement={'top'} content={'🙋 有1人举手，请点击查看'}>
+      </GuideToolTip>
+      <InfoToolTip trigger={trigger} placement={'top'} content={'🙋 有1人举手，请点击查看'}>
         <a
           style={{
             width: 120,
@@ -136,7 +142,7 @@ export const Type: ComponentStory<typeof FcrToolTip> = (props) => {
           }}>
           info
         </a>
-      </FcrInfoToolTip>
+      </InfoToolTip>
       <FcrDialogToolTip
         trigger={trigger}
         placement={'top'}

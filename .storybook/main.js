@@ -5,7 +5,7 @@ module.exports = {
   typescript: {
     reactDocgen: 'react-docgen',
   },
-  stories: [path.resolve(ROOT_PATH, 'src/ui-kit/components/**/*.stories.@(ts|tsx)')],
+  stories: [path.resolve(ROOT_PATH, 'src/components/**/*.stories.@(ts|tsx)')],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
