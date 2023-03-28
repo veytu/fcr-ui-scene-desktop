@@ -107,6 +107,7 @@ module.exports = {
       'notsb-inverse': theme('colors.notsb-inverse'),
     }),
     boxShadow: (theme) => ({
+      'line-1-.5': `0 0 0 .5px ${theme('colors.line-1')}`,
       1: `10px 2px 8px 5px ${theme('colors.shadow-1')}`,
       2: `0px 4px 50px ${theme('colors.shadow-2')}`,
       3: `0px 4px 50px -8px ${theme('colors.shadow-3')}`,

@@ -128,6 +128,9 @@ export class StatusBarUIStore extends EduUIStoreBase {
   get classroomSchedule() {
     return this.classroomStore.roomStore.classroomSchedule;
   }
+  @computed get afterClass() {
+    return this.classroomSchedule.state === ClassState.afterClass;
+  }
   @computed
   get classStatusText() {
     const duration = this.classTimeDuration || 0;

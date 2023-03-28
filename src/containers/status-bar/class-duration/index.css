@@ -1,0 +1,8 @@
+.fcr-status-bar-class-duration {
+  @apply fcr-font-title fcr-text-1;
+  font-size: 16px;
+  padding: 0 11px;
+}
+.fcr-status-bar-class-duration-danger {
+  @apply fcr-bg-red-6;
+}

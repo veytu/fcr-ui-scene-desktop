@@ -18,6 +18,14 @@ dayjs.extend(duration);
  */
 export class AgoraOnlineclassSDK {
   /**
+   * 品牌logo的url，会以图片展示在主界面左上角
+   */
+  /** @en
+   * The logo url of your brand, which will show on the top left of the main view.
+   */
+  static logo = '';
+
+  /**
    * Entry point of AgoraEduSDK, which is used to create an online classroom app and render at the specified dom.
    * @param dom
    * @param launchOption
@@ -119,7 +127,10 @@ export class AgoraOnlineclassSDK {
    *
    * @param params
    */
-  static setParameters(params: string) {}
+  static setParameters(params: AgoraOnlineclassSDKStaticParameters) {
+    const { logo } = params;
+    if (logo) this.logo = logo;
+  }
   private static _convertRegion(region: string): EduRegion {
     switch (region.toUpperCase()) {
       case 'CN':
@@ -174,4 +185,8 @@ export class AgoraOnlineclassSDK {
     }
     return config;
   }
+}
+
+interface AgoraOnlineclassSDKStaticParameters {
+  logo?: string;
 }

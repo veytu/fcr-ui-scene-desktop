@@ -1,5 +1,5 @@
 .fcr-status-bar {
-  @apply fcr-bg-1;
+  @apply fcr-bg-2;
   width: 100%;
   height: 57px;
   display: flex;
@@ -14,12 +14,13 @@
   flex-direction: row;
   gap: 10px;
 }
-
-.fcr-status-bar-item-wrapper {
-  @apply fcr-bg-2 fcr-border-1 fcr-rounded-8;
+.fcr-status-bar-logo img {
   height: 32px;
-  border-width: 1px;
-  border-style: solid;
+}
+.fcr-status-bar-item-wrapper {
+  @apply fcr-bg-2 fcr-shadow-line-1-.5 fcr-rounded-8;
+  height: 32px;
+
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -70,7 +71,8 @@
   justify-content: center;
   align-items: center;
 }
-.fcr-status-bar-fullscreen:hover {
+.fcr-status-bar-fullscreen:hover,
+.fcr-status-bar-layout:hover {
   @apply fcr-bg-brand-6;
 }
 
@@ -84,33 +86,4 @@
 .fcr-status-bar-layout > span {
   @apply fcr-text-1;
   font-size: 16px;
-}
-.fcr-status-bar-class-duration {
-  @apply fcr-font-title fcr-text-1;
-  font-size: 16px;
-  padding: 0 11px;
-}
-.fcr-status-bar-record {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-.fcr-status-bar-record-status {
-  display: flex;
-  flex-direction: row;
-  padding-left: 4px;
-  padding-right: 8px;
-}
-.fcr-status-bar-record-status > span {
-  @apply fcr-font-regular fcr-text-1;
-  font-size: 16px;
-}
-.fcr-status-bar-record-action {
-  height: 32px;
-  padding: 0 8px;
-  display: flex;
-  align-items: center;
-}
-.fcr-status-bar-record-action:hover {
-  @apply fcr-bg-brand-6;
 }

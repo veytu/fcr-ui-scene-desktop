@@ -57,10 +57,8 @@ interface ActionBarItemProps {
 export const ActionBarItem: FC<ActionBarItemProps> = (props) => {
   const { classNames, text, icon, active = false, ...others } = props;
   return (
-    <ActionBarItemWrapper
-      {...others}
-      classNames={classnames(classNames, { 'fcr-action-bar-item-active': active })}>
-      <div className="fcr-action-bar-item">
+    <ActionBarItemWrapper {...others} classNames={classnames(classNames)}>
+      <div className={classnames('fcr-action-bar-item', { 'fcr-action-bar-item-active': active })}>
         <div className="fcr-action-bar-item-icon">
           <SvgImg size={36} type={icon}></SvgImg>
         </div>

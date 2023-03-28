@@ -116,6 +116,7 @@ export interface ToolTipProps {
   motion?: CSSMotionProps;
   getTooltipContainer?: (node: HTMLElement) => HTMLElement;
   children?: React.ReactNode;
+  mouseEnterDelay?: number;
 }
 
 export const ToolTip: FC<ToolTipProps> = (props) => {
@@ -131,10 +132,12 @@ export const ToolTip: FC<ToolTipProps> = (props) => {
     onVisibleChange,
     motion,
     getTooltipContainer,
+    mouseEnterDelay,
     ...others
   } = props;
   return (
     <RcToolTip
+      mouseEnterDelay={mouseEnterDelay ?? 1}
       getTooltipContainer={getTooltipContainer}
       onVisibleChange={onVisibleChange}
       prefixCls="fcr-tooltip"

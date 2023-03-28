@@ -1,12 +1,15 @@
 .fcr-action-bar-device {
+  @apply fcr-rounded-8;
   position: relative;
-  width: 66px;
+  width: 71px;
+}
+.fcr-action-bar-device:hover {
+  @apply fcr-bg-4;
 }
 .fcr-action-bar-device-inner {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 22px 6px 7px;
 }
 .fcr-action-bar-device-text {
   @apply fcr-text-2;
