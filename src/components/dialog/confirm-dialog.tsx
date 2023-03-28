@@ -5,7 +5,7 @@ import { Checkbox, CheckboxProps } from '../checkbox';
 import { BaseDialog, BaseDialogProps } from '.';
 import './confirm-dialog.css';
 
-interface ConfirmDialogProps extends BaseDialogProps {
+export interface ConfirmDialogProps extends BaseDialogProps {
   /**
    * 对话框标题
    */
@@ -63,11 +63,14 @@ interface ConfirmDialogProps extends BaseDialogProps {
    * Set the icon on the left of the dialog title and content.
    */
   icon?: ReactNode;
+  content?: ReactNode;
+  afterOpenChange?: (open: boolean) => void;
 }
 export const ConfirmDialog: FC<ConfirmDialogProps> = (props) => {
   const {
     visible,
     onClose,
+    content,
     children,
     title,
     closable,
@@ -81,9 +84,11 @@ export const ConfirmDialog: FC<ConfirmDialogProps> = (props) => {
     icon,
     okText,
     cancelText,
+    afterOpenChange,
   } = props;
   return (
     <BaseDialog
+      afterOpenChange={afterOpenChange}
       closable={closable}
       closeIcon={closeIcon}
       width={width || 415}
@@ -95,7 +100,7 @@ export const ConfirmDialog: FC<ConfirmDialogProps> = (props) => {
         <div></div>
         <div>
           <div className={classNames('fcr-confirm-dialog-title')}>{title}</div>
-          <div className={classNames('fcr-confirm-dialog-inner')}>{children}</div>
+          <div className={classNames('fcr-confirm-dialog-inner')}>{content || children}</div>
         </div>
       </div>
 

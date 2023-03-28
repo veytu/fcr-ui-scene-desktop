@@ -1,6 +1,6 @@
 import { Popover, PopoverProps } from '@onlineclass/components/popover';
-import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
-import { FC, useState } from 'react';
+import { SvgIconEnum, SvgImg, SvgImgProps } from '@onlineclass/components/svg-img';
+import { FC, ReactNode, useState } from 'react';
 import { AgoraDeviceInfo } from 'agora-edu-core';
 import './index.css';
 import { CameraDevice, MicrophoenDevice } from './device';
@@ -48,19 +48,27 @@ export const ActionBarItemWrapper: FC<ActionBarItemWrapperProps> = (props) => {
     </div>
   );
 };
+type ActionBarItemIconTypes = SvgIconEnum | SvgImgProps;
 interface ActionBarItemProps {
   classNames?: string;
-  icon: SvgIconEnum;
-  text: string;
+  icon: ActionBarItemIconTypes;
+  text: ReactNode;
   active?: boolean;
+  onClick?: () => void;
 }
 export const ActionBarItem: FC<ActionBarItemProps> = (props) => {
-  const { classNames, text, icon, active = false, ...others } = props;
+  const { classNames, text, icon, active = false, onClick, ...others } = props;
   return (
     <ActionBarItemWrapper {...others} classNames={classnames(classNames)}>
-      <div className={classnames('fcr-action-bar-item', { 'fcr-action-bar-item-active': active })}>
+      <div
+        onClick={onClick}
+        className={classnames('fcr-action-bar-item', { 'fcr-action-bar-item-active': active })}>
         <div className="fcr-action-bar-item-icon">
-          <SvgImg size={36} type={icon}></SvgImg>
+          {typeof icon === 'string' ? (
+            <SvgImg size={36} type={icon}></SvgImg>
+          ) : (
+            <SvgImg size={36} {...icon}></SvgImg>
+          )}
         </div>
         <div className="fcr-action-bar-item-text">{text}</div>
       </div>

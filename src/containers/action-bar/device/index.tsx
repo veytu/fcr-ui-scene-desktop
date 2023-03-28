@@ -1,42 +1,68 @@
 import { Popover } from '@onlineclass/components/popover';
 import { Radio } from '@onlineclass/components/radio';
 import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
+import { ToolTip } from '@onlineclass/components/tooltip';
 import { AgoraDeviceInfo } from 'agora-edu-core';
 import { FC, useState } from 'react';
 import { ActionBarItemWrapper } from '..';
 import './index.css';
-interface ActionBarDeviceProps {
-  deviceList: AgoraDeviceInfo[];
-  muteIcon: SvgIconEnum;
-  unmuteIcon: SvgIconEnum;
-  muteText: string;
-  unmuteText: string;
-  onDeviceChanged?: (device: AgoraDeviceInfo) => void;
-}
-const ActionBarDevice: FC<ActionBarDeviceProps> = (props) => {
-  const { deviceList, muteIcon, unmuteIcon, muteText, unmuteText, onDeviceChanged } = props;
+
+export const MicrophoenDevice: FC = () => {
   const [mute, setMute] = useState(false);
   const toggleMute = () => {
     setMute(!mute);
   };
+  const icon = mute ? SvgIconEnum.FCR_NOMUTE : SvgIconEnum.FCR_MUTE;
+  const text = mute ? 'unmute' : 'Microphoen';
   return (
-    <ActionBarItemWrapper>
-      <div className="fcr-action-bar-device" onClick={toggleMute}>
-        <div className="fcr-action-bar-device-inner">
-          <SvgImg type={mute ? muteIcon : unmuteIcon} size={36}></SvgImg>
-          <div className="fcr-action-bar-device-text">{mute ? muteText : unmuteText}</div>
-        </div>
-        <Popover content={<DeviceListPopoverContent></DeviceListPopoverContent>} trigger="click">
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            className="fcr-action-bar-device-extra">
-            <SvgImg type={SvgIconEnum.FCR_DROPUP4}></SvgImg>
+    <ToolTip content={'Microphoen'}>
+      <ActionBarItemWrapper>
+        <div className="fcr-action-bar-device" onClick={toggleMute}>
+          <div className="fcr-action-bar-device-inner">
+            <SvgImg type={icon} size={36}></SvgImg>
+            <div className="fcr-action-bar-device-text">{text}</div>
           </div>
-        </Popover>
-      </div>
-    </ActionBarItemWrapper>
+          <Popover content={<DeviceListPopoverContent></DeviceListPopoverContent>} trigger="click">
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              className="fcr-action-bar-device-extra">
+              <SvgImg type={SvgIconEnum.FCR_DROPUP4}></SvgImg>
+            </div>
+          </Popover>
+        </div>
+      </ActionBarItemWrapper>
+    </ToolTip>
+  );
+};
+export const CameraDevice: FC = () => {
+  const [mute, setMute] = useState(false);
+  const toggleMute = () => {
+    setMute(!mute);
+  };
+  const icon = mute ? SvgIconEnum.FCR_CAMERAOFF : SvgIconEnum.FCR_CAMERA;
+  const text = mute ? 'unmute' : 'Camera';
+  return (
+    <ToolTip content={'CameraDev'}>
+      <ActionBarItemWrapper>
+        <div className="fcr-action-bar-device" onClick={toggleMute}>
+          <div className="fcr-action-bar-device-inner">
+            <SvgImg type={icon} size={36}></SvgImg>
+            <div className="fcr-action-bar-device-text">{text}</div>
+          </div>
+          <Popover content={<DeviceListPopoverContent></DeviceListPopoverContent>} trigger="click">
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              className="fcr-action-bar-device-extra">
+              <SvgImg type={SvgIconEnum.FCR_DROPUP4}></SvgImg>
+            </div>
+          </Popover>
+        </div>
+      </ActionBarItemWrapper>
+    </ToolTip>
   );
 };
 
@@ -78,26 +104,5 @@ const DeviceListPopoverContent = () => {
         <span>More Setting</span>
       </div>
     </div>
-  );
-};
-
-export const MicrophoenDevice = () => {
-  return (
-    <ActionBarDevice
-      deviceList={[]}
-      muteIcon={SvgIconEnum.FCR_NOMUTE}
-      unmuteIcon={SvgIconEnum.FCR_MUTE}
-      muteText={'unmute'}
-      unmuteText={'Microphone'}></ActionBarDevice>
-  );
-};
-export const CameraDevice = () => {
-  return (
-    <ActionBarDevice
-      deviceList={[]}
-      muteIcon={SvgIconEnum.FCR_CAMERAOFF}
-      unmuteIcon={SvgIconEnum.FCR_CAMERA}
-      muteText={'unmute'}
-      unmuteText={'Camera'}></ActionBarDevice>
   );
 };

@@ -5,8 +5,10 @@ import classnames from 'classnames';
 import './index.css';
 import { observer } from 'mobx-react';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
+import { StatusBarItemWrapper } from '..';
+import { PopoverWithTooltip } from '@onlineclass/components/popover';
 
-export const LayoutSwitch = () => {
+export const LayoutSwitchPopover = () => {
   return (
     <div className="fcr-layout-switch">
       <div className="fcr-layout-switch-speaker-view">
@@ -25,18 +27,21 @@ export const LayoutSwitch = () => {
     </div>
   );
 };
-const layoutMap = {
+export const layoutMap = {
   [Layout.ListOnTop]: {
     label: 'List on top',
-    icon: SvgIconEnum.FCR_LIST_ON_TOP_BIG,
+    bigIcon: SvgIconEnum.FCR_LIST_ON_TOP_BIG,
+    smallIcon: SvgIconEnum.FCR_TOPWINDOWS,
   },
   [Layout.ListOnRight]: {
     label: 'List on right',
-    icon: SvgIconEnum.FCR_LIST_ON_RIGHT_BIG,
+    bigIcon: SvgIconEnum.FCR_LIST_ON_RIGHT_BIG,
+    smallIcon: SvgIconEnum.FCR_RIGHTWINDOWS,
   },
   [Layout.Grid]: {
     label: 'Grid',
-    icon: SvgIconEnum.FCR_GRID_BIG,
+    bigIcon: SvgIconEnum.FCR_GRID_BIG,
+    smallIcon: SvgIconEnum.FCR_FOURWINDOWS,
   },
 };
 
@@ -44,7 +49,7 @@ const LayoutCard = observer(({ layout }: { layout: Layout }) => {
   const {
     layoutUIStore: { layout: currentLayout, setLayout },
   } = useStore();
-  const { label, icon } = layoutMap[layout];
+  const { label, bigIcon } = layoutMap[layout];
   const active = currentLayout === layout;
   return (
     <div
@@ -54,8 +59,30 @@ const LayoutCard = observer(({ layout }: { layout: Layout }) => {
         <Radio label={label} checked={active}></Radio>
       </div>
       <div className="fcr-layout-switch-card-icon">
-        <SvgImg style={{ width: 100, height: 56 }} type={icon}></SvgImg>
+        <SvgImg style={{ width: 100, height: 56 }} type={bigIcon}></SvgImg>
       </div>
     </div>
+  );
+});
+export const LayoutSwitch = observer(() => {
+  const {
+    layoutUIStore: { layout: currentLayout },
+  } = useStore();
+  return (
+    <StatusBarItemWrapper>
+      <PopoverWithTooltip
+        popoverProps={{
+          placement: 'bottomLeft',
+          overlayInnerStyle: { width: 'auto' },
+          content: <LayoutSwitchPopover></LayoutSwitchPopover>,
+        }}
+        toolTipProps={{ content: 'Switch Layout' }}>
+        <div className="fcr-status-bar-layout">
+          <SvgImg type={layoutMap[currentLayout].smallIcon}></SvgImg>
+          <span>Layout</span>
+          <SvgImg type={SvgIconEnum.FCR_DROPDOWN} size={20}></SvgImg>
+        </div>
+      </PopoverWithTooltip>
+    </StatusBarItemWrapper>
   );
 });

@@ -9,7 +9,9 @@ import {
   Platform,
 } from 'agora-edu-core';
 import { AGError, bound } from 'agora-rte-sdk';
+import { ActionBarUIStore } from './action-bar';
 import { EduUIStoreBase } from './base';
+import { OnlineclassContext } from './context';
 import { Getters } from './getters';
 import { LayoutUIStore } from './layout';
 import { StatusBarUIStore } from './status-bar';
@@ -21,11 +23,13 @@ export class OnlineclassUIStore {
 
   layoutUIStore: LayoutUIStore;
   statusBarUIStore: StatusBarUIStore;
+  actionBarUIStore: ActionBarUIStore;
   constructor() {
     this.classroomStore = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass);
     this._getters = new Getters(this.classroomStore);
     this.layoutUIStore = new LayoutUIStore(this.classroomStore, this._getters);
     this.statusBarUIStore = new StatusBarUIStore(this.classroomStore, this._getters);
+    this.actionBarUIStore = new ActionBarUIStore(this.classroomStore, this._getters);
   }
   @bound
   initialize() {
@@ -101,5 +105,6 @@ export class OnlineclassUIStore {
         }
       }
     });
+    OnlineclassContext.reset();
   }
 }

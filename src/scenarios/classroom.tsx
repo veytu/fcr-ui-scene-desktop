@@ -1,4 +1,5 @@
 import { ActionBar } from '@onlineclass/containers/action-bar';
+import { ClassRoomDialogContainer } from '@onlineclass/containers/dialog';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import React, { useEffect } from 'react';
 import { StatusBar } from '../containers/status-bar';
@@ -20,6 +21,7 @@ export const Classroom = () => {
       }}>
       <StatusBar></StatusBar>
       <ActionBar></ActionBar>
+      <ClassRoomDialogContainer></ClassRoomDialogContainer>
     </div>
   );
 };

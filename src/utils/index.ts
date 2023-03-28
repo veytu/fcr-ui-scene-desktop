@@ -1,3 +1,5 @@
+import { EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
+
 const callbacks = new Set<() => void>();
 declare const NODE_ENV: string;
 
@@ -32,3 +34,4 @@ export const isProduction = NODE_ENV === 'production';
 export const number2Percent = (v: number, fixed = 0): string => {
   return !isNaN(Number(v * 100)) ? Number(v * 100).toFixed(fixed) + '%' : '0%';
 };
+export const isElectron = EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron;

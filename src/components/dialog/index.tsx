@@ -7,6 +7,7 @@ import classnames from 'classnames';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import { themeVal } from '@onlineclass/utils/tailwindcss';
 const colors = themeVal('colors');
+
 export interface BaseDialogProps {
   /**
    * 对话框是否显示
@@ -57,6 +58,7 @@ export interface BaseDialogProps {
    * Custom close icon
    */
   closeIcon?: ReactNode;
+  afterOpenChange?: (open: boolean) => void;
 }
 const BaseDialog: FC<BaseDialogProps> = (props) => {
   const {
@@ -68,9 +70,11 @@ const BaseDialog: FC<BaseDialogProps> = (props) => {
     classNames,
     closable = true,
     closeIcon,
+    afterOpenChange,
   } = props;
   return (
     <RcDialog
+      afterOpenChange={afterOpenChange}
       className={classNames}
       width={width || 415}
       maskClosable={maskClosable}
