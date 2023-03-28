@@ -65,6 +65,12 @@ export const Dropdown: FC<DropdownProps> = ({
     'fcr-dropdown-s': size === 'small',
   });
 
+  const wrapperCls = classNames('fcr-dropdown-wrapper', {
+    'fcr-dropdown-wrapper-l': size === 'large',
+    'fcr-dropdown-wrapper-m': size === 'medium',
+    'fcr-dropdown-wrapper-s': size === 'small',
+  });
+
   const handleClick = () => {
     setFocused(!focused);
   };
@@ -88,31 +94,33 @@ export const Dropdown: FC<DropdownProps> = ({
   });
 
   return (
-    <div className={cls} onClick={handleClick} ref={ref}>
-      <div className={selectedCls}>
-        <span className="">{selectedText}</span>
-        <SvgImg className="fcr-dropdown__icon" type={SvgIconEnum.FCR_DROPDOWN} size={24} />
+    <div className={wrapperCls}>
+      <div className={cls} onClick={handleClick} ref={ref}>
+        <div className={selectedCls}>
+          <span>{selectedText}</span>
+          <SvgImg className="fcr-dropdown__icon" type={SvgIconEnum.FCR_DROPDOWN} size={24} />
+        </div>
+        {/* options */}
+        <ul className={optionsCls}>
+          {options?.map(({ text, value: ov }) => {
+            const optionCls = classNames('fcr-dropdown__option', {
+              'fcr-dropdown__option--active': value === ov,
+            });
+
+            const handleClick = () => {
+              if (value !== ov) {
+                onChange(ov);
+              }
+            };
+
+            return (
+              <li key={ov} className={optionCls} onClick={handleClick}>
+                {text}
+              </li>
+            );
+          })}
+        </ul>
       </div>
-      {/* options */}
-      <ul className={optionsCls}>
-        {options?.map(({ text, value: ov }) => {
-          const optionCls = classNames('fcr-dropdown__option', {
-            'fcr-dropdown__option--active': value === ov,
-          });
-
-          const handleClick = () => {
-            if (value !== ov) {
-              onChange(ov);
-            }
-          };
-
-          return (
-            <li key={ov} className={optionCls} onClick={handleClick}>
-              {text}
-            </li>
-          );
-        })}
-      </ul>
     </div>
   );
 };

@@ -9,7 +9,7 @@ import {
   Platform,
 } from 'agora-edu-core';
 import { AGError, bound } from 'agora-rte-sdk';
-import { observable, action } from 'mobx';
+import { observable, action, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { DeviceSettingUIStore } from './device-setting';
 import { ActionBarUIStore } from './action-bar';
@@ -19,7 +19,7 @@ import { LayoutUIStore } from './layout';
 import { StatusBarUIStore } from './status-bar';
 
 export class OnlineclassUIStore {
-  // @observable
+  @observable
   private _installed = false;
   @observable
   private _devicePretestFinished = false;
@@ -47,8 +47,7 @@ export class OnlineclassUIStore {
     return this._devicePretestFinished;
   }
 
-  @action.bound
-  // @bound
+  @bound
   initialize() {
     if (this._installed) {
       return;
@@ -64,9 +63,11 @@ export class OnlineclassUIStore {
 
     this.classroomStore.initialize();
 
-    this._installed = true;
+    runInAction(() => {
+      this._installed = true;
+    });
     //@ts-ignore
-    // window.globalStore = this;
+    window.globalStore = this;
   }
 
   @action.bound
