@@ -1,5 +1,5 @@
 import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 import { ToolTip } from '@onlineclass/components/tooltip';
 import { DoubleDeckPopoverWithTooltip, PopoverWithTooltip } from '@onlineclass/components/popover';
@@ -11,6 +11,8 @@ import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { ClassDuration } from './class-duration';
 import { RecordStatus } from './record-status';
 import { AgoraOnlineclassSDK } from '@onlineclass/index';
+import ClipboardJS from 'clipboard';
+import { Toast, ToastApi } from '@onlineclass/components/toast';
 
 export const StatusBar = () => {
   const { logo } = AgoraOnlineclassSDK;
@@ -29,7 +31,7 @@ export const StatusBar = () => {
       <div className="fcr-status-bar-right">
         <RecordStatus></RecordStatus>
         <ClassDuration></ClassDuration>
-        <Layout></Layout>
+        <LayoutSwitch></LayoutSwitch>
         <FullscreenButton></FullscreenButton>
       </div>
     </div>
@@ -45,9 +47,27 @@ export const StatusBarItemWrapper: FC = (props) => {
   );
 };
 const StatusBarInfo: FC = () => {
+  const ref = useRef<HTMLSpanElement | null>(null);
   const {
     statusBarUIStore: { roomUuid },
   } = useStore();
+  useEffect(() => {
+    let clipboard: ClipboardJS | undefined;
+    if (ref.current) {
+      clipboard = new ClipboardJS(ref.current);
+      clipboard.on('success', () => {
+        ToastApi.open({
+          toastProps: {
+            type: 'info',
+            content: 'copy success',
+          },
+        });
+      });
+    }
+    return () => {
+      clipboard?.destroy();
+    };
+  }, []);
   return (
     <StatusBarItemWrapper>
       <div className="fcr-status-bar-info">
@@ -64,7 +84,9 @@ const StatusBarInfo: FC = () => {
         </DoubleDeckPopoverWithTooltip>
         <div className={classnames('fcr-status-bar-info-id', 'fcr-divider')}>
           <span>ID:</span>
-          <span>{roomUuid}</span>
+          <span ref={ref} data-clipboard-text={`roomUuid`}>
+            {roomUuid}
+          </span>
         </div>
         <PopoverWithTooltip
           popoverProps={{
@@ -123,24 +145,5 @@ const FullscreenButton = () => {
         </div>
       </StatusBarItemWrapper>
     </ToolTip>
-  );
-};
-const Layout = () => {
-  return (
-    <StatusBarItemWrapper>
-      <PopoverWithTooltip
-        popoverProps={{
-          placement: 'bottomLeft',
-          overlayInnerStyle: { width: 'auto' },
-          content: <LayoutSwitch></LayoutSwitch>,
-        }}
-        toolTipProps={{ content: 'Switch Layout' }}>
-        <div className="fcr-status-bar-layout">
-          <SvgImg type={SvgIconEnum.FCR_TOPWINDOWS}></SvgImg>
-          <span>Layout</span>
-          <SvgImg type={SvgIconEnum.FCR_DROPDOWN} size={20}></SvgImg>
-        </div>
-      </PopoverWithTooltip>
-    </StatusBarItemWrapper>
   );
 };

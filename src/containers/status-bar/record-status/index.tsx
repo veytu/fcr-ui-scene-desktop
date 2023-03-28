@@ -4,18 +4,20 @@ import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { StatusBarItemWrapper } from '..';
 import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
 import { ToolTip } from '@onlineclass/components/tooltip';
+import classnames from 'classnames';
 import { themeVal } from '@onlineclass/utils/tailwindcss';
 const colors = themeVal('colors');
 
 export const RecordStatus = observer(() => {
   const {
-    statusBarUIStore: { isRecording },
+    statusBarUIStore: { isRecording, isRecordStoped, isRecordStarting },
   } = useStore();
-  return (
+  return !isRecordStoped ? (
     <StatusBarItemWrapper>
       <div className="fcr-status-bar-record">
         <div className="fcr-status-bar-record-status">
           <SvgImg
+            className={classnames({ 'fcr-status-bar-record-starting': isRecordStarting })}
             colors={{
               iconPrimary: isRecording ? colors['red.6'] : colors['notsb-inverse'],
             }}
@@ -30,5 +32,5 @@ export const RecordStatus = observer(() => {
         </ToolTip>
       </div>
     </StatusBarItemWrapper>
-  );
+  ) : null;
 });

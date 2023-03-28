@@ -9,6 +9,8 @@ import { Getters } from './getters';
  *
  */
 export abstract class EduUIStoreBase {
+  protected _disposers: (() => void)[] = [];
+
   /**
    *
    */

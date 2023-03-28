@@ -12,6 +12,8 @@ import { AGError, bound } from 'agora-rte-sdk';
 import { observable, action } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { DeviceSettingUIStore } from './device-setting';
+import { ActionBarUIStore } from './action-bar';
+import { OnlineclassContext } from './context';
 import { Getters } from './getters';
 import { LayoutUIStore } from './layout';
 import { StatusBarUIStore } from './status-bar';
@@ -27,12 +29,14 @@ export class OnlineclassUIStore {
   layoutUIStore: LayoutUIStore;
   statusBarUIStore: StatusBarUIStore;
   deviceSettingUIStore: DeviceSettingUIStore;
+  actionBarUIStore: ActionBarUIStore;
   constructor() {
     this.classroomStore = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass);
     this._getters = new Getters(this.classroomStore);
     this.layoutUIStore = new LayoutUIStore(this.classroomStore, this._getters);
     this.statusBarUIStore = new StatusBarUIStore(this.classroomStore, this._getters);
     this.deviceSettingUIStore = new DeviceSettingUIStore(this.classroomStore, this._getters);
+    this.actionBarUIStore = new ActionBarUIStore(this.classroomStore, this._getters);
   }
 
   get initialized() {
@@ -125,5 +129,6 @@ export class OnlineclassUIStore {
         }
       }
     });
+    OnlineclassContext.reset();
   }
 }
