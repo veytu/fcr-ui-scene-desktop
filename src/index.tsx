@@ -1,5 +1,5 @@
 import { render, unmountComponentAtNode } from 'react-dom';
-import { ConvertMediaOptionsConfig, LaunchMediaOptions, LaunchOption } from './type';
+import { ConvertMediaOptionsConfig, LaunchMediaOptions, LaunchOptions } from './type';
 import { App } from './app';
 import { Logger } from 'agora-common-libs';
 import {
@@ -7,16 +7,20 @@ import {
   EduMediaEncryptionMode,
   EduRegion,
   EduRoleTypeEnum,
-  Platform,
 } from 'agora-edu-core';
 import { initializeBuiltInExtensions } from './utils/rtc-extensions';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { setLaunchOptions } from './utils/launch-options-holder';
 dayjs.extend(duration);
+
+export * from './type';
+
 /**
  * Online class SDK
  */
 export class AgoraOnlineclassSDK {
+  private static _config: Record<string, string> = {};
   /**
    * 品牌logo的url，会以图片展示在主界面左上角
    */
@@ -37,28 +41,29 @@ export class AgoraOnlineclassSDK {
    * @param launchOption
    * @returns
    */
-  static launch(dom: HTMLElement, launchOption: LaunchOption) {
+  static launch(dom: HTMLElement, launchOptions: LaunchOptions) {
     const {
       appId,
       userUuid,
       userName,
       roleType,
       roomUuid,
-      roomName,
-      roomType,
-      duration,
       userFlexProperties,
-      rtmToken,
-      startTime,
+      token,
       recordUrl,
       latencyLevel,
       region,
       mediaOptions,
-      platform,
-      pretest,
+      devicePretest,
       recordRetryTimeout,
-      sdkDomain,
-    } = launchOption;
+      roomName,
+      roomType,
+      startTime,
+      duration,
+    } = launchOptions;
+
+    setLaunchOptions(launchOptions);
+
     const sessionInfo = {
       userUuid,
       userName,
@@ -66,46 +71,42 @@ export class AgoraOnlineclassSDK {
       roomUuid,
       roomName,
       roomType,
+      startTime,
       duration,
       flexProperties: userFlexProperties,
-      token: rtmToken,
-      startTime,
+      token,
     };
+
     const { virtualBackgroundExtension, beautyEffectExtensionInstance, aiDenoiserInstance } =
       initializeBuiltInExtensions();
-    const config = new EduClassroomConfig(
-      appId,
-      sessionInfo,
-      recordUrl || '',
-      {
-        latencyLevel,
-        region: this._convertRegion(region),
-        rtcConfigs: {
-          ...this._convertMediaOptions(mediaOptions),
-          ...{
-            noDevicePermission: roleType === EduRoleTypeEnum.invisible || platform === Platform.H5,
-          },
-        },
-        rtcSDKExtensions: [
-          virtualBackgroundExtension,
-          beautyEffectExtensionInstance,
-          aiDenoiserInstance,
-        ],
-      },
-      platform,
-      Object.assign(
-        { openCameraDeviceAfterLaunch: pretest, openRecordingDeviceAfterLaunch: pretest },
-        recordRetryTimeout ? { recordRetryTimeout } : {},
-      ),
-    );
-    if (sdkDomain) {
-      config.host = sdkDomain;
-    }
-    config.ignoreUrlRegionPrefix = ['dev', 'pre'].some((v) => config.host.includes(v));
+
+    const rteRegion = this._convertRegion(region);
+
+    const noDevicePermission = sessionInfo.role === EduRoleTypeEnum.invisible;
+
+    const rtcConfigs = {
+      ...this._convertMediaOptions(mediaOptions),
+      noDevicePermission,
+    };
+
+    Logger.info(`[AgoraEduSDK]region =`, rteRegion);
+
+    Logger.info(`[AgoraEduSDK]rtcConfigs =`, rtcConfigs);
+
+    const config = new EduClassroomConfig(appId, sessionInfo, recordUrl || '', {
+      latencyLevel,
+      region: rteRegion,
+      rtcConfigs,
+      rtcSDKExtensions: [
+        virtualBackgroundExtension,
+        beautyEffectExtensionInstance,
+        aiDenoiserInstance,
+      ],
+    });
 
     EduClassroomConfig.setConfig(config);
 
-    Logger.info('[AgoraEduSDK]launched with options:', launchOption);
+    Logger.info('[AgoraEduSDK]launched with options:', launchOptions);
 
     const startTs = Date.now();
 
@@ -127,10 +128,22 @@ export class AgoraOnlineclassSDK {
    *
    * @param params
    */
-  static setParameters(params: AgoraOnlineclassSDKStaticParameters) {
-    const { logo } = params;
-    if (logo) this.logo = logo;
+  static setParameters(params: string) {
+    const { host, ignoreUrlRegionPrefix, logo } = JSON.parse(params) || {};
+
+    if (host) {
+      this._config.host = host;
+    }
+
+    if (ignoreUrlRegionPrefix) {
+      this._config.ignoreUrlRegionPrefix = ignoreUrlRegionPrefix;
+    }
+
+    if (logo) {
+      this.logo = logo;
+    }
   }
+
   private static _convertRegion(region: string): EduRegion {
     switch (region.toUpperCase()) {
       case 'CN':
@@ -144,6 +157,7 @@ export class AgoraOnlineclassSDK {
     }
     return region as EduRegion;
   }
+
   private static _convertMediaOptions(opts?: LaunchMediaOptions): ConvertMediaOptionsConfig {
     const config: ConvertMediaOptionsConfig = {};
     if (opts) {
@@ -185,8 +199,4 @@ export class AgoraOnlineclassSDK {
     }
     return config;
   }
-}
-
-interface AgoraOnlineclassSDKStaticParameters {
-  logo?: string;
 }

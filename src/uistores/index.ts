@@ -9,30 +9,46 @@ import {
   Platform,
 } from 'agora-edu-core';
 import { AGError, bound } from 'agora-rte-sdk';
+import { observable, action } from 'mobx';
 import { EduUIStoreBase } from './base';
+import { DeviceSettingUIStore } from './device-setting';
 import { Getters } from './getters';
 import { LayoutUIStore } from './layout';
 import { StatusBarUIStore } from './status-bar';
 
 export class OnlineclassUIStore {
+  // @observable
   private _installed = false;
+  @observable
+  private _devicePretestFinished = false;
   private _getters: Getters;
-  classroomStore: EduClassroomStore;
 
+  classroomStore: EduClassroomStore;
   layoutUIStore: LayoutUIStore;
   statusBarUIStore: StatusBarUIStore;
+  deviceSettingUIStore: DeviceSettingUIStore;
   constructor() {
     this.classroomStore = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass);
     this._getters = new Getters(this.classroomStore);
     this.layoutUIStore = new LayoutUIStore(this.classroomStore, this._getters);
     this.statusBarUIStore = new StatusBarUIStore(this.classroomStore, this._getters);
+    this.deviceSettingUIStore = new DeviceSettingUIStore(this.classroomStore, this._getters);
   }
-  @bound
+
+  get initialized() {
+    return this._installed;
+  }
+
+  get devicePretestFinished() {
+    return this._devicePretestFinished;
+  }
+
+  @action.bound
+  // @bound
   initialize() {
     if (this._installed) {
       return;
     }
-    this._installed = true;
     Object.getOwnPropertyNames(this).forEach((propertyName) => {
       if (propertyName.endsWith('UIStore')) {
         const uiStore = this[propertyName];
@@ -44,9 +60,16 @@ export class OnlineclassUIStore {
 
     this.classroomStore.initialize();
 
+    this._installed = true;
     //@ts-ignore
-    window.globalStore = this;
+    // window.globalStore = this;
   }
+
+  @action.bound
+  setDevicePretestFinished() {
+    this._devicePretestFinished = true;
+  }
+
   @bound
   async join() {
     const { joinClassroom, joinRTC } = this.classroomStore.connectionStore;
@@ -89,6 +112,7 @@ export class OnlineclassUIStore {
       //   this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
   }
+
   @bound
   destroy() {
     this.classroomStore.destroy();

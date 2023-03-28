@@ -1,10 +1,4 @@
-import {
-  EduRegion,
-  EduRoleTypeEnum,
-  EduRoomTypeEnum,
-  EduRtcConfig,
-  Platform,
-} from 'agora-edu-core';
+import { EduRegion, EduRoleTypeEnum, EduRoomTypeEnum, EduRtcConfig } from 'agora-edu-core';
 import { AGMediaOptions, AgoraLatencyLevel, AGVideoEncoderConfiguration } from 'agora-rte-sdk';
 import { FcrMultiThemeMode } from 'agora-common-libs';
 import { IBaseProcessor, IExtension } from 'agora-rte-extension';
@@ -15,12 +9,37 @@ import { IBaseProcessor, IExtension } from 'agora-rte-extension';
 /** @en
  * Options to launch SDK
  */
-export type LaunchOption = {
-  appId: string;
-  region: EduRegion;
-  sdkDomain: string;
+export type LaunchOptions = {
   /**
-   * 用户uuid
+   * App ID
+   */
+  /** @en
+   *
+   */
+  appId: string;
+  /**
+   * 区域
+   */
+  /** @en
+   *
+   */
+  region: EduRegion;
+  /**
+   * 令牌
+   */
+  /** @en
+   *
+   */
+  token: string;
+  /**
+   * 语言
+   */
+  /** @en
+   *
+   */
+  language: Language;
+  /**
+   * 用户UUID
    */
   /** @en
    *
@@ -34,75 +53,33 @@ export type LaunchOption = {
    */
   userName: string;
   /**
-   * 房间uuid
+   * 房间UUID
    */
   /** @en
    *
    */
   roomUuid: string;
   /**
-   * 角色
+   * 用户角色
    */
   /** @en
    *
    */
   roleType: EduRoleTypeEnum;
   /**
-   * 房间类型
+   * 设备检测是否启用
    */
   /** @en
    *
    */
-  roomType: EduRoomTypeEnum;
-  /**
-   * 房间名称
-   */
-  /** @en
-   *
-   */
-  roomName: string;
-  /**
-   * 开启设备检测
-   */
-  /** @en
-   *
-   */
-  pretest: boolean;
-  /**
-   * rtmToken
-   */
-  /** @en
-   *
-   */
-  rtmToken: string;
-  /**
-   * 语言
-   */
-  /** @en
-   *
-   */
-  language: LanguageEnum;
-  /**
-   * 开始时间（单位：毫秒）
-   */
-  /** @en
-   *
-   */
-  startTime?: number; //
-  /**
-   * 房间时长（单位：秒）
-   */
-  /** @en
-   *
-   */
-  duration: number;
+  devicePretest: boolean;
   /**
    * 公共课件列表
    */
   /** @en
    *
    */
-  courseWareList: CoursewareList;
+  // courseWareList: CoursewareList;
   /**
    * 用户自定义属性
    */
@@ -166,8 +143,42 @@ export type LaunchOption = {
    *
    */
   webrtcExtensionBaseUrl?: string;
+  /**
+   * 音视频编解码配置
+   */
+  /** @en
+   *
+   */
   mediaOptions?: LaunchMediaOptions;
-  platform?: Platform;
+
+  /**
+   * 房间名称
+   */
+  /** @en
+   * Room name
+   */
+  roomName: string;
+  /**
+   * 房间类型
+   */
+  /** @en
+   *
+   */
+  roomType: EduRoomTypeEnum;
+  /**
+   * 开始时间
+   */
+  /** @en
+   *
+   */
+  startTime?: number;
+  /**
+   * 房间时长
+   */
+  /** @en
+   *
+   */
+  duration: number;
 };
 
 /**
@@ -176,7 +187,7 @@ export type LaunchOption = {
 /** @en
  *
  */
-export type LanguageEnum = 'en' | 'zh';
+export type Language = 'en' | 'zh';
 
 /**
  * 课件页信息
@@ -265,6 +276,7 @@ export type CoursewareItem = {
    */
   pages?: CoursewarePageInfo[];
 };
+
 /**
  * 公共课件列表
  */
@@ -272,18 +284,53 @@ export type CoursewareItem = {
  *
  */
 export type CoursewareList = CoursewareItem[];
+
+/**
+ * 设备采集编码配置
+ */
+/** @en
+ *
+ */
 export type ConvertMediaOptionsConfig = EduRtcConfig & {
   defaultLowStreamCameraEncoderConfigurations?: AGVideoEncoderConfiguration;
 };
+
+/**
+ * 音视频编解码配置
+ */
+/** @en
+ *
+ */
 export type LaunchMediaOptions = AGMediaOptions & {
   lowStreamCameraEncoderConfiguration?: AGVideoEncoderConfiguration;
 };
+
+/**
+ * WebRTC 扩展初始化器
+ */
+/** @en
+ *
+ */
 export type ExtensionInitializer = {
   createInstance: () => IExtension<IBaseProcessor>;
   createProcessor: (extension: IExtension<IBaseProcessor>) => Promise<IBaseProcessor>;
 };
 
+/**
+ * 音视频处理器初始化器
+ */
+/** @en
+ *
+ */
 export type ProcessorInitializer<T extends IBaseProcessor> = {
   name: string;
   createProcessor: () => Promise<T>;
 };
+
+/**
+ * 工具函数
+ */
+/** @en
+ *
+ */
+export { isElectron, isWeb, isProduction } from './utils';

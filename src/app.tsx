@@ -1,23 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { observer } from 'mobx-react';
 import { Classroom } from './scenarios/classroom';
-import { Pretest } from './scenarios/pretest';
+import { DevicePretest } from './scenarios/device-pretest';
 import './preflight.css';
 import { useStore } from './utils/hooks/use-store';
-export const App = () => {
-  const { initialize, destroy } = useStore();
-  const [pretest, setPretest] = useState(false);
-  const [initialized, setInitialized] = useState(false);
+
+export const App = observer(() => {
+  const { initialize, destroy, initialized, devicePretestFinished } = useStore();
+
   useEffect(() => {
     initialize();
-    setInitialized(true);
     return destroy;
   }, []);
+
+  if (!initialized) {
+    return null;
+  }
+
   return (
-    initialized && (
-      <React.Fragment>
-        {pretest && <Pretest />}
-        {!pretest && <Classroom />}
-      </React.Fragment>
-    )
+    <React.Fragment>
+      {!devicePretestFinished && <DevicePretest />}
+      {devicePretestFinished && <Classroom />}
+    </React.Fragment>
   );
-};
+});
