@@ -190,7 +190,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
           return this.classroomStore.connectionStore.engine && isWeb() && isInvisible();
         },
         (processorsRequired) => {
-          debugger;
           if (processorsRequired) {
             getProcessorInitializer<IVirtualBackgroundProcessor>(
               builtInExtensions.virtualBackgroundExtension,
