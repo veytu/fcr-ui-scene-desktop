@@ -333,4 +333,4 @@ export type ProcessorInitializer<T extends IBaseProcessor> = {
 /** @en
  *
  */
-export { isElectron, isProduction } from './utils';
+export { isElectron, isWeb, isProduction } from './utils/check';

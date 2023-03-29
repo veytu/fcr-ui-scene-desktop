@@ -6,7 +6,7 @@ import { AIDenoiserExtension, IAIDenoiserProcessor } from 'agora-extension-ai-de
 import { ExtensionInitializer, ProcessorInitializer } from '../type';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { IBaseProcessor } from 'agora-rte-extension';
-import { isProduction } from '@onlineclass/utils';
+import { isProduction } from '@onlineclass/utils/check';
 
 let assetsBaseUrl = isProduction ? process.env.REACT_APP_AGORA_APP_ASSETS_CDN : '';
 

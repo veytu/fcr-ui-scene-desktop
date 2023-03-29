@@ -8,8 +8,8 @@ import {
   AgoraRteMediaSourceState,
   bound,
 } from 'agora-rte-sdk';
-import { isElectron } from '@onlineclass/utils';
 import { AgoraOnlineclassSDK } from '..';
+import { isElectron } from '@onlineclass/utils/check';
 export class ActionBarUIStore extends EduUIStoreBase {
   @observable showLeaveOption = false;
   shareScreenStateKeeperMap: Map<string, ShareStreamStateKeeper> = new Map();
