@@ -1,0 +1,14 @@
+.fcr-action-bar-leave-popover {
+  padding: 30px 20px 20px;
+}
+.fcr-action-bar-leave-popover-text {
+  @apply fcr-text-1 fcr-font-medium;
+  font-size: 16px;
+  line-height: 150%;
+}
+.fcr-action-bar-leave-popover-btns {
+  padding-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}

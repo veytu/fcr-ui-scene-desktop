@@ -1,7 +1,7 @@
 import { Popover, PopoverProps } from '@onlineclass/components/popover';
 import { SvgIconEnum, SvgImg, SvgImgProps } from '@onlineclass/components/svg-img';
 import { FC, ReactNode, useState } from 'react';
-import { AgoraDeviceInfo } from 'agora-edu-core';
+import { observer } from 'mobx-react';
 import './index.css';
 import { CameraDevice, MicrophoenDevice } from './device';
 import classnames from 'classnames';
@@ -13,30 +13,40 @@ import { RaiseHands } from './raise-hands';
 import { Chat } from './chat';
 import { Participants } from './participants';
 import { Setting } from './setting';
-import { Leave } from './leave';
-export const ActionBar = () => {
+import { Leave, LeaveCheck } from './leave';
+import { useStore } from '@onlineclass/utils/hooks/use-store';
+export const ActionBar = observer(() => {
+  const {
+    actionBarUIStore: { showLeaveOption },
+  } = useStore();
   return (
     <div className="fcr-action-bar">
-      <div className="fcr-action-bar-left">
-        <MicrophoenDevice></MicrophoenDevice>
-        <CameraDevice></CameraDevice>
-      </div>
-      <div className="fcr-action-bar-mid">
-        <ToolBox></ToolBox>
-        <Whiteboard></Whiteboard>
-        <ScreenShare></ScreenShare>
-        <Record></Record>
-      </div>
-      <div className="fcr-action-bar-right">
-        <RaiseHands></RaiseHands>
-        <Chat></Chat>
-        <Participants></Participants>
-        <Setting></Setting>
-        <Leave></Leave>
-      </div>
+      {showLeaveOption ? (
+        <LeaveCheck></LeaveCheck>
+      ) : (
+        <>
+          <div className="fcr-action-bar-left">
+            <MicrophoenDevice></MicrophoenDevice>
+            <CameraDevice></CameraDevice>
+          </div>
+          <div className="fcr-action-bar-mid">
+            <ToolBox></ToolBox>
+            <Whiteboard></Whiteboard>
+            <ScreenShare></ScreenShare>
+            <Record></Record>
+          </div>
+          <div className="fcr-action-bar-right">
+            <RaiseHands></RaiseHands>
+            <Chat></Chat>
+            <Participants></Participants>
+            <Setting></Setting>
+            <Leave></Leave>
+          </div>
+        </>
+      )}
     </div>
   );
-};
+});
 interface ActionBarItemWrapperProps {
   classNames?: string;
 }

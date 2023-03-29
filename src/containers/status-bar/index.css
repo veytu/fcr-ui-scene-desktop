@@ -1,5 +1,5 @@
 .fcr-status-bar {
-  @apply fcr-bg-2;
+  @apply fcr-bg-transparent;
   width: 100%;
   height: 57px;
   display: flex;

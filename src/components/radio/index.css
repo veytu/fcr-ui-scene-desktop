@@ -4,6 +4,7 @@
   align-items: center;
   cursor: pointer;
   width: fit-content;
+  max-width: 100%;
 }
 .fcr-radio-input-wrapper {
   @apply fcr-border-1-a50 fcr-rounded-full;
@@ -43,8 +44,13 @@
   line-height: 14px;
   padding: 0 7px;
   user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-
+.fcr-radio-brand .fcr-radio-input-wrapper > input:checked ~ .fcr-radio-label {
+  @apply fcr-text-1;
+}
 .fcr-radio-brand .fcr-radio-input-wrapper > input:checked ~ .fcr-radio-inner {
   @apply fcr-bg-brand-6;
 }

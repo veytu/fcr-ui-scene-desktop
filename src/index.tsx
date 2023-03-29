@@ -28,6 +28,7 @@ export class AgoraOnlineclassSDK {
    * The logo url of your brand, which will show on the top left of the main view.
    */
   static logo = '';
+  static language = '';
 
   /**
    * Entry point of AgoraEduSDK, which is used to create an online classroom app and render at the specified dom.
@@ -60,6 +61,7 @@ export class AgoraOnlineclassSDK {
       roomType,
       startTime,
       duration,
+      language,
     } = launchOptions;
 
     setLaunchOptions(launchOptions);
@@ -103,9 +105,10 @@ export class AgoraOnlineclassSDK {
         aiDenoiserInstance,
       ],
     });
+    config.host = this._config.host;
+    this.language = language;
 
     EduClassroomConfig.setConfig(config);
-
     Logger.info('[AgoraEduSDK]launched with options:', launchOptions);
 
     const startTs = Date.now();

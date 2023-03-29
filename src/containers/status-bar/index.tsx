@@ -12,7 +12,7 @@ import { ClassDuration } from './class-duration';
 import { RecordStatus } from './record-status';
 import { AgoraOnlineclassSDK } from '@onlineclass/index';
 import ClipboardJS from 'clipboard';
-import { Toast, ToastApi } from '@onlineclass/components/toast';
+import { ToastApi } from '@onlineclass/components/toast';
 
 export const StatusBar = () => {
   const { logo } = AgoraOnlineclassSDK;

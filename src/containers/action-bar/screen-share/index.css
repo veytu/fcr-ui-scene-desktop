@@ -1,0 +1,6 @@
+.fcr-action-bar-screen-share-tooltip {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}

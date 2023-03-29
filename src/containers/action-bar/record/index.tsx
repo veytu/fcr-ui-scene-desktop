@@ -11,6 +11,7 @@ export const Record = observer(() => {
   const {
     statusBarUIStore: { isRecordStarting, isRecordStoped },
     layoutUIStore: { addDialog },
+    actionBarUIStore: { startRecording },
   } = useStore();
   const handleRecord = () => {
     if (isRecordStoped) {
@@ -19,6 +20,7 @@ export const Record = observer(() => {
         content: 'Are you sure you want to start recording?',
         cancelText: 'Cancel',
         okText: 'Record',
+        onOk: startRecording,
       });
     }
   };

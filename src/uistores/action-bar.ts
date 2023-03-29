@@ -1,7 +1,7 @@
 import { EduUIStoreBase } from './base';
-import { action, computed, reaction } from 'mobx';
+import { observable, computed, reaction, action } from 'mobx';
 import { ShareStreamStateKeeper } from '@onlineclass/utils/stream/state-keeper';
-import { ClassroomState } from 'agora-edu-core';
+import { ClassroomState, EduClassroomConfig, RecordMode } from 'agora-edu-core';
 import {
   AgoraRteAudioSourceType,
   AgoraRteMediaPublishState,
@@ -9,7 +9,9 @@ import {
   bound,
 } from 'agora-rte-sdk';
 import { isElectron } from '@onlineclass/utils';
+import { AgoraOnlineclassSDK } from '..';
 export class ActionBarUIStore extends EduUIStoreBase {
+  @observable showLeaveOption = false;
   shareScreenStateKeeperMap: Map<string, ShareStreamStateKeeper> = new Map();
 
   @computed
@@ -17,6 +19,32 @@ export class ActionBarUIStore extends EduUIStoreBase {
     return (
       this.classroomStore.mediaStore.localScreenShareTrackState === AgoraRteMediaSourceState.started
     );
+  }
+  @action.bound
+  setShowLeaveOption(show: boolean) {
+    this.showLeaveOption = show;
+  }
+  @bound
+  startRecording() {
+    this.classroomStore.recordingStore.startRecording(this.recordArgs);
+  }
+  @bound
+  stopRecording() {
+    this.classroomStore.recordingStore.stopRecording();
+  }
+  get recordArgs() {
+    const { recordUrl, recordRetryTimeout } = EduClassroomConfig.shared;
+
+    const args = {
+      webRecordConfig: {
+        rootUrl: `${recordUrl}?language=${AgoraOnlineclassSDK.language}`,
+        videoBitrate: 3000,
+      },
+      mode: RecordMode.Web,
+      retryTimeout: recordRetryTimeout,
+    };
+
+    return args;
   }
   @bound
   startLocalScreenShare() {
