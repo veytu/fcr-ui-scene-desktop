@@ -4,13 +4,16 @@ import { VerticalSlider } from '@onlineclass/components/slider';
 import { SvgIconEnum } from '@onlineclass/components/svg-img';
 import { ClickableIcon, PretestDeviceIcon } from '@onlineclass/components/svg-img/clickable-icon';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export const VideoPortal = observer(() => {
-  const { setDevicePretestFinished } = useStore();
+  const { setDevicePretestFinished, deviceSettingUIStore } = useStore();
+  const videoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // deviceSettingUIStore.setupLocalVideo();
+    if (videoRef.current) {
+      deviceSettingUIStore.setupLocalVideo(videoRef.current, false);
+    }
   }, []);
 
   return (
@@ -20,6 +23,7 @@ export const VideoPortal = observer(() => {
         <Button onClick={setDevicePretestFinished}>Join</Button>
       </div>
       <div className="fcr-pretest__video-portal__video">
+        <div ref={videoRef} className='fcr-pretest__video-portal__video-renderer' />
         <div className="fcr-pretest__video-portal__sidebar">
           <VerticalSlider />
           <ClickableIcon icon={SvgIconEnum.FCR_V2_LOUDER} size="small" />

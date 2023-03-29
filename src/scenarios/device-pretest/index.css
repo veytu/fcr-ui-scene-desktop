@@ -56,6 +56,11 @@
   background: #ddd;
 }
 
+.fcr-pretest__video-portal__video-renderer {
+  height: 100%;
+  width: 100%;
+}
+
 .fcr-pretest__video-portal__toggles {
   display: flex;
   justify-content: flex-start;
@@ -93,7 +98,7 @@
 .fcr-pretest__settings__combined-item {
   display: flex;
 }
-.fcr-pretest__settings__combined-item .fcr-dropdown {
+.fcr-pretest__settings__combined-item .fcr-dropdown-wrapper {
   flex-grow: 1;
   margin-right: 10px;
 }
@@ -101,6 +106,7 @@
 .fcr-pretest__video-portal__sidebar {
   position: absolute;
   height: 100%;
+  top: 0;
   right: 0;
   display: flex;
   flex-direction: column;

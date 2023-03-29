@@ -1,3 +1,12 @@
+.fcr-dropdown-wrapper-l {
+  height: 48px;
+}
+.fcr-dropdown-wrapper-m {
+  height: 36px;
+}
+.fcr-dropdown-wrapper-s {
+  height: 24px;
+}
 .fcr-dropdown {
   @apply fcr-bg-8 fcr-border-1;
   transition: all 0.2s ease-in-out;
@@ -55,6 +64,8 @@
 
 .fcr-dropdown.fcr-dropdown--focused {
   @apply fcr-border-brand;
+  position: relative;
+  z-index: 100;
   box-shadow: 0 0 0 3px theme(colors.brand-a50);
 }
 .fcr-dropdown .fcr-dropdown__icon {
