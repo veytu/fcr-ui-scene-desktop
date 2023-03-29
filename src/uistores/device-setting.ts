@@ -1,4 +1,4 @@
-import { isInvisible } from '@onlineclass/utils';
+import { isInvisible } from '@onlineclass/utils/check';
 import { builtInExtensions, getProcessorInitializer } from '@onlineclass/utils/rtc-extensions';
 import {
   AgoraEduClassroomEvent,
@@ -414,5 +414,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
    */
   onDestroy(): void {
     this._disposers.forEach((d) => d());
+    this._disposers = [];
   }
 }
