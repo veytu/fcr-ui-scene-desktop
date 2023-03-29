@@ -5,9 +5,17 @@ import { ToolTip } from '@onlineclass/components/tooltip';
 import { AgoraDeviceInfo } from 'agora-edu-core';
 import { FC, useState } from 'react';
 import { ActionBarItemWrapper } from '..';
+import { observer } from 'mobx-react';
 import './index.css';
+import { useStore } from '@onlineclass/utils/hooks/use-store';
 
-export const MicrophoenDevice: FC = () => {
+export const MicrophoenDevice: FC = observer(() => {
+  const {
+    classroomStore: {
+      mediaStore: { videoCameraDevices, audioPlaybackDevices, audioRecordingDevices },
+    },
+    deviceSettingUIStore: {},
+  } = useStore();
   const [mute, setMute] = useState(false);
   const toggleMute = () => {
     setMute(!mute);
@@ -22,7 +30,7 @@ export const MicrophoenDevice: FC = () => {
             <SvgImg type={icon} size={36}></SvgImg>
             <div className="fcr-action-bar-device-text">{text}</div>
           </div>
-          <Popover content={<DeviceListPopoverContent></DeviceListPopoverContent>} trigger="click">
+          <Popover trigger="click">
             <div
               onClick={(e) => {
                 e.stopPropagation();
@@ -35,7 +43,7 @@ export const MicrophoenDevice: FC = () => {
       </ActionBarItemWrapper>
     </ToolTip>
   );
-};
+});
 export const CameraDevice: FC = () => {
   const [mute, setMute] = useState(false);
   const toggleMute = () => {
@@ -51,7 +59,9 @@ export const CameraDevice: FC = () => {
             <SvgImg type={icon} size={36}></SvgImg>
             <div className="fcr-action-bar-device-text">{text}</div>
           </div>
-          <Popover content={<DeviceListPopoverContent></DeviceListPopoverContent>} trigger="click">
+          <Popover
+            content={<CameraDeviceListPopoverContent></CameraDeviceListPopoverContent>}
+            trigger="click">
             <div
               onClick={(e) => {
                 e.stopPropagation();
@@ -66,7 +76,13 @@ export const CameraDevice: FC = () => {
   );
 };
 
-const DeviceListPopoverContent = () => {
+const CameraDeviceListPopoverContent = observer(() => {
+  const {
+    classroomStore: {
+      mediaStore: { videoCameraDevices, audioPlaybackDevices, audioRecordingDevices },
+    },
+  } = useStore();
+  console.log(videoCameraDevices, 'videoCameraDevices');
   return (
     <div
       className="fcr-device-popover-content"
@@ -76,26 +92,15 @@ const DeviceListPopoverContent = () => {
       <div className="fcr-device-popover-content-device-list">
         <div className="fcr-device-popover-content-device">
           <div className="fcr-device-popover-content-device-label">Local Camera</div>
-          <div className="fcr-device-popover-content-device-options">
-            <div>
-              <Radio name="aaa" label={'选择一选择一选择一...'}></Radio>
-            </div>
 
-            <div>
-              <Radio name="aaa" label={'选择一选择一选择一...'}></Radio>
-            </div>
-          </div>
-        </div>
-        <div className="fcr-device-popover-content-device">
-          <div className="fcr-device-popover-content-device-label">Local Camera</div>
           <div className="fcr-device-popover-content-device-options">
-            <div>
-              <Radio name="bbb" label={'选择一选择一选择一...'}></Radio>
-            </div>
-
-            <div>
-              <Radio name="bbb" label={'选择一选择一选择一...'}></Radio>
-            </div>
+            {videoCameraDevices.map((device) => {
+              return (
+                <div key={device.deviceid}>
+                  <Radio name="aaa" label={device.devicename}></Radio>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -105,4 +110,4 @@ const DeviceListPopoverContent = () => {
       </div>
     </div>
   );
-};
+});

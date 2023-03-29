@@ -1,4 +1,4 @@
-import { isInvisible } from '@onlineclass/utils/check';
+import { isInvisible, isWeb } from '@onlineclass/utils/check';
 import { builtInExtensions, getProcessorInitializer } from '@onlineclass/utils/rtc-extensions';
 import {
   AgoraEduClassroomEvent,
@@ -12,7 +12,6 @@ import { computed, observable, reaction } from 'mobx';
 import { IAIDenoiserProcessor } from 'agora-extension-ai-denoiser';
 import { IVirtualBackgroundProcessor } from 'agora-extension-virtual-background';
 import { IBeautyProcessor } from 'agora-extension-beauty-effect';
-import { isWeb } from '..';
 import { EduUIStoreBase } from './base';
 import { bound, Log } from 'agora-rte-sdk';
 import { transI18n } from 'agora-common-libs';
@@ -187,7 +186,9 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   onInstall(): void {
     this._disposers.push(
       reaction(
-        () => this.classroomStore.connectionStore.engine && isWeb() && isInvisible(),
+        () => {
+          return this.classroomStore.connectionStore.engine && isWeb() && isInvisible();
+        },
         (processorsRequired) => {
           if (processorsRequired) {
             getProcessorInitializer<IVirtualBackgroundProcessor>(
