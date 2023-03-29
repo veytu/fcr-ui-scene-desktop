@@ -11,19 +11,20 @@ export const ScreenShare = observer(() => {
     actionBarUIStore: { isLocalScreenSharing, startLocalScreenShare, stopLocalScreenShare },
   } = useStore();
   const handleScreenShare = () => {
-    if (isLocalScreenSharing) {
-      stopLocalScreenShare();
-    } else {
+    if (!isLocalScreenSharing) {
       startLocalScreenShare();
     }
   };
-  const colorByStatus = isLocalScreenSharing ? colors['green'] : colors['icon-1'];
+  const icon = isLocalScreenSharing
+    ? SvgIconEnum.FCR_SCREENSHARING_ON
+    : SvgIconEnum.FCR_SCREENSHARING;
+  const colorByStatus = isLocalScreenSharing ? colors['red']['6'] : colors['green'];
   return (
     <ToolTip content={'ScreenShare'}>
       <ActionBarItem
         onClick={handleScreenShare}
         icon={{
-          type: SvgIconEnum.FCR_SCREENSHARING,
+          type: icon,
           colors: { iconPrimary: colorByStatus },
         }}
         text={<span style={{ color: colorByStatus }}>ScreenShare</span>}></ActionBarItem>
