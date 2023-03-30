@@ -40,6 +40,7 @@ export class AgoraOnlineclassSDK {
    *
    */
   static logo = '';
+  static language = '';
 
   /**
    * 启动入口
@@ -72,6 +73,7 @@ export class AgoraOnlineclassSDK {
       roomType,
       startTime,
       duration,
+      language,
     } = launchOptions;
 
     Logger.info('[AgoraOnlineclassSDK]launched with options:', launchOptions);
@@ -113,6 +115,8 @@ export class AgoraOnlineclassSDK {
         aiDenoiserInstance,
       ],
     });
+    config.host = this._config.host;
+    this.language = language;
 
     EduClassroomConfig.setConfig(config);
 

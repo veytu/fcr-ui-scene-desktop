@@ -61,6 +61,7 @@
   align-items: center;
   gap: 12px;
   padding-left: 24px;
+  user-select: none;
 }
 .fcr-device-popover-content-more > span {
   @apply fcr-text-2 fcr-font-medium;

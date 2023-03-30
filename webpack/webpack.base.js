@@ -6,7 +6,7 @@ const { ROOT_PATH, ALIAS } = require('./utils/index');
 const { base } = require('./utils/loaders');
 const rteVersion = require('agora-rte-sdk/package.json').version;
 
-const classroomSdkVersion = require('../package.json').version;
+const onlineclassSDKVersion = require('../package.json').version;
 
 module.exports = {
   externals: {
@@ -39,7 +39,8 @@ module.exports = {
       RTE_SDK_VERSION: JSON.stringify(rteVersion),
 
       EDU_SDK_VERSION: JSON.stringify(eduCoreVersion),
-      CLASSROOM_SDK_VERSION: JSON.stringify(classroomSdkVersion),
+      ONLINECLASS_SDK_VERSION: JSON.stringify(onlineclassSDKVersion),
+      CLASSROOM_SDK_VERSION: JSON.stringify(onlineclassSDKVersion),
     }),
   ],
   stats: {
