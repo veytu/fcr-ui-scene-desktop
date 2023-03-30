@@ -22,7 +22,7 @@ export const Radio: FC<RadioProps> = (props) => {
         <input
           name={name}
           {...inputProps}
-          checked={groupContext?.value === value || checked || false}
+          checked={(groupContext?.value ?? null) === value || checked || false}
           onChange={(e) => {
             groupContext?.onChange?.(value);
             onChange?.(e.target.checked);
