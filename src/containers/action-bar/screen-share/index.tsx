@@ -7,6 +7,7 @@ import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { themeVal } from '@onlineclass/utils/tailwindcss';
 import { InfoToolTip } from '@onlineclass/components/tooltip/info';
 import { Button } from '@onlineclass/components/button';
+import { createPortal } from 'react-dom';
 const colors = themeVal('colors');
 export const ScreenShare = observer(() => {
   const {
@@ -23,23 +24,26 @@ export const ScreenShare = observer(() => {
   const colorByStatus = isLocalScreenSharing ? colors['red']['6'] : colors['green'];
   const ScreenShareToolTip = isLocalScreenSharing ? InfoToolTip : ToolTip;
   return (
-    <ScreenShareToolTip
-      mouseEnterDelay={isLocalScreenSharing ? 0 : 1}
-      content={
-        isLocalScreenSharing ? (
-          <ScreenSharingTooltipContent></ScreenSharingTooltipContent>
-        ) : (
-          'ScreenShare'
-        )
-      }>
-      <ActionBarItem
-        onClick={handleScreenShare}
-        icon={{
-          type: icon,
-          colors: { iconPrimary: colorByStatus },
-        }}
-        text={<span style={{ color: colorByStatus }}>ScreenShare</span>}></ActionBarItem>
-    </ScreenShareToolTip>
+    <>
+      {isLocalScreenSharing && <ScreenShareStatusBar></ScreenShareStatusBar>}
+      <ScreenShareToolTip
+        mouseEnterDelay={isLocalScreenSharing ? 0 : 1}
+        content={
+          isLocalScreenSharing ? (
+            <ScreenSharingTooltipContent></ScreenSharingTooltipContent>
+          ) : (
+            'ScreenShare'
+          )
+        }>
+        <ActionBarItem
+          onClick={handleScreenShare}
+          icon={{
+            type: icon,
+            colors: { iconPrimary: colorByStatus },
+          }}
+          text={<span style={{ color: colorByStatus }}>ScreenShare</span>}></ActionBarItem>
+      </ScreenShareToolTip>
+    </>
   );
 });
 const ScreenSharingTooltipContent = observer(() => {
@@ -53,5 +57,20 @@ const ScreenSharingTooltipContent = observer(() => {
         停止共享
       </Button>
     </div>
+  );
+});
+
+const ScreenShareStatusBar = observer(() => {
+  const {
+    actionBarUIStore: { stopLocalScreenShare },
+  } = useStore();
+  return createPortal(
+    <div className="fcr-screen-share-status-bar">
+      <span>正在屏幕分享中...</span>
+      <Button onClick={stopLocalScreenShare} size="XS" shape="rounded" styleType="danger">
+        停止共享
+      </Button>
+    </div>,
+    document.body,
   );
 });
