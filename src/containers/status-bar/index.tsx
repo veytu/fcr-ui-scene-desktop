@@ -25,9 +25,9 @@ export const StatusBar = observer(() => {
     },
   } = useStore();
   const { logo } = AgoraOnlineclassSDK;
-  return showStatusBar ? (
+  return (
     <div
-      className="fcr-status-bar"
+      className={classnames('fcr-status-bar', { 'fcr-status-bar-hide': !showStatusBar })}
       onMouseEnter={() => {
         setDisableClearScreen(true);
         stopClearScreenTask();
@@ -53,7 +53,7 @@ export const StatusBar = observer(() => {
         <FullscreenButton></FullscreenButton>
       </div>
     </div>
-  ) : null;
+  );
 });
 
 export const StatusBarItemWrapper: FC = (props) => {

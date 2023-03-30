@@ -25,9 +25,9 @@ export const ActionBar = observer(() => {
     },
     actionBarUIStore: { showLeaveOption },
   } = useStore();
-  return showActiobBar ? (
+  return (
     <div
-      className="fcr-action-bar"
+      className={classnames('fcr-action-bar', { 'fcr-action-bar-hide': !showActiobBar })}
       onMouseEnter={() => {
         setDisableClearScreen(true);
         stopClearScreenTask();
@@ -60,7 +60,7 @@ export const ActionBar = observer(() => {
         </>
       )}
     </div>
-  ) : null;
+  );
 });
 interface ActionBarItemWrapperProps {
   classNames?: string;
