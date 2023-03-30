@@ -2,7 +2,7 @@ import React from 'react';
 
 import { PathOptions } from '../svg-dict';
 
-export const path = ({ iconPrimary }: PathOptions) => (
+export const path = ({ iconPrimary, iconSecondary }: PathOptions) => (
   <g>
     <path
       fillRule="evenodd"
@@ -13,7 +13,7 @@ export const path = ({ iconPrimary }: PathOptions) => (
       fillRule="evenodd"
       clipRule="evenodd"
       d="M9.91107 13.9684C10.4808 13.367 11.4302 13.3413 12.0316 13.9111L31.0316 31.9111C31.633 32.4808 31.6587 33.4302 31.0889 34.0316C30.5192 34.633 29.5698 34.6587 28.9684 34.0889L9.96839 16.0889C9.36699 15.5192 9.34133 14.5698 9.91107 13.9684Z"
-      fill="#F5655C"></path>
+      fill={iconSecondary}></path>
   </g>
 );
 export const viewBox = '0 0 48 48';

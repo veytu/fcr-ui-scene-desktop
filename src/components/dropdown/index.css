@@ -58,7 +58,7 @@
   height: 18px;
 }
 
-.fcr-dropdown:hover {
+.fcr-dropdown:hover:not(.fcr-dropdown--disabled) {
   @apply fcr-border-notsb-inverse;
 }
 
@@ -100,4 +100,12 @@
 
 .fcr-dropdown .fcr-dropdown__option--active {
   @apply fcr-font-title;
+}
+
+.fcr-dropdown.fcr-dropdown--disabled {
+  cursor: not-allowed;
+}
+
+.fcr-dropdown__selected--unselected span {
+  color: #757575;
 }

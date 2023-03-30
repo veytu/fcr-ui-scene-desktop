@@ -3,6 +3,7 @@ import { SvgIconEnum, SvgImg } from '.';
 import classnames from 'classnames';
 import './clickable-icon.css';
 import { themeVal } from '@onlineclass/utils/tailwindcss';
+import { ToolTip } from '../tooltip';
 const colors = themeVal('colors');
 
 interface ClickableIconProps {
@@ -30,7 +31,10 @@ export const ClickableIcon: FC<ClickableIconProps> = (props) => {
       <SvgImg
         type={icon}
         size={size === 'large' ? 32 : 20}
-        colors={{ iconPrimary: colors?.['notsb-inverse'] }}></SvgImg>
+        colors={{
+          iconPrimary: colors?.['notsb-inverse'],
+          iconSecondary: colors?.['notsb-inverse'],
+        }}></SvgImg>
     </button>
   );
 };
@@ -39,18 +43,20 @@ interface PretestDeviceIconProps {
   onClick?: () => void;
   disabled?: boolean;
   classNames?: string;
-  status: 'active' | 'inactive' | 'idle';
+  status: 'active' | 'inactive' | 'idle' | 'disabled';
+  tooltip: string;
 }
 export const PretestDeviceIcon: FC<PretestDeviceIconProps> = (props) => {
-  const { status, icon, onClick, disabled, classNames, ...otherProps } = props;
+  const { status, icon, onClick, classNames, tooltip, ...otherProps } = props;
 
   return (
-    <ClickableIcon
-      {...otherProps}
-      disabled={disabled}
-      onClick={onClick}
-      icon={icon}
-      size="large"
-      classNames={classnames(`fcr-pretest-device-icon-${status}`, classNames)}></ClickableIcon>
+    <ToolTip content={tooltip}>
+      <ClickableIcon
+        {...otherProps}
+        onClick={status === 'disabled' ? () => {} : onClick}
+        icon={icon}
+        size="large"
+        classNames={classnames(`fcr-pretest-device-icon-${status}`, classNames)}></ClickableIcon>
+    </ToolTip>
   );
 };

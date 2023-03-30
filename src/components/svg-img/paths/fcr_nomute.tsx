@@ -2,7 +2,7 @@ import React from 'react';
 
 import { PathOptions } from '../svg-dict';
 
-export const path = ({ iconPrimary }: PathOptions) => (
+export const path = ({ iconPrimary, iconSecondary }: PathOptions) => (
   <g>
     <g opacity="0.9">
       <path
@@ -14,7 +14,7 @@ export const path = ({ iconPrimary }: PathOptions) => (
         fillRule="evenodd"
         clipRule="evenodd"
         d="M15.15 15.2152C15.7271 14.6021 16.6918 14.5729 17.3049 15.1499L34.5812 31.41C35.1943 31.987 35.2235 32.9517 34.6465 33.5648C34.0695 34.1779 33.1048 34.2071 32.4917 33.6301L15.2153 17.37C14.6023 16.793 14.573 15.8282 15.15 15.2152Z"
-        fill="#F5655C"></path>
+        fill={iconSecondary}></path>
     </g>
   </g>
 );
