@@ -54,6 +54,13 @@ export const Docs: ComponentStory<typeof Dropdown> = (props) => {
         }}>
         <Dropdown {...props} value={value} onChange={handleChange} size={'small'} />
       </div>
+      <div
+        style={{
+          width: 200,
+          marginBottom: 50,
+        }}>
+        <Dropdown {...props} value={value} onChange={handleChange} size={'medium'} disabled />
+      </div>
     </div>
   );
 };

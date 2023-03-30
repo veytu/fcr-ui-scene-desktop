@@ -39,7 +39,7 @@
   @apply fcr-bg-purple-6 fcr-border-purple-6;
   --effect-color: theme(colors.purple.4);
 }
-.fcr-pretest-device-icon-active:not(:disabled):active {
+.fcr-pretest-device-icon-active:not(.fcr-pretest-device-icon-disabled):active {
   @apply fcr-bg-purple-8 fcr-border-purple-8;
 }
 
@@ -47,7 +47,7 @@
   @apply fcr-bg-red-6 fcr-border-red-6;
   --effect-color: theme(colors.red.4);
 }
-.fcr-pretest-device-icon-inactive:not(:disabled):active {
+.fcr-pretest-device-icon-inactive:not(.fcr-pretest-device-icon-disabled):active {
   @apply fcr-bg-red-8 fcr-border-red-8;
 }
 
@@ -55,6 +55,13 @@
   @apply fcr-bg-transparent fcr-border-1;
   --effect-color: theme(colors.block-6);
 }
-.fcr-pretest-device-icon-idle:not(:disabled):active {
+.fcr-pretest-device-icon-idle:not(.fcr-pretest-device-icon-disabled):active {
   @apply fcr-bg-transparent fcr-border-1;
+}
+
+.fcr-clickabel-icon.fcr-pretest-device-icon-disabled,
+.fcr-clickabel-icon.fcr-pretest-device-icon-disabled:active {
+  @apply fcr-bg-transparent fcr-border-1;
+  cursor: not-allowed;
+  opacity: 0.4;
 }

@@ -48,6 +48,13 @@ export type DropdownProps = {
    * @param value changed value
    */
   onChange?: (value: string) => void;
+  /**
+   * 下拉框是否禁用
+   */
+  /** @en
+   * Whether the dropdown is disabled
+   */
+  disabled?: boolean;
 };
 
 export const Dropdown: FC<DropdownProps> = ({
@@ -56,10 +63,12 @@ export const Dropdown: FC<DropdownProps> = ({
   value,
   size = 'medium',
   onChange = () => {},
+  disabled,
 }) => {
   const [focused, setFocused] = useState(false);
   const cls = classNames('fcr-dropdown', {
     'fcr-dropdown--focused': focused,
+    'fcr-dropdown--disabled': disabled,
     'fcr-dropdown-l': size === 'large',
     'fcr-dropdown-m': size === 'medium',
     'fcr-dropdown-s': size === 'small',
@@ -71,9 +80,11 @@ export const Dropdown: FC<DropdownProps> = ({
     'fcr-dropdown-wrapper-s': size === 'small',
   });
 
-  const handleClick = () => {
-    setFocused(!focused);
-  };
+  const handleClick = disabled
+    ? () => {}
+    : () => {
+        setFocused(!focused);
+      };
 
   const optionsCls = classNames('fcr-dropdown__options', {
     'fcr-dropdown__options--invisible': !focused,

@@ -20,24 +20,36 @@ export * from './type';
  * Online class SDK
  */
 export class AgoraOnlineclassSDK {
-  private static _config: Record<string, string> = {};
   /**
-   * 品牌logo的url，会以图片展示在主界面左上角
+   * 支持下列参数配：
+   *    host: API请求主机
+   *    ignoreUrlRegionPrefix: 是否去掉API请求区域前缀
+   *    logo: 品牌logo的url，会以图片展示在主界面左上角
    */
   /** @en
-   * The logo url of your brand, which will show on the top left of the main view.
+   * Support below configs:
+   *    host: API request host
+   *    ignoreUrlRegionPrefix: Whether to remove the API request area prefix
+   *    logo: The logo url of your brand, which will show on the top left of the main view.
+   */
+  private static _config: Record<string, string> = {};
+  /**
+   *
+   */
+  /** @en
+   *
    */
   static logo = '';
   static language = '';
 
   /**
-   * Entry point of AgoraEduSDK, which is used to create an online classroom app and render at the specified dom.
+   * 启动入口
    * @param dom
    * @param launchOption
    * @returns
    */
   /** @en
-   *
+   * Entry point of AgoraOnlineclassSDK, which is used to create an online classroom app and render at the specified dom.
    * @param dom
    * @param launchOption
    * @returns
@@ -63,6 +75,8 @@ export class AgoraOnlineclassSDK {
       duration,
       language,
     } = launchOptions;
+
+    Logger.info('[AgoraOnlineclassSDK]launched with options:', launchOptions);
 
     setLaunchOptions(launchOptions);
 
@@ -91,10 +105,6 @@ export class AgoraOnlineclassSDK {
       noDevicePermission,
     };
 
-    Logger.info(`[AgoraEduSDK]region =`, rteRegion);
-
-    Logger.info(`[AgoraEduSDK]rtcConfigs =`, rtcConfigs);
-
     const config = new EduClassroomConfig(appId, sessionInfo, recordUrl || '', {
       latencyLevel,
       region: rteRegion,
@@ -109,17 +119,18 @@ export class AgoraOnlineclassSDK {
     this.language = language;
 
     EduClassroomConfig.setConfig(config);
-    Logger.info('[AgoraEduSDK]launched with options:', launchOptions);
+
+    Logger.info(`[AgoraOnlineclassSDK]classroomConfig`, config);
 
     const startTs = Date.now();
 
-    render(<App />, dom, () => {
-      Logger.info(`[AgoraEduSDK]render complete in ${Date.now() - startTs}ms.`);
+    render(<App skipDevicePretest={!devicePretest} />, dom, () => {
+      Logger.info(`[AgoraOnlineclassSDK]render complete in ${Date.now() - startTs}ms.`);
     });
     // return a disposer
     return () => {
       unmountComponentAtNode(dom);
-      Logger.info(`[AgoraEduSDK]unmounted.`);
+      Logger.info(`[AgoraOnlineclassSDK]unmounted.`);
     };
   }
 
@@ -143,7 +154,7 @@ export class AgoraOnlineclassSDK {
     }
 
     if (logo) {
-      this.logo = logo;
+      this._config.logo = logo;
     }
   }
 

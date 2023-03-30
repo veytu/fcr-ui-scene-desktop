@@ -5,8 +5,13 @@ import { DevicePretest } from './scenarios/device-pretest';
 import './preflight.css';
 import { useStore } from './utils/hooks/use-store';
 
-export const App = observer(() => {
-  const { initialize, destroy, initialized, devicePretestFinished } = useStore();
+export const App = observer(({ skipDevicePretest }: { skipDevicePretest: boolean }) => {
+  const { initialize, destroy, initialized } = useStore();
+  let { devicePretestFinished } = useStore();
+
+  if (skipDevicePretest) {
+    devicePretestFinished = true;
+  }
 
   useEffect(() => {
     initialize();
