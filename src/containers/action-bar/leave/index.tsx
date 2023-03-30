@@ -6,6 +6,7 @@ import { observer } from 'mobx-react';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { Popover } from '@onlineclass/components/popover';
 import { Button } from '@onlineclass/components/button';
+import { useEffect } from 'react';
 export const Leave = observer(() => {
   const {
     actionBarUIStore: { setShowLeaveOption },
@@ -22,7 +23,14 @@ export const Leave = observer(() => {
 export const LeaveCheck = observer(() => {
   const {
     actionBarUIStore: { setShowLeaveOption },
+    layoutUIStore: { setHasPopoverShowed },
   } = useStore();
+  useEffect(() => {
+    setHasPopoverShowed(true);
+    return () => {
+      setHasPopoverShowed(false);
+    };
+  }, []);
   return (
     <Popover placement="topRight" visible content={<LeavePopoverContent></LeavePopoverContent>}>
       <div onClick={() => setShowLeaveOption(false)} className="fcr-action-bar-cancel-leave">

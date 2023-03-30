@@ -41,7 +41,7 @@ export class AgoraOnlineclassSDK {
    */
   static logo = '';
   static language = '';
-
+  static shareUrl = '';
   /**
    * 启动入口
    * @param dom
@@ -73,6 +73,7 @@ export class AgoraOnlineclassSDK {
       roomType,
       startTime,
       duration,
+      shareUrl,
       language,
     } = launchOptions;
 
@@ -117,7 +118,7 @@ export class AgoraOnlineclassSDK {
     });
     config.host = this._config.host;
     this.language = language;
-
+    this.shareUrl = shareUrl || '';
     EduClassroomConfig.setConfig(config);
 
     Logger.info(`[AgoraOnlineclassSDK]classroomConfig`, config);
@@ -154,7 +155,7 @@ export class AgoraOnlineclassSDK {
     }
 
     if (logo) {
-      this._config.logo = logo;
+      this.logo = logo;
     }
   }
 

@@ -4,13 +4,13 @@ import { DialogType, Layout } from './type';
 import { bound, Scheduler } from 'agora-rte-sdk';
 import { BaseDialogProps } from '@onlineclass/components/dialog';
 import { v4 as uuidv4 } from 'uuid';
-import { DialogProps } from 'rc-dialog';
 import { ConfirmDialogProps } from '@onlineclass/components/dialog/confirm-dialog';
 type AddDialog = (type: 'confirm', params: ConfirmDialogProps) => void;
 export class LayoutUIStore extends EduUIStoreBase {
   private _clearScreenTask: Scheduler.Task | null = null;
   private _clearScreenDelay = 3000;
-  private _disableClearScreen = false;
+  private _isPointingBar = false;
+  private _hasPopoverShowed = false;
   @observable showStatusBar = true;
   @observable showActiobBar = true;
   @observable layout: Layout = Layout.Grid;
@@ -20,28 +20,32 @@ export class LayoutUIStore extends EduUIStoreBase {
     this.layout = layout;
   }
   @bound
-  setDisableClearScreen(disable: boolean) {
-    this._disableClearScreen = disable;
+  setIsPointingBar(disable: boolean) {
+    this._isPointingBar = disable;
+  }
+  @bound
+  setHasPopoverShowed(has: boolean) {
+    this._hasPopoverShowed = has;
   }
   @action.bound
-  resetClearScreenTask = () => {
-    this.showStatusBar = true;
-    this.showActiobBar = true;
-    this._clearScreenTask?.stop();
-    this._clearScreenTask = Scheduler.shared.addDelayTask(() => {
-      if (this._disableClearScreen) return;
-      runInAction(() => {
-        this.showStatusBar = false;
-        this.showActiobBar = false;
-      });
-    }, this._clearScreenDelay);
+  clearScreen = () => {
+    if (this._isPointingBar || this._hasPopoverShowed) return;
+    this.showStatusBar = false;
+    this.showActiobBar = false;
   };
   @action.bound
-  stopClearScreenTask = () => {
+  activeStatusBarAndActionBar = () => {
     this.showStatusBar = true;
     this.showActiobBar = true;
-    this._clearScreenTask?.stop();
   };
+
+  @action.bound
+  resetClearScreenTask = () => {
+    this.activeStatusBarAndActionBar();
+    this._clearScreenTask?.stop();
+    this._clearScreenTask = Scheduler.shared.addDelayTask(this.clearScreen, this._clearScreenDelay);
+  };
+
   @action.bound
   addDialog: AddDialog = (type: DialogType, params: BaseDialogProps) => {
     this.dialogMap.set(uuidv4(), Object.assign(params, { type }));
@@ -52,9 +56,12 @@ export class LayoutUIStore extends EduUIStoreBase {
   };
   onDestroy(): void {
     document.removeEventListener('mousemove', this.resetClearScreenTask);
+    document.removeEventListener('mouseleave', this.clearScreen);
   }
   onInstall(): void {
     document.addEventListener('mousemove', this.resetClearScreenTask);
+    document.addEventListener('mouseleave', this.clearScreen);
+
     this.resetClearScreenTask();
   }
 }

@@ -66,12 +66,20 @@ const LayoutCard = observer(({ layout }: { layout: Layout }) => {
 });
 export const LayoutSwitch = observer(() => {
   const {
-    layoutUIStore: { layout: currentLayout },
+    layoutUIStore: { layout: currentLayout, setHasPopoverShowed },
   } = useStore();
   return (
     <StatusBarItemWrapper>
       <PopoverWithTooltip
         popoverProps={{
+          onVisibleChange(visible) {
+            console.log(visible);
+            if (visible) {
+              setHasPopoverShowed(true);
+            } else {
+              setHasPopoverShowed(false);
+            }
+          },
           placement: 'bottomLeft',
           overlayInnerStyle: { width: 'auto' },
           content: <LayoutSwitchPopover></LayoutSwitchPopover>,

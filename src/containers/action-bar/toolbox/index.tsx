@@ -1,12 +1,24 @@
 import { Popover } from '@onlineclass/components/popover';
 import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
+import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { FC } from 'react';
 import { ActionBarItemWithPopover, ActionBarItemWrapper } from '..';
+import { observer } from 'mobx-react';
 import './index.css';
-export const ToolBox = () => {
+export const ToolBox = observer(() => {
+  const {
+    layoutUIStore: { setHasPopoverShowed },
+  } = useStore();
   return (
     <ActionBarItemWithPopover
       popoverProps={{
+        onVisibleChange(visible) {
+          if (visible) {
+            setHasPopoverShowed(true);
+          } else {
+            setHasPopoverShowed(false);
+          }
+        },
         overlayInnerStyle: { width: 'auto' },
         trigger: 'click',
         content: <ToolBoxPopoverContent></ToolBoxPopoverContent>,
@@ -14,7 +26,7 @@ export const ToolBox = () => {
       icon={SvgIconEnum.FCR_WHITEBOARD_TOOLBOX}
       text={'ToolBox'}></ActionBarItemWithPopover>
   );
-};
+});
 const ToolBoxPopoverContent = () => {
   return (
     <div className="fcr-toolbox-popover-content">

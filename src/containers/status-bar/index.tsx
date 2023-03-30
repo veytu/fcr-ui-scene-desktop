@@ -17,24 +17,17 @@ import { observer } from 'mobx-react';
 
 export const StatusBar = observer(() => {
   const {
-    layoutUIStore: {
-      showStatusBar,
-      resetClearScreenTask,
-      stopClearScreenTask,
-      setDisableClearScreen,
-    },
+    layoutUIStore: { showStatusBar, setIsPointingBar },
   } = useStore();
   const { logo } = AgoraOnlineclassSDK;
   return (
     <div
       className={classnames('fcr-status-bar', { 'fcr-status-bar-hide': !showStatusBar })}
       onMouseEnter={() => {
-        setDisableClearScreen(true);
-        stopClearScreenTask();
+        setIsPointingBar(true);
       }}
       onMouseLeave={() => {
-        setDisableClearScreen(false);
-        resetClearScreenTask();
+        setIsPointingBar(false);
       }}>
       <div className="fcr-status-bar-left">
         {logo && (
@@ -68,6 +61,7 @@ const StatusBarInfo: FC = () => {
   const ref = useRef<HTMLSpanElement | null>(null);
   const {
     statusBarUIStore: { roomUuid },
+    layoutUIStore: { setHasPopoverShowed },
   } = useStore();
   useEffect(() => {
     let clipboard: ClipboardJS | undefined;
@@ -91,6 +85,13 @@ const StatusBarInfo: FC = () => {
       <div className="fcr-status-bar-info">
         <DoubleDeckPopoverWithTooltip
           doulebDeckPopoverProps={{
+            onVisibleChange(visible) {
+              if (visible) {
+                setHasPopoverShowed(true);
+              } else {
+                setHasPopoverShowed(false);
+              }
+            },
             placement: 'bottomRight',
             topDeckContent: <NetworkConnection></NetworkConnection>,
             bottomDeckContent: <NetworkDetail></NetworkDetail>,
@@ -102,12 +103,19 @@ const StatusBarInfo: FC = () => {
         </DoubleDeckPopoverWithTooltip>
         <div className={classnames('fcr-status-bar-info-id', 'fcr-divider')}>
           <span>ID:</span>
-          <span ref={ref} data-clipboard-text={`roomUuid`}>
+          <span ref={ref} data-clipboard-text={roomUuid}>
             {roomUuid}
           </span>
         </div>
         <PopoverWithTooltip
           popoverProps={{
+            onVisibleChange(visible) {
+              if (visible) {
+                setHasPopoverShowed(true);
+              } else {
+                setHasPopoverShowed(false);
+              }
+            },
             overlayInnerStyle: {
               width: 'auto',
             },

@@ -80,8 +80,6 @@ export interface ButtonProps {
    * Option to fit button width to its parent width, default value is false.
    */
   block?: boolean;
-
-  children: React.ReactNode;
 }
 export const Button: FC<ButtonProps> = (props) => {
   const {

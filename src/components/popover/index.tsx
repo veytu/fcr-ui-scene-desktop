@@ -120,12 +120,18 @@ export const PopoverWithTooltip: FC<FcrPopoverWithTooltip> = (props) => {
       {...toolTipProps}
       visible={hovered}
       trigger="hover"
-      onVisibleChange={handleHoverChange}>
+      onVisibleChange={(visible) => {
+        handleHoverChange(visible);
+        toolTipProps?.onVisibleChange?.(visible);
+      }}>
       <Popover
         {...popoverProps}
         visible={clicked}
         trigger="click"
-        onVisibleChange={handleClickChange}>
+        onVisibleChange={(visible) => {
+          handleClickChange(visible);
+          popoverProps?.onVisibleChange?.(visible);
+        }}>
         <div className={classnames({ 'fcr-popover-trigger-opened': clicked })}>{children}</div>
       </Popover>
     </ToolTip>
@@ -143,12 +149,18 @@ export const DoubleDeckPopoverWithTooltip: FC<FcrDoubleDeckPopoverWithTooltip> =
       {...toolTipProps}
       trigger="hover"
       visible={hovered}
-      onVisibleChange={handleHoverChange}>
+      onVisibleChange={(visible) => {
+        handleHoverChange(visible);
+        toolTipProps?.onVisibleChange?.(visible);
+      }}>
       <DoubleDeckPopover
         {...doulebDeckPopoverProps}
         visible={clicked}
         trigger="click"
-        onVisibleChange={handleClickChange}>
+        onVisibleChange={(visible) => {
+          handleClickChange(visible);
+          doulebDeckPopoverProps?.onVisibleChange?.(visible);
+        }}>
         <div className={classnames({ 'fcr-popover-trigger-opened': clicked })}>{children}</div>
       </DoubleDeckPopover>
     </ToolTip>

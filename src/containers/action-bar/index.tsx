@@ -17,24 +17,17 @@ import { Leave, LeaveCheck } from './leave';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 export const ActionBar = observer(() => {
   const {
-    layoutUIStore: {
-      showActiobBar,
-      resetClearScreenTask,
-      stopClearScreenTask,
-      setDisableClearScreen,
-    },
+    layoutUIStore: { showActiobBar, setIsPointingBar },
     actionBarUIStore: { showLeaveOption },
   } = useStore();
   return (
     <div
       className={classnames('fcr-action-bar', { 'fcr-action-bar-hide': !showActiobBar })}
       onMouseEnter={() => {
-        setDisableClearScreen(true);
-        stopClearScreenTask();
+        setIsPointingBar(true);
       }}
       onMouseLeave={() => {
-        setDisableClearScreen(false);
-        resetClearScreenTask();
+        setIsPointingBar(false);
       }}>
       {showLeaveOption ? (
         <LeaveCheck></LeaveCheck>
