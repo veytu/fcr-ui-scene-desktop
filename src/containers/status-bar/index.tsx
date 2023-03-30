@@ -13,11 +13,29 @@ import { RecordStatus } from './record-status';
 import { AgoraOnlineclassSDK } from '@onlineclass/index';
 import ClipboardJS from 'clipboard';
 import { ToastApi } from '@onlineclass/components/toast';
+import { observer } from 'mobx-react';
 
-export const StatusBar = () => {
+export const StatusBar = observer(() => {
+  const {
+    layoutUIStore: {
+      showStatusBar,
+      resetClearScreenTask,
+      stopClearScreenTask,
+      setDisableClearScreen,
+    },
+  } = useStore();
   const { logo } = AgoraOnlineclassSDK;
-  return (
-    <div className="fcr-status-bar">
+  return showStatusBar ? (
+    <div
+      className="fcr-status-bar"
+      onMouseEnter={() => {
+        setDisableClearScreen(true);
+        stopClearScreenTask();
+      }}
+      onMouseLeave={() => {
+        setDisableClearScreen(false);
+        resetClearScreenTask();
+      }}>
       <div className="fcr-status-bar-left">
         {logo && (
           <div className="fcr-status-bar-logo">
@@ -35,8 +53,8 @@ export const StatusBar = () => {
         <FullscreenButton></FullscreenButton>
       </div>
     </div>
-  );
-};
+  ) : null;
+});
 
 export const StatusBarItemWrapper: FC = (props) => {
   const { children, ...others } = props;

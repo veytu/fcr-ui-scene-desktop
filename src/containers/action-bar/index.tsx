@@ -17,10 +17,25 @@ import { Leave, LeaveCheck } from './leave';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 export const ActionBar = observer(() => {
   const {
+    layoutUIStore: {
+      showActiobBar,
+      resetClearScreenTask,
+      stopClearScreenTask,
+      setDisableClearScreen,
+    },
     actionBarUIStore: { showLeaveOption },
   } = useStore();
-  return (
-    <div className="fcr-action-bar">
+  return showActiobBar ? (
+    <div
+      className="fcr-action-bar"
+      onMouseEnter={() => {
+        setDisableClearScreen(true);
+        stopClearScreenTask();
+      }}
+      onMouseLeave={() => {
+        setDisableClearScreen(false);
+        resetClearScreenTask();
+      }}>
       {showLeaveOption ? (
         <LeaveCheck></LeaveCheck>
       ) : (
@@ -45,7 +60,7 @@ export const ActionBar = observer(() => {
         </>
       )}
     </div>
-  );
+  ) : null;
 });
 interface ActionBarItemWrapperProps {
   classNames?: string;
