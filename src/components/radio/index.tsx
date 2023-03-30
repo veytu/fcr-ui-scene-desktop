@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import './index.css';
 import classnames from 'classnames';
 import { SvgIconEnum, SvgImg } from '../svg-img';
@@ -10,16 +10,21 @@ export interface RadioProps {
   onChange?: (checked: boolean) => void;
   styleType?: 'brand' | 'white';
   name?: string;
+  value?: string;
 }
 export const Radio: FC<RadioProps> = (props) => {
-  const { label, onChange, styleType = 'brand', name, ...inputProps } = props;
+  const groupContext = useContext(RadioGroupContext);
+  const { label, onChange, styleType = 'brand', name, value, checked, ...inputProps } = props;
+
   return (
     <label className={classnames('fcr-radio', `fcr-radio-${styleType}`)}>
       <span className="fcr-radio-input-wrapper">
         <input
           name={name}
           {...inputProps}
+          checked={groupContext?.value === value || checked || false}
           onChange={(e) => {
+            groupContext?.onChange?.(value);
             onChange?.(e.target.checked);
           }}
           type="radio"></input>
@@ -34,5 +39,35 @@ export const Radio: FC<RadioProps> = (props) => {
       </span>
       <span className="fcr-radio-label">{label}</span>
     </label>
+  );
+};
+interface RadioGroupProps {
+  defaultValue?: any;
+  name?: string;
+  options?: RadioProps[];
+  value?: any;
+  onChange?: (value?: string) => void;
+}
+const RadioGroupContext = createContext<RadioGroupProps | null>(null);
+export const RadioGroup: FC<RadioGroupProps> = (props) => {
+  const { children, options, defaultValue } = props;
+  const [value, setValue] = useState(defaultValue || props.value);
+  useEffect(() => {
+    props.value && setValue(props.value);
+  }, [props.value]);
+  const onRadioChange = (value?: string) => {
+    if (!props.value) {
+      setValue(value);
+    }
+    props.onChange?.(value);
+  };
+  return (
+    <RadioGroupContext.Provider value={{ ...props, value, onChange: onRadioChange }}>
+      {options
+        ? options.map((props) => {
+            <Radio {...props}></Radio>;
+          })
+        : children}
+    </RadioGroupContext.Provider>
   );
 };

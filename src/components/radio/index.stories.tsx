@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Meta } from '@storybook/react';
-import { Radio } from '.';
+import { Radio, RadioGroup } from '.';
 
 const meta: Meta = {
   title: 'Components/Radio',
@@ -9,12 +9,14 @@ const meta: Meta = {
 export const Docs = () => {
   return (
     <>
-      <div>
-        <Radio label="Agree terms of service"></Radio>
-      </div>
-      <div>
-        <Radio styleType="white" label="Agree terms of service"></Radio>
-      </div>
+      <RadioGroup
+        defaultValue={'a'}
+        onChange={(value) => {
+          console.log(value);
+        }}>
+        <Radio value="a" label="Agree terms of service"></Radio>
+        <Radio value="b" styleType="white" label="Agree terms of service"></Radio>
+      </RadioGroup>
     </>
   );
 };

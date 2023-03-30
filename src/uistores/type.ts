@@ -1,8 +1,6 @@
-import { BaseDialogProps } from '@onlineclass/components/dialog';
-
 export enum Layout {
-  ListOnTop = 'ListOnTop',
-  ListOnRight = 'ListOnRight',
-  Grid = 'Grid',
+  ListOnTop = 'list-on-top',
+  ListOnRight = 'list-on-right',
+  Grid = 'grid',
 }
 export type DialogType = 'confirm';

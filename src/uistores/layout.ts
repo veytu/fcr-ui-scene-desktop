@@ -13,7 +13,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   private _disableClearScreen = false;
   @observable showStatusBar = true;
   @observable showActiobBar = true;
-  @observable layout: Layout = Layout.ListOnTop;
+  @observable layout: Layout = Layout.Grid;
   @observable dialogMap: Map<string, BaseDialogProps & { type: DialogType }> = new Map();
   @action.bound
   setLayout(layout: Layout) {
