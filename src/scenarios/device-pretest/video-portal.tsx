@@ -5,6 +5,7 @@ import { SvgIconEnum } from '@onlineclass/components/svg-img';
 import { ClickableIcon, PretestDeviceIcon } from '@onlineclass/components/svg-img/clickable-icon';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { useEffect, useMemo, useRef } from 'react';
+import React from 'react';
 
 export const VideoPortal = observer(() => {
   const { setDevicePretestFinished, deviceSettingUIStore } = useStore();
@@ -12,9 +13,12 @@ export const VideoPortal = observer(() => {
 
   useEffect(() => {
     if (videoRef.current) {
-      deviceSettingUIStore.setupLocalVideo(videoRef.current, false);
+      deviceSettingUIStore.setupLocalVideo(
+        videoRef.current,
+        deviceSettingUIStore.isLocalMirrorEnabled,
+      );
     }
-  }, []);
+  }, [deviceSettingUIStore.isLocalMirrorEnabled]);
 
   const cameraIconProps = useMemo(() => {
     const isDeviceActive = deviceSettingUIStore.isCameraDeviceEnabled;
@@ -33,13 +37,11 @@ export const VideoPortal = observer(() => {
           status: 'active' as const,
           icon: SvgIconEnum.FCR_CAMERA,
           tooltip: 'Camera opened',
-          onClick: deviceSettingUIStore.toggleCameraDevice,
         }
       : {
           status: 'inactive' as const,
           icon: SvgIconEnum.FCR_CAMERAOFF,
           tooltip: 'Camera closed',
-          onClick: deviceSettingUIStore.toggleCameraDevice,
         };
   }, [deviceSettingUIStore.isCameraDeviceEnabled]);
 
@@ -60,13 +62,11 @@ export const VideoPortal = observer(() => {
           status: 'active' as const,
           icon: SvgIconEnum.FCR_MUTE,
           tooltip: 'Microphone opened',
-          onClick: deviceSettingUIStore.toggleAudioRecordingDevice,
         }
       : {
           status: 'inactive' as const,
           icon: SvgIconEnum.FCR_NOMUTE,
           tooltip: 'Microphone closed',
-          onClick: deviceSettingUIStore.toggleAudioRecordingDevice,
         };
   }, [deviceSettingUIStore.isAudioRecordingDeviceEnabled]);
 
@@ -78,15 +78,73 @@ export const VideoPortal = observer(() => {
           status: 'active' as const,
           icon: SvgIconEnum.FCR_V2_LOUDER_MIN,
           tooltip: 'Speaker opened',
-          onClick: deviceSettingUIStore.toggleAudioPlaybackDevice,
         }
       : {
           status: 'inactive' as const,
           icon: SvgIconEnum.FCR_V2_QUITE,
           tooltip: 'Speaker closed',
-          onClick: deviceSettingUIStore.toggleAudioPlaybackDevice,
         };
   }, [deviceSettingUIStore.isAudioPlaybackDeviceEnabled]);
+
+  const mirrorIconProps = useMemo(() => {
+    const enabled = deviceSettingUIStore.isLocalMirrorEnabled;
+    return enabled
+      ? {
+          icon: SvgIconEnum.FCR_MIRRORIMAGE_LEFT,
+        }
+      : {
+          icon: SvgIconEnum.FCR_MIRRORIMAGE_RIGHT,
+        };
+  }, [deviceSettingUIStore.isLocalMirrorEnabled]);
+
+  const virtualBackgroundIconProps = useMemo(() => {
+    const enabled = deviceSettingUIStore.isVirtualBackgroundEnabled;
+
+    return enabled
+      ? {
+          status: 'active' as const,
+          onClick: deviceSettingUIStore.toggleVirtualBackground,
+        }
+      : {
+          status: 'idle' as const,
+          onClick: deviceSettingUIStore.toggleVirtualBackground,
+        };
+  }, [deviceSettingUIStore.isVirtualBackgroundEnabled]);
+
+  const beautyFilterIconProps = useMemo(() => {
+    const enabled = deviceSettingUIStore.isBeautyFilterEnabled;
+
+    return enabled
+      ? {
+          status: 'active' as const,
+          onClick: deviceSettingUIStore.toggleBeautyFilter,
+        }
+      : {
+          status: 'idle' as const,
+          onClick: deviceSettingUIStore.toggleBeautyFilter,
+        };
+  }, [deviceSettingUIStore.isBeautyFilterEnabled]);
+
+  const {
+    isBeautyFilterEnabled,
+    activeBeautyValue = 0,
+    activeBeautyType,
+    setBeautyFilter,
+  } = deviceSettingUIStore;
+
+  const sliderValue = activeBeautyValue * 100;
+
+  const handleBeautyValueChange = (value: number) => {
+    if (activeBeautyType) {
+      setBeautyFilter({ [activeBeautyType]: value / 100 });
+    }
+  };
+
+  const handleResetBeautyValue = () => {
+    if (activeBeautyType) {
+      setBeautyFilter({ [activeBeautyType]: 0 });
+    }
+  };
 
   return (
     <div className="fcr-pretest__video-portal">
@@ -97,29 +155,44 @@ export const VideoPortal = observer(() => {
       <div className="fcr-pretest__video-portal__video">
         <div ref={videoRef} className="fcr-pretest__video-portal__video-renderer" />
         <div className="fcr-pretest__video-portal__sidebar">
-          <VerticalSlider />
-          <ClickableIcon icon={SvgIconEnum.FCR_V2_LOUDER} size="small" />
+          {isBeautyFilterEnabled && activeBeautyType && (
+            <React.Fragment>
+              <VerticalSlider value={sliderValue} onChange={handleBeautyValueChange} />
+              <ClickableIcon
+                icon={SvgIconEnum.FCR_RESET}
+                size="small"
+                onClick={handleResetBeautyValue}
+              />
+            </React.Fragment>
+          )}
         </div>
       </div>
       <div className="fcr-pretest__video-portal__toggles">
-        <PretestDeviceIcon {...cameraIconProps} />
-        <PretestDeviceIcon {...microphoneIconProps} />
-        <PretestDeviceIcon {...speakerIconProps} />
+        <PretestDeviceIcon onClick={deviceSettingUIStore.toggleCameraDevice} {...cameraIconProps} />
+        <PretestDeviceIcon
+          onClick={deviceSettingUIStore.toggleAudioRecordingDevice}
+          {...microphoneIconProps}
+        />
+        <PretestDeviceIcon
+          onClick={deviceSettingUIStore.toggleAudioPlaybackDevice}
+          {...speakerIconProps}
+        />
         <PretestDeviceIcon
           icon={SvgIconEnum.FCR_BACKGROUND2}
-          status="active"
           tooltip={'Virtual Background'}
+          {...virtualBackgroundIconProps}
         />
         <PretestDeviceIcon
           icon={SvgIconEnum.FCR_BEAUTY}
-          status="active"
           tooltip={'Beauty Filter'}
+          {...beautyFilterIconProps}
         />
         <PretestDeviceIcon
-          status="idle"
-          icon={SvgIconEnum.FCR_MIRRORIMAGE_LEFT}
           classNames="fcr-pretest__video-portal__toggles__mirror"
-          tooltip={''}
+          status="idle"
+          tooltip="Mirror"
+          onClick={deviceSettingUIStore.toggleLocalMirror}
+          {...mirrorIconProps}
         />
       </div>
     </div>

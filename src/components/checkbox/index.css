@@ -13,6 +13,21 @@
   border-style: solid;
   position: relative;
 }
+
+.fcr-checkbox-s .fcr-checkbox-input-wrapper {
+  width: 20px;
+  height: 20px;
+  border-width: 3px;
+}
+.fcr-checkbox-s .fcr-checkbox-input-wrapper > input {
+  width: 14px;
+  height: 14px;
+}
+.fcr-checkbox-s .fcr-checkbox-input-wrapper .fcr-checkbox-inner {
+  width: 14px;
+  height: 14px;
+}
+
 .fcr-checkbox-input-wrapper > input {
   @apply fcr-rounded-8;
   width: 16px;

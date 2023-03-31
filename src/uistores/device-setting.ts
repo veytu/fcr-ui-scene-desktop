@@ -1,4 +1,4 @@
-import { isElectron, isInvisible, isWeb } from '@onlineclass/utils/check';
+import { isInvisible, isWeb } from '@onlineclass/utils/check';
 import { builtInExtensions, getProcessorInitializer } from '@onlineclass/utils/rtc-extensions';
 import {
   AgoraEduClassroomEvent,
@@ -14,6 +14,11 @@ import { IBeautyProcessor } from 'agora-extension-beauty-effect';
 import { EduUIStoreBase } from './base';
 import { bound, Log } from 'agora-rte-sdk';
 import { transI18n } from 'agora-common-libs';
+import { BeautyFilterOptions, VirtualBackgroundOptions } from '..';
+import { fetchMediaFileByUrl } from '@onlineclass/utils';
+import { getLaunchOptions } from '@onlineclass/utils/launch-options-holder';
+import concat from 'lodash/concat';
+import map from 'lodash/map';
 
 /**
  * 设备设置
@@ -21,13 +26,17 @@ import { transI18n } from 'agora-common-libs';
 /** @en
  *
  */
-@Log.attach({ proxyMethods: false })
+@Log.attach()
 export class DeviceSettingUIStore extends EduUIStoreBase {
   private _virtualBackgroundProcessor?: IVirtualBackgroundProcessor;
   private _beautyEffectProcessor?: IBeautyProcessor;
   private _aiDenoiserProcessor?: IAIDenoiserProcessor;
   @observable
-  private _virtualBackgroundId?: string;
+  private _virtualBackgroundOptions?: VirtualBackgroundOptions;
+  @observable
+  private _beautyOptions?: BeautyFilterOptions;
+  @observable
+  private _beautyType?: keyof BeautyFilterOptions;
   @observable
   private _cameraDeviceId?: string;
   @observable
@@ -40,6 +49,14 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   private _audioRecordingDeviceEnabled = false;
   @observable
   private _audioPlaybackDeviceEnabled = true;
+  @observable
+  private _localMirrorEnabled = false;
+  @observable
+  private _virtualBackgroundEnabled = false;
+  @observable
+  private _beautyFilterEnabled = false;
+  @observable
+  private _aiDenoiserEnabled = false;
 
   get cameraDeviceId() {
     return this._cameraDeviceId;
@@ -63,6 +80,64 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
 
   get isAudioPlaybackDeviceEnabled() {
     return this._audioPlaybackDeviceEnabled;
+  }
+
+  get isLocalMirrorEnabled() {
+    return this._localMirrorEnabled;
+  }
+
+  get isVirtualBackgroundEnabled() {
+    return this._virtualBackgroundEnabled;
+  }
+
+  get isBeautyFilterEnabled() {
+    return this._beautyFilterEnabled;
+  }
+
+  get activeBackgroundUrl() {
+    return this._virtualBackgroundOptions?.url;
+  }
+
+  get activeBeautyType() {
+    return this._beautyType;
+  }
+
+  get activeBeautyValue() {
+    if (this._beautyOptions && this._beautyType) {
+      return this._beautyOptions[this._beautyType];
+    }
+  }
+
+  get beautySmoothValue() {
+    return this._beautyOptions?.smooth;
+  }
+
+  get beautyBrighteningValue() {
+    return this._beautyOptions?.brightening;
+  }
+
+  get beautyBlushValue() {
+    return this._beautyOptions?.blush;
+  }
+
+  /**
+   * 麦克风测试音量
+   * @returns 音量 0 ~ 1
+   */
+  get localRecordingTestVolume(): number {
+    return this.isAudioRecordingDeviceEnabled
+      ? this.classroomStore.mediaStore.localMicAudioVolume
+      : 0;
+  }
+
+  /**
+   * 扬声器测试音量
+   * @returns 音量 0 ~ 1
+   */
+  get localPlaybackTestVolume(): number {
+    return this.isAudioPlaybackDeviceEnabled
+      ? this.classroomStore.mediaStore.localPlaybackTestVolume
+      : 0;
   }
 
   /**
@@ -154,11 +229,90 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     };
   }
 
-  @bound
-  setVirtualBackground(backgroundId: string) {}
+  get virtualBackgroundList() {
+    const { virtualBackgroundImages, virtualBackgroundVideos } = getLaunchOptions();
+    return concat<{ type: 'image' | 'video'; url: string }>(
+      map(virtualBackgroundImages, (url) => ({ type: 'image', url })),
+      map(virtualBackgroundVideos, (url) => ({ type: 'video', url })),
+    );
+  }
 
+  /**
+   * 开始扬声器测试
+   * @param url
+   */
   @bound
-  setBeautyFilter() {}
+  startPlaybackDeviceTest(url: string) {
+    this.classroomStore.mediaStore.startPlaybackDeviceTest(url);
+  }
+
+  /**
+   * 停止扬声器测试
+   */
+  @bound
+  stopPlaybackDeviceTest() {
+    this.classroomStore.mediaStore.stopPlaybackDeviceTest();
+  }
+
+  /**
+   * 开始麦克风测试
+   */
+  @bound
+  startRecordingDeviceTest() {
+    this.classroomStore.mediaStore.startRecordingDeviceTest(100);
+  }
+
+  /**
+   * 停止麦克风测试
+   */
+  @bound
+  stopRecordingDeviceTest() {
+    this.classroomStore.mediaStore.stopRecordingDeviceTest();
+  }
+
+  /**
+   *
+   * @param options
+   */
+  /** @en
+   *
+   * @param options
+   */
+  @action.bound
+  setVirtualBackground(options: VirtualBackgroundOptions) {
+    this._virtualBackgroundOptions = options;
+  }
+
+  /**
+   *
+   * @param type
+   */
+  /** @en
+   *
+   * @param type
+   */
+  @action.bound
+  setBeautyType(type: keyof BeautyFilterOptions) {
+    this._beautyType = type;
+  }
+  /**
+   *
+   * @param options
+   */
+  /** @en
+   *
+   * @param options
+   */
+  @action.bound
+  setBeautyFilter(options: Partial<BeautyFilterOptions>) {
+    this._beautyOptions = {
+      smooth: 0,
+      brightening: 0,
+      blush: 0,
+      ...this._beautyOptions,
+      ...options,
+    };
+  }
 
   @action.bound
   setCameraDevice(deviceId: string) {
@@ -247,10 +401,55 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     }
   }
 
+  @action.bound
+  toggleLocalMirror() {
+    if (this._localMirrorEnabled) {
+      this._localMirrorEnabled = false;
+    } else {
+      this._localMirrorEnabled = true;
+    }
+  }
+
   @bound
   setupLocalVideo(dom: HTMLElement, mirror: boolean) {
     this.classroomStore.mediaStore.setupLocalVideo(dom, mirror);
   }
+
+  @action.bound
+  toggleVirtualBackground() {
+    if (this._virtualBackgroundEnabled) {
+      this._virtualBackgroundEnabled = false;
+    } else {
+      this._virtualBackgroundEnabled = true;
+
+      if (!this._virtualBackgroundOptions && this.virtualBackgroundList.length) {
+        this._virtualBackgroundOptions = this.virtualBackgroundList[0];
+      }
+    }
+  }
+
+  @action.bound
+  toggleBeautyFilter() {
+    if (this._beautyFilterEnabled) {
+      this._beautyFilterEnabled = false;
+    } else {
+      this._beautyFilterEnabled = true;
+      if (!this._beautyType) {
+        this._beautyType = 'smooth';
+        this._beautyOptions = { smooth: 0.5, brightening: 0.6, blush: 0.1 };
+      }
+    }
+  }
+
+  @action.bound
+  toggleAiDenoiser() {
+    if (this._aiDenoiserEnabled) {
+      this._aiDenoiserEnabled = false;
+    } else {
+      this._aiDenoiserEnabled = true;
+    }
+  }
+
   /**
    * @internal
    */
@@ -261,7 +460,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     this._disposers.push(
       reaction(
         () => {
-          return this.classroomStore.connectionStore.engine && isWeb() && isInvisible();
+          return this.classroomStore.connectionStore.engine && isWeb() && !isInvisible();
         },
         (processorsRequired) => {
           if (processorsRequired) {
@@ -478,25 +677,76 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       ),
     );
 
-    // not implemented in browser
-    if (isElectron()) {
-      // 麦克风设备变更
-      this._disposers.push(
-        reaction(
-          () => this.audioPlaybackDeviceId,
-          () => {
-            const { audioPlaybackDeviceId } = this;
+    // 扬声器设备变更
+    this._disposers.push(
+      reaction(
+        () => this.audioPlaybackDeviceId,
+        () => {
+          const { audioPlaybackDeviceId } = this;
 
-            if (audioPlaybackDeviceId) {
-              const track =
-                this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
-              this.logger.info('change playback device to', audioPlaybackDeviceId);
-              track.setPlaybackDevice(audioPlaybackDeviceId);
-            }
-          },
-        ),
-      );
-    }
+          if (audioPlaybackDeviceId) {
+            const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
+            this.logger.info('change playback device to', audioPlaybackDeviceId);
+            track.setPlaybackDevice(audioPlaybackDeviceId);
+          }
+        },
+      ),
+    );
+
+    this._disposers.push(
+      reaction(
+        () => ({
+          enabled: this._virtualBackgroundEnabled,
+          options: this._virtualBackgroundOptions,
+        }),
+        ({ enabled, options }) => {
+          this.logger.info('enabled', enabled, 'options', options);
+          if (enabled && options) {
+            const { type } = options;
+
+            fetchMediaFileByUrl(options).then((data) => {
+              this._virtualBackgroundProcessor?.setOptions({
+                type: type === 'image' ? 'img' : 'video',
+                source: data,
+              });
+            });
+
+            this._virtualBackgroundProcessor?.enable();
+          } else {
+            this._virtualBackgroundProcessor?.disable();
+          }
+        },
+      ),
+      reaction(
+        () => ({ enabled: this._beautyFilterEnabled, options: this._beautyOptions }),
+        ({ enabled, options }) => {
+          this.logger.info('enabled', enabled, 'options', options);
+          if (enabled && options) {
+            this._beautyEffectProcessor?.setOptions({
+              lighteningContrastLevel: 0,
+              sharpnessLevel: 0,
+              lighteningLevel: options.brightening,
+              smoothnessLevel: options.smooth,
+              rednessLevel: options.blush,
+            });
+            this._beautyEffectProcessor?.enable();
+          } else {
+            this._beautyEffectProcessor?.disable();
+          }
+        },
+      ),
+      reaction(
+        () => this._aiDenoiserEnabled,
+        (enabled) => {
+          this.logger.info('enabled', enabled);
+          if (enabled) {
+            this._aiDenoiserProcessor?.enable();
+          } else {
+            this._aiDenoiserProcessor?.disable();
+          }
+        },
+      ),
+    );
   }
 
   /**

@@ -328,6 +328,28 @@ export type ProcessorInitializer<T extends IBaseProcessor> = {
 };
 
 /**
+ * 虚拟背景参数
+ */
+/** @en
+ * Virtual background options
+ */
+export type VirtualBackgroundOptions = {
+  url: string;
+  type: 'image' | 'video';
+};
+/**
+ * 美颜参数
+ */
+/** @en
+ * Beauty filter options
+ */
+export type BeautyFilterOptions = {
+  smooth: number;
+  brightening: number;
+  blush: number;
+};
+
+/**
  * 工具函数
  */
 /** @en
