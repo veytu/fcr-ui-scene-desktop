@@ -66,7 +66,7 @@ export interface ConfirmDialogProps extends BaseDialogProps {
   content?: ReactNode;
   afterOpenChange?: (open: boolean) => void;
 }
-export const ConfirmDialog: FC<ConfirmDialogProps> = (props) => {
+export const ConfirmDialog: FC<React.PropsWithChildren<ConfirmDialogProps>> = (props) => {
   const {
     visible,
     onClose,

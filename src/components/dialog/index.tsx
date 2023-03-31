@@ -60,7 +60,7 @@ export interface BaseDialogProps {
   closeIcon?: ReactNode;
   afterOpenChange?: (open: boolean) => void;
 }
-const BaseDialog: FC<BaseDialogProps> = (props) => {
+const BaseDialog: FC<React.PropsWithChildren<BaseDialogProps>> = (props) => {
   const {
     visible,
     onClose,

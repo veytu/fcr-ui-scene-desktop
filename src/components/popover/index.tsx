@@ -112,7 +112,7 @@ interface FcrPopoverWithTooltip {
   popoverProps?: PopoverProps;
   toolTipProps?: ToolTipProps;
 }
-export const PopoverWithTooltip: FC<FcrPopoverWithTooltip> = (props) => {
+export const PopoverWithTooltip: FC<React.PropsWithChildren & FcrPopoverWithTooltip> = (props) => {
   const { popoverProps, toolTipProps, children } = props;
   const { clicked, hovered, handleHoverChange, handleClickChange } = usePopoverVisibleState();
   return (
@@ -141,7 +141,9 @@ interface FcrDoubleDeckPopoverWithTooltip {
   doulebDeckPopoverProps?: DoubleDeckPopoverProps;
   toolTipProps?: ToolTipProps;
 }
-export const DoubleDeckPopoverWithTooltip: FC<FcrDoubleDeckPopoverWithTooltip> = (props) => {
+export const DoubleDeckPopoverWithTooltip: FC<
+  React.PropsWithChildren & FcrDoubleDeckPopoverWithTooltip
+> = (props) => {
   const { doulebDeckPopoverProps, toolTipProps, children } = props;
   const { clicked, hovered, handleHoverChange, handleClickChange } = usePopoverVisibleState();
   return (

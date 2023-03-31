@@ -3,6 +3,7 @@ import './index.css';
 import classnames from 'classnames';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import { themeVal } from '@onlineclass/utils/tailwindcss';
+import uuid from 'uuid';
 const colors = themeVal('colors');
 export interface RadioProps {
   label?: ReactNode;
@@ -12,7 +13,7 @@ export interface RadioProps {
   name?: string;
   value?: string;
 }
-export const Radio: FC<RadioProps> = (props) => {
+export const Radio: FC<React.PropsWithChildren<RadioProps>> = (props) => {
   const groupContext = useContext(RadioGroupContext);
   const { label, onChange, styleType = 'brand', name, value, checked, ...inputProps } = props;
 
@@ -49,7 +50,7 @@ interface RadioGroupProps {
   onChange?: (value?: string) => void;
 }
 const RadioGroupContext = createContext<RadioGroupProps | null>(null);
-export const RadioGroup: FC<RadioGroupProps> = (props) => {
+export const RadioGroup: FC<React.PropsWithChildren<RadioGroupProps>> = (props) => {
   const { children, options, defaultValue } = props;
   const [value, setValue] = useState(defaultValue || props.value);
   useEffect(() => {
@@ -65,7 +66,7 @@ export const RadioGroup: FC<RadioGroupProps> = (props) => {
     <RadioGroupContext.Provider value={{ ...props, value, onChange: onRadioChange }}>
       {options
         ? options.map((props) => {
-            <Radio {...props}></Radio>;
+            return <Radio key={props.value || uuid()} {...props}></Radio>;
           })
         : children}
     </RadioGroupContext.Provider>

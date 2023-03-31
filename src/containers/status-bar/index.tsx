@@ -49,7 +49,7 @@ export const StatusBar = observer(() => {
   );
 });
 
-export const StatusBarItemWrapper: FC = (props) => {
+export const StatusBarItemWrapper: FC<React.PropsWithChildren> = (props) => {
   const { children, ...others } = props;
   return (
     <div {...others} className="fcr-status-bar-item-wrapper">

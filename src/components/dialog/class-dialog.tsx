@@ -48,7 +48,7 @@ interface ClassDialogProps extends BaseDialogProps {
    */
   cancelBtn?: boolean;
 }
-export const ClassDialog: FC<ClassDialogProps> = (props) => {
+export const ClassDialog: FC<React.PropsWithChildren<ClassDialogProps>> = (props) => {
   const {
     visible,
     onClose,
