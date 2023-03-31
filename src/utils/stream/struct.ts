@@ -1,6 +1,7 @@
 import { EduClassroomConfig, EduRoleTypeEnum, EduStream, RteRole2EduRole } from 'agora-edu-core';
 import { AgoraFromUser, AgoraRteMediaPublishState, AgoraRteMediaSourceState } from 'agora-rte-sdk';
 import { action, computed, observable } from 'mobx';
+import { generateShortUserName } from '../short-name';
 
 export type VideoPlacement = 'Window' | 'Bar' | 'Setting' | 'Gallery';
 
@@ -16,31 +17,26 @@ export class EduStreamUI {
     this.stream = stream;
   }
 
-  get micIconType() {
-    const deviceDisabled = this.stream.audioSourceState === AgoraRteMediaSourceState.stopped;
-    if (deviceDisabled) {
-      return 'microphone-disabled';
-    }
-    if (
-      this.stream.audioSourceState === AgoraRteMediaSourceState.started &&
-      this.stream.audioState === AgoraRteMediaPublishState.Published
-    ) {
-      return 'microphone-on';
-    }
-    return 'microphone-off';
+  get userName() {
+    return this.stream.fromUser.userName;
+  }
+  get shortUserName() {
+    return generateShortUserName(this.userName);
   }
 
-  get isCameraMuted() {
-    return (
-      this.stream.videoSourceState !== AgoraRteMediaSourceState.started ||
-      this.stream.videoState === AgoraRteMediaPublishState.Unpublished
-    );
+  get isCameraDeviceEnabled() {
+    return this.stream.videoSourceState === AgoraRteMediaSourceState.started;
+  }
+  get isCameraStreamPublished() {
+    return this.stream.videoState === AgoraRteMediaPublishState.Published;
   }
 
-  get isMicMuted() {
-    return this.micIconType.endsWith('off') || this.micIconType.endsWith('disabled');
+  get isMicDeviceEnabled() {
+    return this.stream.audioSourceState === AgoraRteMediaSourceState.started;
   }
-
+  get isMicStreamPublished() {
+    return this.stream.audioState === AgoraRteMediaPublishState.Published;
+  }
   get fromUser(): AgoraFromUser {
     return this.stream.fromUser;
   }
@@ -53,6 +49,9 @@ export class EduStreamUI {
     return RteRole2EduRole(EduClassroomConfig.shared.sessionInfo.roomType, this.fromUser.role);
   }
 
+  get isLocal() {
+    return this.stream.isLocal;
+  }
   @computed
   get renderAt() {
     return this._renderAt;
