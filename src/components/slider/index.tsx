@@ -7,6 +7,7 @@ type VerticalSliderProps = {
   min?: number;
   max?: number;
   step?: number;
+  value?: number;
   defaultValue?: number;
   onChange?: (value: number) => void;
 };
@@ -16,6 +17,7 @@ export const VerticalSlider: FC<VerticalSliderProps> = ({
   max = 100,
   defaultValue = 0,
   step = 1,
+  value,
   onChange,
 }) => {
   return (
@@ -26,6 +28,7 @@ export const VerticalSlider: FC<VerticalSliderProps> = ({
         max={max}
         step={step}
         defaultValue={defaultValue}
+        value={value}
         onChange={onChange}
       />
     </div>

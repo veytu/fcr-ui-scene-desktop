@@ -1,22 +1,25 @@
 import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '@onlineclass/utils/hooks/use-store';
 
-export const VirtualBackground = () => {
-  const backgroundList = [1, 2, 3, 4, 5];
+export const VirtualBackground = observer(() => {
+  const { deviceSettingUIStore } = useStore();
 
-  const [backgroundId, setBackgroundId] = useState<string>('');
+  const { activeBackgroundUrl, setVirtualBackground, virtualBackgroundList } = deviceSettingUIStore;
 
   return (
     <div className="fcr-pretest-virtual-background">
       <ul className="fcr-pretest-virtual-background__list">
-        {backgroundList.map((i, index) => {
+        {virtualBackgroundList.map(({ url, type }, index) => {
+          const isActive = url === activeBackgroundUrl;
+
           const backgroundListItemCls = classNames({
-            'fcr-pretest-virtual-background__list-item--active': `${i}` === backgroundId,
+            'fcr-pretest-virtual-background__list-item--active': isActive,
           });
 
           const handleClick = () => {
-            setBackgroundId(`${i}`);
+            setVirtualBackground({ url, type });
           };
 
           return (
@@ -24,15 +27,28 @@ export const VirtualBackground = () => {
               <div
                 className="fcr-pretest-virtual-background__list-item-inner"
                 onClick={handleClick}>
-                <div className="fcr-pretest-virtual-background__check">
-                  <SvgImg type={SvgIconEnum.FCR_BACKGROUND2} />
-                </div>
-                <div className="fcr-pretest-virtual-background__badge">
-                  <SvgImg type={SvgIconEnum.FCR_RECORDING_PLAY} />
-                </div>
-                <div className="fcr-pretest-virtual-background__delete">
+                {type === 'video' ? (
+                  <video autoPlay loop muted>
+                    <source src={url} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img src={url} />
+                )}
+
+                {isActive && (
+                  <div className="fcr-pretest-virtual-background__check">
+                    <SvgImg type={SvgIconEnum.FCR_CHECKBOX_CHECK} />
+                  </div>
+                )}
+                {type === 'video' && (
+                  <div className="fcr-pretest-virtual-background__badge">
+                    <SvgImg type={SvgIconEnum.FCR_CAMERA3} size={20} />
+                  </div>
+                )}
+
+                {/* <div className="fcr-pretest-virtual-background__delete">
                   <SvgImg type={SvgIconEnum.FCR_DELETE3} />
-                </div>
+                </div> */}
               </div>
             </li>
           );
@@ -40,4 +56,4 @@ export const VirtualBackground = () => {
       </ul>
     </div>
   );
-};
+});

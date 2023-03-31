@@ -10,7 +10,7 @@ export const VolumeIndicator: FC<{ value: number }> = ({ value }) => {
     <div className="fcr-volume-indicator">
       {range(0, step).map((i) => {
         const pointCls = classNames('fcr-volume-indicator__point', {
-          'fcr-volume-indicator__point--active': i <= power,
+          'fcr-volume-indicator__point--active': power > 0 && i <= power,
         });
         return <div key={i.toString()} className={pointCls} />;
       })}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import pretestLogo from '@res/images/pretest-logo.png';
 import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
 import './index.css';
@@ -9,9 +9,11 @@ import { VirtualBackground } from './virtual-background';
 import { BasicSettings } from './basic-settings';
 import { BeautyFilter } from './beauty-filter';
 import { VideoPortal } from './video-portal';
+import { useStore } from '@onlineclass/utils/hooks/use-store';
 
 export const DevicePretest = observer(() => {
   const transI18n = useI18n();
+  const { deviceSettingUIStore } = useStore();
   const [activeTab, setActiveTab] = useState('basic-settings');
   const handleActiveTab = (tabKey: string) => {
     setActiveTab(tabKey);
@@ -28,6 +30,13 @@ export const DevicePretest = observer(() => {
     'virtual-background': <VirtualBackground />,
     'beauty-filter': <BeautyFilter />,
   };
+
+  useEffect(() => {
+    deviceSettingUIStore.startRecordingDeviceTest();
+    return () => {
+      deviceSettingUIStore.stopRecordingDeviceTest();
+    };
+  }, []);
 
   return (
     <div className="fcr-pretest">

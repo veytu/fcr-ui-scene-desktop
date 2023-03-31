@@ -9,11 +9,16 @@ export interface CheckboxProps {
   checked?: boolean;
   onChange?: (checked: boolean) => void;
   styleType?: 'brand' | 'white';
+  size?: 'medium' | 'small';
 }
 export const Checkbox: FC<CheckboxProps> = (props) => {
-  const { label, onChange, styleType = 'brand', ...inputProps } = props;
+  const { label, onChange, styleType = 'brand', size = 'medium', ...inputProps } = props;
+  const cls = classnames('fcr-checkbox', `fcr-checkbox-${styleType}`, {
+    'fcr-checkbox-s': size === 'small',
+  });
+
   return (
-    <label className={classnames('fcr-checkbox', `fcr-checkbox-${styleType}`)}>
+    <label className={cls}>
       <span className="fcr-checkbox-input-wrapper">
         <input
           {...inputProps}
@@ -30,7 +35,7 @@ export const Checkbox: FC<CheckboxProps> = (props) => {
             size={12}></SvgImg>
         </span>
       </span>
-      <span className="fcr-checkbox-label">{label}</span>
+      {label && <span className="fcr-checkbox-label">{label}</span>}
     </label>
   );
 };
