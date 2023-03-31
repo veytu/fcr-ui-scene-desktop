@@ -81,7 +81,7 @@ export interface ButtonProps {
    */
   block?: boolean;
 }
-export const Button: FC<ButtonProps> = (props) => {
+export const Button: FC<React.PropsWithChildren<ButtonProps>> = (props) => {
   const {
     block,
     loading,
