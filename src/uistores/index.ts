@@ -17,6 +17,8 @@ import { OnlineclassContext } from './context';
 import { Getters } from './getters';
 import { LayoutUIStore } from './layout';
 import { StatusBarUIStore } from './status-bar';
+import { GalleryUIStore } from './gallery-view';
+import { StreamUIStore } from './stream';
 
 export class OnlineclassUIStore {
   @observable
@@ -30,6 +32,8 @@ export class OnlineclassUIStore {
   statusBarUIStore: StatusBarUIStore;
   deviceSettingUIStore: DeviceSettingUIStore;
   actionBarUIStore: ActionBarUIStore;
+  galleryUIStore: GalleryUIStore;
+  streamUIStore: StreamUIStore;
   constructor() {
     this.classroomStore = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass);
     this._getters = new Getters(this.classroomStore);
@@ -37,6 +41,8 @@ export class OnlineclassUIStore {
     this.statusBarUIStore = new StatusBarUIStore(this.classroomStore, this._getters);
     this.deviceSettingUIStore = new DeviceSettingUIStore(this.classroomStore, this._getters);
     this.actionBarUIStore = new ActionBarUIStore(this.classroomStore, this._getters);
+    this.galleryUIStore = new GalleryUIStore(this.classroomStore, this._getters);
+    this.streamUIStore = new StreamUIStore(this.classroomStore, this._getters);
   }
 
   get initialized() {
