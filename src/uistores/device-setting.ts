@@ -7,7 +7,7 @@ import {
   EduClassroomConfig,
   EduEventCenter,
 } from 'agora-edu-core';
-import { action, computed, observable, reaction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { IAIDenoiserProcessor } from 'agora-extension-ai-denoiser';
 import { IVirtualBackgroundProcessor } from 'agora-extension-virtual-background';
 import { IBeautyProcessor } from 'agora-extension-beauty-effect';
@@ -421,10 +421,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       this._virtualBackgroundEnabled = false;
     } else {
       this._virtualBackgroundEnabled = true;
-
-      if (!this._virtualBackgroundOptions && this.virtualBackgroundList.length) {
-        this._virtualBackgroundOptions = this.virtualBackgroundList[0];
-      }
     }
   }
 
@@ -434,10 +430,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       this._beautyFilterEnabled = false;
     } else {
       this._beautyFilterEnabled = true;
-      if (!this._beautyType) {
-        this._beautyType = 'smooth';
-        this._beautyOptions = { smooth: 0.5, brightening: 0.6, blush: 0.1 };
-      }
     }
   }
 
@@ -457,6 +449,15 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
    * @internal
    */
   onInstall(): void {
+    // set some default values
+    runInAction(() => {
+      if (this.virtualBackgroundList.length) {
+        this._virtualBackgroundOptions = this.virtualBackgroundList[0];
+      }
+      this._beautyType = 'smooth';
+      this._beautyOptions = { smooth: 0.5, brightening: 0.6, blush: 0.1 };
+    });
+
     this._disposers.push(
       reaction(
         () => {

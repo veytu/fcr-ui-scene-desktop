@@ -1,24 +1,15 @@
+import React, { useMemo } from 'react';
 import { observer } from 'mobx-react';
 import { Button } from '@onlineclass/components/button';
-import { VerticalSlider } from '@onlineclass/components/slider';
 import { SvgIconEnum } from '@onlineclass/components/svg-img';
-import { ClickableIcon, PretestDeviceIcon } from '@onlineclass/components/svg-img/clickable-icon';
+import { PretestDeviceIcon } from '@onlineclass/components/svg-img/clickable-icon';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
-import { useEffect, useMemo, useRef } from 'react';
-import React from 'react';
+import { BeautySlider } from './beauty-slider';
+import { MirrorToggle } from './mirror-toggle';
+import { LocalVideoPlayer } from '../video-player';
 
 export const VideoPortal = observer(() => {
   const { setDevicePretestFinished, deviceSettingUIStore } = useStore();
-  const videoRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      deviceSettingUIStore.setupLocalVideo(
-        videoRef.current,
-        deviceSettingUIStore.isLocalMirrorEnabled,
-      );
-    }
-  }, [deviceSettingUIStore.isLocalMirrorEnabled]);
 
   const cameraIconProps = useMemo(() => {
     const isDeviceActive = deviceSettingUIStore.isCameraDeviceEnabled;
@@ -86,17 +77,6 @@ export const VideoPortal = observer(() => {
         };
   }, [deviceSettingUIStore.isAudioPlaybackDeviceEnabled]);
 
-  const mirrorIconProps = useMemo(() => {
-    const enabled = deviceSettingUIStore.isLocalMirrorEnabled;
-    return enabled
-      ? {
-          icon: SvgIconEnum.FCR_MIRRORIMAGE_LEFT,
-        }
-      : {
-          icon: SvgIconEnum.FCR_MIRRORIMAGE_RIGHT,
-        };
-  }, [deviceSettingUIStore.isLocalMirrorEnabled]);
-
   const virtualBackgroundIconProps = useMemo(() => {
     const enabled = deviceSettingUIStore.isVirtualBackgroundEnabled;
 
@@ -125,27 +105,6 @@ export const VideoPortal = observer(() => {
         };
   }, [deviceSettingUIStore.isBeautyFilterEnabled]);
 
-  const {
-    isBeautyFilterEnabled,
-    activeBeautyValue = 0,
-    activeBeautyType,
-    setBeautyFilter,
-  } = deviceSettingUIStore;
-
-  const sliderValue = activeBeautyValue * 100;
-
-  const handleBeautyValueChange = (value: number) => {
-    if (activeBeautyType) {
-      setBeautyFilter({ [activeBeautyType]: value / 100 });
-    }
-  };
-
-  const handleResetBeautyValue = () => {
-    if (activeBeautyType) {
-      setBeautyFilter({ [activeBeautyType]: 0 });
-    }
-  };
-
   return (
     <div className="fcr-pretest__video-portal">
       <div className="fcr-pretest__video-portal__header">
@@ -153,18 +112,9 @@ export const VideoPortal = observer(() => {
         <Button onClick={setDevicePretestFinished}>Join</Button>
       </div>
       <div className="fcr-pretest__video-portal__video">
-        <div ref={videoRef} className="fcr-pretest__video-portal__video-renderer" />
+        <LocalVideoPlayer />
         <div className="fcr-pretest__video-portal__sidebar">
-          {isBeautyFilterEnabled && activeBeautyType && (
-            <React.Fragment>
-              <VerticalSlider value={sliderValue} onChange={handleBeautyValueChange} />
-              <ClickableIcon
-                icon={SvgIconEnum.FCR_RESET}
-                size="small"
-                onClick={handleResetBeautyValue}
-              />
-            </React.Fragment>
-          )}
+          <BeautySlider />
         </div>
       </div>
       <div className="fcr-pretest__video-portal__toggles">
@@ -187,13 +137,7 @@ export const VideoPortal = observer(() => {
           tooltip={'Beauty Filter'}
           {...beautyFilterIconProps}
         />
-        <PretestDeviceIcon
-          classNames="fcr-pretest__video-portal__toggles__mirror"
-          status="idle"
-          tooltip="Mirror"
-          onClick={deviceSettingUIStore.toggleLocalMirror}
-          {...mirrorIconProps}
-        />
+        <MirrorToggle />
       </div>
     </div>
   );

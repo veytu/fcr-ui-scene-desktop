@@ -11,12 +11,20 @@ import { BeautyFilter } from './beauty-filter';
 import { VideoPortal } from './video-portal';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 
+const tabContents = {
+  'basic-settings': <BasicSettings />,
+  'virtual-background': <VirtualBackground />,
+  'beauty-filter': <BeautyFilter />,
+};
+
+type TabKeyType = keyof typeof tabContents;
+
 export const DevicePretest = observer(() => {
   const transI18n = useI18n();
   const { deviceSettingUIStore } = useStore();
-  const [activeTab, setActiveTab] = useState('basic-settings');
+  const [activeTab, setActiveTab] = useState<TabKeyType>('basic-settings');
   const handleActiveTab = (tabKey: string) => {
-    setActiveTab(tabKey);
+    setActiveTab(tabKey as TabKeyType);
   };
 
   const tabItems = [
@@ -24,12 +32,6 @@ export const DevicePretest = observer(() => {
     { label: 'Background', key: 'virtual-background' },
     { label: 'Beauty Filter', key: 'beauty-filter' },
   ];
-
-  const tabContents = {
-    'basic-settings': <BasicSettings />,
-    'virtual-background': <VirtualBackground />,
-    'beauty-filter': <BeautyFilter />,
-  };
 
   useEffect(() => {
     deviceSettingUIStore.startRecordingDeviceTest();

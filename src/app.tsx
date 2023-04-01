@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { Classroom } from './scenarios/classroom';
-import { DevicePretest } from './scenarios/device-pretest';
+import { DevicePretest } from './containers/device-pretest';
 import './preflight.css';
 import { useStore } from './utils/hooks/use-store';
 
