@@ -1,11 +1,10 @@
 import { EduUIStoreBase } from './base';
-import { observable, action, computed } from 'mobx';
+import { observable, action } from 'mobx';
 import { DialogType, Layout } from './type';
 import { bound, Scheduler } from 'agora-rte-sdk';
-import { BaseDialogProps } from '@onlineclass/components/dialog';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfirmDialogProps } from '@onlineclass/components/dialog/confirm-dialog';
-type AddDialog = (type: 'confirm', params: ConfirmDialogProps) => void;
+
 export class LayoutUIStore extends EduUIStoreBase {
   private _clearScreenTask: Scheduler.Task | null = null;
   private _clearScreenDelay = 3000;
@@ -15,8 +14,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   @observable showStatusBar = true;
   @observable showActiobBar = true;
   @observable layout: Layout = Layout.Grid;
-  @observable dialogMap: Map<string, BaseDialogProps & { type: DialogType }> = new Map();
-
+  @observable dialogMap: Map<string, { type: DialogType }> = new Map();
   @action.bound
   setLayout(layout: Layout) {
     this.layout = layout;
@@ -48,14 +46,29 @@ export class LayoutUIStore extends EduUIStoreBase {
     this._clearScreenTask = Scheduler.shared.addDelayTask(this.clearScreen, this._clearScreenDelay);
   };
 
+  hasDialogOf(type: DialogType) {
+    let exist = false;
+    this.dialogMap.forEach(({ type: dialogType }) => {
+      if (dialogType === type) {
+        exist = true;
+      }
+    });
+
+    return exist;
+  }
+
+  addDialog(type: 'confirm', params: ConfirmDialogProps): void;
+  addDialog(type: 'device-settings'): void;
   @action.bound
-  addDialog: AddDialog = (type: DialogType, params: BaseDialogProps) => {
-    this.dialogMap.set(uuidv4(), Object.assign(params, { type }));
-  };
+  addDialog(type: unknown, params?: unknown) {
+    this.dialogMap.set(uuidv4(), { ...(params as any), type: type as DialogType });
+  }
+
   @action.bound
-  deleteDialog = (id: string) => {
-    this.dialogMap.delete(id);
+  deleteDialog = (type: string) => {
+    this.dialogMap.delete(type);
   };
+
   onDestroy(): void {
     document.removeEventListener('mousemove', this.resetClearScreenTask);
     document.removeEventListener('mouseleave', this.clearScreen);

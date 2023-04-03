@@ -5,10 +5,7 @@ import React, { useEffect } from 'react';
 import { ClassroomLayout } from './layout';
 
 export const Classroom = () => {
-  const {
-    join,
-    layoutUIStore: { layout },
-  } = useStore();
+  const { join } = useStore();
   useEffect(() => {
     join();
   }, []);
