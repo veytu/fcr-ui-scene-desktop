@@ -1,4 +1,4 @@
-import { computed, observable, reaction, runInAction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 export class PresentationUIStore extends EduUIStoreBase {
@@ -6,6 +6,12 @@ export class PresentationUIStore extends EduUIStoreBase {
   @computed
   get listViewStreams() {
     return this.getters.cameraUIStreams;
+  }
+  @action
+  setMainViewStream(streamUuid: string) {
+    this.mainViewStream =
+      this.getters.cameraUIStreams.find((stream) => stream.stream.streamUuid === streamUuid) ||
+      null;
   }
   onDestroy(): void {}
   onInstall(): void {
@@ -19,8 +25,6 @@ export class PresentationUIStore extends EduUIStoreBase {
             runInAction(() => {
               this.mainViewStream = cameraUIStreams[0];
             });
-          } else {
-            this.mainViewStream = null;
           }
         },
       ),

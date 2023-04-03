@@ -63,7 +63,7 @@ export class OnlineclassUIStore {
     }
     Object.getOwnPropertyNames(this).forEach((propertyName) => {
       if (propertyName.endsWith('UIStore')) {
-        const uiStore = this[propertyName];
+        const uiStore = this[propertyName as keyof OnlineclassUIStore];
         if (uiStore instanceof EduUIStoreBase) {
           uiStore.onInstall();
         }
@@ -132,7 +132,7 @@ export class OnlineclassUIStore {
     this.classroomStore.destroy();
     Object.getOwnPropertyNames(this).forEach((propertyName) => {
       if (propertyName.endsWith('UIStore')) {
-        const uiStore = this[propertyName];
+        const uiStore = this[propertyName as keyof OnlineclassUIStore];
 
         if (uiStore instanceof EduUIStoreBase) {
           uiStore.onDestroy();
