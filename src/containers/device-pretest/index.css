@@ -266,6 +266,16 @@
   @apply fcr-border-brand-6;
 }
 
+.fcr-pretest-beauty-filter__list-item-status-icon {
+  color: theme(colors.white);
+}
+
+.fcr-pretest-beauty-filter__list-item--active .fcr-pretest-beauty-filter__list-item-status-icon,
+.fcr-pretest-virtual-background__list-item--active
+  .fcr-pretest-beauty-filter__list-item-status-icon {
+  @apply fcr-text-brand-6;
+}
+
 .fcr-pretest-beauty-filter__list-item-inner {
   @apply fcr-rounded-6 fcr-bg-2;
   position: relative;

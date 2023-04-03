@@ -12,32 +12,52 @@ export const BeautyFilter = observer(() => {
     beautyBlushValue,
     beautyBrighteningValue,
     beautySmoothValue,
+    isBeautyFilterEnabled,
+    closeBeautyFilter,
   } = deviceSettingUIStore;
+
+  const beautyTypeList = [
+    {
+      type: 'smooth' as const,
+      icon: SvgIconEnum.FCR_SMOOTH,
+      label: 'Smooth',
+      enabled: isBeautyFilterEnabled && !!beautySmoothValue,
+    },
+    {
+      type: 'brightening' as const,
+      icon: SvgIconEnum.FCR_BEAUTY_RETOUCH,
+      label: 'Brightening',
+      enabled: isBeautyFilterEnabled && !!beautyBrighteningValue,
+    },
+    {
+      type: 'blush' as const,
+      icon: SvgIconEnum.FCR_BEAUTY_BLUSH,
+      label: 'Blush',
+      enabled: isBeautyFilterEnabled && !!beautyBlushValue,
+    },
+  ];
+
+  const noneButtonCls = classNames({
+    'fcr-pretest-beauty-filter__list-item--active': !isBeautyFilterEnabled,
+  });
 
   return (
     <div className="fcr-pretest-beauty-filter">
       <ul className="fcr-pretest-beauty-filter__list">
-        {[
-          {
-            type: 'smooth' as const,
-            icon: SvgIconEnum.FCR_SMOOTH,
-            label: 'Smooth',
-            enabled: !!beautySmoothValue,
-          },
-          {
-            type: 'brightening' as const,
-            icon: SvgIconEnum.FCR_BEAUTY_RETOUCH,
-            label: 'Brightening',
-            enabled: !!beautyBrighteningValue,
-          },
-          {
-            type: 'blush' as const,
-            icon: SvgIconEnum.FCR_BEAUTY_BLUSH,
-            label: 'Blush',
-            enabled: !!beautyBlushValue,
-          },
-        ].map(({ type, icon, label, enabled }, index) => {
-          const isActive = type === activeBeautyType;
+        <li className={noneButtonCls}>
+          <div className="fcr-pretest-beauty-filter__list-item-inner" onClick={closeBeautyFilter}>
+            <SvgImg
+              className="fcr-pretest-beauty-filter__list-item-status-icon"
+              type={SvgIconEnum.FCR_SETTING_NONE}
+              size={40}
+              colors={{ iconPrimary: 'currentColor' }}
+            />
+          </div>
+          <span className="fcr-pretest-beauty-filter__list-item-label">None</span>
+        </li>
+
+        {beautyTypeList.map(({ type, icon, label, enabled }, index) => {
+          const isActive = isBeautyFilterEnabled && type === activeBeautyType;
           const backgroundListItemCls = classNames({
             'fcr-pretest-beauty-filter__list-item--active': isActive,
           });
@@ -53,7 +73,12 @@ export const BeautyFilter = observer(() => {
           return (
             <li key={index.toString()} className={backgroundListItemCls}>
               <div className={innerCls} onClick={handleClick}>
-                <SvgImg type={icon} size={48} />
+                <SvgImg
+                  className="fcr-pretest-beauty-filter__list-item-status-icon"
+                  type={icon}
+                  size={48}
+                  colors={{ iconPrimary: 'currentColor' }}
+                />
               </div>
               <span className="fcr-pretest-beauty-filter__list-item-label">{label}</span>
             </li>

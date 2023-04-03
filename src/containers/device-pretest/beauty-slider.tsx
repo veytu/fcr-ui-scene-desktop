@@ -29,9 +29,9 @@ export const BeautySlider = observer(() => {
   };
 
   return isBeautyFilterEnabled && activeBeautyType ? (
-    <React.Fragment>
+    <div className="fcr-pretest__video-portal__sidebar">
       <VerticalSlider value={sliderValue} onChange={handleBeautyValueChange} />
       <ClickableIcon icon={SvgIconEnum.FCR_RESET} size="small" onClick={handleResetBeautyValue} />
-    </React.Fragment>
+    </div>
   ) : null;
 });
