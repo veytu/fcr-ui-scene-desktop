@@ -280,6 +280,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
    */
   @action.bound
   setVirtualBackground(options: VirtualBackgroundOptions) {
+    this._virtualBackgroundEnabled = true;
     this._virtualBackgroundOptions = options;
   }
 
@@ -293,6 +294,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
    */
   @action.bound
   setBeautyType(type: keyof BeautyFilterOptions) {
+    this._beautyFilterEnabled = true;
     this._beautyType = type;
   }
   /**
@@ -416,21 +418,13 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   }
 
   @action.bound
-  toggleVirtualBackground() {
-    if (this._virtualBackgroundEnabled) {
-      this._virtualBackgroundEnabled = false;
-    } else {
-      this._virtualBackgroundEnabled = true;
-    }
+  closeVirtualBackground() {
+    this._virtualBackgroundEnabled = false;
   }
 
   @action.bound
-  toggleBeautyFilter() {
-    if (this._beautyFilterEnabled) {
-      this._beautyFilterEnabled = false;
-    } else {
-      this._beautyFilterEnabled = true;
-    }
+  closeBeautyFilter() {
+    this._beautyFilterEnabled = false;
   }
 
   @action.bound

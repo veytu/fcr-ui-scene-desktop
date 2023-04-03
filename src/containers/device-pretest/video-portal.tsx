@@ -77,34 +77,6 @@ export const VideoPortal = observer(() => {
         };
   }, [deviceSettingUIStore.isAudioPlaybackDeviceEnabled]);
 
-  const virtualBackgroundIconProps = useMemo(() => {
-    const enabled = deviceSettingUIStore.isVirtualBackgroundEnabled;
-
-    return enabled
-      ? {
-          status: 'active' as const,
-          onClick: deviceSettingUIStore.toggleVirtualBackground,
-        }
-      : {
-          status: 'idle' as const,
-          onClick: deviceSettingUIStore.toggleVirtualBackground,
-        };
-  }, [deviceSettingUIStore.isVirtualBackgroundEnabled]);
-
-  const beautyFilterIconProps = useMemo(() => {
-    const enabled = deviceSettingUIStore.isBeautyFilterEnabled;
-
-    return enabled
-      ? {
-          status: 'active' as const,
-          onClick: deviceSettingUIStore.toggleBeautyFilter,
-        }
-      : {
-          status: 'idle' as const,
-          onClick: deviceSettingUIStore.toggleBeautyFilter,
-        };
-  }, [deviceSettingUIStore.isBeautyFilterEnabled]);
-
   return (
     <div className="fcr-pretest__video-portal">
       <div className="fcr-pretest__video-portal__header">
@@ -113,9 +85,7 @@ export const VideoPortal = observer(() => {
       </div>
       <div className="fcr-pretest__video-portal__video">
         <LocalVideoPlayer />
-        <div className="fcr-pretest__video-portal__sidebar">
-          <BeautySlider />
-        </div>
+        <BeautySlider />
       </div>
       <div className="fcr-pretest__video-portal__toggles">
         <PretestDeviceIcon onClick={deviceSettingUIStore.toggleCameraDevice} {...cameraIconProps} />
@@ -126,16 +96,6 @@ export const VideoPortal = observer(() => {
         <PretestDeviceIcon
           onClick={deviceSettingUIStore.toggleAudioPlaybackDevice}
           {...speakerIconProps}
-        />
-        <PretestDeviceIcon
-          icon={SvgIconEnum.FCR_BACKGROUND2}
-          tooltip={'Virtual Background'}
-          {...virtualBackgroundIconProps}
-        />
-        <PretestDeviceIcon
-          icon={SvgIconEnum.FCR_BEAUTY}
-          tooltip={'Beauty Filter'}
-          {...beautyFilterIconProps}
         />
         <MirrorToggle />
       </div>

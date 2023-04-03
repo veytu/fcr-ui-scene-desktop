@@ -6,13 +6,37 @@ import { useStore } from '@onlineclass/utils/hooks/use-store';
 export const VirtualBackground = observer(() => {
   const { deviceSettingUIStore } = useStore();
 
-  const { activeBackgroundUrl, setVirtualBackground, virtualBackgroundList } = deviceSettingUIStore;
+  const {
+    activeBackgroundUrl,
+    setVirtualBackground,
+    virtualBackgroundList,
+    isVirtualBackgroundEnabled,
+    closeVirtualBackground,
+  } = deviceSettingUIStore;
+
+  const noneButtonCls = classNames({
+    'fcr-pretest-virtual-background__list-item--active': !isVirtualBackgroundEnabled,
+  });
 
   return (
     <div className="fcr-pretest-virtual-background">
       <ul className="fcr-pretest-virtual-background__list">
+        <li className={noneButtonCls}>
+          <div
+            className="fcr-pretest-virtual-background__list-item-inner"
+            onClick={closeVirtualBackground}>
+            <div className="fcr-pretest-virtual-background__check">
+              <SvgImg
+                className="fcr-pretest-beauty-filter__list-item-status-icon"
+                type={SvgIconEnum.FCR_SETTING_NONE}
+                size={40}
+                colors={{ iconPrimary: 'currentColor' }}
+              />
+            </div>
+          </div>
+        </li>
         {virtualBackgroundList.map(({ url, type }, index) => {
-          const isActive = url === activeBackgroundUrl;
+          const isActive = isVirtualBackgroundEnabled && url === activeBackgroundUrl;
 
           const backgroundListItemCls = classNames({
             'fcr-pretest-virtual-background__list-item--active': isActive,
@@ -37,7 +61,11 @@ export const VirtualBackground = observer(() => {
 
                 {isActive && (
                   <div className="fcr-pretest-virtual-background__check">
-                    <SvgImg type={SvgIconEnum.FCR_CHECKBOX_CHECK} />
+                    <SvgImg
+                      className="fcr-pretest-beauty-filter__list-item-status-icon"
+                      type={SvgIconEnum.FCR_CHECKBOX_CHECK}
+                      colors={{ iconPrimary: 'currentColor' }}
+                    />
                   </div>
                 )}
                 {type === 'video' && (
