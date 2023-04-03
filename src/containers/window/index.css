@@ -1,7 +1,101 @@
-.fcr-user-window-wrap {
+.fcr-stream-window-wrap,
+.fcr-stream-window-placeholder {
   width: 100%;
   height: 100%;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.fcr-user-window-placeholder {
+.fcr-stream-window-placeholder-rounded {
+  @apply fcr-text-1 fcr-rounded-full fcr-bg-brand-6 fcr-font-title;
+  width: 14.5%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(20px + 1vw);
+  max-width: 175px;
+  min-width: 81px;
+}
+.fcr-stream-window-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.fcr-stream-window-interact {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.fcr-stream-window-user-label {
+  @apply fcr-rounded-24 fcr-bg-2;
+  position: absolute;
+  left: 20px;
+  bottom: 12px;
+  height: 24px;
+  display: flex;
+  flex-direction: row;
+  transition: all 0.2s;
+}
+.fcr-stream-window-user-label-anim {
+  transform: translateY(calc(-1 * var(--fcr-action-bar-height)));
+}
+.fcr-stream-window-user-role {
+  @apply fcr-rounded-24 fcr-bg-gradient-1 fcr-text-white fcr-font-medium;
+  height: 24px;
+  font-size: 16px;
+  line-height: 24px;
+  display: flex;
+  padding-right: 10px;
+}
+.fcr-stream-window-user-name {
+  @apply fcr-text-1 fcr-font-medium;
+  height: 24px;
+  font-size: 16px;
+  line-height: 24px;
+  padding: 0 10px;
+}
+
+.fcr-stream-window-student-interact-group,
+.fcr-stream-window-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  transition: all 0.2s;
+}
+.fcr-stream-window-actions {
+  left: auto;
+  right: 20px;
+}
+.fcr-stream-window-student-interact-group-anim,
+.fcr-stream-window-actions-anim {
+  transform: translateY(var(--fcr-status-bar-height));
+}
+.fcr-stream-window-student-interact-item,
+.fcr-stream-window-actions-item {
+  @apply fcr-rounded-8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+}
+.fcr-stream-window-student-interact-item > span,
+.fcr-stream-window-actions-item > span {
+  @apply fcr-font-title fcr-text-white;
+  font-size: 20px;
+  line-height: 20px;
+  padding-right: 10px;
+  text-align: center;
+}
+.fcr-stream-window-actions-item > span {
+  padding: 0 8px;
 }

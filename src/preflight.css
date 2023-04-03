@@ -4,6 +4,11 @@
 
 @tailwind utilities;
 
+:root {
+  --fcr-status-bar-height: 57px;
+  --fcr-action-bar-height: 66px;
+}
+
 html,
 html body {
   @apply fcr-font-scenario;

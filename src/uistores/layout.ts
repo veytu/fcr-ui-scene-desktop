@@ -1,5 +1,5 @@
 import { EduUIStoreBase } from './base';
-import { observable, action, runInAction } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { DialogType, Layout } from './type';
 import { bound, Scheduler } from 'agora-rte-sdk';
 import { BaseDialogProps } from '@onlineclass/components/dialog';
@@ -11,10 +11,12 @@ export class LayoutUIStore extends EduUIStoreBase {
   private _clearScreenDelay = 3000;
   private _isPointingBar = false;
   private _hasPopoverShowed = false;
+
   @observable showStatusBar = true;
   @observable showActiobBar = true;
   @observable layout: Layout = Layout.Grid;
   @observable dialogMap: Map<string, BaseDialogProps & { type: DialogType }> = new Map();
+
   @action.bound
   setLayout(layout: Layout) {
     this.layout = layout;

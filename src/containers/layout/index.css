@@ -43,8 +43,11 @@
 }
 
 .fcr-layout-content-grid .fcr-layout-content-main-view {
+  @apply fcr-bg-1;
   flex: 1;
-  background-color: aquamarine;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .fcr-layout-content-video-list {

@@ -4,3 +4,4 @@ export enum Layout {
   Grid = 'grid',
 }
 export type DialogType = 'confirm';
+export type StreamWindowPlacement = 'main-view' | 'list-view';

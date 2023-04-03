@@ -98,6 +98,7 @@ module.exports = {
       'notsb-inverse': theme('colors.notsb-inverse'),
     }),
     textColor: (theme) => ({
+      white: theme('colors.white'),
       1: theme('colors.text-1'),
       2: theme('colors.text-2'),
       3: theme('colors.text-3'),
