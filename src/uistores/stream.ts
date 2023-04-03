@@ -1,6 +1,10 @@
+import { computed } from 'mobx';
 import { EduUIStoreBase } from './base';
 export class StreamUIStore extends EduUIStoreBase {
-  userCameraStreamByUserUuid = this.getters.userCameraStreamByUserUuid;
+  @computed
+  get cameraUIStreams() {
+    return this.getters.cameraUIStreams;
+  }
   onDestroy(): void {}
   onInstall(): void {}
 }

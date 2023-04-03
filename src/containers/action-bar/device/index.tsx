@@ -7,7 +7,14 @@ import { ActionBarItemWrapper } from '..';
 import { observer } from 'mobx-react';
 import './index.css';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
+export const AudioRecordinDeviceIcon = observer(({ size = 36 }: { size?: number }) => {
+  const {
+    deviceSettingUIStore: { isAudioRecordingDeviceEnabled },
+  } = useStore();
+  const icon = isAudioRecordingDeviceEnabled ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
 
+  return <SvgImg type={icon} size={size}></SvgImg>;
+});
 export const MicrophoenDevice: FC = observer(() => {
   const { tootipVisible, handlePopoverVisibleChanged, handleTooltipVisibleChanged } =
     useDeviceTooltipVisible();
@@ -15,7 +22,6 @@ export const MicrophoenDevice: FC = observer(() => {
     deviceSettingUIStore: { isAudioRecordingDeviceEnabled, toggleAudioRecordingDevice },
   } = useStore();
 
-  const icon = isAudioRecordingDeviceEnabled ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
   const text = isAudioRecordingDeviceEnabled ? 'Microphoen' : 'unmute';
   return (
     <ToolTip
@@ -25,7 +31,7 @@ export const MicrophoenDevice: FC = observer(() => {
       <ActionBarItemWrapper>
         <div className="fcr-action-bar-device" onClick={toggleAudioRecordingDevice}>
           <div className="fcr-action-bar-device-inner">
-            <SvgImg type={icon} size={36}></SvgImg>
+            <AudioRecordinDeviceIcon></AudioRecordinDeviceIcon>
             <div className="fcr-action-bar-device-text">{text}</div>
           </div>
           <Popover

@@ -73,7 +73,6 @@ export const LayoutSwitch = observer(() => {
       <PopoverWithTooltip
         popoverProps={{
           onVisibleChange(visible) {
-            console.log(visible);
             if (visible) {
               setHasPopoverShowed(true);
             } else {

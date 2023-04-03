@@ -10,6 +10,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   private _clearScreenDelay = 3000;
   private _isPointingBar = false;
   private _hasPopoverShowed = false;
+
   @observable showStatusBar = true;
   @observable showActiobBar = true;
   @observable layout: Layout = Layout.Grid;

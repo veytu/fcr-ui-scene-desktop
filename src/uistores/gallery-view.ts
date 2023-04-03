@@ -1,18 +1,29 @@
-import { computed } from 'mobx';
+import { computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
-import { computedFn } from 'mobx-utils';
+import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 export class GalleryUIStore extends EduUIStoreBase {
+  @observable mainViewStream: EduStreamUI | null = null;
   @computed
-  get currentUser() {
-    if (this.getters.userList.length === 1) {
-      return this.getters.userList[0];
-    }
-    return this.getters.userList[0];
-  }
-  @computed
-  get isSingleUser() {
-    return this.getters.userList.length === 1;
+  get listViewStreams() {
+    return this.getters.cameraUIStreams;
   }
   onDestroy(): void {}
-  onInstall(): void {}
+  onInstall(): void {
+    this._disposers.push(
+      reaction(
+        () => {
+          return this.getters.cameraUIStreams;
+        },
+        (cameraUIStreams) => {
+          if (cameraUIStreams.length === 1) {
+            runInAction(() => {
+              this.mainViewStream = cameraUIStreams[0];
+            });
+          } else {
+            this.mainViewStream = null;
+          }
+        },
+      ),
+    );
+  }
 }

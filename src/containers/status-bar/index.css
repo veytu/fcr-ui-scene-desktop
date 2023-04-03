@@ -1,16 +1,17 @@
 .fcr-status-bar {
   @apply fcr-bg-2;
   width: 100%;
-  height: 57px;
+  height: var(--fcr-status-bar-height);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
   transition: all 0.2s;
+  pointer-events: all;
 }
 .fcr-status-bar-hide {
-  transform: translateY(-57px);
+  transform: translateY(calc(-1 * var(--fcr-status-bar-height)));
 }
 .fcr-status-bar-left,
 .fcr-status-bar-right {
@@ -32,50 +33,6 @@
   user-select: none;
 }
 
-.fcr-status-bar-info {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-.fcr-status-bar-info-network,
-.fcr-status-bar-info-share {
-  height: 32px;
-  width: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.fcr-status-bar-info-id {
-  @apply fcr-font-medium fcr-text-1;
-  font-size: 13px;
-  padding-left: 10px;
-  padding-right: 8px;
-}
-.fcr-status-bar-info-id > span:first-child {
-  padding-right: 2px;
-}
-
-.fcr-status-bar-room-name {
-  @apply fcr-text-1 fcr-font-regular;
-  max-width: 114px;
-  padding: 0 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: all 0.2s;
-}
-.fcr-status-bar-room-name:hover {
-  max-width: 500px;
-}
-
-.fcr-status-bar-fullscreen {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.fcr-status-bar-fullscreen:hover,
 .fcr-status-bar-layout:hover {
   @apply fcr-bg-brand-6;
 }
