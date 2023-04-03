@@ -8,6 +8,7 @@ import { convertStreamUIStatus, StreamWindowContext } from '../window/context';
 export const PresentationView = observer(() => {
   const {
     layoutUIStore: { layout },
+    streamUIStore: { cameraUIStreams },
     presentationUIStore: { mainViewStream, listViewStreams },
   } = useStore();
   return (
@@ -24,7 +25,7 @@ export const PresentationView = observer(() => {
             return (
               <div key={stream.stream.streamUuid} style={{ ...sideStreamSize }}>
                 <StreamWindowContext.Provider
-                  value={convertStreamUIStatus(stream, 'list-view', layout)}>
+                  value={convertStreamUIStatus(stream, 'list-view', layout, cameraUIStreams)}>
                   <StreamWindow></StreamWindow>
                 </StreamWindowContext.Provider>
               </div>
@@ -35,7 +36,7 @@ export const PresentationView = observer(() => {
       <div className={classnames(`fcr-layout-content-main-view`)}>
         {mainViewStream ? (
           <StreamWindowContext.Provider
-            value={convertStreamUIStatus(mainViewStream, 'main-view', layout)}>
+            value={convertStreamUIStatus(mainViewStream, 'main-view', layout, cameraUIStreams)}>
             <StreamWindow></StreamWindow>
           </StreamWindowContext.Provider>
         ) : null}

@@ -10,12 +10,14 @@ export const convertStreamUIStatus = (
   stream: EduStreamUI,
   placement: StreamWindowPlacement,
   layout: Layout,
+  cameraStreams: EduStreamUI[],
 ) => {
+  const isSingleStream = cameraStreams.length === 1;
   const renderAtMainView = placement === 'main-view';
   const renderAtListView = placement === 'list-view';
 
-  const topLabelAnimation = renderAtMainView && layout !== Layout.ListOnTop;
-  const bottomLabelAnimation = renderAtMainView;
+  const topLabelAnimation = renderAtMainView && layout !== Layout.ListOnTop && isSingleStream;
+  const bottomLabelAnimation = renderAtMainView && isSingleStream;
   const showMicrophoneIconOnRoleLabel = renderAtMainView;
   const showMicrophoneIconOnBottomRight = renderAtListView;
   const labelSize = renderAtMainView ? 'large' : 'small';
