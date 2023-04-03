@@ -85,6 +85,7 @@ module.exports = {
       'notsb-inverse': theme('colors.notsb-inverse'),
       'btn-gray': theme('colors.btn-gray'),
       transparent: theme('colors.transparent'),
+      hover: theme('colors.hover'),
     }),
     borderColor: (theme) => ({
       1: theme('colors.line-1'),

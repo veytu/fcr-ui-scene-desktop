@@ -99,3 +99,30 @@
 .fcr-stream-window-actions-item > span {
   padding: 0 8px;
 }
+
+.fcr-stream-window-actions-popover-name {
+  @apply fcr-text-2;
+  font-size: 10px;
+  line-height: 12px;
+  padding-top: 10px;
+  padding-left: 14px;
+}
+.fcr-stream-window-actions-popover-item {
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  align-items: center;
+  padding-left: 14px;
+  margin: 5px 0;
+  padding-right: 30px;
+  user-select: none;
+}
+.fcr-stream-window-actions-popover-item:hover {
+  @apply fcr-bg-hover;
+}
+.fcr-stream-window-actions-popover-item-label {
+  @apply fcr-text-1;
+  font-size: 12px;
+  line-height: 12px;
+}

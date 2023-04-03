@@ -11,6 +11,30 @@ import classnames from 'classnames';
 import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
 import { Popover } from '@onlineclass/components/popover';
 export const StreamWindowContext = createContext<StreamWindowContext | null>(null);
+
+const streamWindowActionItems = [
+  {
+    icon: <SvgImg size={20} type={SvgIconEnum.FCR_MUTE}></SvgImg>,
+    label: '申请打开麦克风',
+  },
+  {
+    icon: <SvgImg size={20} type={SvgIconEnum.FCR_CAMERA}></SvgImg>,
+    label: '申请打开摄像头',
+  },
+  {
+    icon: <SvgImg size={20} type={SvgIconEnum.FCR_HOST}></SvgImg>,
+    label: '授权',
+  },
+  {
+    icon: <SvgImg size={20} type={SvgIconEnum.FCR_REWARD}></SvgImg>,
+    label: '奖励',
+  },
+  {
+    icon: <SvgImg size={20} type={SvgIconEnum.FCR_ONELEAVE}></SvgImg>,
+    label: '踢人',
+  },
+];
+
 interface StreamWindowContext {
   stream: EduStreamUI;
   placement: StreamWindowPlacement;
@@ -42,6 +66,7 @@ const StreamPlaceHolder: FC = observer(() => {
     </div>
   );
 });
+
 const StreamPlayer = observer(() => {
   const ref = useRef<HTMLDivElement | null>(null);
   const streamWindowContext = useContext(StreamWindowContext);
@@ -59,6 +84,7 @@ const StreamPlayer = observer(() => {
 
   return <div ref={ref} className="fcr-stream-window-player"></div>;
 });
+
 const UserInteract = observer(() => {
   return (
     <div className="fcr-stream-window-interact">
@@ -68,6 +94,7 @@ const UserInteract = observer(() => {
     </div>
   );
 });
+
 const StreamActions = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
 
@@ -84,9 +111,10 @@ const StreamActions = observer(() => {
         <span>Unmute</span>
       </div>
       <Popover
+        overlayInnerStyle={{ width: 'auto' }}
         placement="bottomLeft"
         mouseEnterDelay={0}
-        content={<StreamActionSheet></StreamActionSheet>}>
+        content={<StreamActionPopover></StreamActionPopover>}>
         <div className="fcr-stream-window-actions-item fcr-bg-brand-6">
           <SvgImg type={SvgIconEnum.FCR_MOBILE_MORE} size={30}></SvgImg>
         </div>
@@ -94,9 +122,29 @@ const StreamActions = observer(() => {
     </div>
   );
 });
-const StreamActionSheet = () => {
-  return <div></div>;
+
+const StreamActionPopover = () => {
+  const streamWindowContext = useContext(StreamWindowContext);
+
+  return (
+    <div className="fcr-stream-window-actions-popover">
+      <div className="fcr-stream-window-actions-popover-name">
+        {streamWindowContext?.stream.fromUser.userName}
+      </div>
+      <div className="fcr-stream-window-actions-popover-items">
+        {streamWindowActionItems.map((item) => {
+          return (
+            <div key={item.label} className="fcr-stream-window-actions-popover-item">
+              {item.icon}
+              <div className="fcr-stream-window-actions-popover-item-label">{item.label}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
+
 const StudentInteractGroup = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
   const stream = streamWindowContext?.stream;
