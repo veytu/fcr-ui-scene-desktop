@@ -7,11 +7,11 @@ import useMeasure from 'react-use-measure';
 import { useMemo } from 'react';
 import { calculateGridMatrix } from '@onlineclass/utils/grid';
 import { convertStreamUIStatus, StreamWindowContext } from '../window/context';
+import { FloatPagination } from '@onlineclass/components/pagination';
 
 export const GalleryView = observer(() => {
   const {
     layoutUIStore: { layout },
-
     galleryUIStore: { mainViewStream },
   } = useStore();
   return (
@@ -19,7 +19,7 @@ export const GalleryView = observer(() => {
       <div className={classnames(`fcr-layout-content-main-view`)}>
         {mainViewStream ? (
           <StreamWindowContext.Provider
-            value={convertStreamUIStatus(mainViewStream, 'main-view', layout)}>
+            value={convertStreamUIStatus(mainViewStream, 'main-view', layout, false)}>
             <StreamWindow></StreamWindow>
           </StreamWindowContext.Provider>
         ) : (
@@ -55,6 +55,7 @@ const GalleryContainer = observer(() => {
   }, [bounds.width, bounds.height, numOfCols, numOfRows]);
   return (
     <div className="fcr-gallery-view-container">
+      <FloatPagination wrapperCls="fcr-gallery-view-pager" total={10} current={2}></FloatPagination>
       <div className="fcr-gallery-view-stream-wrapper" ref={ref}>
         {matrix.map((rows, idx) => {
           return (
@@ -65,7 +66,7 @@ const GalleryContainer = observer(() => {
                 return (
                   <div key={stream.stream.streamUuid} style={{ ...outerSize }}>
                     <StreamWindowContext.Provider
-                      value={convertStreamUIStatus(stream, 'main-view', layout)}>
+                      value={convertStreamUIStatus(stream, 'main-view', layout, true)}>
                       <StreamWindow></StreamWindow>
                     </StreamWindowContext.Provider>
                   </div>

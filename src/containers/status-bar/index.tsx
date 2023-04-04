@@ -14,12 +14,15 @@ import { FullscreenButton } from './fullscreen';
 
 export const StatusBar = observer(() => {
   const {
-    layoutUIStore: { showStatusBar, setIsPointingBar },
+    layoutUIStore: { showStatusBar, setIsPointingBar, noAvailabelStream },
   } = useStore();
   const { logo } = AgoraOnlineclassSDK;
   return (
     <div
-      className={classnames('fcr-status-bar', { 'fcr-status-bar-hide': !showStatusBar })}
+      className={classnames('fcr-status-bar', {
+        'fcr-status-bar-hide': !showStatusBar,
+        'fcr-bg-transparent': noAvailabelStream,
+      })}
       onMouseEnter={() => {
         setIsPointingBar(true);
       }}

@@ -1,7 +1,7 @@
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { generateShortUserName } from '@onlineclass/utils/short-name';
 import { observer } from 'mobx-react';
-import { FC, useContext, useEffect, useRef } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { AudioRecordinDeviceIcon } from '../action-bar/device';
 import './index.css';
 import classnames from 'classnames';
@@ -34,13 +34,26 @@ const streamWindowActionItems = [
 
 export const StreamWindow: FC = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
-
+  const [mouseEnter, setMouseEnter] = useState(false);
+  const {
+    layoutUIStore: { mouseEnterClass },
+  } = useStore();
   return (
-    <div className="fcr-stream-window-wrap">
-      <StreamPlaceHolder></StreamPlaceHolder>
-      {streamWindowContext?.isCameraStreamPublished && <StreamPlayer></StreamPlayer>}
-      <UserInteract></UserInteract>
-    </div>
+    <StreamWindowMouseContext.Provider
+      value={{ mouseEnterWindow: mouseEnter, mouseEnterClass: mouseEnterClass }}>
+      <div
+        className="fcr-stream-window-wrap"
+        onMouseLeave={() => {
+          setMouseEnter(false);
+        }}
+        onMouseEnter={() => {
+          setMouseEnter(true);
+        }}>
+        <StreamPlaceHolder></StreamPlaceHolder>
+        {streamWindowContext?.isCameraStreamPublished && <StreamPlayer></StreamPlayer>}
+        <UserInteract></UserInteract>
+      </div>
+    </StreamWindowMouseContext.Provider>
   );
 });
 
@@ -63,6 +76,7 @@ const StreamPlaceHolder: FC = observer(() => {
 const StreamPlayer = observer(() => {
   const ref = useRef<HTMLDivElement | null>(null);
   const streamWindowContext = useContext(StreamWindowContext);
+  const renderMode = streamWindowContext?.renderMode;
   const stream = streamWindowContext?.stream;
   const {
     classroomStore: {
@@ -71,7 +85,7 @@ const StreamPlayer = observer(() => {
   } = useStore();
   useEffect(() => {
     if (stream?.isLocal) {
-      ref.current && setupLocalVideo(ref.current, false);
+      ref.current && setupLocalVideo(ref.current, false, renderMode);
     } else {
     }
   }, [stream]);
@@ -111,7 +125,7 @@ const StreamMuteIcon = observer(() => {
 
 const StreamActions = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
-
+  const streamWindowMouseContext = useContext(StreamWindowMouseContext);
   const size = streamWindowContext?.labelSize;
   const {
     layoutUIStore: { showStatusBar },
@@ -121,17 +135,19 @@ const StreamActions = observer(() => {
       className={classnames('fcr-stream-window-actions', `fcr-stream-window-actions-${size}`, {
         'fcr-stream-window-actions-anim': showStatusBar && streamWindowContext?.topLabelAnimation,
       })}>
-      <Popover
-        overlayInnerStyle={{ width: 'auto' }}
-        placement="bottomRight"
-        mouseEnterDelay={0}
-        content={<StreamActionPopover></StreamActionPopover>}>
-        <div className="fcr-stream-window-actions-item fcr-bg-brand-6">
-          <SvgImg
-            type={SvgIconEnum.FCR_MOBILE_MORE}
-            size={streamWindowContext?.labelIconSize}></SvgImg>
-        </div>
-      </Popover>
+      {streamWindowMouseContext?.mouseEnterWindow && (
+        <Popover
+          overlayInnerStyle={{ width: 'auto' }}
+          placement="bottomRight"
+          mouseEnterDelay={0}
+          content={<StreamActionPopover></StreamActionPopover>}>
+          <div className="fcr-stream-window-actions-item fcr-bg-brand-6">
+            <SvgImg
+              type={SvgIconEnum.FCR_MOBILE_MORE}
+              size={streamWindowContext?.labelIconSize}></SvgImg>
+          </div>
+        </Popover>
+      )}
     </div>
   );
 });
@@ -198,11 +214,12 @@ const StudentInteractGroup = observer(() => {
 const StreamWindowUserLabel = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
   const stream = streamWindowContext?.stream;
+  const streamWindowMouseContext = useContext(StreamWindowMouseContext);
 
   const {
     layoutUIStore: { showActiobBar },
   } = useStore();
-  return (
+  return streamWindowMouseContext?.mouseEnterClass ? (
     <div
       className={classnames(
         'fcr-stream-window-user-label',
@@ -219,7 +236,9 @@ const StreamWindowUserLabel = observer(() => {
           <span>host</span>
         </div>
       )}
-      <div className="fcr-stream-window-user-name">{stream?.userName}</div>
+      {streamWindowContext?.showNameOnBottomLeft && (
+        <div className="fcr-stream-window-user-name">{stream?.userName}</div>
+      )}
     </div>
-  );
+  ) : null;
 });

@@ -1,5 +1,5 @@
 import { EduUIStoreBase } from './base';
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { DialogType, Layout } from './type';
 import { bound, Scheduler } from 'agora-rte-sdk';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,6 +10,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   private _clearScreenDelay = 3000;
   private _isPointingBar = false;
   private _hasPopoverShowed = false;
+  @observable mouseEnterClass = false;
   @observable layoutReady = false;
   @observable showStatusBar = true;
   @observable showActiobBar = true;
@@ -27,9 +28,24 @@ export class LayoutUIStore extends EduUIStoreBase {
   setHasPopoverShowed(has: boolean) {
     this._hasPopoverShowed = has;
   }
+  @computed
+  get noAvailabelStream() {
+    return (
+      this.getters.cameraUIStreams.length <= 1 &&
+      !this.getters.cameraUIStreams[0]?.isCameraStreamPublished
+    );
+  }
+  get disableClearScreen() {
+    return (
+      this._isPointingBar ||
+      this._hasPopoverShowed ||
+      (this.layout === Layout.Grid && this.getters.cameraUIStreams.length > 1) ||
+      this.noAvailabelStream
+    );
+  }
   @action.bound
   clearScreen = () => {
-    if (this._isPointingBar || this._hasPopoverShowed) return;
+    if (this.disableClearScreen) return;
     this.showStatusBar = false;
     this.showActiobBar = false;
   };
@@ -68,6 +84,16 @@ export class LayoutUIStore extends EduUIStoreBase {
   deleteDialog = (type: string) => {
     this.dialogMap.delete(type);
   };
+  @action.bound
+  handleMouseMove() {
+    this.mouseEnterClass = true;
+    this.resetClearScreenTask();
+  }
+  @action.bound
+  handleMouseLeave() {
+    this.mouseEnterClass = false;
+    this.clearScreen();
+  }
 
   @action.bound
   setLayoutReady(ready: boolean) {
@@ -75,12 +101,12 @@ export class LayoutUIStore extends EduUIStoreBase {
   }
 
   onDestroy(): void {
-    document.removeEventListener('mousemove', this.resetClearScreenTask);
-    document.removeEventListener('mouseleave', this.clearScreen);
+    document.removeEventListener('mousemove', this.handleMouseMove);
+    document.removeEventListener('mouseleave', this.handleMouseLeave);
   }
   onInstall(): void {
-    document.addEventListener('mousemove', this.resetClearScreenTask);
-    document.addEventListener('mouseleave', this.clearScreen);
+    document.addEventListener('mousemove', this.handleMouseMove);
+    document.addEventListener('mouseleave', this.handleMouseLeave);
 
     this.resetClearScreenTask();
   }

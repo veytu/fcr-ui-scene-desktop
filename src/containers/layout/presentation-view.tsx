@@ -20,12 +20,12 @@ export const PresentationView = observer(() => {
             'fcr-layout-content-video-list-col': layout === Layout.ListOnRight,
           })}>
           {listViewStreams.map((stream) => {
-            const sideStreamSize = { width: 222, height: 222 * 0.5625 };
+            const sideStreamSize = { width: 192, height: 192 * 0.5625 };
 
             return (
               <div key={stream.stream.streamUuid} style={{ ...sideStreamSize }}>
                 <StreamWindowContext.Provider
-                  value={convertStreamUIStatus(stream, 'list-view', layout)}>
+                  value={convertStreamUIStatus(stream, 'list-view', layout, false)}>
                   <StreamWindow></StreamWindow>
                 </StreamWindowContext.Provider>
               </div>
@@ -36,7 +36,7 @@ export const PresentationView = observer(() => {
       <div className={classnames(`fcr-layout-content-main-view`)}>
         {mainViewStream ? (
           <StreamWindowContext.Provider
-            value={convertStreamUIStatus(mainViewStream, 'main-view', layout)}>
+            value={convertStreamUIStatus(mainViewStream, 'main-view', layout, false)}>
             <StreamWindow></StreamWindow>
           </StreamWindowContext.Provider>
         ) : null}
