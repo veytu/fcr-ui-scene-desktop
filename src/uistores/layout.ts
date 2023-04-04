@@ -3,7 +3,7 @@ import { observable, action, computed } from 'mobx';
 import { DialogType, Layout } from './type';
 import { bound, Scheduler } from 'agora-rte-sdk';
 import { v4 as uuidv4 } from 'uuid';
-import { ConfirmDialogProps } from '@onlineclass/components/dialog/confirm-dialog';
+import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
 
 export class LayoutUIStore extends EduUIStoreBase {
   private _clearScreenTask: Scheduler.Task | null = null;
@@ -11,6 +11,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   private _isPointingBar = false;
   private _hasPopoverShowed = false;
   @observable mouseEnterClass = false;
+  @observable layoutReady = false;
   @observable showStatusBar = true;
   @observable showActiobBar = true;
   @observable layout: Layout = Layout.Grid;
@@ -93,6 +94,12 @@ export class LayoutUIStore extends EduUIStoreBase {
     this.mouseEnterClass = false;
     this.clearScreen();
   }
+
+  @action.bound
+  setLayoutReady(ready: boolean) {
+    this.layoutReady = ready;
+  }
+
   onDestroy(): void {
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseleave', this.handleMouseLeave);

@@ -1,7 +1,7 @@
 import React from 'react';
-import { VerticalSlider } from '@onlineclass/components/slider';
-import { SvgIconEnum } from '@onlineclass/components/svg-img';
-import { ClickableIcon } from '@onlineclass/components/svg-img/clickable-icon';
+import { VerticalSlider } from '@components/slider';
+import { SvgIconEnum } from '@components/svg-img';
+import { ClickableIcon } from '@components/svg-img/clickable-icon';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { observer } from 'mobx-react';
 

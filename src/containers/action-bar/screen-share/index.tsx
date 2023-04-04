@@ -1,12 +1,12 @@
-import { SvgIconEnum } from '@onlineclass/components/svg-img';
-import { ToolTip } from '@onlineclass/components/tooltip';
+import { SvgIconEnum } from '@components/svg-img';
+import { ToolTip } from '@components/tooltip';
 import { ActionBarItem } from '..';
 import { observer } from 'mobx-react';
 import './index.css';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
-import { themeVal } from '@onlineclass/utils/tailwindcss';
-import { InfoToolTip } from '@onlineclass/components/tooltip/info';
-import { Button } from '@onlineclass/components/button';
+import { themeVal } from '@ui-kit-utils/tailwindcss';
+import { InfoToolTip } from '@components/tooltip/info';
+import { Button } from '@components/button';
 import { createPortal } from 'react-dom';
 const colors = themeVal('colors');
 export const ScreenShare = observer(() => {

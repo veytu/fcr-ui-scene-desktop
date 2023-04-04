@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { observer } from 'mobx-react';
 import classNames from 'classnames';
 import { AudioSettings } from './audio-settings';
-import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { VideoSettings } from './video-settings';
 import './index.css';
 

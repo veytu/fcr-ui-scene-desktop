@@ -10,6 +10,7 @@ export const PresentationView = observer(() => {
     layoutUIStore: { layout },
     presentationUIStore: { mainViewStream, listViewStreams },
   } = useStore();
+
   return (
     <div className={classnames(`fcr-layout-content-${layout}`)}>
       <div className={classnames(`fcr-layout-content-list-view`)}>
@@ -39,6 +40,7 @@ export const PresentationView = observer(() => {
             <StreamWindow></StreamWindow>
           </StreamWindowContext.Provider>
         ) : null}
+        <div className="fcr-layout-board-view" />
       </div>
     </div>
   );

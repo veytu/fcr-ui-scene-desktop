@@ -20,6 +20,13 @@ module.exports = {
       'custom-2': '#7C79FF',
       'custom-3': '#64BB5C',
       'custom-4': '#C2CC55',
+      'black-a40': colorAlpha('#000000', 0.4),
+      'black-a50': colorAlpha('#000000', 0.5),
+      'black-a80': colorAlpha('#000000', 0.8),
+      // outline
+      'brand-a50': colorAlpha('#4262FF', 0.5),
+      // button
+      'btn-gray': colorDepth('#555B69'),
       // Theme colors: change along with theme
       'block-1': '#000000',
       'block-2': '#2F2F2FF2',
@@ -42,17 +49,9 @@ module.exports = {
       'shadow-1': 'rgba(255, 255, 255, 0.1)',
       'shadow-2': 'rgba(255, 255, 255, 0.2)',
       'shadow-3': 'rgba(255, 255, 255, 0.3)',
-      // outline
-      'brand-a50': colorAlpha('#4262FF', 0.5),
-      // button
-      'btn-gray': colorDepth('#555B69'),
-      //
+      // essential colors
       notsb: '#000000',
       'notsb-inverse': '#ffffff',
-
-      'black-a40': colorAlpha('#000000', 0.4),
-      'black-a50': colorAlpha('#000000', 0.5),
-      'black-a80': colorAlpha('#000000', 0.8),
     },
     backgroundImage: (theme) => ({
       // progress

@@ -1,7 +1,7 @@
-import { Popover } from '@onlineclass/components/popover';
-import { Radio } from '@onlineclass/components/radio';
-import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
-import { ToolTip } from '@onlineclass/components/tooltip';
+import { Popover } from '@components/popover';
+import { Radio } from '@components/radio';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
+import { ToolTip } from '@components/tooltip';
 import { FC, useState } from 'react';
 import { ActionBarItemWrapper } from '..';
 import { observer } from 'mobx-react';

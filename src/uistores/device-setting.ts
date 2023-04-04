@@ -13,7 +13,7 @@ import { IVirtualBackgroundProcessor } from 'agora-extension-virtual-background'
 import { IBeautyProcessor } from 'agora-extension-beauty-effect';
 import { EduUIStoreBase } from './base';
 import { bound, Log } from 'agora-rte-sdk';
-import { transI18n } from 'agora-common-libs';
+import { transI18n } from 'agora-common-libs/lib/i18n';
 import { BeautyFilterOptions, VirtualBackgroundOptions } from '..';
 import { fetchMediaFileByUrl } from '@onlineclass/utils';
 import { getLaunchOptions } from '@onlineclass/utils/launch-options-holder';

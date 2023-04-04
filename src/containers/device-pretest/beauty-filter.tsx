@@ -1,4 +1,4 @@
-import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import classNames from 'classnames';
 import { observer } from 'mobx-react';

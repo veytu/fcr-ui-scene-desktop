@@ -1,8 +1,8 @@
-import { Checkbox } from '@onlineclass/components/checkbox';
-import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
+import { Checkbox } from '@components/checkbox';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { observer } from 'mobx-react-lite';
-import { VolumeIndicator } from '@onlineclass/components/volume';
+import { VolumeIndicator } from '@components/volume';
 import { CameraSelect, MicrophoneSelect, SpeakerSelect } from './device-select';
 
 export const BasicSettings = observer(() => {

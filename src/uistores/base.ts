@@ -1,5 +1,5 @@
 import { EduClassroomStore } from 'agora-edu-core';
-import { Logger } from 'agora-common-libs';
+import { Logger } from 'agora-common-libs/lib/annotation';
 import { Getters } from './getters';
 
 /**
@@ -10,7 +10,6 @@ import { Getters } from './getters';
  */
 export abstract class EduUIStoreBase {
   protected _disposers: (() => void)[] = [];
-
   /**
    *
    */

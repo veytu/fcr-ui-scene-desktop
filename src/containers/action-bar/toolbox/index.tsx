@@ -1,5 +1,5 @@
-import { Popover } from '@onlineclass/components/popover';
-import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
+import { Popover } from '@components/popover';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { FC } from 'react';
 import { ActionBarItemWithPopover, ActionBarItemWrapper } from '..';

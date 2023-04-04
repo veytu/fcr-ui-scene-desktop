@@ -1,10 +1,10 @@
 import React from 'react';
-import { VolumeIndicator } from '@onlineclass/components/volume';
+import { VolumeIndicator } from '@components/volume';
 import { observer } from 'mobx-react';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { MicrophoneSelect, SpeakerSelect } from '../device-pretest/device-select';
-import { Checkbox } from '@onlineclass/components/checkbox';
-import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
+import { Checkbox } from '@components/checkbox';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
 
 export const AudioSettings = observer(() => {
   const { deviceSettingUIStore } = useStore();

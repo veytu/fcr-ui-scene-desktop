@@ -1,26 +1,26 @@
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const webpackMerge = require("webpack-merge");
-const path = require("path");
-const webpack = require("webpack");
-const dotenv = require("dotenv-webpack");
-const CopyPlugin = require("copy-webpack-plugin");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const webpackMerge = require('webpack-merge');
+const path = require('path');
+const webpack = require('webpack');
+const dotenv = require('dotenv-webpack');
+const CopyPlugin = require('copy-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
-const baseConfig = require("./webpack.base");
-const { ROOT_PATH, locateEnvFile } = require("./utils/index");
-const { pack } = require("./utils/loaders");
+const baseConfig = require('./webpack.base');
+const { ROOT_PATH, locateEnvFile } = require('./utils/index');
+const { pack } = require('./utils/loaders');
 
 const config = {
-  mode: "production",
+  mode: 'production',
   entry: {
-    edu_sdk: "./src/index.ts",
+    edu_sdk: './src/index.ts',
   },
   output: {
-    path: path.resolve(ROOT_PATH, "lib"),
-    publicPath: "./",
-    filename: "[name].bundle.js",
-    libraryTarget: "umd",
+    path: path.resolve(ROOT_PATH, 'lib'),
+    publicPath: './',
+    filename: '[name].bundle.js',
+    libraryTarget: 'umd',
     clean: true,
   },
   module: {
@@ -29,7 +29,7 @@ const config = {
   optimization: {
     minimize: true,
     sideEffects: true,
-    nodeEnv: "production",
+    nodeEnv: 'production',
     minimizer: [
       new TerserPlugin({
         // parallel: require('os').cpus().length, // 多线程并行构建
@@ -48,27 +48,24 @@ const config = {
     ],
   },
   plugins: [
-    new dotenv({
-      path: locateEnvFile(),
-    }),
     new webpack.DefinePlugin({
-      NODE_ENV: JSON.stringify("production"),
+      NODE_ENV: JSON.stringify('production'),
     }),
     // copy wasm files of Web RTC SDK extension from node_modules
     new CopyPlugin({
       patterns: [
         // ai denoiser
         {
-          from: require.resolve("agora-extension-ai-denoiser/external"),
-          to: path.resolve(ROOT_PATH, "./lib/externals/extensions/ai-denoiser"),
+          from: require.resolve('agora-extension-ai-denoiser/external'),
+          to: path.resolve(ROOT_PATH, './lib/externals/extensions/ai-denoiser'),
           noErrorOnMissing: true,
         },
         //virtual background
         {
-          from: require.resolve("agora-extension-virtual-background/wasms"),
+          from: require.resolve('agora-extension-virtual-background/wasms'),
           to: path.resolve(
             ROOT_PATH,
-            "./lib/externals/extensions/agora-extension-virtual-background"
+            './lib/externals/extensions/agora-extension-virtual-background',
           ),
           noErrorOnMissing: true,
         },

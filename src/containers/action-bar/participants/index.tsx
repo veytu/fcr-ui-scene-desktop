@@ -1,5 +1,5 @@
-import { SvgIconEnum } from '@onlineclass/components/svg-img';
-import { ToolTip } from '@onlineclass/components/tooltip';
+import { SvgIconEnum } from '@components/svg-img';
+import { ToolTip } from '@components/tooltip';
 import { ActionBarItem } from '..';
 import './index.css';
 export const Participants = () => {
