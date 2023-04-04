@@ -3,7 +3,14 @@ import { LaunchOptions } from '..';
 
 type Config = Partial<
   Record<
-    'host' | 'ignoreUrlRegionPrefix' | 'logo' | 'language' | 'shareUrl' | 'uiConfig' | 'theme',
+    | 'host'
+    | 'ignoreUrlRegionPrefix'
+    | 'logo'
+    | 'language'
+    | 'shareUrl'
+    | 'uiConfig'
+    | 'theme'
+    | 'logo',
     unknown
   >
 >;

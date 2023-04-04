@@ -7,7 +7,7 @@ import useMeasure from 'react-use-measure';
 import { useMemo } from 'react';
 import { calculateGridMatrix } from '@onlineclass/utils/grid';
 import { convertStreamUIStatus, StreamWindowContext } from '../window/context';
-import { FloatPagination } from '@onlineclass/components/pagination';
+import { FloatPagination } from '@components/pagination';
 
 export const GalleryView = observer(() => {
   const {
