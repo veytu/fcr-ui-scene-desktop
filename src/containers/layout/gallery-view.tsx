@@ -7,6 +7,7 @@ import useMeasure from 'react-use-measure';
 import { useMemo } from 'react';
 import { calculateGridMatrix } from '@onlineclass/utils/grid';
 import { convertStreamUIStatus, StreamWindowContext } from '../window/context';
+import { FloatPagination } from '@onlineclass/components/pagination';
 
 export const GalleryView = observer(() => {
   const {
@@ -54,6 +55,7 @@ const GalleryContainer = observer(() => {
   }, [bounds.width, bounds.height, numOfCols, numOfRows]);
   return (
     <div className="fcr-gallery-view-container">
+      <FloatPagination wrapperCls="fcr-gallery-view-pager" total={10} current={2}></FloatPagination>
       <div className="fcr-gallery-view-stream-wrapper" ref={ref}>
         {matrix.map((rows, idx) => {
           return (
