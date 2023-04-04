@@ -1,6 +1,6 @@
-import { DoubleDeckPopoverWithTooltip, PopoverWithTooltip } from '@onlineclass/components/popover';
-import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
-import { ToastApi } from '@onlineclass/components/toast';
+import { DoubleDeckPopoverWithTooltip, PopoverWithTooltip } from '@components/popover';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
+import { ToastApi } from '@components/toast';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import ClipboardJS from 'clipboard';
 import { FC, useEffect, useRef } from 'react';

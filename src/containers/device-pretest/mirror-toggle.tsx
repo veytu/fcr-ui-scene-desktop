@@ -1,5 +1,5 @@
-import { SvgIconEnum } from '@onlineclass/components/svg-img';
-import { PretestDeviceIcon } from '@onlineclass/components/svg-img/clickable-icon';
+import { SvgIconEnum } from '@components/svg-img';
+import { PretestDeviceIcon } from '@components/svg-img/clickable-icon';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { observer } from 'mobx-react';
 import { useMemo } from 'react';

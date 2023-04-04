@@ -1,4 +1,4 @@
-import { SvgImg, SvgIconEnum } from '@onlineclass/components/svg-img';
+import { SvgImg, SvgIconEnum } from '@components/svg-img';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { FC, PropsWithChildren } from 'react';
 import { DeviceSettings } from '.';

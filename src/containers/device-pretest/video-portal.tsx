@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react';
-import { Button } from '@onlineclass/components/button';
-import { SvgIconEnum } from '@onlineclass/components/svg-img';
-import { PretestDeviceIcon } from '@onlineclass/components/svg-img/clickable-icon';
+import { Button } from '@components/button';
+import { SvgIconEnum } from '@components/svg-img';
+import { PretestDeviceIcon } from '@components/svg-img/clickable-icon';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { BeautySlider } from './beauty-slider';
 import { MirrorToggle } from './mirror-toggle';

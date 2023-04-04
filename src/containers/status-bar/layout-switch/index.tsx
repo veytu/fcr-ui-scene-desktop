@@ -1,12 +1,12 @@
-import { Radio } from '@onlineclass/components/radio';
-import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
+import { Radio } from '@components/radio';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { Layout } from '@onlineclass/uistores/type';
 import classnames from 'classnames';
 import './index.css';
 import { observer } from 'mobx-react';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { StatusBarItemWrapper } from '..';
-import { PopoverWithTooltip } from '@onlineclass/components/popover';
+import { PopoverWithTooltip } from '@components/popover';
 
 export const LayoutSwitchPopover = () => {
   return (

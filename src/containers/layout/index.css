@@ -6,6 +6,9 @@
   display: flex;
   flex-direction: column;
 }
+.fcr-layout-content-main-view {
+  position: relative;
+}
 .fcr-layout-content-list-on-top .fcr-layout-content-main-view {
   flex: 1;
   background-color: aquamarine;
@@ -76,4 +79,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.fcr-layout-board-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
 }

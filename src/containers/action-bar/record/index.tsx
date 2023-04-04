@@ -1,10 +1,10 @@
-import { SvgIconEnum } from '@onlineclass/components/svg-img';
-import { ToolTip } from '@onlineclass/components/tooltip';
+import { SvgIconEnum } from '@components/svg-img';
+import { ToolTip } from '@components/tooltip';
 import { ActionBarItem } from '..';
 import { observer } from 'mobx-react';
 import './index.css';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
-import { themeVal } from '@onlineclass/utils/tailwindcss';
+import { themeVal } from '@ui-kit-utils/tailwindcss';
 import classnames from 'classnames';
 const colors = themeVal('colors');
 export const Record = observer(() => {

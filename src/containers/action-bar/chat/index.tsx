@@ -1,4 +1,4 @@
-import { SvgIconEnum } from '@onlineclass/components/svg-img';
+import { SvgIconEnum } from '@components/svg-img';
 import { ActionBarItem } from '..';
 import './index.css';
 export const Chat = () => {

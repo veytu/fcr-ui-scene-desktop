@@ -5,7 +5,6 @@ const eduCoreVersion = require('agora-edu-core/package.json').version;
 const { ROOT_PATH } = require('./utils/index');
 const { base } = require('./utils/loaders');
 const rteVersion = require('agora-rte-sdk/package.json').version;
-
 const onlineclassSDKVersion = require('../package.json').version;
 
 module.exports = {
@@ -23,6 +22,8 @@ module.exports = {
     alias: {
       '@onlineclass': path.resolve(ROOT_PATH, 'src'),
       '@res': path.resolve(ROOT_PATH, 'src/resources'),
+      '@components': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/components'),
+      '@ui-kit-utils': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/utils'),
     },
   },
   module: {

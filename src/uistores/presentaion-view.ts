@@ -13,8 +13,25 @@ export class PresentationUIStore extends EduUIStoreBase {
       this.getters.cameraUIStreams.find((stream) => stream.stream.streamUuid === streamUuid) ||
       null;
   }
+  @action
+  clearMainViewStream() {
+    this.mainViewStream = null;
+  }
   onDestroy(): void {}
   onInstall(): void {
+    this._disposers.push(
+      reaction(
+        () => this.getters.boardApi.connected,
+        () => {
+          if (this.getters.boardApi.connected) {
+            this.clearMainViewStream();
+            // stop timer
+          } else {
+            // start timer
+          }
+        },
+      ),
+    );
     this._disposers.push(
       reaction(
         () => {

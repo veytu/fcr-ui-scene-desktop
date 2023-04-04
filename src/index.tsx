@@ -1,3 +1,4 @@
+import './preset';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { ConvertMediaOptionsConfig, LaunchMediaOptions, LaunchOptions } from './type';
 import { App } from './app';
@@ -9,13 +10,7 @@ import {
   EduRoleTypeEnum,
 } from 'agora-edu-core';
 import { initializeBuiltInExtensions } from './utils/rtc-extensions';
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
 import { setLaunchOptions, setConfig, getConfig } from './utils/launch-options-holder';
-
-dayjs.extend(duration);
-
-export * from './type';
 
 /**
  * Online class SDK
@@ -197,3 +192,5 @@ export class AgoraOnlineclassSDK {
     return config;
   }
 }
+
+export * from './type';

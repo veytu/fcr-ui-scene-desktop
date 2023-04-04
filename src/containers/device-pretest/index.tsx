@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import pretestLogo from '@res/images/pretest-logo.png';
-import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import './index.css';
 import { observer } from 'mobx-react';
 import { useI18n } from 'agora-common-libs/lib/i18n';
-import { FashionTabs } from '@onlineclass/components/tabs';
+import { FashionTabs } from '@components/tabs';
 import { VirtualBackground } from './virtual-background';
 import { BasicSettings } from './basic-settings';
 import { BeautyFilter } from './beauty-filter';

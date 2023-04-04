@@ -26,7 +26,9 @@
     "baseUrl": ".",
     "paths": {
       "@onlineclass/*": ["src/*"],
-      "@res/*": ["src/resources/*"]
+      "@res/*": ["src/resources/*"],
+      "@components/*": ["../agora-scenario-ui-kit/src/components/*"],
+      "@ui-kit-utils/*": ["../agora-scenario-ui-kit/src/utils/*"]
     }
   },
   "include": ["src"],

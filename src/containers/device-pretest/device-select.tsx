@@ -1,6 +1,6 @@
-import { Button } from '@onlineclass/components/button';
-import { Dropdown } from '@onlineclass/components/dropdown';
-import { SvgIconEnum } from '@onlineclass/components/svg-img';
+import { Button } from '@components/button';
+import { Dropdown } from '@components/dropdown';
+import { SvgIconEnum } from '@components/svg-img';
 import { getAssetURL } from '@onlineclass/utils/asset';
 import { isElectron } from '@onlineclass/utils/check';
 import { useStore } from '@onlineclass/utils/hooks/use-store';

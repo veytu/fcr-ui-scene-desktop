@@ -1,11 +1,11 @@
-import { SvgIconEnum } from '@onlineclass/components/svg-img';
-import { ToolTip } from '@onlineclass/components/tooltip';
+import { SvgIconEnum } from '@components/svg-img';
+import { ToolTip } from '@components/tooltip';
 import { ActionBarItem } from '..';
 import './index.css';
 import { observer } from 'mobx-react';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
-import { Popover } from '@onlineclass/components/popover';
-import { Button } from '@onlineclass/components/button';
+import { Popover } from '@components/popover';
+import { Button } from '@components/button';
 import { useEffect } from 'react';
 export const Leave = observer(() => {
   const {

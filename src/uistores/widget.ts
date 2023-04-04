@@ -11,7 +11,7 @@ import { action, computed, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { AgoraWidgetTrackController } from 'agora-common-libs/lib/widget/widget-track';
 import { getLaunchOptions, getUiConfig, getTheme } from '@onlineclass/utils/launch-options-holder';
-import { ToastApi } from '@onlineclass/components/toast';
+import { ToastApi } from '@components/toast';
 import { AgoraExtensionWidgetEvent } from '@onlineclass/extension/events';
 
 @Log.attach({ proxyMethods: false })

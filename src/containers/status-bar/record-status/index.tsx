@@ -2,10 +2,10 @@ import './index.css';
 import { observer } from 'mobx-react';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { StatusBarItemWrapper } from '..';
-import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
-import { ToolTip } from '@onlineclass/components/tooltip';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
+import { ToolTip } from '@components/tooltip';
 import classnames from 'classnames';
-import { themeVal } from '@onlineclass/utils/tailwindcss';
+import { themeVal } from '@ui-kit-utils/tailwindcss';
 const colors = themeVal('colors');
 
 export const RecordStatus = observer(() => {

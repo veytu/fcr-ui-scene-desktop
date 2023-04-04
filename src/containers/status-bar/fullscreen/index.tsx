@@ -1,5 +1,5 @@
-import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
-import { ToolTip } from '@onlineclass/components/tooltip';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
+import { ToolTip } from '@components/tooltip';
 import { useEffect, useState } from 'react';
 import { StatusBarItemWrapper } from '..';
 import './index.css';

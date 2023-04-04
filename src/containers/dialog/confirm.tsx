@@ -1,5 +1,5 @@
-import { ConfirmDialog } from '@onlineclass/components/dialog';
-import { ConfirmDialogProps } from '@onlineclass/components/dialog/confirm-dialog';
+import { ConfirmDialog } from '@components/dialog';
+import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
 import { FC, useState } from 'react';
 
 export const ConfirmDialogWrapper: FC<ConfirmDialogProps> = (props) => {

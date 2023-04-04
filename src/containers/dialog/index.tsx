@@ -1,4 +1,4 @@
-import { ConfirmDialogProps } from '@onlineclass/components/dialog/confirm-dialog';
+import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { iterateMap } from 'agora-edu-core';
 import { observer } from 'mobx-react';

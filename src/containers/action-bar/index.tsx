@@ -1,5 +1,5 @@
-import { Popover, PopoverProps } from '@onlineclass/components/popover';
-import { SvgIconEnum, SvgImg, SvgImgProps } from '@onlineclass/components/svg-img';
+import { Popover, PopoverProps } from '@components/popover';
+import { SvgIconEnum, SvgImg, SvgImgProps } from '@components/svg-img';
 import { FC, ReactNode, useState } from 'react';
 import { observer } from 'mobx-react';
 import './index.css';

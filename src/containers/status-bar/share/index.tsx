@@ -1,10 +1,10 @@
-import { Button } from '@onlineclass/components/button';
-import { SvgIconEnum } from '@onlineclass/components/svg-img';
+import { Button } from '@components/button';
+import { SvgIconEnum } from '@components/svg-img';
 import { EduClassroomConfig } from 'agora-edu-core';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import './index.css';
 import { AgoraOnlineclassSDK } from '@onlineclass/index';
-import { ToastApi } from '@onlineclass/components/toast';
+import { ToastApi } from '@components/toast';
 export const Share = () => {
   const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
   const { shareUrl } = AgoraOnlineclassSDK;

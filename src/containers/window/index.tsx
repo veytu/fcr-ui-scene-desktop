@@ -5,8 +5,8 @@ import { FC, useContext, useEffect, useRef } from 'react';
 import { AudioRecordinDeviceIcon } from '../action-bar/device';
 import './index.css';
 import classnames from 'classnames';
-import { SvgIconEnum, SvgImg } from '@onlineclass/components/svg-img';
-import { Popover } from '@onlineclass/components/popover';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
+import { Popover } from '@components/popover';
 import { StreamWindowContext } from './context';
 
 const streamWindowActionItems = [
