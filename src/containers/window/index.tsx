@@ -7,7 +7,7 @@ import './index.css';
 import classnames from 'classnames';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { Popover } from '@components/popover';
-import { StreamWindowContext } from './context';
+import { StreamWindowContext, StreamWindowMouseContext } from './context';
 
 const streamWindowActionItems = [
   {
