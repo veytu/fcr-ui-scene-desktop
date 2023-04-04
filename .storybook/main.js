@@ -5,7 +5,7 @@ module.exports = {
   typescript: {
     reactDocgen: 'react-docgen',
   },
-  stories: [path.resolve(ROOT_PATH, 'src/components/**/*.stories.@(ts|tsx)')],
+  stories: [path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/components/**/*.stories.@(ts|tsx)')],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
@@ -23,6 +23,7 @@ module.exports = {
   webpackFinal: async (config) => {
     config.resolve.extensions.push('.ts', '.tsx');
     config.resolve.alias['@onlineclass'] = path.resolve(ROOT_PATH, 'src');
+    config.resolve.alias['@ui-kit-utils'] = path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/utils');
     return config;
   },
 };
