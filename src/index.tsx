@@ -1,7 +1,7 @@
 import { render, unmountComponentAtNode } from 'react-dom';
 import { ConvertMediaOptionsConfig, LaunchMediaOptions, LaunchOptions } from './type';
 import { App } from './app';
-import { Logger } from 'agora-common-libs';
+import { Logger } from 'agora-common-libs/lib/annotation';
 import {
   EduClassroomConfig,
   EduMediaEncryptionMode,
@@ -11,7 +11,8 @@ import {
 import { initializeBuiltInExtensions } from './utils/rtc-extensions';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { setLaunchOptions } from './utils/launch-options-holder';
+import { setLaunchOptions, setConfig, getConfig } from './utils/launch-options-holder';
+
 dayjs.extend(duration);
 
 export * from './type';
@@ -20,28 +21,6 @@ export * from './type';
  * Online class SDK
  */
 export class AgoraOnlineclassSDK {
-  /**
-   * 支持下列参数配：
-   *    host: API请求主机
-   *    ignoreUrlRegionPrefix: 是否去掉API请求区域前缀
-   *    logo: 品牌logo的url，会以图片展示在主界面左上角
-   */
-  /** @en
-   * Support below configs:
-   *    host: API request host
-   *    ignoreUrlRegionPrefix: Whether to remove the API request area prefix
-   *    logo: The logo url of your brand, which will show on the top left of the main view.
-   */
-  private static _config: Record<string, string> = {};
-  /**
-   *
-   */
-  /** @en
-   *
-   */
-  static logo = '';
-  static language = '';
-  static shareUrl = '';
   /**
    * 启动入口
    * @param dom
@@ -68,13 +47,10 @@ export class AgoraOnlineclassSDK {
       region,
       mediaOptions,
       devicePretest,
-      recordRetryTimeout,
       roomName,
       roomType,
       startTime,
       duration,
-      shareUrl,
-      language,
     } = launchOptions;
 
     Logger.info('[AgoraOnlineclassSDK]launched with options:', launchOptions);
@@ -94,7 +70,7 @@ export class AgoraOnlineclassSDK {
       token,
     };
 
-    const { virtualBackgroundExtension, beautyEffectExtensionInstance, aiDenoiserInstance } =
+    const { virtualBackgroundExtension, beautyEffectExtension, aiDenoiserExtension } =
       initializeBuiltInExtensions();
 
     const rteRegion = this._convertRegion(region);
@@ -110,15 +86,15 @@ export class AgoraOnlineclassSDK {
       latencyLevel,
       region: rteRegion,
       rtcConfigs,
-      rtcSDKExtensions: [
-        virtualBackgroundExtension,
-        beautyEffectExtensionInstance,
-        aiDenoiserInstance,
-      ],
+      rtcSDKExtensions: [virtualBackgroundExtension, beautyEffectExtension, aiDenoiserExtension],
     });
-    config.host = this._config.host;
-    this.language = language;
-    this.shareUrl = shareUrl || '';
+
+    const host = getConfig().host as string;
+
+    if (host) {
+      config.host = host;
+    }
+
     EduClassroomConfig.setConfig(config);
 
     Logger.info(`[AgoraOnlineclassSDK]classroomConfig`, config);
@@ -146,17 +122,23 @@ export class AgoraOnlineclassSDK {
   static setParameters(params: string) {
     const { host, ignoreUrlRegionPrefix, logo } = JSON.parse(params) || {};
 
+    const config = getConfig() || {};
+
     if (host) {
-      this._config.host = host;
+      config.host = host;
     }
 
     if (ignoreUrlRegionPrefix) {
-      this._config.ignoreUrlRegionPrefix = ignoreUrlRegionPrefix;
+      config.ignoreUrlRegionPrefix = ignoreUrlRegionPrefix;
     }
 
     if (logo) {
-      this.logo = logo;
+      config.logo = logo;
     }
+
+    config.ignoreUrlRegionPrefix = ['dev', 'pre'].some((v) => (config.host as string).includes(v));
+
+    setConfig(config);
   }
 
   private static _convertRegion(region: string): EduRegion {

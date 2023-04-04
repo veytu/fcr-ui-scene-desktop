@@ -10,7 +10,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   private _clearScreenDelay = 3000;
   private _isPointingBar = false;
   private _hasPopoverShowed = false;
-
+  @observable layoutReady = false;
   @observable showStatusBar = true;
   @observable showActiobBar = true;
   @observable layout: Layout = Layout.Grid;
@@ -68,6 +68,11 @@ export class LayoutUIStore extends EduUIStoreBase {
   deleteDialog = (type: string) => {
     this.dialogMap.delete(type);
   };
+
+  @action.bound
+  setLayoutReady(ready: boolean) {
+    this.layoutReady = ready;
+  }
 
   onDestroy(): void {
     document.removeEventListener('mousemove', this.resetClearScreenTask);

@@ -19,30 +19,34 @@ import { LayoutUIStore } from './layout';
 import { StatusBarUIStore } from './status-bar';
 import { GalleryUIStore } from './gallery-view';
 import { StreamUIStore } from './stream';
+import { Board } from '../extension/board';
+import { WidgetUIStore } from './widget';
 
 export class OnlineclassUIStore {
   @observable
   private _installed = false;
   @observable
   private _devicePretestFinished = false;
-  private _getters: Getters;
-
-  classroomStore: EduClassroomStore;
-  layoutUIStore: LayoutUIStore;
-  statusBarUIStore: StatusBarUIStore;
-  deviceSettingUIStore: DeviceSettingUIStore;
-  actionBarUIStore: ActionBarUIStore;
-  galleryUIStore: GalleryUIStore;
-  streamUIStore: StreamUIStore;
+  readonly getters: Getters;
+  readonly classroomStore: EduClassroomStore;
+  readonly layoutUIStore: LayoutUIStore;
+  readonly statusBarUIStore: StatusBarUIStore;
+  readonly deviceSettingUIStore: DeviceSettingUIStore;
+  readonly actionBarUIStore: ActionBarUIStore;
+  readonly galleryUIStore: GalleryUIStore;
+  readonly streamUIStore: StreamUIStore;
+  readonly widgetUIStore: WidgetUIStore;
+  readonly boardApi = new Board();
   constructor() {
     this.classroomStore = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass);
-    this._getters = new Getters(this.classroomStore);
-    this.layoutUIStore = new LayoutUIStore(this.classroomStore, this._getters);
-    this.statusBarUIStore = new StatusBarUIStore(this.classroomStore, this._getters);
-    this.deviceSettingUIStore = new DeviceSettingUIStore(this.classroomStore, this._getters);
-    this.actionBarUIStore = new ActionBarUIStore(this.classroomStore, this._getters);
-    this.galleryUIStore = new GalleryUIStore(this.classroomStore, this._getters);
-    this.streamUIStore = new StreamUIStore(this.classroomStore, this._getters);
+    this.getters = new Getters(this);
+    this.layoutUIStore = new LayoutUIStore(this.classroomStore, this.getters);
+    this.statusBarUIStore = new StatusBarUIStore(this.classroomStore, this.getters);
+    this.deviceSettingUIStore = new DeviceSettingUIStore(this.classroomStore, this.getters);
+    this.actionBarUIStore = new ActionBarUIStore(this.classroomStore, this.getters);
+    this.galleryUIStore = new GalleryUIStore(this.classroomStore, this.getters);
+    this.streamUIStore = new StreamUIStore(this.classroomStore, this.getters);
+    this.widgetUIStore = new WidgetUIStore(this.classroomStore, this.getters);
   }
 
   get initialized() {
@@ -60,7 +64,7 @@ export class OnlineclassUIStore {
     }
     Object.getOwnPropertyNames(this).forEach((propertyName) => {
       if (propertyName.endsWith('UIStore')) {
-        const uiStore = this[propertyName];
+        const uiStore = this[propertyName as keyof typeof this];
         if (uiStore instanceof EduUIStoreBase) {
           uiStore.onInstall();
         }
@@ -129,7 +133,7 @@ export class OnlineclassUIStore {
     this.classroomStore.destroy();
     Object.getOwnPropertyNames(this).forEach((propertyName) => {
       if (propertyName.endsWith('UIStore')) {
-        const uiStore = this[propertyName];
+        const uiStore = this[propertyName as keyof typeof this];
 
         if (uiStore instanceof EduUIStoreBase) {
           uiStore.onDestroy();

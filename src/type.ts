@@ -1,6 +1,7 @@
 import { EduRegion, EduRoleTypeEnum, EduRoomTypeEnum, EduRtcConfig } from 'agora-edu-core';
 import { AGMediaOptions, AgoraLatencyLevel, AGVideoEncoderConfiguration } from 'agora-rte-sdk';
-import { FcrMultiThemeMode } from 'agora-common-libs';
+import { FcrMultiThemeMode } from 'agora-common-libs/lib/ui';
+import { AgoraWidgetBase } from 'agora-common-libs/lib/widget';
 import { IBaseProcessor, IExtension } from 'agora-rte-extension';
 
 /**
@@ -179,6 +180,14 @@ export type LaunchOptions = {
    *
    */
   duration: number;
+
+  /**
+   * 插件
+   */
+  /** @en
+   * Widgets
+   */
+  widgets?: Record<string, typeof AgoraWidgetBase>;
 };
 
 /**

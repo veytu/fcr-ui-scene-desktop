@@ -3,7 +3,7 @@ import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { iterateMap } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { ConfirmDialogWrapper } from './confirm';
-import { Logger } from 'agora-common-libs';
+import { Logger } from 'agora-common-libs/lib/annotation';
 import { DeviceSettingsDialog } from '../device-settings/dialog-wrapper';
 
 export const ClassRoomDialogContainer = observer(() => {

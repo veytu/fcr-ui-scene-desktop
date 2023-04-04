@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const webpackbar = require('webpackbar');
 const eduCoreVersion = require('agora-edu-core/package.json').version;
-const { ROOT_PATH, ALIAS } = require('./utils/index');
+const { ROOT_PATH } = require('./utils/index');
 const { base } = require('./utils/loaders');
 const rteVersion = require('agora-rte-sdk/package.json').version;
 
@@ -23,7 +23,6 @@ module.exports = {
     alias: {
       '@onlineclass': path.resolve(ROOT_PATH, 'src'),
       '@res': path.resolve(ROOT_PATH, 'src/resources'),
-      ...ALIAS,
     },
   },
   module: {
@@ -37,7 +36,6 @@ module.exports = {
     new webpackbar(),
     new webpack.DefinePlugin({
       RTE_SDK_VERSION: JSON.stringify(rteVersion),
-
       EDU_SDK_VERSION: JSON.stringify(eduCoreVersion),
       ONLINECLASS_SDK_VERSION: JSON.stringify(onlineclassSDKVersion),
       CLASSROOM_SDK_VERSION: JSON.stringify(onlineclassSDKVersion),

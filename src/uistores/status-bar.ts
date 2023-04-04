@@ -10,7 +10,7 @@ import {
   AgoraRteMediaSourceState,
   AgoraRteVideoSourceType,
 } from 'agora-rte-sdk';
-import { transI18n } from 'agora-common-libs';
+import { transI18n } from 'agora-common-libs/lib/i18n';
 export class StatusBarUIStore extends EduUIStoreBase {
   get roomName() {
     return this.getters.roomName;
