@@ -21,6 +21,7 @@ import { GalleryUIStore } from './gallery-view';
 import { StreamUIStore } from './stream';
 import { Board } from '../extension/board';
 import { WidgetUIStore } from './widget';
+import { PresentationUIStore } from './presentaion-view';
 
 export class OnlineclassUIStore {
   @observable
@@ -36,6 +37,7 @@ export class OnlineclassUIStore {
   readonly galleryUIStore: GalleryUIStore;
   readonly streamUIStore: StreamUIStore;
   readonly widgetUIStore: WidgetUIStore;
+  readonly presentationUIStore: PresentationUIStore;
   readonly boardApi = new Board();
   constructor() {
     this.classroomStore = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass);
@@ -47,6 +49,7 @@ export class OnlineclassUIStore {
     this.galleryUIStore = new GalleryUIStore(this.classroomStore, this.getters);
     this.streamUIStore = new StreamUIStore(this.classroomStore, this.getters);
     this.widgetUIStore = new WidgetUIStore(this.classroomStore, this.getters);
+    this.presentationUIStore = new PresentationUIStore(this.classroomStore, this.getters);
   }
 
   get initialized() {
