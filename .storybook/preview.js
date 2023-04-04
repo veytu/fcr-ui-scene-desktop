@@ -1,4 +1,7 @@
 import '@onlineclass/preflight.css';
+import { setTailwindConfig } from '@ui-kit-utils/tailwindcss';
+import tailwindConfig from '../tailwind.config';
+setTailwindConfig(tailwindConfig);
 
 export const globalTypes = {
   locale: {
