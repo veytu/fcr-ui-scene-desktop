@@ -11,7 +11,6 @@ import { convertStreamUIStatus, StreamWindowContext } from '../window/context';
 export const GalleryView = observer(() => {
   const {
     layoutUIStore: { layout },
-    streamUIStore: { cameraUIStreams },
     galleryUIStore: { mainViewStream },
   } = useStore();
   return (
@@ -19,7 +18,7 @@ export const GalleryView = observer(() => {
       <div className={classnames(`fcr-layout-content-main-view`)}>
         {mainViewStream ? (
           <StreamWindowContext.Provider
-            value={convertStreamUIStatus(mainViewStream, 'main-view', layout, cameraUIStreams)}>
+            value={convertStreamUIStatus(mainViewStream, 'main-view', layout, false)}>
             <StreamWindow></StreamWindow>
           </StreamWindowContext.Provider>
         ) : (
@@ -65,7 +64,7 @@ const GalleryContainer = observer(() => {
                 return (
                   <div key={stream.stream.streamUuid} style={{ ...outerSize }}>
                     <StreamWindowContext.Provider
-                      value={convertStreamUIStatus(stream, 'main-view', layout, cameraUIStreams)}>
+                      value={convertStreamUIStatus(stream, 'main-view', layout, true)}>
                       <StreamWindow></StreamWindow>
                     </StreamWindowContext.Provider>
                   </div>
