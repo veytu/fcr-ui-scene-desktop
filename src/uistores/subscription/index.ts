@@ -1,5 +1,5 @@
 import { AgoraRteScene, Log } from 'agora-rte-sdk';
-import { computed, IReactionDisposer, Lambda, reaction } from 'mobx';
+import { computed, reaction } from 'mobx';
 import { SceneSubscription } from './abstract';
 import { EduUIStoreBase } from '../base';
 import { MainRoomSubscription } from './main-room';
