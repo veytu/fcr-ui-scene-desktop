@@ -5,10 +5,7 @@
   "repository": "ssh://git@git.agoralab.co/aduc/online-class-desktop.git",
   "author": "renyifei <renyifei@agora.io>",
   "license": "MIT",
-  "scripts": {
-    "storybook": "start-storybook -p 6006 --no-manager-cache",
-    "convertsvg": "ts-node --skipProject tools/convertsvg"
-  },
+  "scripts": {},
   "dependencies": {
     "@types/react": "17.0.44",
     "@types/react-dom": "16.9.2",
