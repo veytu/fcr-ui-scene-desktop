@@ -86,6 +86,7 @@
 .fcr-gallery-view-pager {
   top: 0;
   left: 0;
+  z-index: 1;
 }
 
 .fcr-layout-board-view {

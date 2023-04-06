@@ -22,6 +22,7 @@ import { StreamUIStore } from './stream';
 import { Board } from '../extension/board';
 import { WidgetUIStore } from './widget';
 import { PresentationUIStore } from './presentaion-view';
+import { SubscriptionUIStore } from './subscription';
 
 export class OnlineclassUIStore {
   @observable
@@ -38,6 +39,8 @@ export class OnlineclassUIStore {
   readonly streamUIStore: StreamUIStore;
   readonly widgetUIStore: WidgetUIStore;
   readonly presentationUIStore: PresentationUIStore;
+  readonly subscriptionUIStore: SubscriptionUIStore;
+
   readonly boardApi = new Board();
   constructor() {
     this.classroomStore = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass);
@@ -50,6 +53,7 @@ export class OnlineclassUIStore {
     this.streamUIStore = new StreamUIStore(this.classroomStore, this.getters);
     this.widgetUIStore = new WidgetUIStore(this.classroomStore, this.getters);
     this.presentationUIStore = new PresentationUIStore(this.classroomStore, this.getters);
+    this.subscriptionUIStore = new SubscriptionUIStore(this.classroomStore, this.getters);
   }
 
   get initialized() {

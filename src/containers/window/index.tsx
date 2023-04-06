@@ -82,13 +82,23 @@ const StreamPlayer = observer(() => {
     classroomStore: {
       mediaStore: { setupLocalVideo },
     },
+    streamUIStore: { updateVideoDom, removeVideoDom },
   } = useStore();
+
   useEffect(() => {
-    if (stream?.isLocal) {
-      ref.current && setupLocalVideo(ref.current, false, renderMode);
-    } else {
+    if (stream) {
+      if (stream.isLocal) {
+        ref.current && setupLocalVideo(ref.current, false, renderMode);
+      } else {
+        if (ref.current) {
+          updateVideoDom(stream.stream.streamUuid, ref.current);
+        }
+        return () => {
+          removeVideoDom(stream.stream.streamUuid);
+        };
+      }
     }
-  }, [stream]);
+  }, [stream?.stream.streamUuid]);
 
   return <div ref={ref} className="fcr-stream-window-player"></div>;
 });
