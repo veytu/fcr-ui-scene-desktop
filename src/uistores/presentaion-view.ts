@@ -4,10 +4,23 @@ import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { AgoraRteEventType, Lodash } from 'agora-rte-sdk';
 export class PresentationUIStore extends EduUIStoreBase {
   @observable mainViewStream: EduStreamUI | null = null;
+  @observable showListView = true;
   pageSize = 6;
   @observable currentPage = 1;
+  @action.bound
+  setCurrentPage(page: number) {
+    this.currentPage = page;
+  }
+  @action.bound
+  toggleShowListView() {
+    this.showListView = !this.showListView;
+  }
+
   @computed get totalPage() {
     return Math.ceil(this.getters.cameraUIStreams.length / this.pageSize);
+  }
+  @computed get showPager() {
+    return this.totalPage > 1;
   }
   @computed get listViewStreamsByPage() {
     const start = (this.currentPage - 1) * this.pageSize;
@@ -33,7 +46,14 @@ export class PresentationUIStore extends EduUIStoreBase {
     volumes.forEach((volume, key) => {
       if (volume * 100 > 50) activeStreamUuid = key;
     });
-    if (activeStreamUuid) this.setMainViewStream(activeStreamUuid);
+    if (activeStreamUuid && !this.getters.screenShareUIStream)
+      this.setMainViewStream(activeStreamUuid);
+  }
+  @action.bound
+  private _handleMainCameraStream() {
+    if (!this.getters.screenShareUIStream) {
+      this.mainViewStream = this.getters.cameraUIStreams[0];
+    }
   }
   onDestroy(): void {}
   onInstall(): void {
@@ -63,16 +83,27 @@ export class PresentationUIStore extends EduUIStoreBase {
     this._disposers.push(
       reaction(
         () => {
-          return this.getters.cameraUIStreams;
+          return this.getters.screenShareUIStream;
         },
-        (cameraUIStreams) => {
-          if (cameraUIStreams.length === 1) {
+        (screenShareUIStream) => {
+          console.log(screenShareUIStream, 'screenShareUIStream');
+          if (screenShareUIStream) {
             runInAction(() => {
-              this.mainViewStream = cameraUIStreams[0];
+              this.mainViewStream = screenShareUIStream;
             });
+          } else {
+            runInAction(() => {
+              this.mainViewStream = null;
+            });
+            this._handleMainCameraStream();
           }
         },
       ),
+    );
+    this._disposers.push(
+      reaction(() => {
+        return this.getters.cameraUIStreams;
+      }, this._handleMainCameraStream),
     );
   }
 }

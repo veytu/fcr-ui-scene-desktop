@@ -13,10 +13,19 @@
   flex: 1;
   background-color: aquamarine;
 }
+.fcr-layout-content-list-view {
+  position: relative;
+}
 .fcr-layout-content-list-on-top .fcr-layout-content-list-view {
   @apply fcr-bg-2;
   height: 191px;
   padding-top: 57px;
+  transition: all 0.2s;
+  overflow: hidden;
+}
+.fcr-layout-content-list-view.fcr-layout-content-list-view-hide {
+  height: 0;
+  padding: 0;
 }
 /** list-on-rigth **/
 .fcr-layout-content-list-on-right {
@@ -35,6 +44,7 @@
   width: 210px;
   padding-top: 57px;
   padding-bottom: 66px;
+  transition: all 0.2s;
 }
 /** grid **/
 
@@ -55,19 +65,23 @@
 
 .fcr-layout-content-video-list {
   @apply fcr-bg-2;
-  height: 100%;
+  flex: 1;
   display: flex;
   gap: 8px;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 .fcr-layout-content-video-list-row {
   flex-direction: row;
   align-items: start;
 }
+
 .fcr-layout-content-video-list-col {
   flex-direction: column;
   align-items: center;
 }
+
 .fcr-gallery-view-container {
   width: 100%;
   height: 100%;
@@ -96,4 +110,62 @@
   width: 100%;
   height: 100%;
   z-index: 10;
+}
+
+.fcr-layout-content-list-view-collapse-button-row {
+  height: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fcr-layout-content-list-view-collapse-button-row svg {
+  transform: rotate(-90deg);
+}
+.fcr-layout-content-list-view-collapse-button-row:hover {
+  @apply fcr-bg-1;
+}
+
+.fcr-layout-content-list-view-collapse-button-col {
+  @apply fcr-bg-2;
+  position: absolute;
+  width: 24px;
+  height: 77px;
+  left: -24px;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  cursor: pointer;
+}
+.fcr-layout-content-list-view-collapse-button-col.fcr-layout-content-list-view-collapse-button-collapsed
+  svg {
+  transform: rotate(180deg);
+}
+/** listview transition **/
+
+.fcr-layout-content-list-on-top .fcr-layout-content-list-view-exit-active,
+.fcr-layout-content-list-on-top .fcr-layout-content-list-view-exit-done {
+  height: 0;
+  padding: 0;
+}
+.fcr-layout-content-list-on-top .fcr-layout-content-list-view-enter-active,
+.fcr-layout-content-list-on-top .fcr-layout-content-list-view-enter-done {
+  height: 191px;
+  padding-top: 57px;
+}
+.fcr-layout-content-list-on-right .fcr-layout-content-list-view-exit-active,
+.fcr-layout-content-list-on-right .fcr-layout-content-list-view-exit-done {
+  width: 0;
+  padding: 0;
+}
+
+.fcr-layout-content-list-on-right .fcr-layout-content-list-view-enter-active,
+.fcr-layout-content-list-on-right .fcr-layout-content-list-view-enter-done {
+  width: 210px;
 }

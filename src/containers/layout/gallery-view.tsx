@@ -13,7 +13,13 @@ export const GalleryView = observer(() => {
   const {
     layoutUIStore: { layout },
     galleryUIStore: { mainViewStream },
+    streamUIStore: { subscribeMass },
   } = useStore();
+  useEffect(() => {
+    if (mainViewStream) {
+      subscribeMass([mainViewStream.stream]);
+    }
+  }, [mainViewStream]);
   return (
     <div className={classnames(`fcr-layout-content-${layout}`)}>
       <div className={classnames(`fcr-layout-content-main-view`)}>

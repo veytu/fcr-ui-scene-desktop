@@ -6,37 +6,65 @@ import './index.css';
 import { StreamWindow } from '../window';
 import { convertStreamUIStatus, StreamWindowContext } from '../window/context';
 import { useEffect } from 'react';
+import { ListViewFloatPagination } from '@components/pagination';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
+import { CSSTransition } from 'react-transition-group';
 export const PresentationView = observer(() => {
   const {
     streamUIStore: { subscribeMass },
     layoutUIStore: { layout },
-    presentationUIStore: { mainViewStream, listViewStreamsByPage },
+    presentationUIStore: {
+      mainViewStream,
+      listViewStreamsByPage,
+      totalPage,
+      currentPage,
+      setCurrentPage,
+      showPager,
+      showListView,
+    },
   } = useStore();
   useEffect(() => {
+    if (mainViewStream) {
+      subscribeMass([mainViewStream.stream]);
+    }
     subscribeMass(listViewStreamsByPage.map((stream) => stream.stream));
-  }, [listViewStreamsByPage]);
+  }, [listViewStreamsByPage, mainViewStream]);
+  const direction =
+    layout === Layout.ListOnTop ? 'row' : layout === Layout.ListOnRight ? 'col' : 'row';
   return (
     <div className={classnames(`fcr-layout-content-${layout}`)}>
-      <div className={classnames(`fcr-layout-content-list-view`)}>
-        <div
-          className={classnames(`fcr-layout-content-video-list`, {
-            'fcr-layout-content-video-list-row': layout === Layout.ListOnTop,
-            'fcr-layout-content-video-list-col': layout === Layout.ListOnRight,
-          })}>
-          {listViewStreamsByPage.map((stream) => {
-            const sideStreamSize = { width: 192, height: 192 * 0.5625 };
+      <CSSTransition timeout={200} in={showListView} classNames={'fcr-layout-content-list-view'}>
+        <div className={classnames(`fcr-layout-content-list-view`)}>
+          <div
+            className={classnames(
+              `fcr-layout-content-video-list`,
+              `fcr-layout-content-video-list-${direction}`,
+            )}>
+            {showPager && (
+              <ListViewFloatPagination
+                onChange={setCurrentPage}
+                direction={direction}
+                total={totalPage}
+                current={currentPage}></ListViewFloatPagination>
+            )}
 
-            return (
-              <div key={stream.stream.streamUuid} style={{ ...sideStreamSize }}>
-                <StreamWindowContext.Provider
-                  value={convertStreamUIStatus(stream, 'list-view', layout, false)}>
-                  <StreamWindow></StreamWindow>
-                </StreamWindowContext.Provider>
-              </div>
-            );
-          })}
+            {listViewStreamsByPage.map((stream) => {
+              const sideStreamSize = { width: 192, height: 114 };
+
+              return (
+                <div key={stream.stream.streamUuid} style={{ ...sideStreamSize }}>
+                  <StreamWindowContext.Provider
+                    value={convertStreamUIStatus(stream, 'list-view', layout, false)}>
+                    <StreamWindow></StreamWindow>
+                  </StreamWindowContext.Provider>
+                </div>
+              );
+            })}
+          </div>
+          <ListViewCollapseButton></ListViewCollapseButton>
         </div>
-      </div>
+      </CSSTransition>
+
       <div className={classnames(`fcr-layout-content-main-view`)}>
         {mainViewStream ? (
           <StreamWindowContext.Provider
@@ -46,6 +74,25 @@ export const PresentationView = observer(() => {
         ) : null}
         <div className="fcr-layout-board-view" />
       </div>
+    </div>
+  );
+});
+const ListViewCollapseButton = observer(() => {
+  const {
+    layoutUIStore: { layout },
+    presentationUIStore: { toggleShowListView, showListView },
+  } = useStore();
+  const direction =
+    layout === Layout.ListOnTop ? 'row' : layout === Layout.ListOnRight ? 'col' : 'row';
+  return (
+    <div
+      onClick={toggleShowListView}
+      className={classnames(
+        'fcr-layout-content-list-view-collapse-button',
+        `fcr-layout-content-list-view-collapse-button-${direction}`,
+        { 'fcr-layout-content-list-view-collapse-button-collapsed': !showListView },
+      )}>
+      <SvgImg type={SvgIconEnum.FCR_RIGHT2} size={48}></SvgImg>
     </div>
   );
 });

@@ -20,23 +20,36 @@ export class GalleryUIStore extends EduUIStoreBase {
   setCurrentPage(page: number) {
     this.currentPage = page;
   }
+  @action.bound
+  private _handleMainCameraStream() {
+    if (!this.getters.screenShareUIStream) {
+      if (this.getters.cameraUIStreams.length === 1) {
+        this.mainViewStream = this.getters.cameraUIStreams[0];
+      } else {
+        this.mainViewStream = null;
+      }
+    }
+  }
   onDestroy(): void {}
   onInstall(): void {
     this._disposers.push(
       reaction(
         () => {
-          return this.getters.cameraUIStreams;
+          return this.getters.screenShareUIStream;
         },
-        (cameraUIStreams) => {
-          if (cameraUIStreams.length === 1) {
-            runInAction(() => {
-              this.mainViewStream = cameraUIStreams[0];
-            });
+        (screenShareUIStream) => {
+          if (screenShareUIStream) {
+            this.mainViewStream = screenShareUIStream;
           } else {
-            this.mainViewStream = null;
+            this._handleMainCameraStream();
           }
         },
       ),
+    );
+    this._disposers.push(
+      reaction(() => {
+        return this.getters.cameraUIStreams;
+      }, this._handleMainCameraStream),
     );
   }
 }

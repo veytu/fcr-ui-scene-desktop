@@ -11,6 +11,8 @@ import { observer } from 'mobx-react';
 import { StatusBarInfo, StatusBarRoomName } from './room-info';
 import { FullscreenButton } from './fullscreen';
 import { getConfig } from '@onlineclass/utils/launch-options-holder';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
+import { Layout } from '@onlineclass/uistores/type';
 
 export const StatusBar = observer(() => {
   const {
@@ -47,6 +49,7 @@ export const StatusBar = observer(() => {
         <LayoutSwitch></LayoutSwitch>
         <FullscreenButton></FullscreenButton>
       </div>
+      <StatusBarCollapeButton></StatusBarCollapeButton>
     </div>
   );
 });
@@ -59,3 +62,15 @@ export const StatusBarItemWrapper: FC<React.PropsWithChildren> = (props) => {
     </div>
   );
 };
+const StatusBarCollapeButton = observer(() => {
+  const {
+    presentationUIStore: { showListView, toggleShowListView },
+    layoutUIStore: { layout },
+  } = useStore();
+  const visible = !showListView && layout === Layout.ListOnTop;
+  return visible ? (
+    <div className="fcr-status-bar-collapse-button" onClick={toggleShowListView}>
+      <SvgImg type={SvgIconEnum.FCR_UP2} size={48}></SvgImg>
+    </div>
+  ) : null;
+});

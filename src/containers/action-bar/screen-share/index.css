@@ -16,6 +16,7 @@
   width: fit-content;
   padding-left: 20px;
   padding-right: 4px;
+  z-index: 20;
 }
 .fcr-screen-share-status-bar span {
   @apply fcr-text-1;

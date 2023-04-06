@@ -37,7 +37,14 @@ export class Getters {
   get cameraUIStreams() {
     return Array.from(this.cameraStreams).map((stream) => new EduStreamUI(stream));
   }
-
+  @computed
+  get screenShareUIStream() {
+    const streamUuid = this._classroomUIStore.classroomStore.roomStore
+      .screenShareStreamUuid as string;
+    const stream =
+      this._classroomUIStore.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
+    return stream ? new EduStreamUI(stream) : null;
+  }
   userCameraStreamByUserUuid = computedFn((userUuid: string) => {
     const cameraStreams: EduStream[] = [];
     this.cameraStreams.forEach((stream) => {
