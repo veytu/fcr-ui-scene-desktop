@@ -32,7 +32,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   get noAvailabelStream() {
     return (
       this.getters.cameraUIStreams.length <= 1 &&
-      !this.getters.cameraUIStreams[0]?.isCameraStreamPublished
+      !this.getters.cameraUIStreams[0]?.isVideoStreamPublished
     );
   }
   get disableClearScreen() {

@@ -24,10 +24,10 @@ export class EduStreamUI {
     return generateShortUserName(this.userName);
   }
 
-  get isCameraDeviceEnabled() {
+  get isVideoDeviceEnabled() {
     return this.stream.videoSourceState === AgoraRteMediaSourceState.started;
   }
-  get isCameraStreamPublished() {
+  get isVideoStreamPublished() {
     return this.stream.videoState === AgoraRteMediaPublishState.Published;
   }
 
