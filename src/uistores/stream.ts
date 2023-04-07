@@ -2,7 +2,7 @@ import { EduStream } from 'agora-edu-core';
 import { AgoraRteVideoSourceType, AGRtcState, bound, Scheduler } from 'agora-rte-sdk';
 import { action, computed, observable, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
-
+import { computedFn } from 'mobx-utils';
 export class StreamUIStore extends EduUIStoreBase {
   // private static readonly PAGE_SIZE_BY_MODE = {
   //   [ViewMode.Divided]: 20,
@@ -123,7 +123,9 @@ export class StreamUIStore extends EduUIStoreBase {
       this.doneSub = doneSub;
     });
   }
-
+  isUserGranted = computedFn((userUuid: string) => {
+    return this.getters.boardApi.grantedUsers.has(userUuid);
+  });
   onDestroy(): void {
     this._subscribeTask?.stop();
   }

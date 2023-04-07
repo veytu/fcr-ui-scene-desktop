@@ -18,7 +18,7 @@ import { useStore } from '@onlineclass/utils/hooks/use-store';
 export const ActionBar = observer(() => {
   const {
     layoutUIStore: { showActiobBar, setIsPointingBar },
-    actionBarUIStore: { showLeaveOption },
+    actionBarUIStore: { showLeaveOption, showRecord, showScreenShare, showToolBox, showWhiteBoard },
   } = useStore();
   return (
     <div
@@ -38,10 +38,10 @@ export const ActionBar = observer(() => {
             <CameraDevice></CameraDevice>
           </div>
           <div className="fcr-action-bar-mid">
-            <ToolBox></ToolBox>
-            <Whiteboard></Whiteboard>
-            <ScreenShare></ScreenShare>
-            <Record></Record>
+            {showToolBox && <ToolBox></ToolBox>}
+            {showWhiteBoard && <Whiteboard></Whiteboard>}
+            {showScreenShare && <ScreenShare></ScreenShare>}
+            {showRecord && <Record></Record>}
           </div>
           <div className="fcr-action-bar-right">
             <RaiseHands></RaiseHands>

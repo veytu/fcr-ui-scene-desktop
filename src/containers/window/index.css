@@ -40,6 +40,7 @@
   left: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
 }
 .fcr-stream-window-user-label {
   @apply fcr-rounded-24 fcr-bg-2;
@@ -64,6 +65,7 @@
   display: flex;
   padding-right: 10px;
 }
+
 .fcr-stream-window-user-name {
   @apply fcr-text-1 fcr-font-medium;
   height: 24px;
@@ -92,7 +94,9 @@
   display: flex;
   padding-right: 8px;
 }
-
+.fcr-stream-window-user-label-small .fcr-stream-window-user-role > span:only-child {
+  padding-left: 8px;
+}
 .fcr-stream-window-student-interact-group,
 .fcr-stream-window-actions {
   display: flex;
@@ -102,6 +106,7 @@
   top: 20px;
   left: 20px;
   transition: all 0.2s;
+  pointer-events: all;
 }
 .fcr-stream-window-actions {
   left: auto;
@@ -168,6 +173,7 @@
   top: 20px;
   right: 58px;
   transition: all 0.2s;
+  pointer-events: all;
 }
 /** small size **/
 .fcr-stream-window-student-interact-group-small,
@@ -216,4 +222,16 @@
   font-size: 10px;
   line-height: 10px;
   padding: 0 6px;
+}
+
+.fcr-stream-window-bottom-right-mic {
+  @apply fcr-rounded-full fcr-bg-2;
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

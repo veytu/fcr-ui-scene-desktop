@@ -18,6 +18,9 @@ export class StatusBarUIStore extends EduUIStoreBase {
   get roomUuid() {
     return this.getters.roomUuid;
   }
+  get isHost() {
+    return this.getters.isHost;
+  }
   /**
    * CPU 用量
    * @returns

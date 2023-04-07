@@ -3,6 +3,7 @@ import { EduUIStoreBase } from './base';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { AgoraRteEventType, Lodash } from 'agora-rte-sdk';
 export class PresentationUIStore extends EduUIStoreBase {
+  @observable isMainViewStreamPinned = false;
   @observable mainViewStream: EduStreamUI | null = null;
   @observable showListView = true;
   pageSize = 6;
@@ -15,7 +16,15 @@ export class PresentationUIStore extends EduUIStoreBase {
   toggleShowListView() {
     this.showListView = !this.showListView;
   }
-
+  @action.bound
+  pinStream(streamUuid: string) {
+    this.isMainViewStreamPinned = true;
+    this.setMainViewStream(streamUuid);
+  }
+  @action.bound
+  removePinnedStream() {
+    this.isMainViewStreamPinned = false;
+  }
   @computed get totalPage() {
     return Math.ceil(this.getters.cameraUIStreams.length / this.pageSize);
   }
@@ -29,10 +38,10 @@ export class PresentationUIStore extends EduUIStoreBase {
   }
 
   @action
-  setMainViewStream(streamUuid: string) {
+  setMainViewStream(streamUuid: string | null) {
+    if (this.isMainViewStreamPinned) return;
     this.mainViewStream =
-      this.getters.cameraUIStreams.find((stream) => stream.stream.streamUuid === streamUuid) ||
-      null;
+      this.getters.videoUIStreams.find((stream) => stream.stream.streamUuid === streamUuid) || null;
   }
   @action
   clearMainViewStream() {
@@ -41,7 +50,6 @@ export class PresentationUIStore extends EduUIStoreBase {
   @Lodash.debounced(3000)
   @action.bound
   _handleStreamVolumes(volumes: Map<string, number>) {
-    console.log(volumes, 'volumes');
     let activeStreamUuid = '';
     volumes.forEach((volume, key) => {
       if (volume * 100 > 50) activeStreamUuid = key;
@@ -52,7 +60,7 @@ export class PresentationUIStore extends EduUIStoreBase {
   @action.bound
   private _handleMainCameraStream() {
     if (!this.getters.screenShareUIStream) {
-      this.mainViewStream = this.getters.cameraUIStreams[0];
+      this.setMainViewStream(this.getters.cameraUIStreams[0].stream.streamUuid);
     }
   }
   onDestroy(): void {}
@@ -86,15 +94,11 @@ export class PresentationUIStore extends EduUIStoreBase {
           return this.getters.screenShareUIStream;
         },
         (screenShareUIStream) => {
-          console.log(screenShareUIStream, 'screenShareUIStream');
           if (screenShareUIStream) {
-            runInAction(() => {
-              this.mainViewStream = screenShareUIStream;
-            });
+            this.setMainViewStream(screenShareUIStream.stream.streamUuid);
           } else {
-            runInAction(() => {
-              this.mainViewStream = null;
-            });
+            this.setMainViewStream(null);
+
             this._handleMainCameraStream();
           }
         },

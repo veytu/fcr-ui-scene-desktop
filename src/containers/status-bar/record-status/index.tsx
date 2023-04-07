@@ -10,7 +10,7 @@ const colors = themeVal('colors');
 
 export const RecordStatus = observer(() => {
   const {
-    statusBarUIStore: { isRecording, isRecordStoped, isRecordStarting },
+    statusBarUIStore: { isRecording, isRecordStoped, isRecordStarting, isHost },
   } = useStore();
   return !isRecordStoped ? (
     <StatusBarItemWrapper>
@@ -24,12 +24,14 @@ export const RecordStatus = observer(() => {
             type={SvgIconEnum.FCR_RECORDING_STOP}></SvgImg>
           <span>Recording</span>
         </div>
-        <ToolTip content="Click to pause">
-          <div className="fcr-status-bar-record-action fcr-divider">
-            <SvgImg
-              type={isRecording ? SvgIconEnum.FCR_STOP : SvgIconEnum.FCR_RECORDING_PLAY}></SvgImg>
-          </div>
-        </ToolTip>
+        {isHost && (
+          <ToolTip content="Click to pause">
+            <div className="fcr-status-bar-record-action fcr-divider">
+              <SvgImg
+                type={isRecording ? SvgIconEnum.FCR_STOP : SvgIconEnum.FCR_RECORDING_PLAY}></SvgImg>
+            </div>
+          </ToolTip>
+        )}
       </div>
     </StatusBarItemWrapper>
   ) : null;
