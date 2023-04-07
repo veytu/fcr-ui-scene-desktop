@@ -37,7 +37,7 @@ export class Getters {
   get cameraUIStreams() {
     return Array.from(this.cameraStreams).map((stream) => new EduStreamUI(stream));
   }
-  
+
   userCameraStreamByUserUuid = computedFn((userUuid: string) => {
     const cameraStreams: EduStream[] = [];
     this.cameraStreams.forEach((stream) => {
@@ -48,5 +48,11 @@ export class Getters {
 
   get layoutReady() {
     return this._classroomUIStore.layoutUIStore.layoutReady;
+  }
+
+  get isBoardWidgetActive() {
+    return this._classroomUIStore.widgetUIStore.widgetInstanceList.some((widget) => {
+      return widget.widgetName === 'netlessBoard';
+    });
   }
 }

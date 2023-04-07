@@ -61,8 +61,12 @@ module.exports = {
       'gradient-2': `linear-gradient(90deg, ${theme('colors.custom-3')} 2.67%, ${theme(
         'colors.custom-4',
       )} 100%)`,
-      // divider
-      'gradient-3': `linear-gradient(${colorAlpha(theme('colors.notsb-inverse'), 0)} 0%, ${theme(
+      // divider vertical
+      'gradient-3': `linear-gradient(to bottom, ${colorAlpha(theme('colors.notsb-inverse'), 0)} 0%, ${theme(
+        'colors.notsb-inverse',
+      )} 52.6%, ${colorAlpha(theme('colors.notsb-inverse'), 0)} 97.92%)`,
+      // divider horizontal
+      'gradient-4': `linear-gradient(to left, ${colorAlpha(theme('colors.notsb-inverse'), 0)} 0%, ${theme(
         'colors.notsb-inverse',
       )} 52.6%, ${colorAlpha(theme('colors.notsb-inverse'), 0)} 97.92%)`,
     }),

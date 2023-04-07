@@ -1,5 +1,5 @@
 import { EduUIStoreBase } from './base';
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, reaction } from 'mobx';
 import { DialogType, Layout } from './type';
 import { bound, Scheduler } from 'agora-rte-sdk';
 import { v4 as uuidv4 } from 'uuid';
@@ -109,5 +109,16 @@ export class LayoutUIStore extends EduUIStoreBase {
     document.addEventListener('mouseleave', this.handleMouseLeave);
 
     this.resetClearScreenTask();
+
+    this._disposers.push(
+      reaction(
+        () => this.getters.isBoardWidgetActive,
+        (isBoardWidgetActive) => {
+          if (isBoardWidgetActive) {
+            this.setLayout(Layout.ListOnTop);
+          }
+        },
+      ),
+    );
   }
 }

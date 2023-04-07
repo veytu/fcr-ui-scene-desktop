@@ -21,9 +21,9 @@ export class PresentationUIStore extends EduUIStoreBase {
   onInstall(): void {
     this._disposers.push(
       reaction(
-        () => this.getters.boardApi.connected,
-        () => {
-          if (this.getters.boardApi.connected) {
+        () => this.getters.isBoardWidgetActive,
+        (isBoardWidgetActive) => {
+          if (isBoardWidgetActive) {
             this.clearMainViewStream();
             // stop timer
           } else {
