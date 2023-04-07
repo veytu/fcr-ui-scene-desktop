@@ -24,10 +24,8 @@ export const PresentationView = observer(() => {
     },
   } = useStore();
   useEffect(() => {
-    if (mainViewStream) {
-      subscribeMass([mainViewStream.stream]);
-    }
-    subscribeMass(listViewStreamsByPage.map((stream) => stream.stream));
+    const mainViewStreamList = mainViewStream ? [mainViewStream] : [];
+    subscribeMass(listViewStreamsByPage.concat(mainViewStreamList).map((stream) => stream.stream));
   }, [listViewStreamsByPage, mainViewStream]);
   const direction =
     layout === Layout.ListOnTop ? 'row' : layout === Layout.ListOnRight ? 'col' : 'row';

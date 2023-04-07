@@ -98,7 +98,7 @@ const StreamPlayer = observer(() => {
         };
       }
     }
-  }, [stream?.stream.streamUuid]);
+  }, [stream, stream?.isLocal, stream?.stream.streamUuid]);
 
   return <div ref={ref} className="fcr-stream-window-player"></div>;
 });
