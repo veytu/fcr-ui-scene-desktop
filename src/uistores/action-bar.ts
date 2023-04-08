@@ -11,6 +11,18 @@ import {
 import { isElectron } from '@onlineclass/utils/check';
 import { getConfig } from '@onlineclass/utils/launch-options-holder';
 export class ActionBarUIStore extends EduUIStoreBase {
+  @computed get showToolBox() {
+    return this.getters.isHost || this.getters.isGranted;
+  }
+  @computed get showWhiteBoard() {
+    return this.getters.isHost || this.getters.isGranted;
+  }
+  @computed get showScreenShare() {
+    return this.getters.isHost || this.getters.isGranted;
+  }
+  @computed get showRecord() {
+    return this.getters.isHost;
+  }
   @observable showLeaveOption = false;
 
   shareScreenStateKeeperMap: Map<string, ShareStreamStateKeeper> = new Map();

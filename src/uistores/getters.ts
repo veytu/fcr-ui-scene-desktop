@@ -1,6 +1,6 @@
 import { extractUserStreams } from '@onlineclass/utils/stream';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
-import { EduClassroomConfig, EduStream } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoleTypeEnum, EduStream } from 'agora-edu-core';
 import { AgoraRteVideoSourceType } from 'agora-rte-sdk';
 import { computed } from 'mobx';
 import { computedFn } from 'mobx-utils';
@@ -12,6 +12,10 @@ export class Getters {
   get boardApi() {
     return this._classroomUIStore.boardApi;
   }
+  @computed
+  get isGranted() {
+    return this._classroomUIStore.boardApi.granted;
+  }
 
   get roomName() {
     return EduClassroomConfig.shared.sessionInfo.roomName;
@@ -20,6 +24,29 @@ export class Getters {
     return EduClassroomConfig.shared.sessionInfo.roomUuid;
   }
 
+  get isHost() {
+    return EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
+  }
+
+  get isStudent() {
+    return EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student;
+  }
+  @computed
+  get videoStreams() {
+    const { streamByUserUuid, streamByStreamUuid } =
+      this._classroomUIStore.classroomStore.streamStore;
+    const videoStreams = extractUserStreams(
+      this._classroomUIStore.classroomStore.userStore.users,
+      streamByUserUuid,
+      streamByStreamUuid,
+      [AgoraRteVideoSourceType.Camera, AgoraRteVideoSourceType.ScreenShare],
+    );
+    return videoStreams;
+  }
+  @computed
+  get videoUIStreams() {
+    return Array.from(this.videoStreams).map((stream) => new EduStreamUI(stream));
+  }
   @computed
   get cameraStreams() {
     const { streamByUserUuid, streamByStreamUuid } =
