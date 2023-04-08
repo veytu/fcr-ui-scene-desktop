@@ -14,7 +14,7 @@ const { pack } = require('./utils/loaders');
 const config = {
   mode: 'production',
   entry: {
-    edu_sdk: './src/index.ts',
+    onlineclass_sdk: './src/index',
   },
   output: {
     path: path.resolve(ROOT_PATH, 'lib'),
@@ -56,13 +56,16 @@ const config = {
       patterns: [
         // ai denoiser
         {
-          from: require.resolve('agora-extension-ai-denoiser/external'),
+          from: path.resolve(ROOT_PATH, '../../node_modules/agora-extension-ai-denoiser/external'),
           to: path.resolve(ROOT_PATH, './lib/externals/extensions/ai-denoiser'),
           noErrorOnMissing: true,
         },
         //virtual background
         {
-          from: require.resolve('agora-extension-virtual-background/wasms'),
+          from: path.resolve(
+            ROOT_PATH,
+            '../../node_modules/agora-extension-virtual-background/wasms',
+          ),
           to: path.resolve(
             ROOT_PATH,
             './lib/externals/extensions/agora-extension-virtual-background',

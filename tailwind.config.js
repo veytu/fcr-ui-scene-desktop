@@ -3,6 +3,7 @@ const { colorDepth, colorAlpha } = require('./webpack/utils/color-palette');
 module.exports = {
   prefix: 'fcr-',
   darkMode: 'class', // or 'media' or 'class'
+  purge: false,
   theme: {
     colors: {
       // Fixed colors: not change along with theme

@@ -8,8 +8,8 @@ import {
   AgoraRteMediaSourceState,
   bound,
 } from 'agora-rte-sdk';
-import { AgoraOnlineclassSDK } from '..';
 import { isElectron } from '@onlineclass/utils/check';
+import { getConfig } from '@onlineclass/utils/launch-options-holder';
 export class ActionBarUIStore extends EduUIStoreBase {
   @computed get showToolBox() {
     return this.getters.isHost || this.getters.isGranted;
@@ -48,9 +48,11 @@ export class ActionBarUIStore extends EduUIStoreBase {
   get recordArgs() {
     const { recordUrl, recordRetryTimeout } = EduClassroomConfig.shared;
 
+    const { language } = getConfig();
+
     const args = {
       webRecordConfig: {
-        rootUrl: `${recordUrl}?language=${AgoraOnlineclassSDK.language}`,
+        rootUrl: `${recordUrl}?language=${language}`,
         videoBitrate: 3000,
       },
       mode: RecordMode.Web,

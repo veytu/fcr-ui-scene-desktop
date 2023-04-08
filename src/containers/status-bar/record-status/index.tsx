@@ -6,12 +6,13 @@ import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { ToolTip } from '@components/tooltip';
 import classnames from 'classnames';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
-const colors = themeVal('colors');
 
 export const RecordStatus = observer(() => {
   const {
     statusBarUIStore: { isRecording, isRecordStoped, isRecordStarting, isHost },
   } = useStore();
+  const colors = themeVal('colors');
+
   return !isRecordStoped ? (
     <StatusBarItemWrapper>
       <div className="fcr-status-bar-record">

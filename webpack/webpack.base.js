@@ -39,7 +39,6 @@ module.exports = {
       RTE_SDK_VERSION: JSON.stringify(rteVersion),
       EDU_SDK_VERSION: JSON.stringify(eduCoreVersion),
       ONLINECLASS_SDK_VERSION: JSON.stringify(onlineclassSDKVersion),
-      CLASSROOM_SDK_VERSION: JSON.stringify(onlineclassSDKVersion),
     }),
   ],
   stats: {
