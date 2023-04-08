@@ -85,10 +85,13 @@ export class AgoraOnlineclassSDK {
     });
 
     const host = getConfig().host as string;
+    const ignoreUrlRegionPrefix = !!getConfig().ignoreUrlRegionPrefix;
 
     if (host) {
       config.host = host;
     }
+
+    config.ignoreUrlRegionPrefix = ignoreUrlRegionPrefix;
 
     EduClassroomConfig.setConfig(config);
 
@@ -115,6 +118,7 @@ export class AgoraOnlineclassSDK {
    * @param params
    */
   static setParameters(params: string) {
+    Logger.info(`[AgoraOnlineclassSDK]set parameters`, params);
     const { host, ignoreUrlRegionPrefix, logo } = JSON.parse(params) || {};
 
     const config = getConfig() || {};
@@ -123,6 +127,8 @@ export class AgoraOnlineclassSDK {
       config.host = host;
     }
 
+    config.ignoreUrlRegionPrefix = ['dev', 'pre'].some((v) => (config.host as string).includes(v));
+
     if (ignoreUrlRegionPrefix) {
       config.ignoreUrlRegionPrefix = ignoreUrlRegionPrefix;
     }
@@ -130,9 +136,6 @@ export class AgoraOnlineclassSDK {
     if (logo) {
       config.logo = logo;
     }
-
-    config.ignoreUrlRegionPrefix = ['dev', 'pre'].some((v) => (config.host as string).includes(v));
-
     setConfig(config);
   }
 

@@ -59,7 +59,7 @@ export class PresentationUIStore extends EduUIStoreBase {
   }
   @action.bound
   private _handleMainCameraStream() {
-    if (!this.getters.screenShareUIStream) {
+    if (!this.getters.screenShareUIStream && this.getters.cameraUIStreams.length) {
       this.setMainViewStream(this.getters.cameraUIStreams[0].stream.streamUuid);
     }
   }
