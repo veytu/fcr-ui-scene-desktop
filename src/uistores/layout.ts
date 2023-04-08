@@ -31,7 +31,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   @computed
   get noAvailabelStream() {
     return (
-      this.getters.cameraUIStreams.length <= 1 ||
+      this.getters.cameraUIStreams.length < 1 ||
       !this.getters.cameraUIStreams[0]?.isVideoStreamPublished
     );
   }

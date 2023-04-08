@@ -97,6 +97,10 @@
   justify-content: center;
   flex-wrap: wrap;
 }
+.fcr-gallery-view-stream-wrapper-row {
+  display: flex;
+  gap: 8px;
+}
 .fcr-gallery-view-pager {
   top: 0;
   left: 0;
