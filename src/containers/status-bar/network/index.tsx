@@ -3,37 +3,40 @@ import { themeVal } from '@ui-kit-utils/tailwindcss';
 import './index.css';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { AGNetworkQuality } from 'agora-rte-sdk';
-const colors = themeVal('colors');
-const connectionStatus = {
-  [AGNetworkQuality.great]: {
-    color: colors['green'],
-    text: 'Excellent 👍',
-  },
-  [AGNetworkQuality.good]: {
-    color: colors['green'],
-    text: 'Excellent 👍',
-  },
-  [AGNetworkQuality.poor]: {
-    color: colors['yellow'],
-    text: 'Average 💪',
-  },
-  [AGNetworkQuality.bad]: {
-    color: colors['red.6'],
-    text: 'Poor 😭',
-  },
-  [AGNetworkQuality.down]: {
-    color: colors['red.6'],
-    text: 'Poor 😭',
-  },
-  [AGNetworkQuality.unknown]: {
-    color: colors['text-1'],
-    text: 'Unknow',
-  },
-};
+
 export const NetworkConnection = observer(() => {
   const {
     statusBarUIStore: { networkQuality },
   } = useStore();
+
+  const colors = themeVal('colors');
+  const connectionStatus = {
+    [AGNetworkQuality.great]: {
+      color: colors['green'],
+      text: 'Excellent 👍',
+    },
+    [AGNetworkQuality.good]: {
+      color: colors['green'],
+      text: 'Excellent 👍',
+    },
+    [AGNetworkQuality.poor]: {
+      color: colors['yellow'],
+      text: 'Average 💪',
+    },
+    [AGNetworkQuality.bad]: {
+      color: colors['red.6'],
+      text: 'Poor 😭',
+    },
+    [AGNetworkQuality.down]: {
+      color: colors['red.6'],
+      text: 'Poor 😭',
+    },
+    [AGNetworkQuality.unknown]: {
+      color: colors['text-1'],
+      text: 'Unknow',
+    },
+  };
+
   const currentStatus = connectionStatus[networkQuality];
   return (
     <div className="fcr-network-connection">

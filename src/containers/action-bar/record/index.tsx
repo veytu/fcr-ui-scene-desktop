@@ -6,13 +6,14 @@ import './index.css';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
 import classnames from 'classnames';
-const colors = themeVal('colors');
+
 export const Record = observer(() => {
   const {
     statusBarUIStore: { isRecordStarting, isRecordStoped },
     layoutUIStore: { addDialog },
     actionBarUIStore: { startRecording },
   } = useStore();
+  const colors = themeVal('colors');
   const handleRecord = () => {
     if (isRecordStoped) {
       addDialog('confirm', {

@@ -3,11 +3,13 @@ import { SvgIconEnum } from '@components/svg-img';
 import { EduClassroomConfig } from 'agora-edu-core';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import './index.css';
-import { AgoraOnlineclassSDK } from '@onlineclass/index';
 import { ToastApi } from '@components/toast';
+import { getConfig } from '@onlineclass/utils/launch-options-holder';
+
 export const Share = () => {
   const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
-  const { shareUrl } = AgoraOnlineclassSDK;
+
+  const { shareUrl } = getConfig();
 
   return (
     <div className="fcr-share">
@@ -30,10 +32,10 @@ export const Share = () => {
       </div>
       <div className="fcr-share-room-link">
         <span>Link</span>
-        <span>{shareUrl}</span>
+        <span>{shareUrl as string}</span>
       </div>
       <CopyToClipboard
-        text={shareUrl}
+        text={shareUrl as string}
         onCopy={() =>
           ToastApi.open({ toastProps: { type: 'info', content: 'success to copy share link' } })
         }>

@@ -3,6 +3,7 @@ const { colorDepth, colorAlpha } = require('./webpack/utils/color-palette');
 module.exports = {
   prefix: 'fcr-',
   darkMode: 'class', // or 'media' or 'class'
+  purge: false,
   theme: {
     colors: {
       // Fixed colors: not change along with theme
@@ -62,13 +63,21 @@ module.exports = {
         'colors.custom-4',
       )} 100%)`,
       // divider vertical
-      'gradient-3': `linear-gradient(to bottom, ${colorAlpha(theme('colors.notsb-inverse'), 0)} 0%, ${theme(
-        'colors.notsb-inverse',
-      )} 52.6%, ${colorAlpha(theme('colors.notsb-inverse'), 0)} 97.92%)`,
+      'gradient-3': `linear-gradient(to bottom, ${colorAlpha(
+        theme('colors.notsb-inverse'),
+        0,
+      )} 0%, ${theme('colors.notsb-inverse')} 52.6%, ${colorAlpha(
+        theme('colors.notsb-inverse'),
+        0,
+      )} 97.92%)`,
       // divider horizontal
-      'gradient-4': `linear-gradient(to left, ${colorAlpha(theme('colors.notsb-inverse'), 0)} 0%, ${theme(
-        'colors.notsb-inverse',
-      )} 52.6%, ${colorAlpha(theme('colors.notsb-inverse'), 0)} 97.92%)`,
+      'gradient-4': `linear-gradient(to left, ${colorAlpha(
+        theme('colors.notsb-inverse'),
+        0,
+      )} 0%, ${theme('colors.notsb-inverse')} 52.6%, ${colorAlpha(
+        theme('colors.notsb-inverse'),
+        0,
+      )} 97.92%)`,
     }),
     backgroundColor: (theme) => ({
       1: theme('colors.block-1'),

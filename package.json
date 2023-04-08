@@ -1,11 +1,16 @@
 {
   "name": "agora-onlineclass-sdk",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "lib/onlineclass_sdk.bundle.js",
   "repository": "ssh://git@git.agoralab.co/aduc/online-class-desktop.git",
   "author": "renyifei <renyifei@agora.io>",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build:types": "tsc -p tsconfig.json",
+    "build:docs": "typedoc",
+    "pack:npm": "run-s bundle:npm build:types",
+    "bundle:npm": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 webpack --config ./webpack/webpack.pack.js"
+  },
   "dependencies": {
     "@types/react": "17.0.44",
     "@types/react-dom": "16.9.2",
@@ -30,7 +35,10 @@
     "react-use-measure": "2.1.1",
     "mobx": "5.15.4",
     "mobx-react": "6.3.1",
-    "uuid": "3.3.3"
+    "uuid": "3.3.3",
+    "agora-extension-virtual-background": "1.1.1",
+    "agora-extension-beauty-effect": "1.0.1-beta",
+    "agora-extension-ai-denoiser": "1.0.0"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "6.5.13",

@@ -8,11 +8,12 @@ import { themeVal } from '@ui-kit-utils/tailwindcss';
 import { InfoToolTip } from '@components/tooltip/info';
 import { Button } from '@components/button';
 import { createPortal } from 'react-dom';
-const colors = themeVal('colors');
+
 export const ScreenShare = observer(() => {
   const {
     actionBarUIStore: { isLocalScreenSharing, startLocalScreenShare },
   } = useStore();
+  const colors = themeVal('colors');
   const handleScreenShare = () => {
     if (!isLocalScreenSharing) {
       startLocalScreenShare();
