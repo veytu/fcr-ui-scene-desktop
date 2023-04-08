@@ -21,6 +21,7 @@ export const convertStreamUIStatus = (
 
   const topLabelAnimation = renderAtMainView && layout !== Layout.ListOnTop && !isGrid;
   const bottomLabelAnimation = renderAtMainView && !isGrid;
+  const streamWindowBackgroundColorCls = renderAtMainView && !isGrid ? 'fcr-bg-1' : 'fcr-bg-4';
   const showMicrophoneIconOnRoleLabel = renderAtMainView;
   const showMicrophoneIconOnBottomRight = renderAtListView;
   const labelSize = renderAtMainView ? 'large' : 'small';
@@ -48,5 +49,6 @@ export const convertStreamUIStatus = (
     showHostLabel: isHostRemote,
     showActions: !isHostRemote && isHostLocal,
     showInteractLabels: !isHostRemote,
+    streamWindowBackgroundColorCls,
   };
 };

@@ -1,11 +1,20 @@
 import { SvgIconEnum } from '@components/svg-img';
 import { ToolTip } from '@components/tooltip';
+import { useStore } from '@onlineclass/utils/hooks/use-store';
+import { observer } from 'mobx-react-lite';
 import { ActionBarItem } from '..';
 import './index.css';
-export const Participants = () => {
+export const Participants = observer(() => {
+  const {
+    participantsUIStore: {},
+    layoutUIStore: { addDialog },
+  } = useStore();
   return (
     <ToolTip content={'Participants'}>
-      <ActionBarItem icon={SvgIconEnum.FCR_PEOPLE} text={'Participants'}></ActionBarItem>
+      <ActionBarItem
+        onClick={() => addDialog('Participants')}
+        icon={SvgIconEnum.FCR_PEOPLE}
+        text={'Participants'}></ActionBarItem>
     </ToolTip>
   );
-};
+});

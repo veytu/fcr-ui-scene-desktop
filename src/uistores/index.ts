@@ -23,6 +23,7 @@ import { Board } from '../extension/board';
 import { WidgetUIStore } from './widget';
 import { PresentationUIStore } from './presentaion-view';
 import { SubscriptionUIStore } from './subscription';
+import { ParticipantsUIStore } from './participants';
 
 export class OnlineclassUIStore {
   @observable
@@ -40,6 +41,7 @@ export class OnlineclassUIStore {
   readonly widgetUIStore: WidgetUIStore;
   readonly presentationUIStore: PresentationUIStore;
   readonly subscriptionUIStore: SubscriptionUIStore;
+  readonly participantsUIStore: ParticipantsUIStore;
 
   readonly boardApi = new Board();
   constructor() {
@@ -54,6 +56,7 @@ export class OnlineclassUIStore {
     this.widgetUIStore = new WidgetUIStore(this.classroomStore, this.getters);
     this.presentationUIStore = new PresentationUIStore(this.classroomStore, this.getters);
     this.subscriptionUIStore = new SubscriptionUIStore(this.classroomStore, this.getters);
+    this.participantsUIStore = new ParticipantsUIStore(this.classroomStore, this.getters);
   }
 
   get initialized() {

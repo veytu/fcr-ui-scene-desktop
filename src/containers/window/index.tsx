@@ -20,7 +20,7 @@ export const StreamWindow: FC = observer(() => {
     <StreamWindowMouseContext.Provider
       value={{ mouseEnterWindow: mouseEnter, mouseEnterClass: mouseEnterClass }}>
       <div
-        className="fcr-stream-window-wrap"
+        className={classnames('fcr-stream-window-wrap')}
         onMouseLeave={() => {
           setMouseEnter(false);
         }}
@@ -39,7 +39,11 @@ const StreamPlaceHolder: FC = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
   const stream = streamWindowContext?.stream;
   return (
-    <div className={'fcr-stream-window-placeholder'}>
+    <div
+      className={classnames(
+        'fcr-stream-window-placeholder',
+        streamWindowContext?.streamWindowBackgroundColorCls,
+      )}>
       {streamWindowContext?.showRoundedNamePlaceholder ? (
         <div className={'fcr-stream-window-placeholder-rounded'}>
           {generateShortUserName(stream?.fromUser.userName || '')}
@@ -176,9 +180,7 @@ const StreamActions = observer(() => {
 
 const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void }) => {
   const {
-    classroomStore: {
-      roomStore: { sendRewards },
-    },
+    participantsUIStore: { sendReward },
   } = useStore();
 
   const streamWindowContext = useContext(StreamWindowContext);
@@ -203,13 +205,7 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
       label: '奖励',
       onClick: () => {
         const userUuid = streamWindowContext?.stream.fromUser.userUuid;
-        if (userUuid)
-          sendRewards([
-            {
-              userUuid,
-              changeReward: 1,
-            },
-          ]);
+        if (userUuid) sendReward(userUuid);
       },
     },
     {
