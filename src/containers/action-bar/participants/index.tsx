@@ -12,7 +12,7 @@ export const Participants = observer(() => {
   return (
     <ToolTip content={'Participants'}>
       <ActionBarItem
-        onClick={() => addDialog('Participants')}
+        onClick={() => addDialog('participants')}
         icon={SvgIconEnum.FCR_PEOPLE}
         text={'Participants'}></ActionBarItem>
     </ToolTip>
