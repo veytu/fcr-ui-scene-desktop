@@ -76,7 +76,7 @@ const GalleryContainer = observer(() => {
       <div className="fcr-gallery-view-stream-wrapper" ref={ref}>
         {matrix.map((rows, idx) => {
           return (
-            <div className="flex" key={idx} style={{ gap: 8 }}>
+            <div className="fcr-gallery-view-stream-wrapper-row" key={idx}>
               {rows.map(() => {
                 const stream = streamsByPage[count++];
 
