@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import { ConfirmDialogWrapper } from './confirm';
 import { Logger } from 'agora-common-libs/lib/annotation';
 import { DeviceSettingsDialog } from '../device-settings/dialog-wrapper';
+import { ParticipantsDialog } from '../participants';
 
 export const ClassRoomDialogContainer = observer(() => {
   const {
@@ -34,6 +35,14 @@ export const ClassRoomDialogContainer = observer(() => {
             );
           case 'device-settings':
             return <DeviceSettingsDialog key={id} id={id} />;
+          case 'participants':
+            return (
+              <ParticipantsDialog
+                key={id}
+                onClose={() => {
+                  deleteDialog(id);
+                }}></ParticipantsDialog>
+            );
           default:
             Logger.warn(`dialog type [${props.type}] is not supported`);
         }

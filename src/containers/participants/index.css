@@ -1,0 +1,118 @@
+.fcr-participants-container {
+  min-height: 590px;
+  display: flex;
+  flex-direction: column;
+}
+.fcr-participants-container .fcr-table {
+  flex: 1;
+}
+.fcr-participants-dialog .fcr-dialog-body {
+  padding: 0;
+}
+.fcr-participants-header {
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.fcr-participants-footer {
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  padding-left: 20px;
+}
+.fcr-participants-title {
+  @apply fcr-font-title fcr-text-1;
+  font-size: 20px;
+  line-height: 20px;
+  padding-left: 25px;
+}
+.fcr-participants-count {
+  @apply fcr-font-regular fcr-text-1;
+  font-size: 14px;
+  line-height: 14px;
+  padding-left: 4px;
+  padding-right: 34px;
+}
+.fcr-participants-table-name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.fcr-participants-table-name-logo {
+  @apply fcr-rounded-full fcr-font-medium fcr-text-white fcr-bg-brand-4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 14px;
+}
+.fcr-participants-table-name-text {
+  @apply fcr-font-regular fcr-text-white;
+
+  font-size: 12px;
+  padding-left: 8px;
+  line-height: 12px;
+}
+.fcr-participants-table-icon-wrap {
+  @apply fcr-rounded-full;
+
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.fcr-participants-table-icon-wrap:hover {
+  @apply fcr-bg-brand-4;
+}
+.fcr-participants-table-auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fcr-participants-table-rewards {
+  @apply fcr-rounded-16 fcr-text-black fcr-font-title fcr-bg-yellowwarm fcr-shadow-line-1-.5;
+  min-width: 26px;
+  height: 16px;
+  line-height: 16px;
+  font-size: 10px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+  width: fit-content;
+}
+.fcr-participants-table-remove-dialog {
+  width: 200px;
+}
+.fcr-participants-table-remove-title {
+  @apply fcr-text-1 fcr-font-title;
+  font-size: 20px;
+  line-height: 20px;
+  padding-bottom: 9px;
+  padding-top: 9px;
+}
+.fcr-participants-table-remove-options {
+  display: flex;
+  flex-direction: column;
+}
+.fcr-participants-table-remove-options .fcr-radio-label {
+  white-space: normal;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.fcr-participants-table-remove-btns {
+  padding-top: 16px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}

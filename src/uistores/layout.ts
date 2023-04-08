@@ -31,7 +31,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   @computed
   get noAvailabelStream() {
     return (
-      this.getters.cameraUIStreams.length <= 1 &&
+      this.getters.cameraUIStreams.length <= 1 ||
       !this.getters.cameraUIStreams[0]?.isVideoStreamPublished
     );
   }
@@ -75,6 +75,8 @@ export class LayoutUIStore extends EduUIStoreBase {
 
   addDialog(type: 'confirm', params: ConfirmDialogProps): void;
   addDialog(type: 'device-settings'): void;
+  addDialog(type: 'participants'): void;
+
   @action.bound
   addDialog(type: unknown, params?: unknown) {
     this.dialogMap.set(uuidv4(), { ...(params as any), type: type as DialogType });

@@ -62,13 +62,21 @@ module.exports = {
         'colors.custom-4',
       )} 100%)`,
       // divider vertical
-      'gradient-3': `linear-gradient(to bottom, ${colorAlpha(theme('colors.notsb-inverse'), 0)} 0%, ${theme(
-        'colors.notsb-inverse',
-      )} 52.6%, ${colorAlpha(theme('colors.notsb-inverse'), 0)} 97.92%)`,
+      'gradient-3': `linear-gradient(to bottom, ${colorAlpha(
+        theme('colors.notsb-inverse'),
+        0,
+      )} 0%, ${theme('colors.notsb-inverse')} 52.6%, ${colorAlpha(
+        theme('colors.notsb-inverse'),
+        0,
+      )} 97.92%)`,
       // divider horizontal
-      'gradient-4': `linear-gradient(to left, ${colorAlpha(theme('colors.notsb-inverse'), 0)} 0%, ${theme(
-        'colors.notsb-inverse',
-      )} 52.6%, ${colorAlpha(theme('colors.notsb-inverse'), 0)} 97.92%)`,
+      'gradient-4': `linear-gradient(to left, ${colorAlpha(
+        theme('colors.notsb-inverse'),
+        0,
+      )} 0%, ${theme('colors.notsb-inverse')} 52.6%, ${colorAlpha(
+        theme('colors.notsb-inverse'),
+        0,
+      )} 97.92%)`,
     }),
     backgroundColor: (theme) => ({
       1: theme('colors.block-1'),
@@ -103,6 +111,8 @@ module.exports = {
     }),
     textColor: (theme) => ({
       white: theme('colors.white'),
+      black: theme('colors.black'),
+
       1: theme('colors.text-1'),
       2: theme('colors.text-2'),
       3: theme('colors.text-3'),

@@ -5,4 +5,4 @@ export enum Layout {
 }
 export type StreamWindowPlacement = 'main-view' | 'list-view';
 
-export type DialogType = 'confirm' | 'device-settings';
+export type DialogType = 'confirm' | 'device-settings' | 'participants';
