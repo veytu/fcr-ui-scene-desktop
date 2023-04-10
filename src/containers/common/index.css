@@ -15,7 +15,10 @@
 .fcr-stream-window-student-interact-item > span {
   text-align: center;
 }
-
+.fcr-stream-window-student-interact-group-large svg {
+  width: 30px;
+  height: 30px;
+}
 .fcr-stream-window-student-interact-group-large .fcr-stream-window-student-interact-item {
   @apply fcr-rounded-8;
   gap: 5px;
@@ -26,10 +29,16 @@
   line-height: 20px;
   padding-right: 10px;
 }
+.fcr-stream-window-student-interact-group-normal {
+  gap: 10px;
+}
+.fcr-stream-window-student-interact-group-normal svg {
+  width: 32px;
+  height: 32px;
+}
 .fcr-stream-window-student-interact-group-normal .fcr-stream-window-student-interact-item {
   @apply fcr-rounded-8;
   gap: 3px;
-  height: 32px;
 }
 .fcr-stream-window-student-interact-group-normal .fcr-stream-window-student-interact-item > span {
   @apply fcr-font-title fcr-text-white;
@@ -37,11 +46,14 @@
   line-height: 14px;
   padding-right: 9px;
 }
+.fcr-stream-window-student-interact-group-small svg {
+  width: 24px;
+  height: 24px;
+}
 
 .fcr-stream-window-student-interact-group-small .fcr-stream-window-student-interact-item {
   @apply fcr-rounded-6;
   gap: 4px;
-  height: 24px;
 }
 .fcr-stream-window-student-interact-group-small .fcr-stream-window-student-interact-item > span {
   @apply fcr-font-title fcr-text-white;

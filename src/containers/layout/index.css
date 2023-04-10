@@ -11,7 +11,6 @@
 }
 .fcr-layout-content-list-on-top .fcr-layout-content-main-view {
   flex: 1;
-  background-color: aquamarine;
 }
 .fcr-layout-content-list-view {
   position: relative;
@@ -22,6 +21,8 @@
   padding-top: 57px;
   transition: all 0.2s;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 .fcr-layout-content-list-view.fcr-layout-content-list-view-hide {
   height: 0;
@@ -64,7 +65,6 @@
 }
 
 .fcr-layout-content-video-list {
-  @apply fcr-bg-2;
   flex: 1;
   display: flex;
   gap: 8px;
@@ -127,7 +127,7 @@
   transform: rotate(-90deg);
 }
 .fcr-layout-content-list-view-collapse-button-row:hover {
-  @apply fcr-bg-1;
+  @apply fcr-bg-3;
 }
 
 .fcr-layout-content-list-view-collapse-button-col {

@@ -142,6 +142,7 @@
   line-height: 12px;
   padding-top: 10px;
   padding-left: 14px;
+  padding-bottom: 5px;
 }
 .fcr-stream-window-actions-popover-item {
   height: 30px;
@@ -151,7 +152,7 @@
   align-items: center;
   padding-left: 14px;
   margin: 5px 0;
-  padding-right: 30px;
+  padding-right: 15px;
   user-select: none;
 }
 .fcr-stream-window-actions-popover-item:hover {
@@ -237,4 +238,16 @@
 .fcr-stream-window-student-interact-group-anim {
   transition: all 0.2s;
   transform: translateY(var(--fcr-status-bar-height));
+}
+
+.fcr-stream-window-actions-popover-divider {
+  @apply fcr-border-1;
+  width: calc(100% - 40px);
+  border-top-style: solid;
+  border-top-width: 1px;
+  align-self: flex-end;
+}
+.fcr-stream-window-actions-popover-items {
+  display: flex;
+  flex-direction: column;
 }

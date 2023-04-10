@@ -15,6 +15,7 @@ import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { Layout } from '@onlineclass/uistores/type';
 import { StatusBarWidgetSlot } from './widgets';
 import { StudentInteractLabelGroup } from '../common/student-interact-labels';
+import { ToolTip } from '@components/tooltip';
 
 export const StatusBar = observer(() => {
   const {
@@ -79,8 +80,10 @@ const StatusBarCollapeButton = observer(() => {
   } = useStore();
   const visible = !showListView && layout === Layout.ListOnTop;
   return visible ? (
-    <div className="fcr-status-bar-collapse-button" onClick={toggleShowListView}>
-      <SvgImg type={SvgIconEnum.FCR_UP2} size={48}></SvgImg>
-    </div>
+    <ToolTip placement="bottom" content={'Show lectern'}>
+      <div className="fcr-status-bar-collapse-button" onClick={toggleShowListView}>
+        <SvgImg type={SvgIconEnum.FCR_UP2} size={48}></SvgImg>
+      </div>
+    </ToolTip>
   ) : null;
 });

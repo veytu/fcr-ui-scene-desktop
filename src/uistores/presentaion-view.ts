@@ -39,7 +39,7 @@ export class PresentationUIStore extends EduUIStoreBase {
 
   @action
   setMainViewStream(streamUuid: string | null) {
-    if (this.isMainViewStreamPinned) return;
+    if (this.isMainViewStreamPinned || this.getters.isBoardWidgetActive) return;
     this.mainViewStream =
       this.getters.videoUIStreams.find((stream) => stream.stream.streamUuid === streamUuid) || null;
   }

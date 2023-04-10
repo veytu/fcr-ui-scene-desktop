@@ -59,8 +59,14 @@
   padding-left: 4px;
   padding-bottom: 6px;
 }
+.fcr-layout-switch-card-checkbox .fcr-radio {
+  width: 100%;
+}
 .fcr-layout-switch-card-checkbox .fcr-radio-label {
   padding-left: 2px;
+  padding-right: 8px;
+  flex: 1;
+  text-align: center;
 }
 .fcr-layout-switch-desc {
   padding-top: 10px;

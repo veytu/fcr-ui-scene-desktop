@@ -10,7 +10,8 @@ import { Popover } from '@components/popover';
 import { StreamWindowContext, StreamWindowMouseContext } from './context';
 import { Layout } from '@onlineclass/uistores/type';
 import { StudentInteractLabelGroup } from '../common/student-interact-labels';
-
+import { themeVal } from '@ui-kit-utils/tailwindcss';
+const colors = themeVal('colors');
 export const StreamWindow: FC = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
   const [mouseEnter, setMouseEnter] = useState(false);
@@ -164,6 +165,11 @@ const StreamActions = observer(() => {
   const {
     layoutUIStore: { showStatusBar },
   } = useStore();
+  useEffect(() => {
+    if (!streamWindowMouseContext?.mouseEnterWindow) {
+      setPopoverVisibel(false);
+    }
+  }, [streamWindowMouseContext?.mouseEnterWindow]);
   return (
     <div
       className={classnames('fcr-stream-window-actions', `fcr-stream-window-actions-${size}`, {
@@ -193,36 +199,60 @@ const StreamActions = observer(() => {
 const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void }) => {
   const {
     participantsUIStore: { sendReward },
+    boardApi: { grantPrivilege },
   } = useStore();
 
   const streamWindowContext = useContext(StreamWindowContext);
+  const userUuid = streamWindowContext?.stream.fromUser.userUuid || '';
+
   const streamWindowActionItems = [
     {
-      icon: <SvgImg size={20} type={SvgIconEnum.FCR_MUTE}></SvgImg>,
-      label: '申请打开麦克风',
+      icon: (
+        <SvgImg
+          size={20}
+          colors={{ iconPrimary: colors['custom-2'] }}
+          type={SvgIconEnum.FCR_MUTE}></SvgImg>
+      ),
+      label: 'Ask to Unmute',
       onClick: () => {},
     },
     {
-      icon: <SvgImg size={20} type={SvgIconEnum.FCR_CAMERA}></SvgImg>,
-      label: '申请打开摄像头',
+      icon: (
+        <SvgImg
+          size={20}
+          colors={{ iconPrimary: colors['custom-2'] }}
+          type={SvgIconEnum.FCR_CAMERA}></SvgImg>
+      ),
+      label: 'Ask to turn on Camera',
       onClick: () => {},
     },
     {
-      icon: <SvgImg size={20} type={SvgIconEnum.FCR_HOST}></SvgImg>,
-      label: '授权',
-      onClick: () => {},
+      icon: (
+        <SvgImg
+          size={20}
+          type={SvgIconEnum.FCR_HOST}
+          colors={{ iconPrimary: colors['yellow'] }}></SvgImg>
+      ),
+      label: 'Grant Authorization',
+      onClick: () => {
+        grantPrivilege(userUuid, true);
+      },
     },
     {
       icon: <SvgImg size={20} type={SvgIconEnum.FCR_REWARD}></SvgImg>,
-      label: '奖励',
+      label: 'Reward',
       onClick: () => {
-        const userUuid = streamWindowContext?.stream.fromUser.userUuid;
         if (userUuid) sendReward(userUuid);
       },
     },
     {
-      icon: <SvgImg size={20} type={SvgIconEnum.FCR_ONELEAVE}></SvgImg>,
-      label: '踢人',
+      icon: (
+        <SvgImg
+          size={20}
+          colors={{ iconPrimary: colors['red'][6] }}
+          type={SvgIconEnum.FCR_ONELEAVE}></SvgImg>
+      ),
+      label: 'Remove',
       onClick: () => {},
     },
   ];
@@ -232,18 +262,21 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
         {streamWindowContext?.stream.fromUser.userName}
       </div>
       <div className="fcr-stream-window-actions-popover-items">
-        {streamWindowActionItems.map((item) => {
+        {streamWindowActionItems.map((item, index) => {
           return (
-            <div
-              key={item.label}
-              className="fcr-stream-window-actions-popover-item"
-              onClick={() => {
-                item.onClick();
-                onItemClick();
-              }}>
-              {item.icon}
-              <div className="fcr-stream-window-actions-popover-item-label">{item.label}</div>
-            </div>
+            <>
+              <div
+                key={item.label}
+                className="fcr-stream-window-actions-popover-item"
+                onClick={() => {
+                  item.onClick();
+                  onItemClick();
+                }}>
+                {item.icon}
+                <div className="fcr-stream-window-actions-popover-item-label">{item.label}</div>
+              </div>
+              {index % 2 === 1 && <div className="fcr-stream-window-actions-popover-divider"></div>}
+            </>
           );
         })}
       </div>

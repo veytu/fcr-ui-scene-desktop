@@ -98,12 +98,16 @@ const Participants = observer(() => {
         data={participantList}
         rowKey={(record) => record.user.userUuid}></Table>
       <div className="fcr-participants-footer">
-        <Button preIcon={SvgIconEnum.FCR_ALL_MUTE} size="S" type="secondary">
-          Mute All
-        </Button>
-        <Button preIcon={SvgIconEnum.FCR_ALL_UNMUTE} size="S" type="secondary">
-          Ask all to Unmute
-        </Button>
+        <ToolTip placement="top" content="Mute All">
+          <Button preIcon={SvgIconEnum.FCR_ALL_MUTE} size="S" type="secondary">
+            Mute All
+          </Button>
+        </ToolTip>
+        <ToolTip placement="top" content="Unmute all">
+          <Button preIcon={SvgIconEnum.FCR_ALL_UNMUTE} size="S" type="secondary">
+            Ask all to Unmute
+          </Button>
+        </ToolTip>
       </div>
     </div>
   );
