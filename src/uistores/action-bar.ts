@@ -11,6 +11,10 @@ import {
 import { isElectron } from '@onlineclass/utils/check';
 import { getConfig } from '@onlineclass/utils/launch-options-holder';
 export class ActionBarUIStore extends EduUIStoreBase {
+  @computed get showEndClassButton() {
+    return this.getters.isHost;
+  }
+
   @computed get showToolBox() {
     return this.getters.isHost || this.getters.isGranted;
   }

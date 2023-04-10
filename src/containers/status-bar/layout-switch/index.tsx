@@ -8,7 +8,10 @@ import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { StatusBarItemWrapper } from '..';
 import { PopoverWithTooltip } from '@components/popover';
 
-export const LayoutSwitchPopover = () => {
+export const LayoutSwitchPopover = observer(() => {
+  const {
+    layoutUIStore: { gridLayoutDisabled },
+  } = useStore();
   return (
     <div className="fcr-layout-switch">
       <div className="fcr-layout-switch-speaker-view">
@@ -20,13 +23,18 @@ export const LayoutSwitchPopover = () => {
       </div>
       <div className="fcr-layout-switch-grid">
         <div className="fcr-layout-switch-title">Grid</div>
+        {gridLayoutDisabled && (
+          <div className="fcr-layout-switch-desc">
+            You cannot switch to grid view when opening the whiteboard
+          </div>
+        )}
         <div className="fcr-layout-switch-view-wrap">
           <LayoutCard layout={Layout.Grid}></LayoutCard>
         </div>
       </div>
     </div>
   );
-};
+});
 export const layoutMap = {
   [Layout.ListOnTop]: {
     label: 'List on top',
@@ -47,14 +55,18 @@ export const layoutMap = {
 
 const LayoutCard = observer(({ layout }: { layout: Layout }) => {
   const {
-    layoutUIStore: { layout: currentLayout, setLayout },
+    layoutUIStore: { layout: currentLayout, setLayout, gridLayoutDisabled },
   } = useStore();
+  const disabled = layout === Layout.Grid && gridLayoutDisabled;
   const { label, bigIcon } = layoutMap[layout];
   const active = currentLayout === layout;
   return (
     <div
-      onClick={() => setLayout(layout)}
-      className={classnames('fcr-layout-switch-card', { 'fcr-layout-switch-card-active': active })}>
+      onClick={() => !disabled && setLayout(layout)}
+      className={classnames('fcr-layout-switch-card', {
+        'fcr-layout-switch-card-active': active,
+        'fcr-layout-switch-card-disabled': disabled,
+      })}>
       <div className="fcr-layout-switch-card-checkbox">
         <Radio label={label} checked={active}></Radio>
       </div>

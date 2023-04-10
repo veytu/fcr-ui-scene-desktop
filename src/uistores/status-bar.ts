@@ -21,6 +21,13 @@ export class StatusBarUIStore extends EduUIStoreBase {
   get isHost() {
     return this.getters.isHost;
   }
+  get isStudent() {
+    return this.getters.isStudent;
+  }
+  @computed
+  get localUser() {
+    return this.getters.localUser;
+  }
   /**
    * CPU 用量
    * @returns

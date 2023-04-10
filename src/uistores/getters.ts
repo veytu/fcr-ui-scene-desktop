@@ -32,6 +32,10 @@ export class Getters {
     return EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student;
   }
   @computed
+  get localUser() {
+    return this._classroomUIStore.classroomStore.userStore.localUser;
+  }
+  @computed
   get videoStreams() {
     const { streamByUserUuid, streamByStreamUuid } =
       this._classroomUIStore.classroomStore.streamStore;

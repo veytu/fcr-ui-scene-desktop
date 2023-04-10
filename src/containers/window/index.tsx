@@ -9,6 +9,7 @@ import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { Popover } from '@components/popover';
 import { StreamWindowContext, StreamWindowMouseContext } from './context';
 import { Layout } from '@onlineclass/uistores/type';
+import { StudentInteractLabelGroup } from '../common/student-interact-labels';
 
 export const StreamWindow: FC = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
@@ -97,20 +98,31 @@ const StreamPlayer = observer(() => {
   );
 });
 
-const UserInteract = () => {
+const UserInteract = observer(() => {
+  const {
+    layoutUIStore: { showStatusBar },
+  } = useStore();
   const streamWindowContext = useContext(StreamWindowContext);
 
   return (
     <div className="fcr-stream-window-interact">
       {streamWindowContext?.showInteractLabels && (
-        <StudentInteractLabelGroup></StudentInteractLabelGroup>
+        <div
+          className={classnames('fcr-stream-window-student-interact-group-wrap', {
+            'fcr-stream-window-student-interact-group-anim':
+              showStatusBar && streamWindowContext?.topLabelAnimation,
+          })}>
+          <StudentInteractLabelGroup
+            userUuid={streamWindowContext.stream.fromUser.userUuid}
+            size={streamWindowContext.labelSize as 'large' | 'small'}></StudentInteractLabelGroup>
+        </div>
       )}
       {streamWindowContext?.showActions && <StreamActions></StreamActions>}
       <StreamMuteIcon></StreamMuteIcon>
       <StreamWindowUserLabel></StreamWindowUserLabel>
     </div>
   );
-};
+});
 const StreamMuteIcon = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
   const streamWindowMouseContext = useContext(StreamWindowMouseContext);
@@ -234,47 +246,6 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
             </div>
           );
         })}
-      </div>
-    </div>
-  );
-});
-
-const StudentInteractLabelGroup = observer(() => {
-  const streamWindowContext = useContext(StreamWindowContext);
-  const stream = streamWindowContext?.stream;
-
-  const {
-    classroomStore: {
-      userStore: { rewards },
-    },
-    streamUIStore: { isUserGranted },
-    layoutUIStore: { showStatusBar },
-  } = useStore();
-  const reward = rewards.get(stream?.fromUser.userUuid || '');
-  const isGranted = isUserGranted(stream?.stream.fromUser.userUuid || '');
-  return (
-    <div
-      className={classnames(
-        'fcr-stream-window-student-interact-group',
-        `fcr-stream-window-student-interact-group-${streamWindowContext?.labelSize}`,
-        {
-          'fcr-stream-window-student-interact-group-anim':
-            showStatusBar && streamWindowContext?.topLabelAnimation,
-        },
-      )}>
-      {isGranted && (
-        <div className="fcr-stream-window-student-interact-item fcr-bg-yellowwarm">
-          <SvgImg type={SvgIconEnum.FCR_HOST} size={streamWindowContext?.labelIconSize}></SvgImg>
-        </div>
-      )}
-      <div className="fcr-stream-window-student-interact-item  fcr-bg-brand-6">
-        <SvgImg type={SvgIconEnum.FCR_STAR} size={streamWindowContext?.labelIconSize}></SvgImg>
-        <span>{reward || 0}</span>
-      </div>
-      <div className="fcr-stream-window-student-interact-item  fcr-bg-brand-6">
-        <SvgImg
-          type={SvgIconEnum.FCR_STUDENT_RASIEHAND}
-          size={streamWindowContext?.labelIconSize}></SvgImg>
       </div>
     </div>
   );

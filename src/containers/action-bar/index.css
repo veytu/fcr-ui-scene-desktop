@@ -38,6 +38,13 @@
   align-items: center;
   max-width: 100%;
 }
+.fcr-action-bar-item-disabled {
+  cursor: not-allowed;
+}
+.fcr-action-bar-item-disabled .fcr-action-bar-item-icon,
+.fcr-action-bar-item-disabled .fcr-action-bar-item-text {
+  opacity: 0.5;
+}
 .fcr-action-bar-item-text {
   @apply fcr-text-2 fcr-font-regular;
   font-size: 10px;

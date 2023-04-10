@@ -1,4 +1,5 @@
 .fcr-layout-switch {
+  max-width: 328px;
   padding: 22px 24px 24px;
 }
 .fcr-layout-switch-speaker-view {
@@ -8,7 +9,6 @@
   @apply fcr-font-title fcr-text-1;
   font-size: 16px;
   line-height: 16px;
-  padding-bottom: 14px;
 }
 .fcr-layout-switch-card {
   @apply fcr-rounded-12 fcr-bg-4;
@@ -29,16 +29,22 @@
   border-style: solid;
   opacity: 0;
 }
-.fcr-layout-switch-card:hover.fcr-layout-switch-card::after {
+.fcr-layout-switch-card:hover.fcr-layout-switch-card:not(.fcr-layout-switch-card-disabled)::after {
   opacity: 1;
 }
 .fcr-layout-switch-card-active {
   @apply fcr-bg-brand-6;
 }
+.fcr-layout-switch-card-disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
 .fcr-layout-switch-view-wrap {
   display: flex;
   flex-direction: row;
   gap: 20px;
+  padding-top: 14px;
 }
 .fcr-layout-switch-card-icon {
   @apply fcr-bg-2 fcr-rounded-8;
@@ -52,4 +58,13 @@
   padding-top: 2px;
   padding-left: 4px;
   padding-bottom: 6px;
+}
+.fcr-layout-switch-card-checkbox .fcr-radio-label {
+  padding-left: 2px;
+}
+.fcr-layout-switch-desc {
+  padding-top: 10px;
+  @apply fcr-text-3;
+  font-size: 11px;
+  line-height: 14px;
 }

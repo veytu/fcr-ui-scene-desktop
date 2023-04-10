@@ -75,14 +75,20 @@ interface ActionBarItemProps {
   text: ReactNode;
   active?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
 }
 export const ActionBarItem: FC<ActionBarItemProps> = (props) => {
-  const { classNames, text, icon, active = false, onClick, ...others } = props;
+  const { classNames, text, icon, active = false, onClick, disabled = false, ...others } = props;
   return (
     <ActionBarItemWrapper {...others} classNames={classnames(classNames)}>
       <div
-        onClick={onClick}
-        className={classnames('fcr-action-bar-item', { 'fcr-action-bar-item-active': active })}>
+        onClick={() => {
+          !disabled && onClick?.();
+        }}
+        className={classnames('fcr-action-bar-item', {
+          'fcr-action-bar-item-active': active,
+          'fcr-action-bar-item-disabled': disabled,
+        })}>
         <div className="fcr-action-bar-item-icon">
           {typeof icon === 'string' ? (
             <SvgImg size={36} type={icon}></SvgImg>

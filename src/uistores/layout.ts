@@ -10,6 +10,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   private _clearScreenDelay = 3000;
   private _isPointingBar = false;
   private _hasPopoverShowed = false;
+
   @observable mouseEnterClass = false;
   @observable layoutReady = false;
   @observable showStatusBar = true;
@@ -27,6 +28,9 @@ export class LayoutUIStore extends EduUIStoreBase {
   @bound
   setHasPopoverShowed(has: boolean) {
     this._hasPopoverShowed = has;
+  }
+  @computed get gridLayoutDisabled() {
+    return this.getters.isBoardWidgetActive;
   }
   @computed
   get noAvailabelStream() {

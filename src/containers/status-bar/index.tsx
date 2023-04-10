@@ -13,10 +13,13 @@ import { FullscreenButton } from './fullscreen';
 import { getConfig } from '@onlineclass/utils/launch-options-holder';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { Layout } from '@onlineclass/uistores/type';
+import { StatusBarWidgetSlot } from './widgets';
+import { StudentInteractLabelGroup } from '../common/student-interact-labels';
 
 export const StatusBar = observer(() => {
   const {
     layoutUIStore: { showStatusBar, setIsPointingBar, noAvailabelStream },
+    statusBarUIStore: { localUser, isStudent },
   } = useStore();
   const { logo } = getConfig();
   return (
@@ -44,6 +47,13 @@ export const StatusBar = observer(() => {
         </>
       </div>
       <div className="fcr-status-bar-right">
+        <StatusBarWidgetSlot></StatusBarWidgetSlot>
+        {isStudent && localUser && (
+          <StudentInteractLabelGroup
+            userUuid={localUser.userUuid}
+            size={'normal'}></StudentInteractLabelGroup>
+        )}
+
         <RecordStatus></RecordStatus>
         <ClassDuration></ClassDuration>
         <LayoutSwitch></LayoutSwitch>
