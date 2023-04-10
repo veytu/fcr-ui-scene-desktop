@@ -116,3 +116,8 @@
   display: flex;
   justify-content: space-between;
 }
+.fcr-participants-table-cell-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

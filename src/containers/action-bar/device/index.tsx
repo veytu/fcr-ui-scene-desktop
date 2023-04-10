@@ -16,10 +16,15 @@ export const AudioRecordinDeviceIcon = observer(({ size = 36 }: { size?: number 
   return <SvgImg type={icon} size={size}></SvgImg>;
 });
 export const MicrophoenDevice: FC = observer(() => {
-  const { tootipVisible, handlePopoverVisibleChanged, handleTooltipVisibleChanged } =
-    useDeviceTooltipVisible();
+  const {
+    tootipVisible,
+    handlePopoverVisibleChanged,
+    handleTooltipVisibleChanged,
+    setPopoverOpened,
+  } = useDeviceTooltipVisible();
   const {
     deviceSettingUIStore: { isAudioRecordingDeviceEnabled, toggleAudioRecordingDevice },
+    layoutUIStore: { addDialog },
   } = useStore();
 
   const text = isAudioRecordingDeviceEnabled ? 'Microphoen' : 'unmute';
@@ -37,7 +42,13 @@ export const MicrophoenDevice: FC = observer(() => {
           <Popover
             onVisibleChange={handlePopoverVisibleChanged}
             trigger="click"
-            content={<AudioDeviceListPopoverContent></AudioDeviceListPopoverContent>}>
+            content={
+              <AudioDeviceListPopoverContent
+                onMoreClick={() => {
+                  addDialog('device-settings');
+                  setPopoverOpened(false);
+                }}></AudioDeviceListPopoverContent>
+            }>
             <div
               onClick={(e) => {
                 e.stopPropagation();
@@ -52,10 +63,15 @@ export const MicrophoenDevice: FC = observer(() => {
   );
 });
 export const CameraDevice: FC = observer(() => {
-  const { tootipVisible, handlePopoverVisibleChanged, handleTooltipVisibleChanged } =
-    useDeviceTooltipVisible();
+  const {
+    tootipVisible,
+    handlePopoverVisibleChanged,
+    handleTooltipVisibleChanged,
+    setPopoverOpened,
+  } = useDeviceTooltipVisible();
   const {
     deviceSettingUIStore: { isCameraDeviceEnabled, toggleCameraDevice },
+    layoutUIStore: { addDialog },
   } = useStore();
 
   const icon = isCameraDeviceEnabled ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
@@ -73,7 +89,13 @@ export const CameraDevice: FC = observer(() => {
           </div>
           <Popover
             onVisibleChange={handlePopoverVisibleChanged}
-            content={<VideoDeviceListPopoverContent></VideoDeviceListPopoverContent>}
+            content={
+              <VideoDeviceListPopoverContent
+                onMoreClick={() => {
+                  addDialog('device-settings');
+                  setPopoverOpened(false);
+                }}></VideoDeviceListPopoverContent>
+            }
             trigger="click">
             <div
               onClick={(e) => {
@@ -110,9 +132,11 @@ const useDeviceTooltipVisible = () => {
     tootipVisible,
     handleTooltipVisibleChanged,
     handlePopoverVisibleChanged,
+    setPopoverOpened,
+    setTootipVisible,
   };
 };
-const VideoDeviceListPopoverContent = observer(() => {
+const VideoDeviceListPopoverContent = observer(({ onMoreClick }: { onMoreClick: () => void }) => {
   const {
     deviceSettingUIStore: { cameraDevicesList, cameraDeviceId, setCameraDevice },
   } = useStore();
@@ -140,14 +164,14 @@ const VideoDeviceListPopoverContent = observer(() => {
           </div>
         </div>
       </div>
-      <div className="fcr-device-popover-content-more">
+      <div className="fcr-device-popover-content-more" onClick={onMoreClick}>
         <SvgImg type={SvgIconEnum.FCR_SETTING} size={32}></SvgImg>
         <span>More Setting</span>
       </div>
     </div>
   );
 });
-const AudioDeviceListPopoverContent = observer(() => {
+const AudioDeviceListPopoverContent = observer(({ onMoreClick }: { onMoreClick: () => void }) => {
   const {
     deviceSettingUIStore: {
       recordingDevicesList,
@@ -198,7 +222,7 @@ const AudioDeviceListPopoverContent = observer(() => {
           </div>
         </div>
       </div>
-      <div className="fcr-device-popover-content-more">
+      <div className="fcr-device-popover-content-more" onClick={onMoreClick}>
         <SvgImg type={SvgIconEnum.FCR_SETTING} size={32}></SvgImg>
         <span>More Setting</span>
       </div>

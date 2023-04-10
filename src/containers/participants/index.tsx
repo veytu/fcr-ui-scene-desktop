@@ -143,8 +143,10 @@ const TableAuth = observer(({ userUuid }: { userUuid: string }) => {
 const TableIconWrapper: FC<PropsWithChildren<{ onClick?: () => void }>> = (props) => {
   const { children, ...others } = props;
   return (
-    <div {...others} className="fcr-participants-table-icon-wrap">
-      {children}
+    <div className="fcr-participants-table-cell-wrap">
+      <div {...others} className="fcr-participants-table-icon-wrap">
+        {children}
+      </div>
     </div>
   );
 };
