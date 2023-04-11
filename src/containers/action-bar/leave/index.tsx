@@ -41,7 +41,7 @@ export const LeaveCheck = observer(() => {
 });
 const LeavePopoverContent = observer(() => {
   const {
-    actionBarUIStore: { showEndClassButton },
+    actionBarUIStore: { showEndClassButton, leaveClassroom },
   } = useStore();
   return (
     <div className="fcr-action-bar-leave-popover">
@@ -55,7 +55,7 @@ const LeavePopoverContent = observer(() => {
           </Button>
         )}
 
-        <Button block size="L" type="secondary" styleType="danger">
+        <Button block onClick={leaveClassroom} size="L" type="secondary" styleType="danger">
           Leave the Room
         </Button>
       </div>

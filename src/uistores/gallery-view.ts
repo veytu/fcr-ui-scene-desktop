@@ -2,9 +2,16 @@ import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 export class GalleryUIStore extends EduUIStoreBase {
-  @observable mainViewStream: EduStreamUI | null = null;
+  @observable mainViewStreamUuid: string | null = null;
   pageSize = 25;
   @observable currentPage = 1;
+  @computed
+  get mainViewStream() {
+    if (!this.mainViewStreamUuid) return null;
+    const stream = this.classroomStore.streamStore.streamByStreamUuid.get(this.mainViewStreamUuid);
+    if (stream) return new EduStreamUI(stream);
+    return null;
+  }
   @computed get showPager() {
     return this.totalPage > 1;
   }
@@ -24,9 +31,9 @@ export class GalleryUIStore extends EduUIStoreBase {
   private _handleMainCameraStream() {
     if (!this.getters.screenShareUIStream) {
       if (this.getters.cameraUIStreams.length === 1) {
-        this.mainViewStream = this.getters.cameraUIStreams[0];
+        this.mainViewStreamUuid = this.getters.cameraUIStreams[0].stream.streamUuid;
       } else {
-        this.mainViewStream = null;
+        this.mainViewStreamUuid = null;
       }
     }
   }
@@ -39,7 +46,7 @@ export class GalleryUIStore extends EduUIStoreBase {
         },
         (screenShareUIStream) => {
           if (screenShareUIStream) {
-            this.mainViewStream = screenShareUIStream;
+            this.mainViewStreamUuid = screenShareUIStream.stream.streamUuid;
           } else {
             this._handleMainCameraStream();
           }

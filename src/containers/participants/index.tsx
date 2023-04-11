@@ -1,5 +1,5 @@
 import { BaseDialog, BaseDialogProps } from '@components/dialog';
-import { FC, PropsWithChildren, useState } from 'react';
+import { FC, PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { Input } from '@components/input';
 import { Table } from '@components/table';
 
@@ -13,7 +13,12 @@ import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { DialogToolTip } from '@components/tooltip/dialog';
 import { Button } from '@components/button';
 import { Radio, RadioGroup } from '@components/radio';
-
+import { EduRoleTypeEnum } from 'agora-edu-core';
+import { themeVal } from '@ui-kit-utils/tailwindcss';
+import classnames from 'classnames';
+import { ToastApi } from '@components/toast';
+import { AgoraRteMediaPublishState } from 'agora-rte-sdk';
+const colors = themeVal('colors');
 export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = (props) => {
   const [visible, setVisible] = useState(true);
   const handleVisibleChanged = (visible: boolean) => {
@@ -38,8 +43,9 @@ export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = 
 };
 const Participants = observer(() => {
   const {
-    participantsUIStore: { participantList },
+    participantsUIStore: { participantList, searchKey, setSearchKey },
   } = useStore();
+
   return (
     <div className="fcr-participants-container">
       <div className="fcr-participants-header">
@@ -48,22 +54,31 @@ const Participants = observer(() => {
           (Student {participantList.length} / Co-teacher 0)
         </div>
         <div className="fcr-participants-search">
-          <Input size="medium" iconPrefix={SvgIconEnum.FCR_V2_SEARCH} placeholder="Search" />
+          <Input
+            size="medium"
+            value={searchKey}
+            onChange={setSearchKey}
+            iconPrefix={SvgIconEnum.FCR_V2_SEARCH}
+            placeholder="Search"
+          />
         </div>
       </div>
       <Table
         columns={[
           {
-            title: 'Name',
+            title: <div className="fcr-participants-table-name-label">Name</div>,
             render: (_, item) => {
               return <TableName name={item.user.userName}></TableName>;
             },
+            align: 'left',
           },
           {
             title: 'Auth',
             width: 100,
             render: (_, item) => {
-              return <TableAuth userUuid={item.user.userUuid}></TableAuth>;
+              return (
+                <TableAuth role={item.user.userRole} userUuid={item.user.userUuid}></TableAuth>
+              );
             },
           },
           {
@@ -97,6 +112,7 @@ const Participants = observer(() => {
         ]}
         data={participantList}
         rowKey={(record) => record.user.userUuid}></Table>
+
       <div className="fcr-participants-footer">
         <ToolTip placement="top" content="Mute All">
           <Button preIcon={SvgIconEnum.FCR_ALL_MUTE} size="S" type="secondary">
@@ -120,34 +136,43 @@ const TableName = ({ name }: { name: string }) => {
     </div>
   );
 };
-const TableAuth = observer(({ userUuid }: { userUuid: string }) => {
+const TableAuth = observer(({ userUuid, role }: { userUuid: string; role: EduRoleTypeEnum }) => {
   const {
-    participantsUIStore: { isHost },
-    boardApi: { grantedUsers },
+    participantsUIStore: { isHostByUserRole },
+    boardApi: { grantedUsers, grantPrivilege },
   } = useStore();
-  const tooltipContent = isHost
-    ? 'host'
-    : grantedUsers.has(userUuid)
-    ? 'UnAuthorization'
-    : 'Authorization';
+  const isHost = isHostByUserRole(role);
+  const granted = grantedUsers.has(userUuid);
+  const tooltipContent = isHost ? 'host' : granted ? 'UnAuthorization' : 'Authorization';
+  const handleAuth = () => {
+    grantPrivilege(userUuid, !granted);
+  };
   return (
-    <ToolTip mouseEnterDelay={0} content={tooltipContent}>
+    <ToolTip placement="bottom" content={tooltipContent}>
       <div className="fcr-participants-table-auth">
         {isHost ? (
           'Host'
         ) : (
-          <TableIconWrapper>
-            <SvgImg type={SvgIconEnum.FCR_HOST} size={36}></SvgImg>
+          <TableIconWrapper onClick={handleAuth}>
+            <SvgImg
+              type={SvgIconEnum.FCR_HOST}
+              colors={{ iconPrimary: granted ? colors['yellow'] : colors['icon-1'] }}
+              size={36}></SvgImg>
           </TableIconWrapper>
         )}
       </div>
     </ToolTip>
   );
 });
-const TableIconWrapper: FC<PropsWithChildren<{ onClick?: () => void }>> = (props) => {
-  const { children, ...others } = props;
+const TableIconWrapper: FC<PropsWithChildren<{ onClick?: () => void; disabled?: boolean }>> = (
+  props,
+) => {
+  const { children, disabled = false, ...others } = props;
   return (
-    <div className="fcr-participants-table-cell-wrap">
+    <div
+      className={classnames('fcr-participants-table-cell-wrap', {
+        'fcr-participants-table-cell-wrap-disabled': disabled,
+      })}>
       <div {...others} className="fcr-participants-table-icon-wrap">
         {children}
       </div>
@@ -156,22 +181,58 @@ const TableIconWrapper: FC<PropsWithChildren<{ onClick?: () => void }>> = (props
 };
 
 const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
-  const {} = useStore();
-  const icon = stream?.isVideoStreamPublished ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
+  const {
+    deviceSettingUIStore: { toggleCameraDevice },
+    classroomStore: {
+      streamStore: { updateRemotePublishState },
+    },
+  } = useStore();
+  const icon = stream?.isVideoDeviceEnabled ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
+  const tooltip = stream?.isVideoDeviceEnabled
+    ? 'Turn off the camera'
+    : 'Ask to turn on the camera';
+  const handleCameraClick = () => {
+    if (stream?.isLocal) {
+      toggleCameraDevice();
+    } else {
+      if (stream?.isVideoStreamPublished)
+        updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
+          videoState: AgoraRteMediaPublishState.Unpublished,
+        });
+    }
+  };
   return (
-    <ToolTip>
-      <TableIconWrapper>
+    <ToolTip placement="bottom" content={tooltip}>
+      <TableIconWrapper onClick={handleCameraClick}>
         <SvgImg type={icon} size={36}></SvgImg>
       </TableIconWrapper>
     </ToolTip>
   );
 });
 const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
-  const {} = useStore();
-  const icon = stream?.isMicStreamPublished ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
+  const {
+    deviceSettingUIStore: { toggleAudioRecordingDevice },
+    classroomStore: {
+      streamStore: { updateRemotePublishState },
+    },
+  } = useStore();
+  const icon = stream?.isMicDeviceEnabled ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
+  const tooltip = stream?.isMicDeviceEnabled
+    ? 'Turn off the microphone'
+    : 'Ask to turn on the camera';
+  const handleMicrophoneClick = () => {
+    if (stream?.isLocal) {
+      toggleAudioRecordingDevice();
+    } else {
+      if (stream?.isMicStreamPublished)
+        updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
+          audioState: AgoraRteMediaPublishState.Unpublished,
+        });
+    }
+  };
   return (
-    <ToolTip>
-      <TableIconWrapper>
+    <ToolTip content={tooltip} placement="bottom">
+      <TableIconWrapper onClick={handleMicrophoneClick}>
         <SvgImg type={icon} size={36}></SvgImg>
       </TableIconWrapper>
     </ToolTip>
@@ -183,7 +244,7 @@ const TableReward = observer(({ userUuid }: { userUuid: string }) => {
   } = useStore();
   const rewards = rewardsByUserUuid(userUuid);
   return (
-    <ToolTip content="Reward">
+    <ToolTip placement="bottom" content="Reward">
       <TableIconWrapper onClick={() => sendReward(userUuid)}>
         <>
           {rewards > 0 && <div className="fcr-participants-table-rewards">{rewards}</div>}
@@ -197,13 +258,15 @@ const TableRemove = observer(({ userUuid }: { userUuid: string }) => {
   const [dialogVisible, setDialogVisible] = useState(false);
 
   return (
-    <ToolTip mouseEnterDelay={0} content="Remove">
+    <ToolTip placement="bottom" content="Remove">
       <DialogToolTip
         visible={dialogVisible}
         onVisibleChange={setDialogVisible}
         onClose={() => setDialogVisible(false)}
         content={
-          <RemoveDialogContent onClose={() => setDialogVisible(false)}></RemoveDialogContent>
+          <RemoveDialogContent
+            userUuid={userUuid}
+            onClose={() => setDialogVisible(false)}></RemoveDialogContent>
         }
         trigger="click"
         placement="right">
@@ -214,24 +277,43 @@ const TableRemove = observer(({ userUuid }: { userUuid: string }) => {
     </ToolTip>
   );
 });
-const RemoveDialogContent = ({ onClose }: { onClose?: () => void }) => {
-  return (
-    <div className="fcr-participants-table-remove-dialog">
-      <div className="fcr-participants-table-remove-title">Remove students </div>
-      <div className="fcr-participants-table-remove-options">
-        <RadioGroup>
-          <Radio value="1" label="Remove the student from the classroom"></Radio>
-          <Radio value="2" label="Ban the student from re-entering the classroom"></Radio>
-        </RadioGroup>
+const RemoveDialogContent = observer(
+  ({ onClose, userUuid }: { onClose?: () => void; userUuid: string }) => {
+    const {
+      classroomStore: {
+        userStore: { kickOutOnceOrBan },
+      },
+    } = useStore();
+    const [kickOutType, setKickOutType] = useState<'once' | 'ban'>('once');
+    const handleRemove = async () => {
+      await kickOutOnceOrBan(userUuid, kickOutType === 'ban');
+    };
+    return (
+      <div className="fcr-participants-table-remove-dialog">
+        <div className="fcr-participants-table-remove-title">Remove students </div>
+        <div className="fcr-participants-table-remove-options">
+          <RadioGroup<'once' | 'ban'>
+            value={kickOutType}
+            onChange={(value) => value && setKickOutType(value)}>
+            <Radio value="once" label="Remove the student from the classroom"></Radio>
+            <Radio value="ban" label="Ban the student from re-entering the classroom"></Radio>
+          </RadioGroup>
+        </div>
+        <div className="fcr-participants-table-remove-btns">
+          <Button onClick={onClose} shape="rounded" size="S" styleType="gray">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              handleRemove();
+              onClose?.();
+            }}
+            shape="rounded"
+            size="S">
+            Remove
+          </Button>
+        </div>
       </div>
-      <div className="fcr-participants-table-remove-btns">
-        <Button onClick={onClose} shape="rounded" size="S" styleType="gray">
-          Cancel
-        </Button>
-        <Button onClick={onClose} shape="rounded" size="S">
-          Remove
-        </Button>
-      </div>
-    </div>
-  );
-};
+    );
+  },
+);

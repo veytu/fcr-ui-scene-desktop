@@ -1,7 +1,7 @@
 import { EduUIStoreBase } from './base';
 import { observable, computed, reaction, action } from 'mobx';
 import { ShareStreamStateKeeper } from '@onlineclass/utils/stream/state-keeper';
-import { ClassroomState, EduClassroomConfig, RecordMode } from 'agora-edu-core';
+import { ClassroomState, EduClassroomConfig, LeaveReason, RecordMode } from 'agora-edu-core';
 import {
   AgoraRteAudioSourceType,
   AgoraRteMediaPublishState,
@@ -94,6 +94,10 @@ export class ActionBarUIStore extends EduUIStoreBase {
       trackState: this.classroomStore.mediaStore.localScreenShareTrackState,
       classroomState: this.classroomStore.connectionStore.classroomState,
     };
+  }
+  @bound
+  leaveClassroom() {
+    this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
   }
   onDestroy(): void {}
   onInstall(): void {

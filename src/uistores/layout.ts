@@ -4,6 +4,7 @@ import { DialogType, Layout } from './type';
 import { bound, Scheduler } from 'agora-rte-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
+import { LeaveReason } from 'agora-edu-core';
 
 export class LayoutUIStore extends EduUIStoreBase {
   private _clearScreenTask: Scheduler.Task | null = null;

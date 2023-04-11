@@ -4,7 +4,7 @@ import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { AgoraRteEventType, Lodash } from 'agora-rte-sdk';
 export class PresentationUIStore extends EduUIStoreBase {
   @observable isMainViewStreamPinned = false;
-  @observable mainViewStream: EduStreamUI | null = null;
+  @observable mainViewStreamUuid: string | null = null;
   @observable showListView = true;
   pageSize = 6;
   @observable currentPage = 1;
@@ -25,6 +25,13 @@ export class PresentationUIStore extends EduUIStoreBase {
   removePinnedStream() {
     this.isMainViewStreamPinned = false;
   }
+  @computed get mainViewStream() {
+    if (!this.mainViewStreamUuid) return null;
+    const stream = this.classroomStore.streamStore.streamByStreamUuid.get(this.mainViewStreamUuid);
+    if (stream) return new EduStreamUI(stream);
+    return null;
+  }
+
   @computed get totalPage() {
     return Math.ceil(this.getters.cameraUIStreams.length / this.pageSize);
   }
@@ -40,12 +47,11 @@ export class PresentationUIStore extends EduUIStoreBase {
   @action
   setMainViewStream(streamUuid: string | null) {
     if (this.isMainViewStreamPinned || this.getters.isBoardWidgetActive) return;
-    this.mainViewStream =
-      this.getters.videoUIStreams.find((stream) => stream.stream.streamUuid === streamUuid) || null;
+    this.mainViewStreamUuid = streamUuid;
   }
   @action
   clearMainViewStream() {
-    this.mainViewStream = null;
+    this.mainViewStreamUuid = null;
   }
   @Lodash.debounced(3000)
   @action.bound

@@ -5,6 +5,7 @@ import { App } from './app';
 import { Logger } from 'agora-common-libs/lib/annotation';
 import {
   EduClassroomConfig,
+  EduEventCenter,
   EduMediaEncryptionMode,
   EduRegion,
   EduRoleTypeEnum,
@@ -46,6 +47,7 @@ export class AgoraOnlineclassSDK {
       roomType,
       startTime,
       duration,
+      listener,
     } = launchOptions;
 
     Logger.info('[AgoraOnlineclassSDK]launched with options:', launchOptions);
@@ -94,6 +96,7 @@ export class AgoraOnlineclassSDK {
     config.ignoreUrlRegionPrefix = ignoreUrlRegionPrefix;
 
     EduClassroomConfig.setConfig(config);
+    listener && EduEventCenter.shared.onClassroomEvents(listener);
 
     Logger.info(`[AgoraOnlineclassSDK]classroomConfig`, config);
 
