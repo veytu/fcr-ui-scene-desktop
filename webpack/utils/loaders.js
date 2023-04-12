@@ -3,7 +3,7 @@ const { ROOT_PATH } = require('.');
 
 module.exports.base = [
   {
-    test: /\.(t|j)s(x)?$/,
+    test: /\.ts(x)?$/,
     exclude: /node_modules/,
     use: [
       {
