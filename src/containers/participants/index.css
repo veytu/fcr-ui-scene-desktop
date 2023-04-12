@@ -6,6 +6,7 @@
 .fcr-participants-container .fcr-table {
   flex: 1;
 }
+
 .fcr-participants-dialog .fcr-dialog-body {
   padding: 0;
 }
@@ -125,4 +126,7 @@
   justify-content: center;
 }
 .fcr-participants-table-cell-wrap-disabled {
+}
+.fcr-participants-container .fcr-table .fcr-table-row:hover {
+  @apply fcr-bg-brand-6;
 }
