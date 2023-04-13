@@ -5,12 +5,16 @@ import React, { useEffect } from 'react';
 import { ClassroomLayout } from './layout';
 
 export const Classroom = () => {
-  const { join } = useStore();
+  const { join, layoutUIStore } = useStore();
   useEffect(() => {
     join();
+    const observer = layoutUIStore.addViewportResizeObserver();
+    return () => {
+      observer.disconnect();
+    };
   }, []);
   return (
-    <div>
+    <div className={layoutUIStore.classroomViewportClassName}>
       <ClassroomLayout></ClassroomLayout>
       <ClassRoomDialogContainer></ClassRoomDialogContainer>
     </div>
