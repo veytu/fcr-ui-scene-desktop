@@ -282,21 +282,23 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   onInstall() {
     this._registeredWidgets = this._getEnabledWidgets();
-
     this.classroomStore.widgetStore.addWidgetStateListener(this._stateListener);
     // switch between widget controllers of scenes
     this._disposers.push(
       reaction(
         () => ({
           controller: this.classroomStore.widgetStore.widgetController,
+          widgetIds: this.classroomStore.widgetStore.widgetController?.widgetIds,
           ready: this.getters.layoutReady,
         }),
-        ({ controller, ready }) => {
+        ({ widgetIds, ready, controller }) => {
           // wait until the layout is ready
           if (ready && controller) {
-            controller.widgetIds.forEach((widgetId) => {
+            widgetIds?.forEach((widgetId) => {
               const state = controller.getWidgetState(widgetId);
-              if (state === WidgetState.Active) {
+              console.log(widgetIds, widgetId, state, 'widgetIdstate');
+
+              if (state === WidgetState.Active || widgetId === 'easemobIM') {
                 this._handleWidgetActive(widgetId);
               }
             });
@@ -316,7 +318,7 @@ export class WidgetUIStore extends EduUIStoreBase {
           if (oldController) {
             this._uninstallWidgets(oldController);
             this.getters.boardApi.uninstall();
-
+            this.getters.chatApi.uninstall();
             oldController.removeBroadcastListener({
               messageType: AgoraExtensionWidgetEvent.WidgetBecomeActive,
               onMessage: this._handleBecomeActive,
@@ -329,6 +331,7 @@ export class WidgetUIStore extends EduUIStoreBase {
           // install widgets
           if (controller) {
             this.getters.boardApi.install(controller);
+            this.getters.chatApi.install(controller);
 
             this._installWidgets(controller);
 

@@ -37,6 +37,12 @@ export class ActionBarUIStore extends EduUIStoreBase {
       this.classroomStore.mediaStore.localScreenShareTrackState === AgoraRteMediaSourceState.started
     );
   }
+
+  @bound
+  openChatDialog() {
+    this.getters.chatApi.openChatDialog();
+  }
+
   @action.bound
   setShowLeaveOption(show: boolean) {
     this.showLeaveOption = show;

@@ -12,6 +12,9 @@ export class Getters {
   get boardApi() {
     return this._classroomUIStore.boardApi;
   }
+  get chatApi() {
+    return this._classroomUIStore.chatApi;
+  }
   @computed
   get isGranted() {
     return this._classroomUIStore.boardApi.granted;
