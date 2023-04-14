@@ -14,7 +14,6 @@ export const Chat = observer(() => {
         onClick={openChatDialog}
         icon={SvgIconEnum.FCR_CHAT2}
         text={'Chat'}></ActionBarItem>
-      ;
     </div>
   );
 });
