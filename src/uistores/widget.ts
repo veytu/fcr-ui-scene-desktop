@@ -1,6 +1,7 @@
 import {
   AgoraMultiInstanceWidget,
   AgoraTrackSyncedWidget,
+  AgoraViewportBoundaries,
   AgoraWidgetBase,
   AgoraWidgetLifecycle,
   AgoraWidgetTrackMode,
@@ -280,6 +281,15 @@ export class WidgetUIStore extends EduUIStoreBase {
     };
   }
 
+  @bound
+  private _notifyViewportChange(boundaries?: AgoraViewportBoundaries) {
+    if (boundaries) {
+      this.widgetInstanceList.forEach((instance) => {
+        instance.onViewportBoundaryUpdate(boundaries);
+      });
+    }
+  }
+
   onInstall() {
     this._registeredWidgets = this._getEnabledWidgets();
     this.classroomStore.widgetStore.addWidgetStateListener(this._stateListener);
@@ -345,6 +355,10 @@ export class WidgetUIStore extends EduUIStoreBase {
           }
         },
       ),
+    );
+
+    this._disposers.push(
+      reaction(() => this.getters.viewportBoundaries, this._notifyViewportChange),
     );
   }
 

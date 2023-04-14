@@ -1,8 +1,8 @@
 /** list-on-top **/
 .fcr-layout-content-list-on-top {
   @apply fcr-bg-1;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -31,8 +31,8 @@
 /** list-on-rigth **/
 .fcr-layout-content-list-on-right {
   @apply fcr-bg-1;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row-reverse;
 }

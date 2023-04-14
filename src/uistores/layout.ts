@@ -1,17 +1,22 @@
 import { EduUIStoreBase } from './base';
-import { observable, action, computed, reaction } from 'mobx';
+import { observable, action, computed, reaction, runInAction } from 'mobx';
 import { DialogType, Layout } from './type';
-import { bound, Scheduler } from 'agora-rte-sdk';
+import { bound, Lodash, Scheduler } from 'agora-rte-sdk';
+import { Log } from 'agora-common-libs/lib/annotation';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
-import { LeaveReason } from 'agora-edu-core';
+import { AgoraViewportBoundaries } from 'agora-common-libs/lib/widget';
 
+@Log.attach({ proxyMethods: false })
 export class LayoutUIStore extends EduUIStoreBase {
   private _clearScreenTask: Scheduler.Task | null = null;
   private _clearScreenDelay = 3000;
   private _isPointingBar = false;
   private _hasPopoverShowed = false;
+  private _classroomViewportClassName = 'fcr-classroom-viewport';
+  private _viewportResizeObserver?: ResizeObserver;
 
+  @observable viewportBoundaries?: AgoraViewportBoundaries;
   @observable mouseEnterClass = false;
   @observable layoutReady = false;
   @observable showStatusBar = true;
@@ -47,6 +52,9 @@ export class LayoutUIStore extends EduUIStoreBase {
       (this.layout === Layout.Grid && this.getters.cameraUIStreams.length > 1) ||
       this.noAvailabelStream
     );
+  }
+  get classroomViewportClassName() {
+    return this._classroomViewportClassName;
   }
   @action.bound
   clearScreen = () => {
@@ -107,7 +115,38 @@ export class LayoutUIStore extends EduUIStoreBase {
     this.layoutReady = ready;
   }
 
+  addViewportResizeObserver() {
+    const observer = new ResizeObserver(this._updateViewportBoundaries);
+
+    const viewport = document.querySelector(`.${this._classroomViewportClassName}`);
+    if (viewport) {
+      observer.observe(viewport);
+    }
+    return observer;
+  }
+
+  @bound
+  @Lodash.debounced(300)
+  private _updateViewportBoundaries() {
+    const clientRect = document
+      .querySelector(`.${this._classroomViewportClassName}`)
+      ?.getBoundingClientRect();
+
+    if (clientRect) {
+      this.logger.info('notify to all widgets that viewport boundaries changed');
+      runInAction(() => {
+        this.viewportBoundaries = clientRect;
+      });
+    } else {
+      this.logger.warn(
+        'cannot get viewport boudnaries by classname:',
+        this._classroomViewportClassName,
+      );
+    }
+  }
+
   onDestroy(): void {
+    this._viewportResizeObserver?.disconnect();
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseleave', this.handleMouseLeave);
   }

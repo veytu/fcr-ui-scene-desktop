@@ -98,4 +98,8 @@ export class Getters {
       return widget.widgetName === 'netlessBoard';
     });
   }
+
+  get viewportBoundaries() {
+    return this._classroomUIStore.layoutUIStore.viewportBoundaries;
+  }
 }
