@@ -296,7 +296,6 @@ export class WidgetUIStore extends EduUIStoreBase {
           if (ready && controller) {
             widgetIds?.forEach((widgetId) => {
               const state = controller.getWidgetState(widgetId);
-              console.log(widgetIds, widgetId, state, 'widgetIdstate');
 
               if (state === WidgetState.Active || widgetId === 'easemobIM') {
                 this._handleWidgetActive(widgetId);
