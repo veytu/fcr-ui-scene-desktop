@@ -13,12 +13,12 @@ export const WidgetContainer = observer(() => {
 
   return (
     <React.Fragment>
-      <div className="fcr-widget-container z-0">
+      <div className="fcr-widget-container fcr-z-0">
         {z0Widgets.map((w: AgoraWidgetBase) => (
           <Widget key={w.widgetId} widget={w} />
         ))}
       </div>
-      <div className="fcr-widget-container z-10">
+      <div className="fcr-widget-container fcr-z-10">
         {z10Widgets.map((w: AgoraWidgetBase) => (
           <Widget key={w.widgetId} widget={w} />
         ))}
@@ -51,6 +51,7 @@ export const Widget = observer(({ widget }: { widget: AgoraWidgetBase }) => {
       return (
         <WidgetTrackControl widget={widget}>
           <div
+            className="fcr-widget-inner"
             ref={(ref) => {
               if (ref) widget.render(ref);
               else widget.unload();
@@ -61,6 +62,7 @@ export const Widget = observer(({ widget }: { widget: AgoraWidgetBase }) => {
     } else {
       return (
         <div
+          className="fcr-widget-inner"
           ref={(ref) => {
             if (ref) widget.render(ref);
             else widget.unload();
