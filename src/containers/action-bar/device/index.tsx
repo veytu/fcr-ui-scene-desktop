@@ -15,7 +15,7 @@ export const AudioRecordinDeviceIcon = observer(({ size = 36 }: { size?: number 
 
   return <SvgImg type={icon} size={size}></SvgImg>;
 });
-export const MicrophoenDevice: FC = observer(() => {
+export const MicrophoneDevice: FC = observer(() => {
   const {
     tootipVisible,
     handlePopoverVisibleChanged,
@@ -27,12 +27,12 @@ export const MicrophoenDevice: FC = observer(() => {
     layoutUIStore: { addDialog },
   } = useStore();
 
-  const text = isAudioRecordingDeviceEnabled ? 'Microphoen' : 'unmute';
+  const text = isAudioRecordingDeviceEnabled ? 'Microphone' : 'Unmute';
   return (
     <ToolTip
       visible={tootipVisible}
       onVisibleChange={handleTooltipVisibleChanged}
-      content={'Microphoen'}>
+      content={'Microphone'}>
       <ActionBarItemWrapper>
         <div className="fcr-action-bar-device" onClick={toggleAudioRecordingDevice}>
           <div className="fcr-action-bar-device-inner">
@@ -75,12 +75,12 @@ export const CameraDevice: FC = observer(() => {
   } = useStore();
 
   const icon = isCameraDeviceEnabled ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
-  const text = isCameraDeviceEnabled ? 'Camera' : 'unmute';
+  const text = isCameraDeviceEnabled ? 'Camera' : 'Unmute';
   return (
     <ToolTip
       onVisibleChange={handleTooltipVisibleChanged}
       visible={tootipVisible}
-      content={'CameraDev'}>
+      content={'Camera'}>
       <ActionBarItemWrapper>
         <div className="fcr-action-bar-device" onClick={toggleCameraDevice}>
           <div className="fcr-action-bar-device-inner">

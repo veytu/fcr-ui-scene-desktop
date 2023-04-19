@@ -3,7 +3,7 @@ import { SvgIconEnum, SvgImg, SvgImgProps } from '@components/svg-img';
 import { FC, ReactNode, useState } from 'react';
 import { observer } from 'mobx-react';
 import './index.css';
-import { CameraDevice, MicrophoenDevice } from './device';
+import { CameraDevice, MicrophoneDevice } from './device';
 import classnames from 'classnames';
 import { ToolBox } from './toolbox';
 import { Whiteboard } from './whiteboard';
@@ -34,7 +34,7 @@ export const ActionBar = observer(() => {
       ) : (
         <>
           <div className="fcr-action-bar-left">
-            <MicrophoenDevice></MicrophoenDevice>
+            <MicrophoneDevice></MicrophoneDevice>
             <CameraDevice></CameraDevice>
           </div>
           <div className="fcr-action-bar-mid">
