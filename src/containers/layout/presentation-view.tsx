@@ -21,6 +21,7 @@ export const PresentationView = observer(() => {
       setCurrentPage,
       showPager,
       showListView,
+      isBoardWidgetActive,
     },
   } = useStore();
   useEffect(() => {
@@ -70,7 +71,7 @@ export const PresentationView = observer(() => {
             <StreamWindow></StreamWindow>
           </StreamWindowContext.Provider>
         ) : null}
-        <BoardViewContainer></BoardViewContainer>
+        {isBoardWidgetActive && <BoardViewContainer></BoardViewContainer>}
       </div>
     </div>
   );

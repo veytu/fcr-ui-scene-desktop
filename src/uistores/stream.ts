@@ -3,6 +3,7 @@ import { AgoraRteVideoSourceType, AGRtcState, bound, Scheduler } from 'agora-rte
 import { action, computed, observable, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { computedFn } from 'mobx-utils';
+import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 export class StreamUIStore extends EduUIStoreBase {
   // private static readonly PAGE_SIZE_BY_MODE = {
   //   [ViewMode.Divided]: 20,
@@ -126,6 +127,19 @@ export class StreamUIStore extends EduUIStoreBase {
   isUserGranted = computedFn((userUuid: string) => {
     return this.getters.boardApi.grantedUsers.has(userUuid);
   });
+
+  remoteStreamVolume = computedFn((stream?: EduStreamUI) => {
+    if (stream) {
+      const volume =
+        this.classroomStore.streamStore.streamVolumes.get(stream.stream.streamUuid) || 0;
+      return volume * 100;
+    }
+    return 0;
+  });
+
+  @computed get localVolume(): number {
+    return this.classroomStore.mediaStore.localMicAudioVolume * 100;
+  }
   onDestroy(): void {
     this._subscribeTask?.stop();
   }

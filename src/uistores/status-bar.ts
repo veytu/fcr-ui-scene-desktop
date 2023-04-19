@@ -130,9 +130,9 @@ export class StatusBarUIStore extends EduUIStoreBase {
   @computed
   get delay() {
     if (this.classroomStore.statisticsStore.delay === undefined) {
-      return `-- ${transI18n('nav.ms')}`;
+      return `-- ms`;
     }
-    return `${Math.floor(this.classroomStore.statisticsStore.delay)} ${transI18n('nav.ms')}`;
+    return `${Math.floor(this.classroomStore.statisticsStore.delay)} ms`;
   }
   @computed
   get classroomSchedule() {

@@ -35,6 +35,13 @@ export class LayoutUIStore extends EduUIStoreBase {
   setHasPopoverShowed(has: boolean) {
     this._hasPopoverShowed = has;
   }
+  @computed get deviceSettingOpened() {
+    let opened = false;
+    this.dialogMap.forEach((dialog) => {
+      if (dialog.type === 'device-settings') opened = true;
+    });
+    return opened;
+  }
   @computed get gridLayoutDisabled() {
     return this.getters.isBoardWidgetActive;
   }

@@ -44,7 +44,7 @@ export const ActionBar = observer(() => {
             {showRecord && <Record></Record>}
           </div>
           <div className="fcr-action-bar-right">
-            <RaiseHands></RaiseHands>
+            {/* <RaiseHands></RaiseHands> */}
             <Chat></Chat>
             <Participants></Participants>
             <Setting></Setting>

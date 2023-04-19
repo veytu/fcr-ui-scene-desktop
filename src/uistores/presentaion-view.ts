@@ -1,7 +1,8 @@
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
-import { AgoraRteEventType, bound, Lodash } from 'agora-rte-sdk';
+import { AgoraRteEventType, bound, Lodash, Log } from 'agora-rte-sdk';
+@Log.attach({ proxyMethods: false })
 export class PresentationUIStore extends EduUIStoreBase {
   private _boardViewportClassName = 'fcr-layout-board-viewport';
   @observable boardViewportSize = { width: 0, height: 0 };
@@ -20,17 +21,24 @@ export class PresentationUIStore extends EduUIStoreBase {
   }
   @action.bound
   pinStream(streamUuid: string) {
-    this.isMainViewStreamPinned = true;
     this.setMainViewStream(streamUuid);
+
+    this.isMainViewStreamPinned = true;
   }
   @action.bound
   removePinnedStream() {
     this.isMainViewStreamPinned = false;
   }
+  @computed get pinnedUserUuid() {
+    return this.isMainViewStreamPinned && this.mainViewStream?.fromUser.userUuid;
+  }
+  @computed get isBoardWidgetActive() {
+    return this.getters.isBoardWidgetActive;
+  }
   @computed get mainViewStream() {
     if (!this.mainViewStreamUuid) return null;
     const stream = this.classroomStore.streamStore.streamByStreamUuid.get(this.mainViewStreamUuid);
-    if (stream) return new EduStreamUI(stream).setRenderAt('Window');
+    if (stream) return new EduStreamUI(stream);
     return null;
   }
 
@@ -135,7 +143,7 @@ export class PresentationUIStore extends EduUIStoreBase {
             this.clearMainViewStream();
             // stop timer
           } else {
-            // start timer
+            this._handleMainCameraStream();
           }
         },
       ),
@@ -158,7 +166,7 @@ export class PresentationUIStore extends EduUIStoreBase {
     );
     this._disposers.push(
       reaction(() => {
-        return this.getters.cameraUIStreams;
+        return this.getters.cameraUIStreams.length && this.mainViewStream;
       }, this._handleMainCameraStream),
     );
   }
