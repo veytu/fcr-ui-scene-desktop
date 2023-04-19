@@ -56,7 +56,11 @@ export class WidgetUIStore extends EduUIStoreBase {
   @action.bound
   createWidget(
     widgetId: string,
-    defaults?: Record<'properties' | 'userProperties' | 'trackProperties', any>,
+    defaults?: {
+      properties: any;
+      userProperties: any;
+      trackProperties: AgoraWidgetTrack;
+    },
   ) {
     const [widgetName, instanceId] = this._extractWidgetNameId(widgetId);
 
@@ -125,6 +129,24 @@ export class WidgetUIStore extends EduUIStoreBase {
       this._callWidgetDestroy(widget);
       delete this._widgetInstances[widgetId];
     }
+  }
+
+  setWidgetActive(
+    widgetId: string,
+    defaults?: {
+      properties: any;
+      userProperties: any;
+      trackProperties: AgoraWidgetTrack;
+    },
+  ) {
+    this.classroomStore.widgetStore.setActive(widgetId, {
+      ...defaults?.properties,
+      ...defaults?.trackProperties,
+    });
+  }
+
+  setWidgetInactive(widgetId: string) {
+    this.classroomStore.widgetStore.setInactive(widgetId);
   }
 
   private _extractWidgetNameId(widgetId: string) {
