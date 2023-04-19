@@ -50,7 +50,8 @@ export class LayoutUIStore extends EduUIStoreBase {
       this._isPointingBar ||
       this._hasPopoverShowed ||
       (this.layout === Layout.Grid && this.getters.cameraUIStreams.length > 1) ||
-      this.noAvailabelStream
+      this.noAvailabelStream ||
+      this.getters.isBoardWidgetActive
     );
   }
   get classroomViewportClassName() {

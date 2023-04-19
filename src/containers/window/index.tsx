@@ -11,6 +11,7 @@ import { StreamWindowContext, StreamWindowMouseContext } from './context';
 import { Layout } from '@onlineclass/uistores/type';
 import { StudentInteractLabelGroup } from '../common/student-interact-labels';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
+import { useDeviceSwitch } from '@onlineclass/utils/hooks/useDeviceSwitch';
 const colors = themeVal('colors');
 export const StreamWindow: FC = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
@@ -73,6 +74,7 @@ const StreamPlayer = observer(() => {
     streamUIStore: { updateVideoDom, removeVideoDom },
     presentationUIStore: { pinStream },
   } = useStore();
+
   const handleDoubleClick = () => {
     if (stream) {
       if (layout === Layout.Grid) setLayout(Layout.ListOnTop);
@@ -200,9 +202,15 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
   const {
     participantsUIStore: { sendReward },
     boardApi: { grantPrivilege },
+    classroomStore: {
+      userStore: { kickOutOnceOrBan },
+    },
   } = useStore();
-
   const streamWindowContext = useContext(StreamWindowContext);
+
+  const { cameraTooltip, micTooltip, handleCameraClick, handleMicrophoneClick } = useDeviceSwitch(
+    streamWindowContext?.stream,
+  );
   const userUuid = streamWindowContext?.stream.fromUser.userUuid || '';
 
   const streamWindowActionItems = [
@@ -213,8 +221,8 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
           colors={{ iconPrimary: colors['custom-2'] }}
           type={SvgIconEnum.FCR_MUTE}></SvgImg>
       ),
-      label: 'Ask to Unmute',
-      onClick: () => {},
+      label: micTooltip,
+      onClick: handleMicrophoneClick,
     },
     {
       icon: (
@@ -223,8 +231,8 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
           colors={{ iconPrimary: colors['custom-2'] }}
           type={SvgIconEnum.FCR_CAMERA}></SvgImg>
       ),
-      label: 'Ask to turn on Camera',
-      onClick: () => {},
+      label: cameraTooltip,
+      onClick: handleCameraClick,
     },
     {
       icon: (
@@ -253,7 +261,9 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
           type={SvgIconEnum.FCR_ONELEAVE}></SvgImg>
       ),
       label: 'Remove',
-      onClick: () => {},
+      onClick: async () => {
+        await kickOutOnceOrBan(userUuid, false);
+      },
     },
   ];
   return (

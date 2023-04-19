@@ -50,5 +50,7 @@ export const convertStreamUIStatus = (
     showActions: !isHostRemote && isHostLocal,
     showInteractLabels: !isHostRemote,
     streamWindowBackgroundColorCls,
+    renderAtMainView,
+    renderAtListView,
   };
 };

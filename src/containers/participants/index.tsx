@@ -18,6 +18,7 @@ import { themeVal } from '@ui-kit-utils/tailwindcss';
 import classnames from 'classnames';
 import { ToastApi } from '@components/toast';
 import { AgoraRteMediaPublishState } from 'agora-rte-sdk';
+import { useDeviceSwitch } from '@onlineclass/utils/hooks/useDeviceSwitch';
 const colors = themeVal('colors');
 export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = (props) => {
   const [visible, setVisible] = useState(true);
@@ -181,28 +182,11 @@ const TableIconWrapper: FC<PropsWithChildren<{ onClick?: () => void; disabled?: 
 };
 
 const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
-  const {
-    deviceSettingUIStore: { toggleCameraDevice },
-    classroomStore: {
-      streamStore: { updateRemotePublishState },
-    },
-  } = useStore();
-  const icon = stream?.isVideoDeviceEnabled ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
-  const tooltip = stream?.isVideoDeviceEnabled
-    ? 'Turn off the camera'
-    : 'Ask to turn on the camera';
-  const handleCameraClick = () => {
-    if (stream?.isLocal) {
-      toggleCameraDevice();
-    } else {
-      if (stream?.isVideoStreamPublished)
-        updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
-          videoState: AgoraRteMediaPublishState.Unpublished,
-        });
-    }
-  };
+  const { cameraTooltip, handleCameraClick } = useDeviceSwitch(stream);
+  const icon = stream?.isVideoStreamPublished ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
+
   return (
-    <ToolTip placement="bottom" content={tooltip}>
+    <ToolTip placement="bottom" content={cameraTooltip}>
       <TableIconWrapper onClick={handleCameraClick}>
         <SvgImg type={icon} size={36}></SvgImg>
       </TableIconWrapper>
@@ -210,28 +194,11 @@ const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
   );
 });
 const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
-  const {
-    deviceSettingUIStore: { toggleAudioRecordingDevice },
-    classroomStore: {
-      streamStore: { updateRemotePublishState },
-    },
-  } = useStore();
-  const icon = stream?.isMicDeviceEnabled ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
-  const tooltip = stream?.isMicDeviceEnabled
-    ? 'Turn off the microphone'
-    : 'Ask to turn on the camera';
-  const handleMicrophoneClick = () => {
-    if (stream?.isLocal) {
-      toggleAudioRecordingDevice();
-    } else {
-      if (stream?.isMicStreamPublished)
-        updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
-          audioState: AgoraRteMediaPublishState.Unpublished,
-        });
-    }
-  };
+  const { micTooltip, handleMicrophoneClick } = useDeviceSwitch(stream);
+  const icon = stream?.isMicStreamPublished ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
+
   return (
-    <ToolTip content={tooltip} placement="bottom">
+    <ToolTip content={micTooltip} placement="bottom">
       <TableIconWrapper onClick={handleMicrophoneClick}>
         <SvgImg type={icon} size={36}></SvgImg>
       </TableIconWrapper>

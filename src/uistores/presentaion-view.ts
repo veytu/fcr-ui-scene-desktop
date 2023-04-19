@@ -1,8 +1,10 @@
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
-import { AgoraRteEventType, Lodash } from 'agora-rte-sdk';
+import { AgoraRteEventType, bound, Lodash } from 'agora-rte-sdk';
 export class PresentationUIStore extends EduUIStoreBase {
+  private _boardViewportClassName = 'fcr-layout-board-viewport';
+  @observable boardViewportSize = { width: 0, height: 0 };
   @observable isMainViewStreamPinned = false;
   @observable mainViewStreamUuid: string | null = null;
   @observable showListView = true;
@@ -28,7 +30,7 @@ export class PresentationUIStore extends EduUIStoreBase {
   @computed get mainViewStream() {
     if (!this.mainViewStreamUuid) return null;
     const stream = this.classroomStore.streamStore.streamByStreamUuid.get(this.mainViewStreamUuid);
-    if (stream) return new EduStreamUI(stream);
+    if (stream) return new EduStreamUI(stream).setRenderAt('Window');
     return null;
   }
 
@@ -69,6 +71,50 @@ export class PresentationUIStore extends EduUIStoreBase {
       this.setMainViewStream(this.getters.cameraUIStreams[0].stream.streamUuid);
     }
   }
+  @bound
+  addBoardViewportResizeObserver() {
+    const observer = new ResizeObserver(this.updateBoardViewportSize);
+
+    const containerEle = document.querySelector(`.${this._boardViewportClassName}`);
+    if (containerEle) {
+      observer.observe(containerEle);
+    }
+    return observer;
+  }
+  @bound
+  @Lodash.debounced(300)
+  updateBoardViewportSize() {
+    const containerEle = document.querySelector(`.${this._boardViewportClassName}`);
+    if (containerEle) {
+      const { width, height } = this.getRootDimensions(containerEle as HTMLElement);
+
+      const aspectRatio = 708 / 1186;
+
+      const curAspectRatio = height / width;
+
+      const scopeSize = { height, width };
+
+      if (curAspectRatio > aspectRatio) {
+        // shrink height
+        scopeSize.height = width * aspectRatio;
+      } else if (curAspectRatio < aspectRatio) {
+        // shrink width
+        scopeSize.width = height / aspectRatio;
+      }
+
+      runInAction(() => {
+        this.boardViewportSize = { width: scopeSize.width, height: scopeSize.height };
+      });
+    }
+  }
+  getRootDimensions = (containerNode: Window | HTMLElement) => {
+    const height =
+      containerNode instanceof Window ? containerNode.innerHeight : containerNode.clientHeight;
+    const width =
+      containerNode instanceof Window ? containerNode.innerWidth : containerNode.clientWidth;
+    return { width, height };
+  };
+
   onDestroy(): void {}
   onInstall(): void {
     this._disposers.push(

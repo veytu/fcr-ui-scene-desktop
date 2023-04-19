@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import './index.css';
 import { StreamWindow } from '../window';
 import { convertStreamUIStatus, StreamWindowContext } from '../window/context';
-import { useEffect } from 'react';
+import { FC, PropsWithChildren, useEffect } from 'react';
 import { ListViewFloatPagination } from '@components/pagination';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { CSSTransition } from 'react-transition-group';
@@ -70,7 +70,7 @@ export const PresentationView = observer(() => {
             <StreamWindow></StreamWindow>
           </StreamWindowContext.Provider>
         ) : null}
-        <div className="fcr-layout-board-view" />
+        <BoardViewContainer></BoardViewContainer>
       </div>
     </div>
   );
@@ -91,6 +91,30 @@ const ListViewCollapseButton = observer(() => {
         { 'fcr-layout-content-list-view-collapse-button-collapsed': !showListView },
       )}>
       <SvgImg type={SvgIconEnum.FCR_RIGHT2} size={48}></SvgImg>
+    </div>
+  );
+});
+const BoardViewContainer: FC<PropsWithChildren> = observer(() => {
+  const {
+    layoutUIStore: { showActiobBar, showStatusBar, layout },
+    presentationUIStore: { addBoardViewportResizeObserver, boardViewportSize, showListView },
+  } = useStore();
+  useEffect(() => {
+    const observer = addBoardViewportResizeObserver();
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+  return (
+    <div
+      className={classnames('fcr-layout-board-container', {
+        'fcr-layout-board-container-with-action-bar': showActiobBar,
+        'fcr-layout-board-container-with-status-bar':
+          showStatusBar && (layout !== Layout.ListOnTop || !showListView),
+      })}>
+      <div className={classnames('fcr-layout-board-viewport')}>
+        <div style={{ ...boardViewportSize }} className="fcr-layout-board-view" />
+      </div>
     </div>
   );
 });
