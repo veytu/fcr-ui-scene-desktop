@@ -1,11 +1,12 @@
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { AgoraRteEventType, bound, Lodash, Log } from 'agora-rte-sdk';
+import debounce from 'lodash/debounce';
 @Log.attach({ proxyMethods: false })
 export class PresentationUIStore extends EduUIStoreBase {
   private _boardViewportClassName = 'fcr-layout-board-viewport';
-  @observable boardViewportSize = { width: 0, height: 0 };
+  @observable boardViewportSize?: { width: number; height: number };
   @observable isMainViewStreamPinned = false;
   @observable mainViewStreamUuid: string | null = null;
   @observable showListView = true;
@@ -81,16 +82,17 @@ export class PresentationUIStore extends EduUIStoreBase {
   }
   @bound
   addBoardViewportResizeObserver() {
-    const observer = new ResizeObserver(this.updateBoardViewportSize);
+    const observer = new ResizeObserver(debounce(this.updateBoardViewportSize, 300));
 
     const containerEle = document.querySelector(`.${this._boardViewportClassName}`);
     if (containerEle) {
       observer.observe(containerEle);
     }
+    this.updateBoardViewportSize();
     return observer;
   }
-  @bound
-  @Lodash.debounced(300)
+
+  @action.bound
   updateBoardViewportSize() {
     const containerEle = document.querySelector(`.${this._boardViewportClassName}`);
     if (containerEle) {
@@ -110,9 +112,7 @@ export class PresentationUIStore extends EduUIStoreBase {
         scopeSize.width = height / aspectRatio;
       }
 
-      runInAction(() => {
-        this.boardViewportSize = { width: scopeSize.width, height: scopeSize.height };
-      });
+      this.boardViewportSize = { width: scopeSize.width, height: scopeSize.height };
     }
   }
   getRootDimensions = (containerNode: Window | HTMLElement) => {

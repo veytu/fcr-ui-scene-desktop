@@ -110,10 +110,9 @@
 }
 
 .fcr-layout-board-view {
-  @apply fcr-bg-4;
+  @apply fcr-bg-7;
   position: relative;
   transition: all 0.2s;
-
   z-index: 10;
 }
 
