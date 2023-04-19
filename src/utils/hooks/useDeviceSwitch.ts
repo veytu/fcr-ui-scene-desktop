@@ -9,6 +9,7 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
       streamStore: { updateRemotePublishState },
     },
   } = useStore();
+
   const cameraTooltip = stream?.isVideoStreamPublished
     ? 'Turn off the camera'
     : 'Ask to turn on the camera';
@@ -16,23 +17,27 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
     if (stream?.isLocal) {
       toggleCameraDevice();
     } else {
-      if (stream?.isVideoStreamPublished)
+      if (stream)
         updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
-          videoState: AgoraRteMediaPublishState.Unpublished,
+          videoState: stream.isVideoStreamPublished
+            ? AgoraRteMediaPublishState.Unpublished
+            : AgoraRteMediaPublishState.Published,
         });
     }
   };
 
   const micTooltip = stream?.isMicStreamPublished
     ? 'Turn off the microphone'
-    : 'Ask to turn on the camera';
+    : 'Ask to turn on the microphone';
   const handleMicrophoneClick = () => {
     if (stream?.isLocal) {
       toggleAudioRecordingDevice();
     } else {
-      if (stream?.isMicStreamPublished)
+      if (stream)
         updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
-          audioState: AgoraRteMediaPublishState.Unpublished,
+          audioState: stream.isMicStreamPublished
+            ? AgoraRteMediaPublishState.Unpublished
+            : AgoraRteMediaPublishState.Published,
         });
     }
   };

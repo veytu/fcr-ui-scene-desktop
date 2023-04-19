@@ -55,7 +55,7 @@
   height: 24px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-  border-bottom: none;
+  border-bottom-color: transparent;
   border-width: 1px;
   border-style: solid;
   display: flex;

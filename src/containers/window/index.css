@@ -140,9 +140,12 @@
   @apply fcr-text-2;
   font-size: 10px;
   line-height: 12px;
-  padding-top: 10px;
-  padding-left: 14px;
-  padding-bottom: 5px;
+
+  padding: 10px 14px 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 175px;
 }
 .fcr-stream-window-actions-popover-item {
   height: 30px;
@@ -250,4 +253,12 @@
 .fcr-stream-window-actions-popover-items {
   display: flex;
   flex-direction: column;
+}
+.fcr-audio-volume-effect {
+  @apply fcr-border-green fcr-rounded-8;
+  border-width: 3px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-style: solid;
 }

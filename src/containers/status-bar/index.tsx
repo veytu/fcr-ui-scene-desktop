@@ -14,7 +14,7 @@ import { getConfig } from '@onlineclass/utils/launch-options-holder';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { Layout } from '@onlineclass/uistores/type';
 import { StatusBarWidgetSlot } from './widgets';
-import { StudentInteractLabelGroup } from '../common/student-interact-labels';
+import { InteractLabelGroup } from '../common/interact-labels';
 import { ToolTip } from '@components/tooltip';
 
 export const StatusBar = observer(() => {
@@ -23,6 +23,7 @@ export const StatusBar = observer(() => {
     statusBarUIStore: { localUser, isStudent },
   } = useStore();
   const { logo } = getConfig();
+  const userUuid = localUser?.userUuid || '';
   return (
     <div
       className={classnames('fcr-status-bar', {
@@ -49,11 +50,8 @@ export const StatusBar = observer(() => {
       </div>
       <div className="fcr-status-bar-right">
         <StatusBarWidgetSlot></StatusBarWidgetSlot>
-        {isStudent && localUser && (
-          <StudentInteractLabelGroup
-            userUuid={localUser.userUuid}
-            size={'normal'}></StudentInteractLabelGroup>
-        )}
+
+        <InteractLabelGroup userUuid={userUuid} placement={'status-bar'}></InteractLabelGroup>
 
         <RecordStatus></RecordStatus>
         <ClassDuration></ClassDuration>
