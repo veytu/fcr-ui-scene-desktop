@@ -99,22 +99,25 @@ const BoardViewContainer: FC<PropsWithChildren> = observer(() => {
     layoutUIStore: { showActiobBar, showStatusBar, layout },
     presentationUIStore: { addBoardViewportResizeObserver, boardViewportSize, showListView },
   } = useStore();
+
   useEffect(() => {
     const observer = addBoardViewportResizeObserver();
     return () => {
       observer.disconnect();
     };
   }, []);
-  return (
-    <div
-      className={classnames('fcr-layout-board-container', {
-        'fcr-layout-board-container-with-action-bar': showActiobBar,
-        'fcr-layout-board-container-with-status-bar':
-          showStatusBar && (layout !== Layout.ListOnTop || !showListView),
-      })}>
-      <div className={classnames('fcr-layout-board-viewport')}>
-        <div style={{ ...boardViewportSize }} className="fcr-layout-board-view" />
+
+  const boardContainerCls = classnames('fcr-layout-board-container', {
+    'fcr-layout-board-container-with-action-bar': showActiobBar,
+    'fcr-layout-board-container-with-status-bar':
+      showStatusBar && (layout !== Layout.ListOnTop || !showListView),
+  });
+
+  return boardViewportSize ? (
+    <div className={boardContainerCls}>
+      <div className="fcr-layout-board-viewport">
+        <div style={boardViewportSize} className="fcr-layout-board-view" />
       </div>
     </div>
-  );
+  ) : null;
 });
