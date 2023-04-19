@@ -1,6 +1,6 @@
 import { AgoraWidgetController, EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { bound, Log, Logger } from 'agora-rte-sdk';
-import { action, computed, IReactionDisposer, observable, reaction, runInAction, toJS } from 'mobx';
+import { action, computed, IReactionDisposer, observable, runInAction, toJS } from 'mobx';
 
 import { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from './events';
 import { BoardConnectionState, BoardMountState, FcrBoardShape, FcrBoardTool } from './type';
@@ -182,17 +182,6 @@ export class Board {
       messageType: AgoraExtensionWidgetEvent.RequestGrantedList,
       onMessage: this._handleRequestGrantedList,
     });
-
-    this._disposers.push(
-      reaction(
-        () => this.granted && this.mounted,
-        (grantedAndMounted) => {
-          if (grantedAndMounted) {
-            this._resetTool();
-          }
-        },
-      ),
-    );
   }
 
   uninstall() {
@@ -280,18 +269,6 @@ export class Board {
   @action.bound
   private _handleMountStateChanged(state: BoardMountState) {
     this.mountState = state;
-    // if (state === BoardMountState.Mounted && this.hasPrivilege()) {
-    //   this._resetTool();
-    // }
-  }
-
-  @action
-  private _resetTool() {
-    // this.strokeColor = { r: 0, g: 115, b: 255 };
-    // this.strokeWidth = 2;
-    this.changeStrokeColor({ r: 0, g: 115, b: 255 });
-    this.changeStrokeWidth(2);
-    this.selectTool(FcrBoardTool.Clicker);
   }
 
   private _sendBoardCommandMessage(event: AgoraExtensionRoomEvent, args?: unknown) {

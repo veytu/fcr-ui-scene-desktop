@@ -350,6 +350,7 @@ export class WidgetUIStore extends EduUIStoreBase {
             this._uninstallWidgets(oldController);
             this.getters.boardApi.uninstall();
             this.getters.chatApi.uninstall();
+            this.getters.eduTool.uninstall();
             oldController.removeBroadcastListener({
               messageType: AgoraExtensionWidgetEvent.WidgetBecomeActive,
               onMessage: this._handleBecomeActive,
@@ -363,6 +364,7 @@ export class WidgetUIStore extends EduUIStoreBase {
           if (controller) {
             this.getters.boardApi.install(controller);
             this.getters.chatApi.install(controller);
+            this.getters.eduTool.install(controller);
 
             this._installWidgets(controller);
 
