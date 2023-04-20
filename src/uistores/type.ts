@@ -3,6 +3,6 @@ export enum Layout {
   ListOnRight = 'list-on-right',
   Grid = 'grid',
 }
-export type StreamWindowPlacement = 'main-view' | 'list-view' | 'setting';
+export type StreamWindowPlacement = 'main-view' | 'list-view';
 
 export type DialogType = 'confirm' | 'device-settings' | 'participants';

@@ -50,5 +50,6 @@ export const convertStreamUIStatus = (
     renderAtMainView,
     renderAtListView,
     isHostRemote,
+    placement,
   };
 };

@@ -12,11 +12,11 @@ const interactLabelGroupSizeMap = {
 };
 export const InteractLabelGroup = observer(
   ({
-    userUuid,
-    placement,
+    userUuid = '',
+    placement = 'list-view',
   }: {
-    userUuid: string;
-    placement: 'status-bar' | 'list-view' | 'main-view';
+    userUuid?: string;
+    placement?: 'status-bar' | 'list-view' | 'main-view';
   }) => {
     const {
       classroomStore: {

@@ -8,7 +8,6 @@ import classnames from 'classnames';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { Popover } from '@components/popover';
 import { StreamWindowContext, StreamWindowMouseContext } from './context';
-import { Layout } from '@onlineclass/uistores/type';
 import { InteractLabelGroup } from '../common/interact-labels';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
 import { useDeviceSwitch } from '@onlineclass/utils/hooks/useDeviceSwitch';
@@ -57,8 +56,8 @@ const StreamPlaceHolder: FC = observer(() => {
         </div>
       ) : (
         <div className={'fcr-stream-window-placeholder-text'}>
-          {stream?.fromUser.userName}
-          {stream?.isLocal && ' (you)'}
+          <span>{stream?.fromUser.userName}</span>
+          {stream?.isLocal && <span>&nbsp;(you)</span>}
         </div>
       )}
     </div>
@@ -109,25 +108,32 @@ const StreamPlayer = observer(() => {
 
 const UserInteract = observer(() => {
   const {
-    layoutUIStore: { showStatusBar },
+    layoutUIStore: { showStatusBar, showActiobBar },
   } = useStore();
   const streamWindowContext = useContext(StreamWindowContext);
   return (
-    <div className="fcr-stream-window-interact">
-      <div
-        className={classnames('fcr-stream-window-student-interact-group-wrap', {
-          'fcr-stream-window-student-interact-group-anim':
-            showStatusBar && streamWindowContext?.topLabelAnimation,
-        })}>
+    <div
+      className={classnames(
+        'fcr-stream-window-interact',
+        `fcr-stream-window-interact-${streamWindowContext?.labelSize}`,
+        {
+          'fcr-stream-window-interact-with-status-bar-visible':
+            streamWindowContext?.topLabelAnimation && showStatusBar,
+          'fcr-stream-window-interact-with-action-bar-visible':
+            streamWindowContext?.bottomLabelAnimation && showActiobBar,
+        },
+      )}>
+      <div className="fcr-stream-window-interact-top">
         <InteractLabelGroup
-          userUuid={streamWindowContext?.stream.fromUser.userUuid || ''}
-          placement={
-            streamWindowContext?.renderAtListView ? 'list-view' : 'main-view'
-          }></InteractLabelGroup>
+          userUuid={streamWindowContext?.stream.fromUser.userUuid}
+          placement={streamWindowContext?.placement}></InteractLabelGroup>
+        <StreamActions></StreamActions>
       </div>
-      <StreamActions></StreamActions>
-      <StreamMuteIcon></StreamMuteIcon>
-      <StreamWindowUserLabel></StreamWindowUserLabel>
+      <div className="fcr-stream-window-interact-bottom">
+        <StreamWindowUserLabel></StreamWindowUserLabel>
+
+        <StreamMuteIcon></StreamMuteIcon>
+      </div>
     </div>
   );
 });
@@ -136,7 +142,6 @@ const StreamMuteIcon = observer(() => {
   const streamWindowMouseContext = useContext(StreamWindowMouseContext);
 
   const {
-    layoutUIStore: { showStatusBar },
     statusBarUIStore: { isHost },
   } = useStore();
   const showAudioMuteAction =
@@ -152,10 +157,6 @@ const StreamMuteIcon = observer(() => {
           onClick={handleMicrophoneClick}
           className={classnames(
             `fcr-stream-window-mute-icon fcr-stream-window-mute-icon-${streamWindowContext?.labelSize} fcr-bg-brand-6`,
-            {
-              'fcr-stream-window-mute-icon-anim':
-                showStatusBar && streamWindowContext?.topLabelAnimation,
-            },
           )}>
           <span> {streamWindowContext?.stream.isMicStreamPublished ? 'Mute' : 'Unmute'}</span>
         </div>
@@ -183,10 +184,7 @@ const StreamActions = observer(() => {
     }
   }, [streamWindowMouseContext?.mouseEnterWindow]);
   return (
-    <div
-      className={classnames('fcr-stream-window-actions', `fcr-stream-window-actions-${size}`, {
-        'fcr-stream-window-actions-anim': showStatusBar && streamWindowContext?.topLabelAnimation,
-      })}>
+    <div className={classnames('fcr-stream-window-actions', `fcr-stream-window-actions-${size}`)}>
       {streamWindowMouseContext?.mouseEnterWindow && (
         <Popover
           visible={popoverVisible}
@@ -335,18 +333,11 @@ const StreamWindowUserLabel = observer(() => {
   const stream = streamWindowContext?.stream;
   const streamWindowMouseContext = useContext(StreamWindowMouseContext);
 
-  const {
-    layoutUIStore: { showActiobBar },
-  } = useStore();
-  return streamWindowMouseContext?.mouseEnterClass ? (
+  return true ? (
     <div
       className={classnames(
         'fcr-stream-window-user-label',
         `fcr-stream-window-user-label-${streamWindowContext?.labelSize}`,
-        {
-          'fcr-stream-window-user-label-anim':
-            showActiobBar && streamWindowContext?.bottomLabelAnimation,
-        },
       )}>
       {streamWindowContext?.showHostLabel && (
         <div className="fcr-stream-window-user-role">
@@ -362,7 +353,9 @@ const StreamWindowUserLabel = observer(() => {
         <div className="fcr-stream-window-user-name">{stream?.userName}</div>
       )}
     </div>
-  ) : null;
+  ) : (
+    <div></div>
+  );
 });
 const AudioVolumeEffect = observer(
   ({
