@@ -22,83 +22,7 @@ interface ParticipantsContext {
   toastApi: ToastApiFactory | null;
 }
 const ParticipantsContext = createContext<ParticipantsContext | null>(null);
-const hostColumns = [
-  {
-    title: <div className="fcr-participants-table-name-label">Name</div>,
-    render: (_, item) => {
-      return <TableName name={item.user.userName}></TableName>;
-    },
-    width: 150,
-    align: 'left',
-  },
-  {
-    title: 'Auth',
-    width: 100,
-    render: (_, item) => {
-      return <TableAuth role={item.user.userRole} userUuid={item.user.userUuid}></TableAuth>;
-    },
-  },
-  {
-    title: 'Camera',
-    width: 100,
-    render: (_, item) => {
-      return <TableCamera stream={item.stream}></TableCamera>;
-    },
-  },
-  {
-    title: 'Microphone',
-    width: 100,
-    render: (_, item) => {
-      return <TableMicrophone stream={item.stream}></TableMicrophone>;
-    },
-  },
-  {
-    title: 'Reward',
-    width: 100,
-    render: (_, item) => {
-      return <TableReward userUuid={item.user.userUuid}></TableReward>;
-    },
-  },
-  {
-    title: 'Remove',
-    width: 100,
-    render: (_, item) => {
-      return <TableRemove userUuid={item.user.userUuid}></TableRemove>;
-    },
-  },
-];
-const studentColumns = [
-  {
-    title: <div className="fcr-participants-table-name-label">Name</div>,
-    render: (_, item) => {
-      return <TableName name={item.user.userName}></TableName>;
-    },
-    align: 'left',
-    width: 200,
-  },
 
-  {
-    title: 'Camera',
-    width: 150,
-    render: (_, item) => {
-      return <TableCamera stream={item.stream}></TableCamera>;
-    },
-  },
-  {
-    title: 'Microphone',
-    width: 150,
-    render: (_, item) => {
-      return <TableMicrophone stream={item.stream}></TableMicrophone>;
-    },
-  },
-  {
-    title: 'Reward',
-    width: 150,
-    render: (_, item) => {
-      return <TableReward userUuid={item.user.userUuid}></TableReward>;
-    },
-  },
-];
 const colors = themeVal('colors');
 export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = (props) => {
   const [visible, setVisible] = useState(true);
@@ -127,6 +51,7 @@ const Participants = observer(() => {
     participantsUIStore: { participantList, searchKey, setSearchKey },
     statusBarUIStore: { isHost },
   } = useStore();
+  const { hostColumns, studentColumns } = useParticipantsColumn();
   const participantsContainerRef = useRef<HTMLDivElement | null>(null);
   const toastApiRef = useRef<ToastApiFactory | null>(null);
   useEffect(() => {
@@ -354,3 +279,87 @@ const RemoveDialogContent = observer(
     );
   },
 );
+
+const useParticipantsColumn = () => {
+  const hostColumns = [
+    {
+      title: <div className="fcr-participants-table-name-label">Name</div>,
+      render: (_, item) => {
+        return <TableName name={item.user.userName}></TableName>;
+      },
+      width: 150,
+      align: 'left',
+    },
+    {
+      title: 'Auth',
+      width: 100,
+      render: (_, item) => {
+        return <TableAuth role={item.user.userRole} userUuid={item.user.userUuid}></TableAuth>;
+      },
+    },
+    {
+      title: 'Camera',
+      width: 100,
+      render: (_, item) => {
+        return <TableCamera stream={item.stream}></TableCamera>;
+      },
+    },
+    {
+      title: 'Microphone',
+      width: 100,
+      render: (_, item) => {
+        return <TableMicrophone stream={item.stream}></TableMicrophone>;
+      },
+    },
+    {
+      title: 'Reward',
+      width: 100,
+      render: (_, item) => {
+        return <TableReward userUuid={item.user.userUuid}></TableReward>;
+      },
+    },
+    {
+      title: 'Remove',
+      width: 100,
+      render: (_, item) => {
+        return <TableRemove userUuid={item.user.userUuid}></TableRemove>;
+      },
+    },
+  ];
+  const studentColumns = [
+    {
+      title: <div className="fcr-participants-table-name-label">Name</div>,
+      render: (_, item) => {
+        return <TableName name={item.user.userName}></TableName>;
+      },
+      align: 'left',
+      width: 200,
+    },
+
+    {
+      title: 'Camera',
+      width: 150,
+      render: (_, item) => {
+        return <TableCamera stream={item.stream}></TableCamera>;
+      },
+    },
+    {
+      title: 'Microphone',
+      width: 150,
+      render: (_, item) => {
+        return <TableMicrophone stream={item.stream}></TableMicrophone>;
+      },
+    },
+    {
+      title: 'Reward',
+      width: 150,
+      render: (_, item) => {
+        return <TableReward userUuid={item.user.userUuid}></TableReward>;
+      },
+    },
+  ];
+  return {
+    hostColumns,
+    studentColumns,
+  };
+};
