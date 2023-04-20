@@ -20,6 +20,10 @@ export class EduTool {
     }));
   }
 
+  isWidgetMinimized(widgetId: string) {
+    return this._minimizedStateMap.has(widgetId);
+  }
+
   @action.bound
   private _handleMinimizedStateChange({
     minimized,

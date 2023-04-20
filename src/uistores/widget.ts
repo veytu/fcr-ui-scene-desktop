@@ -57,9 +57,9 @@ export class WidgetUIStore extends EduUIStoreBase {
   createWidget(
     widgetId: string,
     defaults?: {
-      properties: any;
-      userProperties: any;
-      trackProperties: AgoraWidgetTrack;
+      properties?: Record<string, any>;
+      userProperties?: Record<string, any>;
+      trackProperties?: AgoraWidgetTrack;
     },
   ) {
     const [widgetName, instanceId] = this._extractWidgetNameId(widgetId);
@@ -134,9 +134,9 @@ export class WidgetUIStore extends EduUIStoreBase {
   setWidgetActive(
     widgetId: string,
     defaults?: {
-      properties: any;
-      userProperties: any;
-      trackProperties: AgoraWidgetTrack;
+      properties?: Record<string, any>;
+      userProperties?: Record<string, any>;
+      trackProperties?: AgoraWidgetTrack;
     },
   ) {
     this.classroomStore.widgetStore.setActive(widgetId, {

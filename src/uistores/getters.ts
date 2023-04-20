@@ -105,4 +105,8 @@ export class Getters {
   get viewportBoundaries() {
     return this._classroomUIStore.layoutUIStore.viewportBoundaries;
   }
+
+  get activeWidgetIds() {
+    return this._classroomUIStore.widgetUIStore.widgetInstanceList.map((w) => w.widgetId);
+  }
 }
