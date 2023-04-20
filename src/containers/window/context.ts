@@ -26,7 +26,7 @@ export const convertStreamUIStatus = (
   const showMicrophoneIconOnBottomRight = renderAtListView;
   const labelSize = renderAtMainView ? 'large' : 'small';
   const isVideoStreamPublished = stream.isVideoStreamPublished;
-  const showNameOnBottomLeft = renderAtMainView || (renderAtListView && !isVideoStreamPublished);
+  const showNameOnBottomLeft = renderAtMainView || (renderAtListView && isVideoStreamPublished);
   const showRoundedNamePlaceholder = renderAtMainView;
   const labelIconSize = labelSize === 'large' ? 30 : 24;
   const audioIconSize = labelSize === 'large' ? 24 : 16;

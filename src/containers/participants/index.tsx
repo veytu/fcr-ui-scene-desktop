@@ -16,8 +16,7 @@ import { Radio, RadioGroup } from '@components/radio';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
 import classnames from 'classnames';
-import { ToastApi } from '@components/toast';
-import { AgoraRteMediaPublishState } from 'agora-rte-sdk';
+import { ToastApiFactory } from '@components/toast';
 import { useDeviceSwitch } from '@onlineclass/utils/hooks/useDeviceSwitch';
 const colors = themeVal('colors');
 export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = (props) => {
@@ -46,9 +45,18 @@ const Participants = observer(() => {
   const {
     participantsUIStore: { participantList, searchKey, setSearchKey },
   } = useStore();
-
+  const participantsContainerRef = useRef<HTMLDivElement | null>(null);
+  const toastApiRef = useRef<ToastApiFactory | null>(null);
+  useEffect(() => {
+    if (participantsContainerRef.current) {
+      toastApiRef.current = new ToastApiFactory({
+        toastPlacement: 'bottom',
+        renderContainer: participantsContainerRef.current,
+      });
+    }
+  }, []);
   return (
-    <div className="fcr-participants-container">
+    <div ref={participantsContainerRef} className="fcr-participants-container">
       <div className="fcr-participants-header">
         <div className="fcr-participants-title">Participants</div>
         <div className="fcr-participants-count">
