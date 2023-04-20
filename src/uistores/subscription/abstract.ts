@@ -1,3 +1,4 @@
+import { EduClassroomStore } from 'agora-edu-core';
 import {
   AgoraMediaControl,
   AgoraRteEventType,
@@ -31,7 +32,11 @@ export abstract class SceneSubscription {
     return this._active;
   }
 
-  constructor(protected scene: AgoraRteScene, protected getters: Getters) {
+  constructor(
+    protected scene: AgoraRteScene,
+    protected getters: Getters,
+    protected classroomStore: EduClassroomStore,
+  ) {
     this._rtcChannel = scene.rtcChannel;
     this._mediaControl = scene.engine.getAgoraMediaControl();
     this._active = true;
@@ -256,6 +261,14 @@ export abstract class SceneSubscription {
         this.logger.info(
           `muteLocalVideo, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteVideo}]`,
         );
+        if (muteVideo) {
+          const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
+          track.stop();
+        }
+        if (muteAudio) {
+          const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
+          track.stop();
+        }
         scene.rtcChannel.muteLocalVideoStream(muteVideo, connType);
         this.putRegistry(stream.streamUuid, { muteVideo });
         break;

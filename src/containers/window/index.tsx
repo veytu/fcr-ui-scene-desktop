@@ -10,7 +10,7 @@ import { Popover } from '@components/popover';
 import { StreamWindowContext, StreamWindowMouseContext } from './context';
 import { InteractLabelGroup } from '../common/interact-labels';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
-import { useDeviceSwitch } from '@onlineclass/utils/hooks/useDeviceSwitch';
+import { useDeviceSwitch } from '@onlineclass/utils/hooks/use-device-switch';
 import { useVideoRenderable } from '@onlineclass/utils/hooks/use-video-renderable';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { usePinStream } from '@onlineclass/utils/hooks/use-pin-stream';
@@ -74,6 +74,7 @@ const StreamPlayer = observer(() => {
       mediaStore: { setupLocalVideo },
     },
     streamUIStore: { updateVideoDom, removeVideoDom },
+    deviceSettingUIStore: { isLocalMirrorEnabled },
   } = useStore();
   const { pinStream } = usePinStream();
   const { videoRenderable } = useVideoRenderable();
@@ -85,7 +86,9 @@ const StreamPlayer = observer(() => {
   useEffect(() => {
     if (stream) {
       if (stream.isLocal) {
-        ref.current && videoRenderable && setupLocalVideo(ref.current, false, renderMode);
+        ref.current &&
+          videoRenderable &&
+          setupLocalVideo(ref.current, isLocalMirrorEnabled, renderMode);
       } else {
         if (ref.current) {
           if (videoRenderable) {

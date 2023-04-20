@@ -1,5 +1,5 @@
 import { BaseDialog, BaseDialogProps } from '@components/dialog';
-import { FC, PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { createContext, FC, PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { Input } from '@components/input';
 import { Table } from '@components/table';
 
@@ -17,7 +17,88 @@ import { EduRoleTypeEnum } from 'agora-edu-core';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
 import classnames from 'classnames';
 import { ToastApiFactory } from '@components/toast';
-import { useDeviceSwitch } from '@onlineclass/utils/hooks/useDeviceSwitch';
+import { useDeviceSwitch } from '@onlineclass/utils/hooks/use-device-switch';
+interface ParticipantsContext {
+  toastApi: ToastApiFactory | null;
+}
+const ParticipantsContext = createContext<ParticipantsContext | null>(null);
+const hostColumns = [
+  {
+    title: <div className="fcr-participants-table-name-label">Name</div>,
+    render: (_, item) => {
+      return <TableName name={item.user.userName}></TableName>;
+    },
+    width: 150,
+    align: 'left',
+  },
+  {
+    title: 'Auth',
+    width: 100,
+    render: (_, item) => {
+      return <TableAuth role={item.user.userRole} userUuid={item.user.userUuid}></TableAuth>;
+    },
+  },
+  {
+    title: 'Camera',
+    width: 100,
+    render: (_, item) => {
+      return <TableCamera stream={item.stream}></TableCamera>;
+    },
+  },
+  {
+    title: 'Microphone',
+    width: 100,
+    render: (_, item) => {
+      return <TableMicrophone stream={item.stream}></TableMicrophone>;
+    },
+  },
+  {
+    title: 'Reward',
+    width: 100,
+    render: (_, item) => {
+      return <TableReward userUuid={item.user.userUuid}></TableReward>;
+    },
+  },
+  {
+    title: 'Remove',
+    width: 100,
+    render: (_, item) => {
+      return <TableRemove userUuid={item.user.userUuid}></TableRemove>;
+    },
+  },
+];
+const studentColumns = [
+  {
+    title: <div className="fcr-participants-table-name-label">Name</div>,
+    render: (_, item) => {
+      return <TableName name={item.user.userName}></TableName>;
+    },
+    align: 'left',
+    width: 200,
+  },
+
+  {
+    title: 'Camera',
+    width: 150,
+    render: (_, item) => {
+      return <TableCamera stream={item.stream}></TableCamera>;
+    },
+  },
+  {
+    title: 'Microphone',
+    width: 150,
+    render: (_, item) => {
+      return <TableMicrophone stream={item.stream}></TableMicrophone>;
+    },
+  },
+  {
+    title: 'Reward',
+    width: 150,
+    render: (_, item) => {
+      return <TableReward userUuid={item.user.userUuid}></TableReward>;
+    },
+  },
+];
 const colors = themeVal('colors');
 export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = (props) => {
   const [visible, setVisible] = useState(true);
@@ -44,6 +125,7 @@ export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = 
 const Participants = observer(() => {
   const {
     participantsUIStore: { participantList, searchKey, setSearchKey },
+    statusBarUIStore: { isHost },
   } = useStore();
   const participantsContainerRef = useRef<HTMLDivElement | null>(null);
   const toastApiRef = useRef<ToastApiFactory | null>(null);
@@ -56,85 +138,44 @@ const Participants = observer(() => {
     }
   }, []);
   return (
-    <div ref={participantsContainerRef} className="fcr-participants-container">
-      <div className="fcr-participants-header">
-        <div className="fcr-participants-title">Participants</div>
-        <div className="fcr-participants-count">
-          (Student {participantList.length} / Co-teacher 0)
+    <ParticipantsContext.Provider value={{ toastApi: toastApiRef.current }}>
+      <div ref={participantsContainerRef} className="fcr-participants-container">
+        <div className="fcr-participants-header">
+          <div className="fcr-participants-title">Participants</div>
+          <div className="fcr-participants-count">
+            (Student {participantList.length} / Co-teacher 0)
+          </div>
+          <div className="fcr-participants-search">
+            <Input
+              size="medium"
+              value={searchKey}
+              onChange={setSearchKey}
+              iconPrefix={SvgIconEnum.FCR_V2_SEARCH}
+              placeholder="Search"
+            />
+          </div>
         </div>
-        <div className="fcr-participants-search">
-          <Input
-            size="medium"
-            value={searchKey}
-            onChange={setSearchKey}
-            iconPrefix={SvgIconEnum.FCR_V2_SEARCH}
-            placeholder="Search"
-          />
-        </div>
-      </div>
-      <Table
-        columns={[
-          {
-            title: <div className="fcr-participants-table-name-label">Name</div>,
-            render: (_, item) => {
-              return <TableName name={item.user.userName}></TableName>;
-            },
-            align: 'left',
-          },
-          {
-            title: 'Auth',
-            width: 100,
-            render: (_, item) => {
-              return (
-                <TableAuth role={item.user.userRole} userUuid={item.user.userUuid}></TableAuth>
-              );
-            },
-          },
-          {
-            title: 'Camera',
-            width: 100,
-            render: (_, item) => {
-              return <TableCamera stream={item.stream}></TableCamera>;
-            },
-          },
-          {
-            title: 'Microphone',
-            width: 100,
-            render: (_, item) => {
-              return <TableMicrophone stream={item.stream}></TableMicrophone>;
-            },
-          },
-          {
-            title: 'Reward',
-            width: 100,
-            render: (_, item) => {
-              return <TableReward userUuid={item.user.userUuid}></TableReward>;
-            },
-          },
-          {
-            title: 'Remove',
-            width: 100,
-            render: (_, item) => {
-              return <TableRemove userUuid={item.user.userUuid}></TableRemove>;
-            },
-          },
-        ]}
-        data={participantList}
-        rowKey={(record) => record.user.userUuid}></Table>
+        <Table
+          columns={isHost ? hostColumns : studentColumns}
+          data={participantList}
+          rowKey={(record) => record.user.userUuid}></Table>
 
-      <div className="fcr-participants-footer">
-        <ToolTip placement="top" content="Mute All">
-          <Button preIcon={SvgIconEnum.FCR_ALL_MUTE} size="S" type="secondary">
-            Mute All
-          </Button>
-        </ToolTip>
-        <ToolTip placement="top" content="Unmute all">
-          <Button preIcon={SvgIconEnum.FCR_ALL_UNMUTE} size="S" type="secondary">
-            Ask all to Unmute
-          </Button>
-        </ToolTip>
+        {isHost && (
+          <div className="fcr-participants-footer">
+            <ToolTip placement="top" content="Mute All">
+              <Button preIcon={SvgIconEnum.FCR_ALL_MUTE} size="S" type="secondary">
+                Mute All
+              </Button>
+            </ToolTip>
+            <ToolTip placement="top" content="Unmute all">
+              <Button preIcon={SvgIconEnum.FCR_ALL_UNMUTE} size="S" type="secondary">
+                Ask all to Unmute
+              </Button>
+            </ToolTip>
+          </div>
+        )}
       </div>
-    </div>
+    </ParticipantsContext.Provider>
   );
 });
 const TableName = ({ name }: { name: string }) => {
@@ -182,7 +223,10 @@ const TableIconWrapper: FC<PropsWithChildren<{ onClick?: () => void; disabled?: 
       className={classnames('fcr-participants-table-cell-wrap', {
         'fcr-participants-table-cell-wrap-disabled': disabled,
       })}>
-      <div {...others} className="fcr-participants-table-icon-wrap">
+      <div
+        {...others}
+        onClick={() => !disabled && props.onClick?.()}
+        className="fcr-participants-table-icon-wrap">
         {children}
       </div>
     </div>
@@ -190,12 +234,19 @@ const TableIconWrapper: FC<PropsWithChildren<{ onClick?: () => void; disabled?: 
 };
 
 const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
+  const {
+    statusBarUIStore: { isHost },
+    classroomStore: {
+      userStore: { localUser },
+    },
+  } = useStore();
+  const isSelf = stream?.fromUser.userUuid === localUser?.userUuid;
+  const actionDisabled = !isHost && !isSelf;
   const { cameraTooltip, handleCameraClick } = useDeviceSwitch(stream);
   const icon = stream?.isVideoStreamPublished ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
-
   return (
     <ToolTip placement="bottom" content={cameraTooltip}>
-      <TableIconWrapper onClick={handleCameraClick}>
+      <TableIconWrapper disabled={actionDisabled} onClick={handleCameraClick}>
         <SvgImg type={icon} size={36}></SvgImg>
       </TableIconWrapper>
     </ToolTip>
@@ -204,10 +255,17 @@ const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
 const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
   const { micTooltip, handleMicrophoneClick } = useDeviceSwitch(stream);
   const icon = stream?.isMicStreamPublished ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
-
+  const {
+    statusBarUIStore: { isHost },
+    classroomStore: {
+      userStore: { localUser },
+    },
+  } = useStore();
+  const isSelf = stream?.fromUser.userUuid === localUser?.userUuid;
+  const actionDisabled = !isHost && !isSelf;
   return (
     <ToolTip content={micTooltip} placement="bottom">
-      <TableIconWrapper onClick={handleMicrophoneClick}>
+      <TableIconWrapper disabled={actionDisabled} onClick={handleMicrophoneClick}>
         <SvgImg type={icon} size={36}></SvgImg>
       </TableIconWrapper>
     </ToolTip>
@@ -218,9 +276,13 @@ const TableReward = observer(({ userUuid }: { userUuid: string }) => {
     participantsUIStore: { sendReward, rewardsByUserUuid },
   } = useStore();
   const rewards = rewardsByUserUuid(userUuid);
+  const {
+    statusBarUIStore: { isHost },
+  } = useStore();
+  const actionDisabled = !isHost;
   return (
     <ToolTip placement="bottom" content="Reward">
-      <TableIconWrapper onClick={() => sendReward(userUuid)}>
+      <TableIconWrapper disabled={actionDisabled} onClick={() => sendReward(userUuid)}>
         <>
           {rewards > 0 && <div className="fcr-participants-table-rewards">{rewards}</div>}
           <SvgImg type={SvgIconEnum.FCR_REWARD} size={36}></SvgImg>

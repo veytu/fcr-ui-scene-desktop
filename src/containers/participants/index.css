@@ -42,6 +42,8 @@
   flex-direction: row;
   align-items: center;
   padding-left: 21px;
+  display: flex;
+  overflow: hidden;
 }
 .fcr-participants-table-name-label {
   padding-left: 21px;
