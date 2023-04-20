@@ -70,6 +70,7 @@ export const CameraDevice: FC = observer(() => {
     setPopoverOpened,
   } = useDeviceTooltipVisible();
   const {
+    classroomStore: {},
     deviceSettingUIStore: { isCameraDeviceEnabled, toggleCameraDevice },
     layoutUIStore: { addDialog },
   } = useStore();

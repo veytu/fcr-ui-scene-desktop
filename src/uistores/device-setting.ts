@@ -12,7 +12,7 @@ import { IAIDenoiserProcessor } from 'agora-extension-ai-denoiser';
 import { IVirtualBackgroundProcessor } from 'agora-extension-virtual-background';
 import { IBeautyProcessor } from 'agora-extension-beauty-effect';
 import { EduUIStoreBase } from './base';
-import { bound, Log } from 'agora-rte-sdk';
+import { AgoraRteMediaSourceState, bound, Log } from 'agora-rte-sdk';
 import { transI18n } from 'agora-common-libs/lib/i18n';
 import { BeautyFilterOptions, VirtualBackgroundOptions } from '..';
 import { fetchMediaFileByUrl } from '@onlineclass/utils';
@@ -416,6 +416,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   setupLocalVideo(dom: HTMLElement, mirror: boolean) {
     this.classroomStore.mediaStore.setupLocalVideo(dom, mirror);
   }
+  @bound
+  getStream() {
+    return this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
+  }
 
   @action.bound
   closeVirtualBackground() {
@@ -739,6 +743,21 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
           } else {
             this._aiDenoiserProcessor?.disable();
           }
+        },
+      ),
+      reaction(
+        () => {
+          return {
+            localMicTrackState: this.classroomStore.mediaStore.localMicTrackState,
+            localCameraTrackState: this.classroomStore.mediaStore.localCameraTrackState,
+          };
+        },
+        ({ localMicTrackState, localCameraTrackState }) => {
+          runInAction(() => {
+            this._cameraDeviceEnabled = localCameraTrackState === AgoraRteMediaSourceState.started;
+            this._audioRecordingDeviceEnabled =
+              localMicTrackState === AgoraRteMediaSourceState.started;
+          });
         },
       ),
     );

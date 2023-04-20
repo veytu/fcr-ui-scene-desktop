@@ -4,6 +4,7 @@ import { SceneSubscription } from './abstract';
 import { EduUIStoreBase } from '../base';
 import { MainRoomSubscription } from './main-room';
 import { Getters } from '../getters';
+import { EduClassroomStore } from 'agora-edu-core';
 
 @Log.attach({ proxyMethods: false })
 export class SubscriptionUIStore extends EduUIStoreBase {
@@ -24,7 +25,7 @@ export class SubscriptionUIStore extends EduUIStoreBase {
 
   createSceneSubscription(scene: AgoraRteScene) {
     if (!this._sceneSubscriptions.has(scene.sceneId)) {
-      const sub = SubscriptionFactory.createSubscription(scene, this.getters);
+      const sub = SubscriptionFactory.createSubscription(scene, this.getters, this.classroomStore);
 
       sub && this._sceneSubscriptions.set(scene.sceneId, sub);
     }
@@ -83,7 +84,11 @@ export class SubscriptionUIStore extends EduUIStoreBase {
 }
 
 class SubscriptionFactory {
-  static createSubscription(scene: AgoraRteScene, getters: Getters) {
-    return new MainRoomSubscription(scene, getters);
+  static createSubscription(
+    scene: AgoraRteScene,
+    getters: Getters,
+    classroomStore: EduClassroomStore,
+  ) {
+    return new MainRoomSubscription(scene, getters, classroomStore);
   }
 }
