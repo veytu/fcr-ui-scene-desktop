@@ -15,7 +15,12 @@ export const LocalVideoPlayer = observer(() => {
     }
   }, [deviceSettingUIStore.isLocalMirrorEnabled]);
 
-  return <div ref={videoRef} className="fcr-video-player" />;
+  return (
+    <div className="fcr-video-player-wrapper">
+      <div ref={videoRef} className="fcr-video-player" />
+      {/* <StreamPlaceHolder /> */}
+    </div>
+  );
 });
 
 export const RemoteVideoPlayer = observer(() => {

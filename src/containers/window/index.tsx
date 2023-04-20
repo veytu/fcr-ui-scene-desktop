@@ -8,7 +8,6 @@ import classnames from 'classnames';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { Popover } from '@components/popover';
 import { StreamWindowContext, StreamWindowMouseContext } from './context';
-import { Layout } from '@onlineclass/uistores/type';
 import { InteractLabelGroup } from '../common/interact-labels';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
 import { useDeviceSwitch } from '@onlineclass/utils/hooks/useDeviceSwitch';
