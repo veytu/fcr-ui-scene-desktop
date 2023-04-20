@@ -53,7 +53,6 @@
 .fcr-pretest__video-portal__video {
   position: relative;
   flex-grow: 1;
-  background: #ddd;
 }
 
 .fcr-pretest__video-portal__toggles {
