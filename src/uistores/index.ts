@@ -26,6 +26,7 @@ import { SubscriptionUIStore } from './subscription';
 import { ParticipantsUIStore } from './participants';
 import { NotiticationUIStore } from './notification';
 import { Chat } from '@onlineclass/extension/chat';
+import { EduTool } from '@onlineclass/extension/edu-tool';
 
 export class OnlineclassUIStore {
   @observable
@@ -48,6 +49,7 @@ export class OnlineclassUIStore {
 
   readonly boardApi = new Board();
   readonly chatApi = new Chat();
+  readonly eduToolApi = new EduTool();
 
   constructor() {
     this.classroomStore = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass);

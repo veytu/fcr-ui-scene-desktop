@@ -15,6 +15,9 @@ export class Getters {
   get chatApi() {
     return this._classroomUIStore.chatApi;
   }
+  get eduTool() {
+    return this._classroomUIStore.eduToolApi;
+  }
   @computed
   get isGranted() {
     return this._classroomUIStore.boardApi.granted;
@@ -101,5 +104,9 @@ export class Getters {
 
   get viewportBoundaries() {
     return this._classroomUIStore.layoutUIStore.viewportBoundaries;
+  }
+
+  get activeWidgetIds() {
+    return this._classroomUIStore.widgetUIStore.widgetInstanceList.map((w) => w.widgetId);
   }
 }

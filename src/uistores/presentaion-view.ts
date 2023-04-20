@@ -1,4 +1,4 @@
-import { action, computed, observable, reaction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { AgoraRteEventType, bound, Lodash, Log } from 'agora-rte-sdk';
@@ -88,11 +88,10 @@ export class PresentationUIStore extends EduUIStoreBase {
     if (containerEle) {
       observer.observe(containerEle);
     }
-    this.updateBoardViewportSize();
     return observer;
   }
 
-  @action.bound
+  @bound
   updateBoardViewportSize() {
     const containerEle = document.querySelector(`.${this._boardViewportClassName}`);
     if (containerEle) {
@@ -111,8 +110,9 @@ export class PresentationUIStore extends EduUIStoreBase {
         // shrink width
         scopeSize.width = height / aspectRatio;
       }
-
-      this.boardViewportSize = { width: scopeSize.width, height: scopeSize.height };
+      runInAction(() => {
+        this.boardViewportSize = { width: scopeSize.width, height: scopeSize.height };
+      });
     }
   }
   getRootDimensions = (containerNode: Window | HTMLElement) => {

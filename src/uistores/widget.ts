@@ -57,9 +57,9 @@ export class WidgetUIStore extends EduUIStoreBase {
   createWidget(
     widgetId: string,
     defaults?: {
-      properties: any;
-      userProperties: any;
-      trackProperties: AgoraWidgetTrack;
+      properties?: Record<string, any>;
+      userProperties?: Record<string, any>;
+      trackProperties?: AgoraWidgetTrack;
     },
   ) {
     const [widgetName, instanceId] = this._extractWidgetNameId(widgetId);
@@ -134,9 +134,9 @@ export class WidgetUIStore extends EduUIStoreBase {
   setWidgetActive(
     widgetId: string,
     defaults?: {
-      properties: any;
-      userProperties: any;
-      trackProperties: AgoraWidgetTrack;
+      properties?: Record<string, any>;
+      userProperties?: Record<string, any>;
+      trackProperties?: AgoraWidgetTrack;
     },
   ) {
     this.classroomStore.widgetStore.setActive(widgetId, {
@@ -350,6 +350,7 @@ export class WidgetUIStore extends EduUIStoreBase {
             this._uninstallWidgets(oldController);
             this.getters.boardApi.uninstall();
             this.getters.chatApi.uninstall();
+            this.getters.eduTool.uninstall();
             oldController.removeBroadcastListener({
               messageType: AgoraExtensionWidgetEvent.WidgetBecomeActive,
               onMessage: this._handleBecomeActive,
@@ -363,6 +364,7 @@ export class WidgetUIStore extends EduUIStoreBase {
           if (controller) {
             this.getters.boardApi.install(controller);
             this.getters.chatApi.install(controller);
+            this.getters.eduTool.install(controller);
 
             this._installWidgets(controller);
 

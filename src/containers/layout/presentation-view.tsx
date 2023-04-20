@@ -98,10 +98,16 @@ const ListViewCollapseButton = observer(() => {
 const BoardViewContainer: FC<PropsWithChildren> = observer(() => {
   const {
     layoutUIStore: { showActiobBar, showStatusBar, layout },
-    presentationUIStore: { addBoardViewportResizeObserver, boardViewportSize, showListView },
+    presentationUIStore: {
+      addBoardViewportResizeObserver,
+      updateBoardViewportSize,
+      boardViewportSize,
+      showListView,
+    },
   } = useStore();
 
   useEffect(() => {
+    updateBoardViewportSize();
     const observer = addBoardViewportResizeObserver();
     return () => {
       observer.disconnect();
@@ -114,11 +120,18 @@ const BoardViewContainer: FC<PropsWithChildren> = observer(() => {
       showStatusBar && (layout !== Layout.ListOnTop || !showListView),
   });
 
-  return boardViewportSize ? (
+  return (
     <div className={boardContainerCls}>
       <div className="fcr-layout-board-viewport">
-        <div style={boardViewportSize} className="fcr-layout-board-view" />
+        <div
+          style={{
+            display: boardViewportSize ? 'block' : 'none',
+            width: boardViewportSize?.width,
+            height: boardViewportSize?.height,
+          }}
+          className="fcr-layout-board-view"
+        />
       </div>
     </div>
-  ) : null;
+  );
 });
