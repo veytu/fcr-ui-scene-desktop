@@ -14,6 +14,7 @@ import { useDeviceSwitch } from '@onlineclass/utils/hooks/use-device-switch';
 import { useVideoRenderable } from '@onlineclass/utils/hooks/use-video-renderable';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { usePinStream } from '@onlineclass/utils/hooks/use-pin-stream';
+import { Avatar } from '@components/avatar';
 const colors = themeVal('colors');
 export const StreamWindow: FC = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
@@ -51,9 +52,7 @@ const StreamPlaceHolder: FC = observer(() => {
         streamWindowContext?.streamWindowBackgroundColorCls,
       )}>
       {streamWindowContext?.showRoundedNamePlaceholder ? (
-        <div className={'fcr-stream-window-placeholder-rounded'}>
-          {generateShortUserName(stream?.fromUser.userName || '')}
-        </div>
+        <Avatar size={81} textSize={30} nickName={stream?.fromUser.userName || ''}></Avatar>
       ) : (
         <div className={'fcr-stream-window-placeholder-text'}>
           <span>{stream?.fromUser.userName}</span>
@@ -253,6 +252,7 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
 
   const streamWindowActionItems = [
     {
+      key: 'mic',
       icon: (
         <SvgImg
           size={20}
@@ -264,6 +264,8 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
       visible: showStreamWindowHostAction,
     },
     {
+      key: 'camera',
+
       icon: (
         <SvgImg
           size={20}
@@ -275,6 +277,8 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
       visible: showStreamWindowHostAction,
     },
     {
+      key: 'auth',
+
       icon: (
         <SvgImg
           size={20}
@@ -288,6 +292,8 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
       visible: showStreamWindowHostAction,
     },
     {
+      key: 'reward',
+
       icon: <SvgImg size={20} type={SvgIconEnum.FCR_REWARD}></SvgImg>,
       label: 'Reward',
       onClick: () => {
@@ -296,6 +302,8 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
       visible: showStreamWindowHostAction,
     },
     {
+      key: 'pin',
+
       icon: <SvgImg size={20} type={SvgIconEnum.FCR_PIN}></SvgImg>,
       label: pinned ? 'Unpin' : 'Pin',
       onClick: async () => {
@@ -304,6 +312,8 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
       visible: true,
     },
     {
+      key: 'remove',
+
       icon: (
         <SvgImg
           size={20}
@@ -329,7 +339,7 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
             return (
               <>
                 <div
-                  key={item.label}
+                  key={item.key}
                   className="fcr-stream-window-actions-popover-item"
                   onClick={() => {
                     item.onClick();

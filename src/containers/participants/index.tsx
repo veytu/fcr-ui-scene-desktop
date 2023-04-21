@@ -18,6 +18,7 @@ import { themeVal } from '@ui-kit-utils/tailwindcss';
 import classnames from 'classnames';
 import { ToastApiFactory } from '@components/toast';
 import { useDeviceSwitch } from '@onlineclass/utils/hooks/use-device-switch';
+import { Avatar } from '@components/avatar';
 interface ParticipantsContext {
   toastApi: ToastApiFactory | null;
 }
@@ -106,7 +107,8 @@ const Participants = observer(() => {
 const TableName = ({ name }: { name: string }) => {
   return (
     <div className="fcr-participants-table-name">
-      <div className="fcr-participants-table-name-logo">{generateShortUserName(name)}</div>
+      <Avatar size={30} textSize={14} nickName={name}></Avatar>
+      {/* <div className="fcr-participants-table-name-logo">{generateShortUserName(name)}</div> */}
       <div className="fcr-participants-table-name-text">{name}</div>
     </div>
   );

@@ -19,7 +19,7 @@ export const convertStreamUIStatus = (
   const renderAtMainView = placement === 'main-view';
   const renderAtListView = placement === 'list-view';
 
-  const topLabelAnimation = renderAtMainView && layout !== Layout.ListOnTop && !isGrid;
+  const topLabelAnimation = renderAtMainView && !isGrid;
   const bottomLabelAnimation = renderAtMainView && !isGrid;
   const streamWindowBackgroundColorCls = renderAtMainView && !isGrid ? 'fcr-bg-1' : 'fcr-bg-4';
   const showMicrophoneIconOnRoleLabel = renderAtMainView;
