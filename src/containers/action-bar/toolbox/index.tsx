@@ -35,7 +35,7 @@ const ToolBoxPopoverContent = observer(() => {
       <div className="fcr-toolbox-popover-title">ToolBox</div>
       <div className="fcr-toolbox-popover-item-wrapper">
         {[
-          { label: 'Timer', id: 'timer', icon: SvgIconEnum.FCR_V2_TIMER },
+          // { label: 'Timer', id: 'timer', icon: SvgIconEnum.FCR_V2_TIMER },
           { label: 'Poll', id: 'poll', icon: SvgIconEnum.FCR_V2_VOTE },
         ].map(({ id, icon, label }) => (
           <ToolBoxItem key={id} id={id} icon={icon} label={label} active={isWidgetActive(id)} />

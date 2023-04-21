@@ -108,6 +108,7 @@ li.fcr-device-settings__nav-list-item--active {
   bottom: 10px;
   left: 10px;
   width: 240px;
+  z-index: 20;
 }
 
 .fcr-device-settings__video-preview-title {

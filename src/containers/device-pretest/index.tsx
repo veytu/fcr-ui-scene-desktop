@@ -21,7 +21,8 @@ type TabKeyType = keyof typeof tabContents;
 
 export const DevicePretest = observer(() => {
   const transI18n = useI18n();
-  const { deviceSettingUIStore } = useStore();
+  const { deviceSettingUIStore, setDevicePretestFinished } = useStore();
+
   const [activeTab, setActiveTab] = useState<TabKeyType>('basic-settings');
   const handleActiveTab = (tabKey: string) => {
     setActiveTab(tabKey as TabKeyType);
@@ -45,7 +46,9 @@ export const DevicePretest = observer(() => {
       {/* header */}
       <div className="fcr-pretest__header">
         <img className="fcr-pretest__logo" src={pretestLogo} />
-        <button className="fcr-pretest__close-btn fcr-btn-click-effect">
+        <button
+          className="fcr-pretest__close-btn fcr-btn-click-effect"
+          onClick={setDevicePretestFinished}>
           <SvgImg type={SvgIconEnum.FCR_CLOSE} />
         </button>
       </div>
