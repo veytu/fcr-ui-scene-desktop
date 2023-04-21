@@ -13,7 +13,7 @@
   @apply fcr-text-white;
   display: flex;
   overflow: hidden;
-  padding: 0 3px;
+  padding: 0 20px;
 }
 .fcr-stream-window-placeholder-text span:first-child {
   white-space: nowrap;
@@ -183,9 +183,6 @@
 }
 .fcr-stream-window-mute-icon {
   height: 30px;
-  position: absolute;
-  top: 20px;
-  right: 58px;
   transition: all 0.2s;
   pointer-events: all;
 }

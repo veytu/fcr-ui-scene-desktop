@@ -130,43 +130,53 @@ const UserInteract = observer(() => {
         <InteractLabelGroup
           userUuid={streamWindowContext?.stream.fromUser.userUuid}
           placement={streamWindowContext?.placement}></InteractLabelGroup>
+
         <StreamActions></StreamActions>
       </div>
       <div className="fcr-stream-window-interact-bottom">
         <StreamWindowUserLabel></StreamWindowUserLabel>
 
-        <StreamMuteIcon></StreamMuteIcon>
+        <StreamBottomRightAudioStatus></StreamBottomRightAudioStatus>
       </div>
     </div>
   );
 });
-const StreamMuteIcon = observer(() => {
+const MuteIcon = ({ size, visible }: { size: 'large' | 'small'; visible: boolean }) => {
+  const streamWindowContext = useContext(StreamWindowContext);
+
+  const { handleMicrophoneClick } = useDeviceSwitch(streamWindowContext?.stream);
+
+  return visible ? (
+    <div
+      onClick={handleMicrophoneClick}
+      className={classnames(
+        `fcr-stream-window-mute-icon fcr-stream-window-mute-icon-${size} fcr-bg-brand-6`,
+      )}>
+      <span> {streamWindowContext?.stream.isMicStreamPublished ? 'Mute' : 'Unmute'}</span>
+    </div>
+  ) : null;
+};
+const StreamBottomRightAudioStatus = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
   const streamWindowMouseContext = useContext(StreamWindowMouseContext);
-
   const {
     statusBarUIStore: { isHost },
   } = useStore();
   const showAudioMuteAction =
     streamWindowMouseContext?.mouseEnterWindow &&
     isHost &&
-    streamWindowContext?.stream.role === EduRoleTypeEnum.student;
+    streamWindowContext?.stream.role === EduRoleTypeEnum.student &&
+    streamWindowContext.renderAtListView;
   const showMicIcon = streamWindowContext?.showMicrophoneIconOnBottomRight && !showAudioMuteAction;
-  const { handleMicrophoneClick } = useDeviceSwitch(streamWindowContext?.stream);
+
   return (
     <>
-      {showAudioMuteAction && (
-        <div
-          onClick={handleMicrophoneClick}
-          className={classnames(
-            `fcr-stream-window-mute-icon fcr-stream-window-mute-icon-${streamWindowContext?.labelSize} fcr-bg-brand-6`,
-          )}>
-          <span> {streamWindowContext?.stream.isMicStreamPublished ? 'Mute' : 'Unmute'}</span>
-        </div>
-      )}
+      <MuteIcon size="small" visible={!!showAudioMuteAction}></MuteIcon>
       {showMicIcon && (
         <div className="fcr-stream-window-bottom-right-mic">
-          <AudioRecordinDeviceIcon size={18}></AudioRecordinDeviceIcon>
+          <AudioRecordinDeviceIcon
+            size={18}
+            stream={streamWindowContext.stream}></AudioRecordinDeviceIcon>
         </div>
       )}
     </>
@@ -178,16 +188,24 @@ const StreamActions = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
   const streamWindowMouseContext = useContext(StreamWindowMouseContext);
   const size = streamWindowContext?.labelSize;
+
   const {
-    layoutUIStore: { showStatusBar },
+    statusBarUIStore: { isHost },
   } = useStore();
+  const showAudioMuteAction =
+    streamWindowMouseContext?.mouseEnterWindow &&
+    isHost &&
+    streamWindowContext?.stream.role === EduRoleTypeEnum.student &&
+    streamWindowContext.renderAtMainView;
   useEffect(() => {
     if (!streamWindowMouseContext?.mouseEnterWindow) {
       setPopoverVisibel(false);
     }
   }, [streamWindowMouseContext?.mouseEnterWindow]);
+
   return (
     <div className={classnames('fcr-stream-window-actions', `fcr-stream-window-actions-${size}`)}>
+      <MuteIcon size="large" visible={!!showAudioMuteAction}></MuteIcon>
       {streamWindowMouseContext?.mouseEnterWindow && (
         <Popover
           visible={popoverVisible}
@@ -336,7 +354,7 @@ const StreamWindowUserLabel = observer(() => {
   const stream = streamWindowContext?.stream;
   const streamWindowMouseContext = useContext(StreamWindowMouseContext);
 
-  return true ? (
+  return streamWindowMouseContext?.mouseEnterClass ? (
     <div
       className={classnames(
         'fcr-stream-window-user-label',
@@ -346,6 +364,7 @@ const StreamWindowUserLabel = observer(() => {
         <div className="fcr-stream-window-user-role">
           {streamWindowContext.showMicrophoneIconOnRoleLabel && (
             <AudioRecordinDeviceIcon
+              stream={streamWindowContext.stream}
               size={streamWindowContext?.audioIconSize}></AudioRecordinDeviceIcon>
           )}
 

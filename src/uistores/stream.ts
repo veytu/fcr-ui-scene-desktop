@@ -1,6 +1,13 @@
 import { EduStream } from 'agora-edu-core';
-import { AgoraRteVideoSourceType, AGRtcState, bound, Scheduler } from 'agora-rte-sdk';
-import { action, computed, observable, runInAction } from 'mobx';
+import {
+  AgoraRteEventType,
+  AgoraRteVideoSourceType,
+  AgoraUser,
+  AGRtcState,
+  bound,
+  Scheduler,
+} from 'agora-rte-sdk';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { computedFn } from 'mobx-utils';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
@@ -22,6 +29,13 @@ export class StreamUIStore extends EduUIStoreBase {
   @computed
   get cameraUIStreams() {
     return this.getters.cameraUIStreams;
+  }
+  @computed
+  get localStream() {
+    const stream = this.classroomStore.streamStore.streamByStreamUuid.get(
+      this.classroomStore.streamStore.localCameraStreamUuid || '',
+    );
+    return stream ? new EduStreamUI(stream) : stream;
   }
   @action.bound
   subscribeMass(streams: EduStream[]) {
@@ -61,7 +75,7 @@ export class StreamUIStore extends EduUIStoreBase {
     // 已订阅 diff 当前页面视频列表 = 需要取消订阅的流列表
     const toUnsub = doneSub
       .filter((stream) => {
-        return !waitingSub.includes(stream);
+        return !waitingSub.find((waitingStream) => waitingStream.streamUuid === stream.streamUuid);
       })
       .concat(quitSub);
     // 当前页面视频列表 diff 已订阅 = 需要订阅的流列表
@@ -85,6 +99,7 @@ export class StreamUIStore extends EduUIStoreBase {
     }
 
     let subList: string[] = [];
+
     if (toSub.length) {
       // 订阅成功的列表
       subList = (await muteRemoteVideoStreamMass(toSub, false)) || [];
@@ -140,6 +155,19 @@ export class StreamUIStore extends EduUIStoreBase {
   @computed get localVolume(): number {
     return this.classroomStore.mediaStore.localMicAudioVolume * 100;
   }
+
+  @action.bound
+  private _handleUserRemoved(users: AgoraUser[]) {
+    const uuids = users.map(({ userUuid }) => userUuid);
+
+    const quitSub = Array.from(this.classroomStore.streamStore.streamByStreamUuid.values()).filter(
+      (s) => {
+        return uuids.includes(s.fromUser.userUuid);
+      },
+    );
+
+    this.quitSub = this.quitSub.concat(quitSub);
+  }
   onDestroy(): void {
     this._subscribeTask?.stop();
   }
@@ -147,6 +175,17 @@ export class StreamUIStore extends EduUIStoreBase {
     this._subscribeTask = Scheduler.shared.addPollingTask(
       this._handleSubscribe,
       Scheduler.Duration.second(1),
+    );
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.connectionStore.scene,
+        (scene) => {
+          if (scene) {
+            scene.addListener(AgoraRteEventType.UserRemoved, this._handleUserRemoved);
+            this.classroomStore.streamStore.unpublishScreenShare();
+          }
+        },
+      ),
     );
   }
 }

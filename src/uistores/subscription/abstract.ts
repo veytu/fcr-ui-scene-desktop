@@ -215,6 +215,9 @@ export abstract class SceneSubscription {
   }
 
   protected isMuted(stream: AgoraStream) {
+    const enableVideoDevice = stream.videoState === AgoraRteMediaPublishState.Published;
+
+    const enableAudioDevice = stream.audioState === AgoraRteMediaPublishState.Published;
     const unmuteVideo =
       stream.videoSourceState === AgoraRteMediaSourceState.started &&
       stream.videoState === AgoraRteMediaPublishState.Published;
@@ -223,7 +226,12 @@ export abstract class SceneSubscription {
       stream.audioSourceState === AgoraRteMediaSourceState.started &&
       stream.audioState === AgoraRteMediaPublishState.Published;
 
-    return { muteVideo: !unmuteVideo, muteAudio: !unmuteAudio };
+    return {
+      muteVideo: !unmuteVideo,
+      muteAudio: !unmuteAudio,
+      enableVideoDevice,
+      enableAudioDevice,
+    };
   }
 
   protected muteRemoteStream(
@@ -252,23 +260,18 @@ export abstract class SceneSubscription {
   }
 
   protected muteLocalStream(scene: AgoraRteScene, stream: AgoraStream) {
-    const { muteVideo, muteAudio } = this.isMuted(stream);
+    const { muteVideo, muteAudio, enableAudioDevice, enableVideoDevice } = this.isMuted(stream);
 
     const connType = this.getStreamConnType(stream);
 
     switch (stream.videoSourceType) {
       case AgoraRteVideoSourceType.Camera:
         this.logger.info(
-          `muteLocalVideo, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteVideo}]`,
+          `muteLocalVideo, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteVideo}], enableDevice:{audio:${enableAudioDevice},video: ${enableVideoDevice}}`,
         );
-        if (muteVideo) {
-          const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
-          track.stop();
-        }
-        if (muteAudio) {
-          const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
-          track.stop();
-        }
+        this.getters.classroomUIStore.deviceSettingUIStore.enableCamera(enableVideoDevice);
+        this.getters.classroomUIStore.deviceSettingUIStore.enableAudioRecording(enableAudioDevice);
+
         scene.rtcChannel.muteLocalVideoStream(muteVideo, connType);
         this.putRegistry(stream.streamUuid, { muteVideo });
         break;

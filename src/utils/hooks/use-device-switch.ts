@@ -4,18 +4,39 @@ import { useStore } from './use-store';
 
 export const useDeviceSwitch = (stream?: EduStreamUI) => {
   const {
-    deviceSettingUIStore: { toggleCameraDevice, toggleAudioRecordingDevice },
+    deviceSettingUIStore: { isCameraDeviceEnabled, isAudioRecordingDeviceEnabled },
     classroomStore: {
-      streamStore: { updateRemotePublishState },
+      streamStore: { updateRemotePublishState, updateLocalPublishState },
     },
   } = useStore();
-
+  const toggleLocalCameraDevice = async () => {
+    if (isCameraDeviceEnabled) {
+      updateLocalPublishState({
+        videoState: AgoraRteMediaPublishState.Unpublished,
+      });
+    } else {
+      updateLocalPublishState({
+        videoState: AgoraRteMediaPublishState.Published,
+      });
+    }
+  };
+  const toggleLocalAudioRecordingDevice = async () => {
+    if (isAudioRecordingDeviceEnabled) {
+      updateLocalPublishState({
+        audioState: AgoraRteMediaPublishState.Unpublished,
+      });
+    } else {
+      updateLocalPublishState({
+        audioState: AgoraRteMediaPublishState.Published,
+      });
+    }
+  };
   const cameraTooltip = stream?.isVideoStreamPublished
     ? 'Turn off the camera'
     : 'Ask to turn on the camera';
   const handleCameraClick = () => {
     if (stream?.isLocal) {
-      toggleCameraDevice();
+      toggleLocalCameraDevice();
     } else {
       if (stream)
         updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
@@ -31,7 +52,7 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
     : 'Ask to turn on the microphone';
   const handleMicrophoneClick = () => {
     if (stream?.isLocal) {
-      toggleAudioRecordingDevice();
+      toggleLocalAudioRecordingDevice();
     } else {
       if (stream)
         updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
@@ -41,5 +62,13 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
         });
     }
   };
-  return { cameraTooltip, micTooltip, handleCameraClick, handleMicrophoneClick };
+  return {
+    cameraTooltip,
+    micTooltip,
+
+    handleCameraClick,
+    handleMicrophoneClick,
+    toggleLocalAudioRecordingDevice,
+    toggleLocalCameraDevice,
+  };
 };

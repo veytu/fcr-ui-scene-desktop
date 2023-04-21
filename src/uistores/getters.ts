@@ -8,6 +8,9 @@ import { OnlineclassUIStore } from '.';
 
 export class Getters {
   constructor(private _classroomUIStore: OnlineclassUIStore) {}
+  get classroomUIStore() {
+    return this._classroomUIStore;
+  }
 
   get boardApi() {
     return this._classroomUIStore.boardApi;

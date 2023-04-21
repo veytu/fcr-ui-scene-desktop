@@ -7,14 +7,16 @@ import { ActionBarItemWrapper } from '..';
 import { observer } from 'mobx-react';
 import './index.css';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
-export const AudioRecordinDeviceIcon = observer(({ size = 36 }: { size?: number }) => {
-  const {
-    deviceSettingUIStore: { isAudioRecordingDeviceEnabled },
-  } = useStore();
-  const icon = isAudioRecordingDeviceEnabled ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
+import { useDeviceSwitch } from '@onlineclass/utils/hooks/use-device-switch';
+import { EduStreamUI } from '@onlineclass/utils/stream/struct';
+export const AudioRecordinDeviceIcon = observer(
+  ({ size = 36, stream }: { size?: number; stream?: EduStreamUI }) => {
+    const isMute = stream?.isMicStreamPublished;
+    const icon = isMute ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
 
-  return <SvgImg type={icon} size={size}></SvgImg>;
-});
+    return <SvgImg type={icon} size={size}></SvgImg>;
+  },
+);
 export const MicrophoneDevice: FC = observer(() => {
   const {
     tootipVisible,
@@ -23,20 +25,22 @@ export const MicrophoneDevice: FC = observer(() => {
     setPopoverOpened,
   } = useDeviceTooltipVisible();
   const {
-    deviceSettingUIStore: { isAudioRecordingDeviceEnabled, toggleAudioRecordingDevice },
+    streamUIStore: { localStream },
+    deviceSettingUIStore: { isAudioRecordingDeviceEnabled },
     layoutUIStore: { addDialog },
   } = useStore();
-
+  const { toggleLocalAudioRecordingDevice } = useDeviceSwitch();
   const text = isAudioRecordingDeviceEnabled ? 'Microphone' : 'Unmute';
+
   return (
     <ToolTip
       visible={tootipVisible}
       onVisibleChange={handleTooltipVisibleChanged}
       content={'Microphone'}>
       <ActionBarItemWrapper>
-        <div className="fcr-action-bar-device" onClick={toggleAudioRecordingDevice}>
+        <div className="fcr-action-bar-device" onClick={toggleLocalAudioRecordingDevice}>
           <div className="fcr-action-bar-device-inner">
-            <AudioRecordinDeviceIcon></AudioRecordinDeviceIcon>
+            <AudioRecordinDeviceIcon stream={localStream}></AudioRecordinDeviceIcon>
             <div className="fcr-action-bar-device-text">{text}</div>
           </div>
           <Popover
@@ -70,20 +74,20 @@ export const CameraDevice: FC = observer(() => {
     setPopoverOpened,
   } = useDeviceTooltipVisible();
   const {
-    classroomStore: {},
-    deviceSettingUIStore: { isCameraDeviceEnabled, toggleCameraDevice },
+    deviceSettingUIStore: { isCameraDeviceEnabled },
     layoutUIStore: { addDialog },
   } = useStore();
-
+  const { toggleLocalCameraDevice } = useDeviceSwitch();
   const icon = isCameraDeviceEnabled ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
   const text = isCameraDeviceEnabled ? 'Camera' : 'Unmute';
+
   return (
     <ToolTip
       onVisibleChange={handleTooltipVisibleChanged}
       visible={tootipVisible}
       content={'Camera'}>
       <ActionBarItemWrapper>
-        <div className="fcr-action-bar-device" onClick={toggleCameraDevice}>
+        <div className="fcr-action-bar-device" onClick={toggleLocalCameraDevice}>
           <div className="fcr-action-bar-device-inner">
             <SvgImg type={icon} size={36}></SvgImg>
             <div className="fcr-action-bar-device-text">{text}</div>

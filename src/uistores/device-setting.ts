@@ -332,6 +332,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
 
   @action.bound
   enableCamera(value: boolean) {
+    if (value === this._cameraDeviceEnabled) return;
     if (value) {
       if (this.cameraDeviceId) {
         const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
@@ -362,6 +363,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
 
   @action.bound
   enableAudioRecording(value: boolean) {
+    if (value === this._audioRecordingDeviceEnabled) return;
     if (value) {
       if (this.audioRecordingDeviceId) {
         const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();

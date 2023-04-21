@@ -14,7 +14,7 @@ export const Whiteboard = observer(() => {
   } = useStore();
 
   const handleClick = () => {
-    if (boardApi.mounted) {
+    if (isBoardWidgetActive) {
       Logger.info('disable');
       boardApi.disable();
     } else {
