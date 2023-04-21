@@ -118,6 +118,7 @@
   flex-direction: column;
   align-items: center;
   padding: 18px 16px 10px 0;
+  z-index: 10;
 }
 
 .fcr-pretest__video-portal__sidebar .fcr-vertical-slider {
