@@ -13,7 +13,7 @@ import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { DialogToolTip } from '@components/tooltip/dialog';
 import { Button } from '@components/button';
 import { Radio, RadioGroup } from '@components/radio';
-import { EduRoleTypeEnum } from 'agora-edu-core';
+import { EduRoleTypeEnum, EduUserStruct } from 'agora-edu-core';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
 import classnames from 'classnames';
 import { ToastApiFactory } from '@components/toast';
@@ -81,7 +81,7 @@ const Participants = observer(() => {
           </div>
         </div>
         <Table
-          columns={isHost ? hostColumns : studentColumns}
+          columns={(isHost ? hostColumns : studentColumns) as any}
           data={participantList}
           rowKey={(record) => record.user.userUuid}></Table>
 
@@ -280,11 +280,16 @@ const RemoveDialogContent = observer(
   },
 );
 
+type UserTableItem = {
+  stream: EduStreamUI;
+  user: EduUserStruct;
+};
+
 const useParticipantsColumn = () => {
   const hostColumns = [
     {
       title: <div className="fcr-participants-table-name-label">Name</div>,
-      render: (_, item) => {
+      render: (_: unknown, item: UserTableItem) => {
         return <TableName name={item.user.userName}></TableName>;
       },
       width: 150,
@@ -293,35 +298,35 @@ const useParticipantsColumn = () => {
     {
       title: 'Auth',
       width: 100,
-      render: (_, item) => {
+      render: (_: unknown, item: UserTableItem) => {
         return <TableAuth role={item.user.userRole} userUuid={item.user.userUuid}></TableAuth>;
       },
     },
     {
       title: 'Camera',
       width: 100,
-      render: (_, item) => {
+      render: (_: unknown, item: UserTableItem) => {
         return <TableCamera stream={item.stream}></TableCamera>;
       },
     },
     {
       title: 'Microphone',
       width: 100,
-      render: (_, item) => {
+      render: (_: unknown, item: UserTableItem) => {
         return <TableMicrophone stream={item.stream}></TableMicrophone>;
       },
     },
     {
       title: 'Reward',
       width: 100,
-      render: (_, item) => {
+      render: (_: unknown, item: UserTableItem) => {
         return <TableReward userUuid={item.user.userUuid}></TableReward>;
       },
     },
     {
       title: 'Remove',
       width: 100,
-      render: (_, item) => {
+      render: (_: unknown, item: UserTableItem) => {
         return <TableRemove userUuid={item.user.userUuid}></TableRemove>;
       },
     },
@@ -329,7 +334,7 @@ const useParticipantsColumn = () => {
   const studentColumns = [
     {
       title: <div className="fcr-participants-table-name-label">Name</div>,
-      render: (_, item) => {
+      render: (_: unknown, item: UserTableItem) => {
         return <TableName name={item.user.userName}></TableName>;
       },
       align: 'left',
@@ -339,21 +344,21 @@ const useParticipantsColumn = () => {
     {
       title: 'Camera',
       width: 150,
-      render: (_, item) => {
+      render: (_: unknown, item: UserTableItem) => {
         return <TableCamera stream={item.stream}></TableCamera>;
       },
     },
     {
       title: 'Microphone',
       width: 150,
-      render: (_, item) => {
+      render: (_: unknown, item: UserTableItem) => {
         return <TableMicrophone stream={item.stream}></TableMicrophone>;
       },
     },
     {
       title: 'Reward',
       width: 150,
-      render: (_, item) => {
+      render: (_: unknown, item: UserTableItem) => {
         return <TableReward userUuid={item.user.userUuid}></TableReward>;
       },
     },
