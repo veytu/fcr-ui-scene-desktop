@@ -7,7 +7,7 @@
   flex: 1;
 }
 
-.fcr-participants-dialog {
+.fcr-participants-dialog.fcr-dialog {
   position: absolute;
   top: 0;
   left: 0;

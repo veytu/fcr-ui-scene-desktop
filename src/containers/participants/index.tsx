@@ -108,7 +108,6 @@ const TableName = ({ name }: { name: string }) => {
   return (
     <div className="fcr-participants-table-name">
       <Avatar size={30} textSize={14} nickName={name}></Avatar>
-      {/* <div className="fcr-participants-table-name-logo">{generateShortUserName(name)}</div> */}
       <div className="fcr-participants-table-name-text">{name}</div>
     </div>
   );
