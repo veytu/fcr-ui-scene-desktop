@@ -20,7 +20,8 @@ import { ToolTip } from '@components/tooltip';
 export const StatusBar = observer(() => {
   const {
     layoutUIStore: { showStatusBar, setIsPointingBar, noAvailabelStream },
-    statusBarUIStore: { localUser, isStudent },
+    statusBarUIStore: { localUser },
+    presentationUIStore: { isBoardWidgetActive },
   } = useStore();
   const { logo } = getConfig();
   const userUuid = localUser?.userUuid || '';
@@ -28,7 +29,7 @@ export const StatusBar = observer(() => {
     <div
       className={classnames('fcr-status-bar', {
         'fcr-status-bar-hide': !showStatusBar,
-        'fcr-bg-transparent': noAvailabelStream,
+        'fcr-bg-transparent': noAvailabelStream && !isBoardWidgetActive,
       })}
       onMouseEnter={() => {
         setIsPointingBar(true);
@@ -73,8 +74,7 @@ export const StatusBarItemWrapper: FC<React.PropsWithChildren> = (props) => {
 };
 const StatusBarCollapeButton = observer(() => {
   const {
-    presentationUIStore: { showListView, toggleShowListView },
-    layoutUIStore: { layout },
+    layoutUIStore: { layout, showListView, toggleShowListView },
   } = useStore();
   const visible = !showListView && layout === Layout.ListOnTop;
   return visible ? (

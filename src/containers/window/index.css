@@ -1,6 +1,6 @@
 .fcr-stream-window-wrap,
 .fcr-stream-window-placeholder {
-  @apply fcr-bg-4 fcr-rounded-8;
+  @apply fcr-bg-4 fcr-rounded-8 fcr-shadow-line-1-.5;
 
   width: 100%;
   height: 100%;
