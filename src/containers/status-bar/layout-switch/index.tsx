@@ -91,7 +91,7 @@ export const LayoutSwitch = observer(() => {
               setHasPopoverShowed(false);
             }
           },
-          placement: 'bottomLeft',
+          placement: 'bottomRight',
           overlayInnerStyle: { width: 'auto' },
           content: <LayoutSwitchPopover></LayoutSwitchPopover>,
         }}

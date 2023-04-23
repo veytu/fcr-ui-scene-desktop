@@ -1,25 +1,19 @@
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
-import { AgoraRteEventType, bound, Lodash, Log } from 'agora-rte-sdk';
-import debounce from 'lodash/debounce';
+import { AgoraRteEventType, Lodash, Log } from 'agora-rte-sdk';
 @Log.attach({ proxyMethods: false })
 export class PresentationUIStore extends EduUIStoreBase {
-  private _boardViewportClassName = 'fcr-layout-board-viewport';
   @observable boardViewportSize?: { width: number; height: number };
   @observable isMainViewStreamPinned = false;
   @observable mainViewStreamUuid: string | null = null;
-  @observable showListView = true;
   pageSize = 6;
   @observable currentPage = 1;
   @action.bound
   setCurrentPage(page: number) {
     this.currentPage = page;
   }
-  @action.bound
-  toggleShowListView() {
-    this.showListView = !this.showListView;
-  }
+  
   @action.bound
   pinStream(streamUuid: string) {
     this.setMainViewStream(streamUuid);
@@ -80,48 +74,6 @@ export class PresentationUIStore extends EduUIStoreBase {
       this.setMainViewStream(this.getters.cameraUIStreams[0].stream.streamUuid);
     }
   }
-  @bound
-  addBoardViewportResizeObserver() {
-    const observer = new ResizeObserver(debounce(this.updateBoardViewportSize, 300));
-
-    const containerEle = document.querySelector(`.${this._boardViewportClassName}`);
-    if (containerEle) {
-      observer.observe(containerEle);
-    }
-    return observer;
-  }
-
-  @bound
-  updateBoardViewportSize() {
-    const containerEle = document.querySelector(`.${this._boardViewportClassName}`);
-    if (containerEle) {
-      const { width, height } = this.getRootDimensions(containerEle as HTMLElement);
-
-      const aspectRatio = 708 / 1186;
-
-      const curAspectRatio = height / width;
-
-      const scopeSize = { height, width };
-
-      if (curAspectRatio > aspectRatio) {
-        // shrink height
-        scopeSize.height = width * aspectRatio;
-      } else if (curAspectRatio < aspectRatio) {
-        // shrink width
-        scopeSize.width = height / aspectRatio;
-      }
-      runInAction(() => {
-        this.boardViewportSize = { width: scopeSize.width, height: scopeSize.height };
-      });
-    }
-  }
-  getRootDimensions = (containerNode: Window | HTMLElement) => {
-    const height =
-      containerNode instanceof Window ? containerNode.innerHeight : containerNode.clientHeight;
-    const width =
-      containerNode instanceof Window ? containerNode.innerWidth : containerNode.clientWidth;
-    return { width, height };
-  };
 
   onDestroy(): void {}
   onInstall(): void {

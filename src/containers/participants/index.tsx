@@ -39,6 +39,7 @@ export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = 
       width={720}
       visible={visible}
       maskClosable={false}
+      mask={false}
       onClose={() => {
         setVisible(false);
       }}

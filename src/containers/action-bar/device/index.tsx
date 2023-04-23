@@ -10,7 +10,7 @@ import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { useDeviceSwitch } from '@onlineclass/utils/hooks/use-device-switch';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 export const AudioRecordinDeviceIcon = observer(
-  ({ size = 36, stream }: { size?: number; stream?: EduStreamUI }) => {
+  ({ size = 32, stream }: { size?: number; stream?: EduStreamUI }) => {
     const isMute = stream?.isMicStreamPublished;
     const icon = isMute ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
 
@@ -89,7 +89,7 @@ export const CameraDevice: FC = observer(() => {
       <ActionBarItemWrapper>
         <div className="fcr-action-bar-device" onClick={toggleLocalCameraDevice}>
           <div className="fcr-action-bar-device-inner">
-            <SvgImg type={icon} size={36}></SvgImg>
+            <SvgImg type={icon} size={32}></SvgImg>
             <div className="fcr-action-bar-device-text">{text}</div>
           </div>
           <Popover

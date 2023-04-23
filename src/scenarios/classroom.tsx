@@ -1,22 +1,26 @@
 import { ClassRoomDialogContainer } from '@onlineclass/containers/dialog';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
+import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
 
 import { ClassroomLayout } from './layout';
 
-export const Classroom = () => {
-  const { join, layoutUIStore } = useStore();
+export const Classroom = observer(() => {
+  const {
+    join,
+    layoutUIStore: { classroomViewportSize, addViewportResizeObserver, classroomViewportClassName },
+  } = useStore();
   useEffect(() => {
     join();
-    const observer = layoutUIStore.addViewportResizeObserver();
+    const observer = addViewportResizeObserver();
     return () => {
       observer.disconnect();
     };
   }, []);
   return (
-    <div className={layoutUIStore.classroomViewportClassName}>
+    <div style={{ ...classroomViewportSize }} className={classroomViewportClassName}>
       <ClassroomLayout></ClassroomLayout>
       <ClassRoomDialogContainer></ClassRoomDialogContainer>
     </div>
   );
-};
+});

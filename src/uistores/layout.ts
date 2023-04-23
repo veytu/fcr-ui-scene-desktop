@@ -15,7 +15,12 @@ export class LayoutUIStore extends EduUIStoreBase {
   private _hasPopoverShowed = false;
   private _classroomViewportClassName = 'fcr-classroom-viewport';
   private _viewportResizeObserver?: ResizeObserver;
+  @observable
+  statusBarHeight = 36;
+  @observable
+  actionBarHeight = 58;
 
+  @observable classroomViewportSize = { width: 0, height: 0 };
   @observable viewportBoundaries?: AgoraViewportBoundaries;
   @observable mouseEnterClass = false;
   @observable layoutReady = false;
@@ -27,6 +32,12 @@ export class LayoutUIStore extends EduUIStoreBase {
   setLayout(layout: Layout) {
     this.layout = layout;
   }
+  @observable showListView = true;
+
+  @action.bound
+  toggleShowListView() {
+    this.showListView = !this.showListView;
+  }
   @bound
   setIsPointingBar(disable: boolean) {
     this._isPointingBar = disable;
@@ -34,6 +45,13 @@ export class LayoutUIStore extends EduUIStoreBase {
   @bound
   setHasPopoverShowed(has: boolean) {
     this._hasPopoverShowed = has;
+  }
+  @computed get stageSize() {
+    return this.layout === Layout.Grid || !this.showListView
+      ? 0
+      : this.layout === Layout.ListOnRight
+      ? 210
+      : 135;
   }
   @computed get deviceSettingOpened() {
     let opened = false;
@@ -122,11 +140,11 @@ export class LayoutUIStore extends EduUIStoreBase {
   setLayoutReady(ready: boolean) {
     this.layoutReady = ready;
   }
-
+  @bound
   addViewportResizeObserver() {
     const observer = new ResizeObserver(this._updateViewportBoundaries);
 
-    const viewport = document.querySelector(`.${this._classroomViewportClassName}`);
+    const viewport = document.querySelector(`body`);
     if (viewport) {
       observer.observe(viewport);
     }
@@ -136,23 +154,60 @@ export class LayoutUIStore extends EduUIStoreBase {
   @bound
   @Lodash.debounced(300)
   private _updateViewportBoundaries() {
-    const clientRect = document
-      .querySelector(`.${this._classroomViewportClassName}`)
-      ?.getBoundingClientRect();
+    const containerEle = document.querySelector(`body`);
 
-    if (clientRect) {
-      this.logger.info('notify to all widgets that viewport boundaries changed');
-      runInAction(() => {
-        this.viewportBoundaries = clientRect;
-      });
-    } else {
-      this.logger.warn(
-        'cannot get viewport boudnaries by classname:',
-        this._classroomViewportClassName,
+    if (containerEle) {
+      const { calcWidth: width, calcHeight: height } = this.classroomSizeToBoardSize(
+        containerEle as HTMLElement,
       );
+      console.log(width, height, 'boardOriSize');
+      const aspectRatio = 670 / 1440;
+
+      const curAspectRatio = height / width;
+
+      const boardSize = { height, width };
+
+      if (curAspectRatio > aspectRatio) {
+        // shrink height
+        boardSize.height = width * aspectRatio;
+      } else if (curAspectRatio < aspectRatio) {
+        // shrink width
+        boardSize.width = height / aspectRatio;
+      }
+      console.log(boardSize.width, boardSize.height, 'boardSize');
+
+      runInAction(() => {
+        this.classroomViewportSize = this.boardSizeToClassroomSize({
+          w: boardSize.width,
+          h: boardSize.height,
+        });
+      });
     }
   }
+  classroomSizeToBoardSize = (containerNode: Window | HTMLElement) => {
+    const height =
+      containerNode instanceof Window ? containerNode.innerHeight : containerNode.clientHeight;
+    const width =
+      containerNode instanceof Window ? containerNode.innerWidth : containerNode.clientWidth;
 
+    const calcWidth = this.layout === Layout.ListOnRight ? width - this.stageSize : width;
+    const calcHeight =
+      this.layout === Layout.ListOnRight
+        ? height - this.statusBarHeight - this.actionBarHeight
+        : height - this.stageSize - this.statusBarHeight - this.actionBarHeight;
+
+    return { calcWidth, calcHeight };
+  };
+  boardSizeToClassroomSize = ({ w, h }: { w: number; h: number }) => {
+    const width = this.layout === Layout.ListOnRight ? w + this.stageSize : w;
+    const height =
+      this.layout === Layout.ListOnRight
+        ? h + this.statusBarHeight + this.actionBarHeight
+        : h + this.stageSize + this.statusBarHeight + this.actionBarHeight;
+    console.log(width, height, 'boardClassroomSize');
+
+    return { width, height };
+  };
   onDestroy(): void {
     this._viewportResizeObserver?.disconnect();
     document.removeEventListener('mousemove', this.handleMouseMove);
@@ -163,13 +218,15 @@ export class LayoutUIStore extends EduUIStoreBase {
     document.addEventListener('mouseleave', this.handleMouseLeave);
 
     this.resetClearScreenTask();
+    this._disposers.push(reaction(() => this.layout, this._updateViewportBoundaries));
+    this._disposers.push(reaction(() => this.showListView, this._updateViewportBoundaries));
 
     this._disposers.push(
       reaction(
         () => this.getters.isBoardWidgetActive,
         (isBoardWidgetActive) => {
           if (isBoardWidgetActive) {
-            this.setLayout(Layout.ListOnTop);
+            if (this.layout === Layout.Grid) this.setLayout(Layout.ListOnTop);
           }
         },
       ),

@@ -91,9 +91,9 @@ export const ActionBarItem: FC<ActionBarItemProps> = (props) => {
         })}>
         <div className="fcr-action-bar-item-icon">
           {typeof icon === 'string' ? (
-            <SvgImg size={36} type={icon}></SvgImg>
+            <SvgImg size={32} type={icon}></SvgImg>
           ) : (
-            <SvgImg size={36} {...icon}></SvgImg>
+            <SvgImg size={32} {...icon}></SvgImg>
           )}
         </div>
         <div className="fcr-action-bar-item-text">{text}</div>

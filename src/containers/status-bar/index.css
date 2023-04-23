@@ -10,6 +10,7 @@
   transition: all 0.2s;
   pointer-events: all;
   position: relative;
+  --fcr-status-bar-item-height: 28px;
 }
 .fcr-status-bar-hide {
   transform: translateY(calc(-1 * var(--fcr-status-bar-height)));
@@ -21,11 +22,11 @@
   gap: 10px;
 }
 .fcr-status-bar-logo img {
-  height: 32px;
+  height: var(--fcr-status-bar-item-height);
 }
 .fcr-status-bar-item-wrapper {
   @apply fcr-bg-2 fcr-shadow-line-1-.5 fcr-rounded-8;
-  height: 32px;
+  height: var(--fcr-status-bar-item-height);
 
   display: flex;
   flex-direction: row;
@@ -39,7 +40,7 @@
 }
 
 .fcr-status-bar-layout {
-  height: 32px;
+  height: var(--fcr-status-bar-item-height);
   display: flex;
   flex-direction: row;
   align-items: center;

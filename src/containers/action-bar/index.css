@@ -1,8 +1,7 @@
 .fcr-action-bar {
   @apply fcr-bg-2;
   width: 100%;
-  height: 66px;
-  padding-top: 8px;
+  height: var(--fcr-action-bar-height);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -10,13 +9,14 @@
   pointer-events: all;
 }
 .fcr-action-bar-hide {
-  transform: translateY(66px);
+  transform: translateY(var(--fcr-action-bar-height));
 }
 .fcr-action-bar-left,
 .fcr-action-bar-mid,
 .fcr-action-bar-right {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 .fcr-action-bar-item-wrapper {
   @apply fcr-bg-transparent;

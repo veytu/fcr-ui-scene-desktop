@@ -12,7 +12,7 @@ import { CSSTransition } from 'react-transition-group';
 export const PresentationView = observer(() => {
   const {
     streamUIStore: { subscribeMass },
-    layoutUIStore: { layout },
+    layoutUIStore: { layout, showListView },
     presentationUIStore: {
       mainViewStream,
       listViewStreamsByPage,
@@ -20,7 +20,7 @@ export const PresentationView = observer(() => {
       currentPage,
       setCurrentPage,
       showPager,
-      showListView,
+
       isBoardWidgetActive,
     },
   } = useStore();
@@ -78,8 +78,7 @@ export const PresentationView = observer(() => {
 });
 const ListViewCollapseButton = observer(() => {
   const {
-    layoutUIStore: { layout },
-    presentationUIStore: { toggleShowListView, showListView },
+    layoutUIStore: { layout, toggleShowListView, showListView },
   } = useStore();
   const direction =
     layout === Layout.ListOnTop ? 'row' : layout === Layout.ListOnRight ? 'col' : 'row';
@@ -97,22 +96,9 @@ const ListViewCollapseButton = observer(() => {
 });
 const BoardViewContainer: FC<PropsWithChildren> = observer(() => {
   const {
-    layoutUIStore: { showActiobBar, showStatusBar, layout },
-    presentationUIStore: {
-      addBoardViewportResizeObserver,
-      updateBoardViewportSize,
-      boardViewportSize,
-      showListView,
-    },
+    layoutUIStore: { showActiobBar, showStatusBar, layout, showListView },
+    presentationUIStore: { boardViewportSize },
   } = useStore();
-
-  useEffect(() => {
-    updateBoardViewportSize();
-    const observer = addBoardViewportResizeObserver();
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
 
   const boardContainerCls = classnames('fcr-layout-board-container', {
     'fcr-layout-board-container-with-action-bar': showActiobBar,
@@ -123,14 +109,7 @@ const BoardViewContainer: FC<PropsWithChildren> = observer(() => {
   return (
     <div className={boardContainerCls}>
       <div className="fcr-layout-board-viewport">
-        <div
-          style={{
-            display: boardViewportSize ? 'block' : 'none',
-            width: boardViewportSize?.width,
-            height: boardViewportSize?.height,
-          }}
-          className="fcr-layout-board-view"
-        />
+        <div className="fcr-layout-board-view" />
       </div>
     </div>
   );
