@@ -7,6 +7,7 @@ import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { Popover } from '@components/popover';
 import { Button } from '@components/button';
 import { useEffect } from 'react';
+import { ClassState } from 'agora-edu-core';
 export const Leave = observer(() => {
   const {
     actionBarUIStore: { setShowLeaveOption },
@@ -42,6 +43,9 @@ export const LeaveCheck = observer(() => {
 const LeavePopoverContent = observer(() => {
   const {
     actionBarUIStore: { showEndClassButton, leaveClassroom },
+    classroomStore: {
+      roomStore: { updateClassState },
+    },
   } = useStore();
   return (
     <div className="fcr-action-bar-leave-popover">
@@ -50,7 +54,11 @@ const LeavePopoverContent = observer(() => {
       </div>
       <div className="fcr-action-bar-leave-popover-btns">
         {showEndClassButton && (
-          <Button block size="L" styleType="danger">
+          <Button
+            onClick={() => updateClassState(ClassState.close)}
+            block
+            size="L"
+            styleType="danger">
             End the Room
           </Button>
         )}

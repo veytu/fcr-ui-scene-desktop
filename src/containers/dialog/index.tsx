@@ -6,6 +6,8 @@ import { ConfirmDialogWrapper } from './confirm';
 import { Logger } from 'agora-common-libs/lib/annotation';
 import { DeviceSettingsDialog } from '../device-settings/dialog-wrapper';
 import { ParticipantsDialog } from '../participants';
+import { ClassDialogProps } from '@components/dialog/class-dialog';
+import { ClassInfoDialog } from './class-info';
 
 export const ClassRoomDialogContainer = observer(() => {
   const {
@@ -42,6 +44,18 @@ export const ClassRoomDialogContainer = observer(() => {
                 onClose={() => {
                   deleteDialog(id);
                 }}></ParticipantsDialog>
+            );
+          case 'class-info':
+            const classDialog = props as ClassDialogProps;
+
+            return (
+              <ClassInfoDialog
+                {...classDialog}
+                onClose={() => {
+                  deleteDialog(id);
+                  classDialog.onClose?.();
+                }}
+                key={id}></ClassInfoDialog>
             );
           default:
             Logger.warn(`dialog type [${props.type}] is not supported`);

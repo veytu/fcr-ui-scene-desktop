@@ -3,9 +3,9 @@ import { observable, action, computed, reaction, runInAction } from 'mobx';
 import { DialogType, Layout } from './type';
 import { bound, Lodash, Scheduler } from 'agora-rte-sdk';
 import { Log } from 'agora-common-libs/lib/annotation';
-import { v4 as uuidv4 } from 'uuid';
 import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
 import { AgoraViewportBoundaries } from 'agora-common-libs/lib/widget';
+import { ClassDialogProps } from '@components/dialog/class-dialog';
 
 @Log.attach({ proxyMethods: false })
 export class LayoutUIStore extends EduUIStoreBase {
@@ -27,7 +27,6 @@ export class LayoutUIStore extends EduUIStoreBase {
   @observable showStatusBar = true;
   @observable showActiobBar = true;
   @observable layout: Layout = Layout.Grid;
-  @observable dialogMap: Map<string, { type: DialogType }> = new Map();
   @action.bound
   setLayout(layout: Layout) {
     this.layout = layout;
@@ -52,6 +51,9 @@ export class LayoutUIStore extends EduUIStoreBase {
       : this.layout === Layout.ListOnRight
       ? 210
       : 135;
+  }
+  @computed get dialogMap() {
+    return this.getters.dialogMap;
   }
   @computed get deviceSettingOpened() {
     let opened = false;
@@ -100,30 +102,24 @@ export class LayoutUIStore extends EduUIStoreBase {
     this._clearScreenTask?.stop();
     this._clearScreenTask = Scheduler.shared.addDelayTask(this.clearScreen, this._clearScreenDelay);
   };
-
+  @bound
   hasDialogOf(type: DialogType) {
-    let exist = false;
-    this.dialogMap.forEach(({ type: dialogType }) => {
-      if (dialogType === type) {
-        exist = true;
-      }
-    });
-
-    return exist;
+    return this.getters.hasDialogOf(type);
   }
 
   addDialog(type: 'confirm', params: ConfirmDialogProps): void;
   addDialog(type: 'device-settings'): void;
   addDialog(type: 'participants'): void;
+  addDialog(type: 'class-info', params: ClassDialogProps): void;
 
   @action.bound
   addDialog(type: unknown, params?: unknown) {
-    this.dialogMap.set(uuidv4(), { ...(params as any), type: type as DialogType });
+    this.getters.addDialog(type as any, params as any);
   }
 
   @action.bound
   deleteDialog = (type: string) => {
-    this.dialogMap.delete(type);
+    this.getters.deleteDialog(type);
   };
   @action.bound
   handleMouseMove() {
@@ -161,7 +157,7 @@ export class LayoutUIStore extends EduUIStoreBase {
         containerEle as HTMLElement,
       );
       console.log(width, height, 'boardOriSize');
-      const aspectRatio = 670 / 1440;
+      const aspectRatio = 670 / 1490;
 
       const curAspectRatio = height / width;
 
@@ -174,7 +170,6 @@ export class LayoutUIStore extends EduUIStoreBase {
         // shrink width
         boardSize.width = height / aspectRatio;
       }
-      console.log(boardSize.width, boardSize.height, 'boardSize');
 
       runInAction(() => {
         this.classroomViewportSize = this.boardSizeToClassroomSize({
@@ -204,10 +199,14 @@ export class LayoutUIStore extends EduUIStoreBase {
       this.layout === Layout.ListOnRight
         ? h + this.statusBarHeight + this.actionBarHeight
         : h + this.stageSize + this.statusBarHeight + this.actionBarHeight;
-    console.log(width, height, 'boardClassroomSize');
 
     return { width, height };
   };
+  @action.bound
+  _handleLayoutChanged() {
+    if (this.layout === Layout.Grid) this.showListView = false;
+    this._updateViewportBoundaries();
+  }
   onDestroy(): void {
     this._viewportResizeObserver?.disconnect();
     document.removeEventListener('mousemove', this.handleMouseMove);
@@ -218,7 +217,7 @@ export class LayoutUIStore extends EduUIStoreBase {
     document.addEventListener('mouseleave', this.handleMouseLeave);
 
     this.resetClearScreenTask();
-    this._disposers.push(reaction(() => this.layout, this._updateViewportBoundaries));
+    this._disposers.push(reaction(() => this.layout, this._handleLayoutChanged));
     this._disposers.push(reaction(() => this.showListView, this._updateViewportBoundaries));
 
     this._disposers.push(

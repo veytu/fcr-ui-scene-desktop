@@ -12,6 +12,7 @@ import {
 } from 'agora-edu-core';
 import { initializeBuiltInExtensions } from './utils/rtc-extensions';
 import { setLaunchOptions, setConfig, getConfig } from './utils/launch-options-holder';
+import { ApiBase } from 'agora-rte-sdk';
 
 /**
  * Online class SDK
@@ -196,6 +197,21 @@ export class AgoraOnlineclassSDK {
       }
     }
     return config;
+  }
+  static setRecordReady() {
+    const {
+      rteEngineConfig: { ignoreUrlRegionPrefix, region },
+      sessionInfo: { roomUuid },
+      appId,
+    } = EduClassroomConfig.shared;
+    const pathPrefix = `${
+      ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
+    }/edu/apps/${appId}`;
+    new ApiBase().fetch({
+      path: `/v2/rooms/${roomUuid}/records/ready`,
+      method: 'PUT',
+      pathPrefix,
+    });
   }
 }
 

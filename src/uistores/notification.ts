@@ -1,13 +1,17 @@
 import {
   AgoraEduClassroomEvent,
+  ClassroomState,
+  ClassState,
   EduClassroomConfig,
   EduEventCenter,
   LeaveReason,
 } from 'agora-edu-core';
 import { bound } from 'agora-rte-sdk';
+import { reaction } from 'mobx';
 import { EduUIStoreBase } from './base';
 
 export class NotiticationUIStore extends EduUIStoreBase {
+  private _prevClassState: ClassState = ClassState.beforeClass;
   @bound
   private _handleClassroomEvent(event: AgoraEduClassroomEvent, param: any) {
     // kick out
@@ -196,5 +200,55 @@ export class NotiticationUIStore extends EduUIStoreBase {
   onDestroy(): void {}
   onInstall(): void {
     EduEventCenter.shared.onClassroomEvents(this._handleClassroomEvent);
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.roomStore.classroomSchedule.state,
+        (state) => {
+          if (ClassState.close === state) {
+            this.classroomStore.connectionStore.leaveClassroom(
+              LeaveReason.leave,
+              new Promise((resolve) => {
+                this.getters.addDialog('class-info', {
+                  title: 'The host has end the room.',
+                  content: 'The class has ended.Please click the button to leave the classroom.',
+                  actions: [
+                    {
+                      text: 'Leave the Room',
+                      styleType: 'danger',
+                      onClick: resolve,
+                    },
+                  ],
+                });
+              }),
+            );
+          }
+          this._prevClassState = ClassState.ongoing;
+        },
+      ),
+    );
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.connectionStore.classroomState,
+        (state) => {
+          if (ClassroomState.Error === state) {
+            // this.classroomStore.connectionStore.leaveClassroom(
+            //   LeaveReason.leave,
+            //   new Promise((resolve) => {
+            //     this.shareUIStore.addConfirmDialog(
+            //       transI18n('toast.leave_room'),
+            //       this._getStateErrorReason(
+            //         this.classroomStore.connectionStore.classroomStateErrorReason,
+            //       ),
+            //       {
+            //         onOK: resolve,
+            //         actions: ['ok'],
+            //       },
+            //     );
+            //   }),
+            // );
+          }
+        },
+      ),
+    );
   }
 }

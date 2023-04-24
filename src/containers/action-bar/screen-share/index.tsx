@@ -53,9 +53,9 @@ const ScreenSharingTooltipContent = observer(() => {
   } = useStore();
   return (
     <div className="fcr-action-bar-screen-share-tooltip">
-      <span>点击停止共享</span>
+      <span>Click to Stop Sharing</span>
       <Button onClick={stopLocalScreenShare} size="XS" shape="rounded" styleType="danger">
-        停止共享
+        Stop Sharing
       </Button>
     </div>
   );
@@ -67,9 +67,9 @@ const ScreenShareStatusBar = observer(() => {
   } = useStore();
   return createPortal(
     <div className="fcr-screen-share-status-bar">
-      <span>正在屏幕分享中...</span>
+      <span>Screen Sharing...</span>
       <Button onClick={stopLocalScreenShare} size="XS" shape="rounded" styleType="danger">
-        停止共享
+        Stop Sharing
       </Button>
     </div>,
     document.body,

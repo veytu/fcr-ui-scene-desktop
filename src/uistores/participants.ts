@@ -51,6 +51,9 @@ export class ParticipantsUIStore extends EduUIStoreBase {
       return 0;
     });
   }
+  @computed get participantStudentList() {
+    return this.participantList.filter(({ user }) => user.userRole === EduRoleTypeEnum.student);
+  }
   @bound
   sendReward(userUuid: string) {
     const { sendRewards } = this.classroomStore.roomStore;

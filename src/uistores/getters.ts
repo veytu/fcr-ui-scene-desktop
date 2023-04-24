@@ -1,13 +1,46 @@
+import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
 import { extractUserStreams } from '@onlineclass/utils/stream';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { EduClassroomConfig, EduRoleTypeEnum, EduStream } from 'agora-edu-core';
 import { AgoraRteVideoSourceType } from 'agora-rte-sdk';
-import { computed } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { OnlineclassUIStore } from '.';
+import { DialogType } from './type';
+import { v4 as uuidv4 } from 'uuid';
+import { ClassDialogProps } from '@components/dialog/class-dialog';
 
 export class Getters {
   constructor(private _classroomUIStore: OnlineclassUIStore) {}
+
+  @observable dialogMap: Map<string, { type: DialogType }> = new Map();
+
+  hasDialogOf(type: DialogType) {
+    let exist = false;
+    this.dialogMap.forEach(({ type: dialogType }) => {
+      if (dialogType === type) {
+        exist = true;
+      }
+    });
+
+    return exist;
+  }
+
+  addDialog(type: 'confirm', params: ConfirmDialogProps): void;
+  addDialog(type: 'device-settings'): void;
+  addDialog(type: 'participants'): void;
+  addDialog(type: 'class-info', params: ClassDialogProps): void;
+
+  @action.bound
+  addDialog(type: unknown, params?: unknown) {
+    this.dialogMap.set(uuidv4(), { ...(params as any), type: type as DialogType });
+  }
+
+  @action.bound
+  deleteDialog = (type: string) => {
+    this.dialogMap.delete(type);
+  };
+
   get classroomUIStore() {
     return this._classroomUIStore;
   }

@@ -19,6 +19,7 @@ import classnames from 'classnames';
 import { ToastApiFactory } from '@components/toast';
 import { useDeviceSwitch } from '@onlineclass/utils/hooks/use-device-switch';
 import { Avatar } from '@components/avatar';
+import { AgoraRteMediaPublishState } from 'agora-rte-sdk';
 interface ParticipantsContext {
   toastApi: ToastApiFactory | null;
 }
@@ -50,8 +51,11 @@ export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = 
 };
 const Participants = observer(() => {
   const {
-    participantsUIStore: { participantList, searchKey, setSearchKey },
+    participantsUIStore: { participantList, participantStudentList, searchKey, setSearchKey },
     statusBarUIStore: { isHost },
+    classroomStore: {
+      streamStore: { updateRemotePublishStateBatch },
+    },
   } = useStore();
   const { hostColumns, studentColumns } = useParticipantsColumn();
   const participantsContainerRef = useRef<HTMLDivElement | null>(null);
@@ -64,13 +68,35 @@ const Participants = observer(() => {
       });
     }
   }, []);
+  const handleMuteAll = () => {
+    updateRemotePublishStateBatch(
+      participantStudentList.map(({ user, stream }) => {
+        return {
+          userUuid: user.userUuid,
+          streamUuid: stream?.stream.streamUuid || '',
+          audioState: AgoraRteMediaPublishState.Unpublished,
+        };
+      }),
+    );
+  };
+  const handleUnMuteAll = () => {
+    updateRemotePublishStateBatch(
+      participantStudentList.map(({ user, stream }) => {
+        return {
+          userUuid: user.userUuid,
+          streamUuid: stream?.stream.streamUuid || '',
+          audioState: AgoraRteMediaPublishState.Published,
+        };
+      }),
+    );
+  };
   return (
     <ParticipantsContext.Provider value={{ toastApi: toastApiRef.current }}>
       <div ref={participantsContainerRef} className="fcr-participants-container">
         <div className="fcr-participants-header">
           <div className="fcr-participants-title">Participants</div>
           <div className="fcr-participants-count">
-            (Student {participantList.length} / Co-teacher 0)
+            (Student {participantStudentList.length} / Co-teacher 0)
           </div>
           <div className="fcr-participants-search">
             <Input
@@ -90,12 +116,20 @@ const Participants = observer(() => {
         {isHost && (
           <div className="fcr-participants-footer">
             <ToolTip placement="top" content="Mute All">
-              <Button preIcon={SvgIconEnum.FCR_ALL_MUTE} size="S" type="secondary">
+              <Button
+                onClick={handleMuteAll}
+                preIcon={SvgIconEnum.FCR_ALL_MUTE}
+                size="S"
+                type="secondary">
                 Mute All
               </Button>
             </ToolTip>
             <ToolTip placement="top" content="Unmute all">
-              <Button preIcon={SvgIconEnum.FCR_ALL_UNMUTE} size="S" type="secondary">
+              <Button
+                onClick={handleUnMuteAll}
+                preIcon={SvgIconEnum.FCR_ALL_UNMUTE}
+                size="S"
+                type="secondary">
                 Ask all to Unmute
               </Button>
             </ToolTip>
@@ -198,16 +232,20 @@ const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
     </ToolTip>
   );
 });
-const TableReward = observer(({ userUuid }: { userUuid: string }) => {
+const TableReward = observer(({ userUuid, role }: { userUuid: string; role: EduRoleTypeEnum }) => {
   const {
-    participantsUIStore: { sendReward, rewardsByUserUuid },
+    participantsUIStore: { sendReward, rewardsByUserUuid, isHostByUserRole },
   } = useStore();
   const rewards = rewardsByUserUuid(userUuid);
   const {
     statusBarUIStore: { isHost },
   } = useStore();
   const actionDisabled = !isHost;
-  return (
+  const isStreamFromHost = isHostByUserRole(role);
+
+  return isStreamFromHost ? (
+    <>{'-'}</>
+  ) : (
     <ToolTip placement="bottom" content="Reward">
       <TableIconWrapper disabled={actionDisabled} onClick={() => sendReward(userUuid)}>
         <>
@@ -218,10 +256,16 @@ const TableReward = observer(({ userUuid }: { userUuid: string }) => {
     </ToolTip>
   );
 });
-const TableRemove = observer(({ userUuid }: { userUuid: string }) => {
+const TableRemove = observer(({ userUuid, role }: { userUuid: string; role: EduRoleTypeEnum }) => {
   const [dialogVisible, setDialogVisible] = useState(false);
+  const {
+    participantsUIStore: { isHostByUserRole },
+  } = useStore();
+  const isStreamFromHost = isHostByUserRole(role);
 
-  return (
+  return isStreamFromHost ? (
+    <>{'-'}</>
+  ) : (
     <ToolTip placement="bottom" content="Remove">
       <DialogToolTip
         visible={dialogVisible}
@@ -322,14 +366,14 @@ const useParticipantsColumn = () => {
       title: 'Reward',
       width: 100,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableReward userUuid={item.user.userUuid}></TableReward>;
+        return <TableReward role={item.user.userRole} userUuid={item.user.userUuid}></TableReward>;
       },
     },
     {
       title: 'Remove',
       width: 100,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableRemove userUuid={item.user.userUuid}></TableRemove>;
+        return <TableRemove role={item.user.userRole} userUuid={item.user.userUuid}></TableRemove>;
       },
     },
   ];
@@ -361,7 +405,7 @@ const useParticipantsColumn = () => {
       title: 'Reward',
       width: 150,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableReward userUuid={item.user.userUuid}></TableReward>;
+        return <TableReward role={item.user.userRole} userUuid={item.user.userUuid}></TableReward>;
       },
     },
   ];

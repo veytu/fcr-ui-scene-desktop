@@ -116,10 +116,15 @@ export class OnlineclassUIStore {
       return this.classroomStore.connectionStore.leaveClassroom(
         LeaveReason.leave,
         new Promise((resolve) => {
-          //   this.shareUIStore.addGenericErrorDialog(e as AGError, {
-          //     onOK: resolve,
-          //     okBtnText: transI18n('toast.leave_room'),
-          //   });
+          this.getters.addDialog('confirm', {
+            closable: false,
+            title: 'Join Error',
+            content: (e as AGError).message,
+            onOk: resolve,
+            okText: 'Leave the Room',
+            okButtonProps: { styleType: 'danger' },
+            cancelButtonVisible: false,
+          });
         }),
       );
     }

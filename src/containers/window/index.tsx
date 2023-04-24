@@ -110,7 +110,7 @@ const StreamPlayer = observer(() => {
 
 const UserInteract = observer(() => {
   const {
-    layoutUIStore: { showStatusBar, showActiobBar },
+    layoutUIStore: { showStatusBar, showActiobBar, showListView },
   } = useStore();
   const streamWindowContext = useContext(StreamWindowContext);
   return (
@@ -120,7 +120,7 @@ const UserInteract = observer(() => {
         `fcr-stream-window-interact-${streamWindowContext?.labelSize}`,
         {
           'fcr-stream-window-interact-with-status-bar-visible':
-            streamWindowContext?.topLabelAnimation && showStatusBar,
+            streamWindowContext?.topLabelAnimation && showStatusBar && !showListView,
           'fcr-stream-window-interact-with-action-bar-visible':
             streamWindowContext?.bottomLabelAnimation && showActiobBar,
         },
