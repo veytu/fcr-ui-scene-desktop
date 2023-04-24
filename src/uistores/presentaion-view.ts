@@ -4,6 +4,7 @@ import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { AgoraRteEventType, Lodash, Log } from 'agora-rte-sdk';
 @Log.attach({ proxyMethods: false })
 export class PresentationUIStore extends EduUIStoreBase {
+  private _cacheBoardEnableStatus = false;
   @observable boardViewportSize?: { width: number; height: number };
   @observable isMainViewStreamPinned = false;
   @observable mainViewStreamUuid: string | null = null;
@@ -13,7 +14,7 @@ export class PresentationUIStore extends EduUIStoreBase {
   setCurrentPage(page: number) {
     this.currentPage = page;
   }
-  
+
   @action.bound
   pinStream(streamUuid: string) {
     this.setMainViewStream(streamUuid);
@@ -89,17 +90,34 @@ export class PresentationUIStore extends EduUIStoreBase {
     );
     this._disposers.push(
       reaction(
-        () => this.getters.isBoardWidgetActive,
-        (isBoardWidgetActive) => {
-          if (isBoardWidgetActive) {
-            this.clearMainViewStream();
-            // stop timer
+        () => this.classroomStore.streamStore.localShareStreamUuid,
+        () => {
+          const screenShareEnabled = !!this.classroomStore.streamStore.localShareStreamUuid;
+          if (screenShareEnabled) {
+            if (this.isBoardWidgetActive) {
+              this._cacheBoardEnableStatus = true;
+              this.getters.boardApi.disable();
+            }
           } else {
-            this._handleMainCameraStream();
+            if (this._cacheBoardEnableStatus) this.getters.boardApi.enable();
+            this._cacheBoardEnableStatus = false;
           }
         },
       ),
-    );
+    ),
+      this._disposers.push(
+        reaction(
+          () => this.getters.isBoardWidgetActive,
+          (isBoardWidgetActive) => {
+            if (isBoardWidgetActive) {
+              this.clearMainViewStream();
+              // stop timer
+            } else {
+              this._handleMainCameraStream();
+            }
+          },
+        ),
+      );
     this._disposers.push(
       reaction(
         () => {

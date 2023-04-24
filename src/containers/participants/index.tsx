@@ -68,8 +68,8 @@ const Participants = observer(() => {
       });
     }
   }, []);
-  const handleMuteAll = () => {
-    updateRemotePublishStateBatch(
+  const handleMuteAll = async () => {
+    await updateRemotePublishStateBatch(
       participantStudentList.map(({ user, stream }) => {
         return {
           userUuid: user.userUuid,
@@ -78,9 +78,10 @@ const Participants = observer(() => {
         };
       }),
     );
+    toastApiRef.current?.open({ toastProps: { type: 'normal', content: 'Mute All' } });
   };
-  const handleUnMuteAll = () => {
-    updateRemotePublishStateBatch(
+  const handleUnMuteAll = async () => {
+    await updateRemotePublishStateBatch(
       participantStudentList.map(({ user, stream }) => {
         return {
           userUuid: user.userUuid,
@@ -89,6 +90,7 @@ const Participants = observer(() => {
         };
       }),
     );
+    toastApiRef.current?.open({ toastProps: { type: 'normal', content: 'Unmute All' } });
   };
   return (
     <ParticipantsContext.Provider value={{ toastApi: toastApiRef.current }}>

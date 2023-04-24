@@ -156,8 +156,7 @@ export class LayoutUIStore extends EduUIStoreBase {
       const { calcWidth: width, calcHeight: height } = this.classroomSizeToBoardSize(
         containerEle as HTMLElement,
       );
-      console.log(width, height, 'boardOriSize');
-      const aspectRatio = 670 / 1490;
+      const aspectRatio = 670 / 1630;
 
       const curAspectRatio = height / width;
 

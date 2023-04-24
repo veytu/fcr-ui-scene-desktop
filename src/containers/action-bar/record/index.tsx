@@ -9,9 +9,9 @@ import classnames from 'classnames';
 
 export const Record = observer(() => {
   const {
-    statusBarUIStore: { isRecordStarting, isRecordStoped },
+    statusBarUIStore: { isRecordStoped },
     layoutUIStore: { addDialog },
-    actionBarUIStore: { startRecording },
+    actionBarUIStore: { startRecording, stopRecording },
   } = useStore();
   const colors = themeVal('colors');
   const handleRecord = () => {
@@ -23,20 +23,31 @@ export const Record = observer(() => {
         okText: 'Record',
         onOk: startRecording,
       });
+    } else {
+      addDialog('confirm', {
+        title: 'Recording Prompt',
+        content: 'Are you sure you want to stop recording?',
+        cancelText: 'Cancel',
+        okText: 'Stop',
+        onOk: stopRecording,
+      });
     }
   };
   const icon = isRecordStoped ? SvgIconEnum.FCR_RECORDING_ON : SvgIconEnum.FCR_RECORDING_STOP;
   const iconColor = isRecordStoped ? colors['icon-1'] : colors['red']['6'];
+  const tooltip = isRecordStoped ? 'Click to start recording' : 'Click to stop recording';
+  const text = isRecordStoped ? 'Record' : 'Recording';
+
   return (
-    <ToolTip content={'Recording'}>
+    <ToolTip content={tooltip}>
       <ActionBarItem
         onClick={handleRecord}
         icon={{
           type: icon,
           colors: { iconPrimary: iconColor },
-          className: classnames({ 'fcr-status-bar-record-starting': isRecordStarting }),
+          className: classnames({ 'fcr-status-bar-record-starting': !isRecordStoped }),
         }}
-        text={'Recording'}></ActionBarItem>
+        text={text}></ActionBarItem>
     </ToolTip>
   );
 });

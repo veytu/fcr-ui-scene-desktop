@@ -1,4 +1,10 @@
-import { AgoraWidgetController, EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
+import {
+  AgoraEduClassroomEvent,
+  AgoraWidgetController,
+  EduClassroomConfig,
+  EduEventCenter,
+  EduRoleTypeEnum,
+} from 'agora-edu-core';
 import { bound, Log, Logger } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, observable, runInAction, toJS } from 'mobx';
 
@@ -10,7 +16,7 @@ import { getTheme } from '@onlineclass/utils/launch-options-holder';
 export class Board {
   logger!: Logger;
   private _controller?: AgoraWidgetController;
-  private _disposers: IReactionDisposer[] = [];
+  private _disposers: (IReactionDisposer | (() => void))[] = [];
   @observable
   grantedUsers = new Set<string>();
   @observable
@@ -182,6 +188,25 @@ export class Board {
       messageType: AgoraExtensionWidgetEvent.RequestGrantedList,
       onMessage: this._handleRequestGrantedList,
     });
+    const { role } = EduClassroomConfig.shared.sessionInfo;
+    if (role === EduRoleTypeEnum.student) {
+      this._disposers.push(
+        computed(() => this.grantedUsers).observe(async ({ newValue, oldValue }) => {
+          const oldGranted = oldValue;
+          const newGranted = newValue;
+          const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+
+          if (newGranted.has(userUuid) && !oldGranted?.has(userUuid)) {
+            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.TeacherGrantPermission);
+          }
+          if (!newGranted.has(userUuid) && oldGranted?.has(userUuid)) {
+            EduEventCenter.shared.emitClasroomEvents(
+              AgoraEduClassroomEvent.TeacherRevokePermission,
+            );
+          }
+        }),
+      );
+    }
   }
 
   uninstall() {

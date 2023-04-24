@@ -1,3 +1,4 @@
+import { ToastApi } from '@components/toast';
 import {
   AgoraEduClassroomEvent,
   ClassroomState,
@@ -24,30 +25,42 @@ export class NotiticationUIStore extends EduUIStoreBase {
         this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
       }
     }
-    // // teacher turn on my mic
-    // if (event === AgoraEduClassroomEvent.TeacherTurnOnMyMic) {
-    //   this.shareUIStore.addToast(transI18n('toast2.teacher.turn.on.my.mic'));
-    // }
-    // // teacher turn off my mic
-    // if (event === AgoraEduClassroomEvent.TeacherTurnOffMyMic) {
-    //   this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.mic'), 'error');
-    // }
-    // // teacher turn on my mic
-    // if (event === AgoraEduClassroomEvent.TeacherTurnOnMyCam) {
-    //   this.shareUIStore.addToast(transI18n('toast2.teacher.turn.on.my.cam'));
-    // }
-    // // teacher turn off my mic
-    // if (event === AgoraEduClassroomEvent.TeacherTurnOffMyCam) {
-    //   this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.cam'), 'error');
-    // }
-    // // teacher grant permission
-    // if (event === AgoraEduClassroomEvent.TeacherGrantPermission) {
-    //   this.shareUIStore.addToast(transI18n('toast2.teacher.grant.permission'));
-    // }
-    // // teacher revoke permission
-    // if (event === AgoraEduClassroomEvent.TeacherRevokePermission) {
-    //   this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.permission'));
-    // }
+    // teacher turn on my mic
+    if (event === AgoraEduClassroomEvent.TeacherTurnOnMyMic) {
+      ToastApi.open({
+        toastProps: { type: 'info', content: 'You are unmuted' },
+      });
+    }
+    // teacher turn off my mic
+    if (event === AgoraEduClassroomEvent.TeacherTurnOffMyMic) {
+      ToastApi.open({
+        toastProps: { type: 'info', content: 'You are muted' },
+      });
+    }
+    // teacher turn on my mic
+    if (event === AgoraEduClassroomEvent.TeacherTurnOnMyCam) {
+      ToastApi.open({
+        toastProps: { type: 'info', content: 'The teacher has turned on your camera' },
+      });
+    }
+    // teacher turn off my mic
+    if (event === AgoraEduClassroomEvent.TeacherTurnOffMyCam) {
+      ToastApi.open({
+        toastProps: { type: 'info', content: 'The teacher has turned off your camera' },
+      });
+    }
+    // teacher grant permission
+    if (event === AgoraEduClassroomEvent.TeacherGrantPermission) {
+      ToastApi.open({
+        toastProps: { type: 'info', content: 'The teacher invites you to the whiteboard' },
+      });
+    }
+    // teacher revoke permission
+    if (event === AgoraEduClassroomEvent.TeacherRevokePermission) {
+      ToastApi.open({
+        toastProps: { type: 'info', content: 'The teacher cancelled your whiteboard permission' },
+      });
+    }
     // // user accpeted to stage
     // if (event === AgoraEduClassroomEvent.UserAcceptToStage) {
     //   this.shareUIStore.addToast(transI18n('toast2.teacher.accept.onpodium'));
