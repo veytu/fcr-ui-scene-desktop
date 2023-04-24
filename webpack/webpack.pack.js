@@ -48,6 +48,9 @@ const config = {
     ],
   },
   plugins: [
+    new dotenv({
+      path: locateEnvFile(),
+    }),
     new webpack.DefinePlugin({
       NODE_ENV: JSON.stringify('production'),
     }),
