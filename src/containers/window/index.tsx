@@ -45,9 +45,7 @@ export const StreamWindow: FC = observer(() => {
         {streamWindowContext?.streamPlayerVisible && <StreamPlayer></StreamPlayer>}
         <UserInteract></UserInteract>
         <AwardAnimations></AwardAnimations>
-        {!(streamWindowContext?.renderAtMainView && layout !== Layout.Grid) && (
-          <AudioVolumeEffect></AudioVolumeEffect>
-        )}
+        {<AudioVolumeEffect></AudioVolumeEffect>}
       </div>
     </StreamWindowMouseContext.Provider>
   );

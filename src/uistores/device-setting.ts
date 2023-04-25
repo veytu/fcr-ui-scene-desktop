@@ -319,6 +319,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   @action.bound
   setCameraDevice(deviceId: string) {
     this._cameraDeviceId = deviceId;
+    this.updateCameraTrack();
   }
 
   @bound
@@ -329,17 +330,20 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       this.enableCamera(true);
     }
   }
-
+  @bound
+  updateCameraTrack() {
+    if (this.cameraDeviceId) {
+      const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
+      track.setDeviceId(this.cameraDeviceId);
+      track.start();
+      this._cameraDeviceEnabled = true;
+    }
+  }
   @action.bound
   enableCamera(value: boolean) {
     if (value === this._cameraDeviceEnabled) return;
     if (value) {
-      if (this.cameraDeviceId) {
-        const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
-        track.setDeviceId(this.cameraDeviceId);
-        track.start();
-        this._cameraDeviceEnabled = true;
-      }
+      this.updateCameraTrack();
     } else {
       const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
       track.stop();
@@ -350,6 +354,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   @action.bound
   setAudioRecordingDevice(deviceId: string) {
     this._audioRecordingDeviceId = deviceId;
+    this.updateAudioRecordingTrack();
   }
 
   @bound
@@ -361,16 +366,21 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     }
   }
 
+  @bound
+  updateAudioRecordingTrack() {
+    if (this.audioRecordingDeviceId) {
+      const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
+      track.setRecordingDevice(this.audioRecordingDeviceId);
+      track.start();
+      this._audioRecordingDeviceEnabled = true;
+    }
+  }
+
   @action.bound
   enableAudioRecording(value: boolean) {
     if (value === this._audioRecordingDeviceEnabled) return;
     if (value) {
-      if (this.audioRecordingDeviceId) {
-        const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
-        track.setRecordingDevice(this.audioRecordingDeviceId);
-        track.start();
-        this._audioRecordingDeviceEnabled = true;
-      }
+      this.updateAudioRecordingTrack();
     } else {
       const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
       track.stop();
