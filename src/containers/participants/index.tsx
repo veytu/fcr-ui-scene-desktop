@@ -119,6 +119,7 @@ const Participants = observer(() => {
           <div className="fcr-participants-footer">
             <ToolTip placement="top" content="Mute All">
               <Button
+                disabled={participantStudentList.length <= 0}
                 onClick={handleMuteAll}
                 preIcon={SvgIconEnum.FCR_ALL_MUTE}
                 size="S"
@@ -128,6 +129,7 @@ const Participants = observer(() => {
             </ToolTip>
             <ToolTip placement="top" content="Unmute all">
               <Button
+                disabled={participantStudentList.length <= 0}
                 onClick={handleUnMuteAll}
                 preIcon={SvgIconEnum.FCR_ALL_UNMUTE}
                 size="S"
