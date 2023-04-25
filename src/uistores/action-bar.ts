@@ -16,13 +16,13 @@ export class ActionBarUIStore extends EduUIStoreBase {
   }
 
   @computed get showToolBox() {
-    return this.getters.isHost || this.getters.isGranted;
+    return this.getters.isHost;
   }
   @computed get showWhiteBoard() {
-    return this.getters.isHost || this.getters.isGranted;
+    return this.getters.isHost;
   }
   @computed get showScreenShare() {
-    return this.getters.isHost || this.getters.isGranted;
+    return this.getters.isHost;
   }
   @computed get showRecord() {
     return this.getters.isHost;

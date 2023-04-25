@@ -9,7 +9,6 @@ import { ToolBox } from './toolbox';
 import { Whiteboard } from './whiteboard';
 import { ScreenShare } from './screen-share';
 import { Record } from './record';
-import { RaiseHands } from './raise-hands';
 import { Chat } from './chat';
 import { Participants } from './participants';
 import { Setting } from './setting';

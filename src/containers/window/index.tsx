@@ -15,12 +15,20 @@ import { useVideoRenderable } from '@onlineclass/utils/hooks/use-video-renderabl
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { usePinStream } from '@onlineclass/utils/hooks/use-pin-stream';
 import { Avatar } from '@components/avatar';
+import { Layout } from '@onlineclass/uistores/type';
+
+import { SvgaPlayer } from '@components/svga-player';
+import { SoundPlayer } from '@components/sound-player';
+import RewardSVGA from './assets/svga/reward.svga';
+import RewardSound from './assets/audio/reward.mp3';
+import { EduStreamUI } from '@onlineclass/utils/stream/struct';
+
 const colors = themeVal('colors');
 export const StreamWindow: FC = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
   const [mouseEnter, setMouseEnter] = useState(false);
   const {
-    layoutUIStore: { mouseEnterClass },
+    layoutUIStore: { mouseEnterClass, layout },
   } = useStore();
   return (
     <StreamWindowMouseContext.Provider
@@ -36,7 +44,10 @@ export const StreamWindow: FC = observer(() => {
         <StreamPlaceHolder></StreamPlaceHolder>
         {streamWindowContext?.streamPlayerVisible && <StreamPlayer></StreamPlayer>}
         <UserInteract></UserInteract>
-        <AudioVolumeEffect></AudioVolumeEffect>
+        <AwardAnimations></AwardAnimations>
+        {!(streamWindowContext?.renderAtMainView && layout !== Layout.Grid) && (
+          <AudioVolumeEffect></AudioVolumeEffect>
+        )}
       </div>
     </StreamWindowMouseContext.Provider>
   );
@@ -110,7 +121,7 @@ const StreamPlayer = observer(() => {
 
 const UserInteract = observer(() => {
   const {
-    layoutUIStore: { showStatusBar, showActiobBar, showListView },
+    layoutUIStore: { showStatusBar, showActiobBar, showListView, layout },
   } = useStore();
   const streamWindowContext = useContext(StreamWindowContext);
   return (
@@ -120,7 +131,8 @@ const UserInteract = observer(() => {
         `fcr-stream-window-interact-${streamWindowContext?.labelSize}`,
         {
           'fcr-stream-window-interact-with-status-bar-visible':
-            streamWindowContext?.topLabelAnimation && showStatusBar && !showListView,
+            streamWindowContext?.topLabelAnimation &&
+            ((showStatusBar && !showListView) || layout !== Layout.ListOnTop),
           'fcr-stream-window-interact-with-action-bar-visible':
             streamWindowContext?.bottomLabelAnimation && showActiobBar,
         },
@@ -435,3 +447,30 @@ const AudioVolumeEffect = observer(
     return showAudioVolumeEffect ? <div className={'fcr-audio-volume-effect'}></div> : null;
   },
 );
+
+const AwardAnimations = observer(() => {
+  const {
+    streamUIStore: { streamAwardAnims, removeAward },
+  } = useStore();
+  const streamWindowContext = useContext(StreamWindowContext);
+  const stream = streamWindowContext?.stream;
+  return stream ? (
+    <div className="fcr-stream-window-reward-anim">
+      {streamAwardAnims(stream).map((anim: { id: string; userUuid: string }) => {
+        return (
+          <SvgaPlayer
+            key={anim.id}
+            style={{ position: 'absolute' }}
+            url={RewardSVGA}
+            onFinish={() => {
+              removeAward(anim.id);
+            }}></SvgaPlayer>
+        );
+      })}
+
+      {streamAwardAnims(stream).map((anim: { id: string; userUuid: string }) => {
+        return <SoundPlayer url={RewardSound} key={anim.id} />;
+      })}
+    </div>
+  ) : null;
+});

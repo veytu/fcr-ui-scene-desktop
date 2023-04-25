@@ -1,4 +1,4 @@
-import { EduStream } from 'agora-edu-core';
+import { AgoraEduClassroomEvent, EduEventCenter, EduStream } from 'agora-edu-core';
 import {
   AgoraRteEventType,
   AgoraRteVideoSourceType,
@@ -11,12 +11,14 @@ import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { computedFn } from 'mobx-utils';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
+import { v4 as uuidv4 } from 'uuid';
 export class StreamUIStore extends EduUIStoreBase {
   // private static readonly PAGE_SIZE_BY_MODE = {
   //   [ViewMode.Divided]: 20,
   //   [ViewMode.Surrounded]: 8,
   // };
   subSet = new Set<string>();
+  @observable awardAnims: { id: string; userUuid: string }[] = [];
 
   @observable
   waitingSub: EduStream[] = [];
@@ -26,6 +28,10 @@ export class StreamUIStore extends EduUIStoreBase {
   quitSub: EduStream[] = [];
   private _subscribeTask?: Scheduler.Task;
   private _videoDoms = new Map<string, HTMLDivElement>();
+  streamAwardAnims = computedFn((stream: EduStreamUI): { id: string; userUuid: string }[] => {
+    return this.awardAnims.filter((anim) => anim.userUuid === stream.fromUser.userUuid);
+  });
+
   @computed
   get cameraUIStreams() {
     return this.getters.cameraUIStreams;
@@ -168,10 +174,41 @@ export class StreamUIStore extends EduUIStoreBase {
 
     this.quitSub = this.quitSub.concat(quitSub);
   }
+
+  /**
+   * 移除奖励动画
+   * @param id
+   */
+  @action.bound
+  removeAward(id: string) {
+    this.awardAnims = this.awardAnims.filter((anim) => anim.id !== id);
+  }
+
+  @bound
+  _handleRewardsChange(e: AgoraEduClassroomEvent, params: unknown) {
+    if (
+      e === AgoraEduClassroomEvent.RewardReceived ||
+      e === AgoraEduClassroomEvent.BatchRewardReceived
+    ) {
+      const users = params as { userUuid: string; userName: string }[];
+      const anims: { id: string; userUuid: string }[] = [];
+      users.forEach((user) => {
+        anims.push({ id: uuidv4(), userUuid: user.userUuid });
+      });
+      if (anims.length > 0) {
+        runInAction(() => {
+          this.awardAnims = this.awardAnims.concat(anims);
+        });
+      }
+    }
+  }
   onDestroy(): void {
     this._subscribeTask?.stop();
+    EduEventCenter.shared.offClassroomEvents(this._handleRewardsChange);
   }
   onInstall(): void {
+    EduEventCenter.shared.onClassroomEvents(this._handleRewardsChange);
+
     this._subscribeTask = Scheduler.shared.addPollingTask(
       this._handleSubscribe,
       Scheduler.Duration.second(1),

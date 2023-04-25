@@ -1,8 +1,13 @@
 import { ClassDialog, ClassDialogProps } from '@components/dialog/class-dialog';
+import { useStore } from '@onlineclass/utils/hooks/use-store';
+import { observer } from 'mobx-react';
 import { FC, useState } from 'react';
 
-export const ClassInfoDialog: FC<ClassDialogProps> = (props) => {
+export const ClassInfoDialog: FC<ClassDialogProps> = observer((props) => {
   const [visible, setVisible] = useState(true);
+  const {
+    layoutUIStore: { classroomViewportClassName },
+  } = useStore();
   const handleVisibleChanged = (visible: boolean) => {
     if (!visible) {
       props.onClose?.();
@@ -10,6 +15,9 @@ export const ClassInfoDialog: FC<ClassDialogProps> = (props) => {
   };
   return (
     <ClassDialog
+      getContainer={() => {
+        return document.querySelector(`.${classroomViewportClassName}`) as HTMLElement;
+      }}
       maskClosable={false}
       visible={visible}
       {...props}
@@ -18,4 +26,4 @@ export const ClassInfoDialog: FC<ClassDialogProps> = (props) => {
         setVisible(false);
       }}></ClassDialog>
   );
-};
+});

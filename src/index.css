@@ -18,9 +18,7 @@
   transition: all 0.2s;
   overflow: hidden;
 }
-.fcr-bg-background {
-  @apply fcr-bg-1;
-}
+
 .fcr-bg-2 {
   backdrop-filter: blur(25px);
 }

@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import './index.css';
 import { StreamWindow } from '../window';
 import { convertStreamUIStatus, StreamWindowContext } from '../window/context';
-import { FC, PropsWithChildren, useEffect } from 'react';
+import { CSSProperties, FC, PropsWithChildren, useEffect } from 'react';
 import { ListViewFloatPagination } from '@components/pagination';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { CSSTransition } from 'react-transition-group';
@@ -20,7 +20,7 @@ export const PresentationView = observer(() => {
       currentPage,
       setCurrentPage,
       showPager,
-
+      isListViewFloat,
       isBoardWidgetActive,
     },
   } = useStore();
@@ -30,10 +30,20 @@ export const PresentationView = observer(() => {
   }, [listViewStreamsByPage, mainViewStream]);
   const direction =
     layout === Layout.ListOnTop ? 'row' : layout === Layout.ListOnRight ? 'col' : 'row';
+  const listViewFloatStyle: CSSProperties = isListViewFloat
+    ? {
+        position: 'absolute',
+        zIndex: 99,
+        top: 0,
+        right: 0,
+      }
+    : {};
   return (
     <div className={classnames(`fcr-layout-content-${layout}`)}>
       <CSSTransition timeout={200} in={showListView} classNames={'fcr-layout-content-list-view'}>
-        <div className={classnames(`fcr-layout-content-list-view`)}>
+        <div
+          style={{ ...listViewFloatStyle }}
+          className={classnames(`fcr-layout-content-list-view`)}>
           <div
             className={classnames(
               `fcr-layout-content-video-list`,
@@ -96,14 +106,12 @@ const ListViewCollapseButton = observer(() => {
 });
 const BoardViewContainer: FC<PropsWithChildren> = observer(() => {
   const {
-    layoutUIStore: { showActiobBar, showStatusBar, layout, showListView },
-    presentationUIStore: { boardViewportSize },
+    layoutUIStore: { showActiobBar, showStatusBar },
   } = useStore();
 
   const boardContainerCls = classnames('fcr-layout-board-container', {
     'fcr-layout-board-container-with-action-bar': showActiobBar,
-    'fcr-layout-board-container-with-status-bar':
-      showStatusBar && (layout !== Layout.ListOnTop || !showListView),
+    'fcr-layout-board-container-with-status-bar': showStatusBar,
   });
 
   return (

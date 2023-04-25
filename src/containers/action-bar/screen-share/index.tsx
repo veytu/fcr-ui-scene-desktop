@@ -29,6 +29,7 @@ export const ScreenShare = observer(() => {
       {isLocalScreenSharing && <ScreenShareStatusBar></ScreenShareStatusBar>}
       <ScreenShareToolTip
         mouseEnterDelay={isLocalScreenSharing ? 0 : 1}
+        mouseLeaveDelay={isLocalScreenSharing ? 1 : undefined}
         content={
           isLocalScreenSharing ? (
             <ScreenSharingTooltipContent></ScreenSharingTooltipContent>

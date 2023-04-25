@@ -34,8 +34,10 @@ export const LeaveCheck = observer(() => {
   }, []);
   return (
     <Popover placement="topRight" visible content={<LeavePopoverContent></LeavePopoverContent>}>
-      <div onClick={() => setShowLeaveOption(false)} className="fcr-action-bar-cancel-leave">
-        Cancel
+      <div className="fcr-action-bar-cancel-leave">
+        <Button onClick={() => setShowLeaveOption(false)} size="XS" styleType="gray">
+          Cancel
+        </Button>
       </div>
     </Popover>
   );
@@ -50,7 +52,7 @@ const LeavePopoverContent = observer(() => {
   return (
     <div className="fcr-action-bar-leave-popover">
       <div className="fcr-action-bar-leave-popover-text">
-        Are you sure you want to end your room？
+        Are you sure you want to end your classroom？
       </div>
       <div className="fcr-action-bar-leave-popover-btns">
         {showEndClassButton && (
@@ -59,12 +61,12 @@ const LeavePopoverContent = observer(() => {
             block
             size="L"
             styleType="danger">
-            End the Room
+            End the Classroom
           </Button>
         )}
 
         <Button block onClick={leaveClassroom} size="L" type="secondary" styleType="danger">
-          Leave the Room
+          Leave the Classroom
         </Button>
       </div>
     </div>

@@ -97,9 +97,7 @@ const Participants = observer(() => {
       <div ref={participantsContainerRef} className="fcr-participants-container">
         <div className="fcr-participants-header">
           <div className="fcr-participants-title">Participants</div>
-          <div className="fcr-participants-count">
-            (Student {participantStudentList.length} / Co-teacher 0)
-          </div>
+          <div className="fcr-participants-count">(Student {participantStudentList.length})</div>
           <div className="fcr-participants-search">
             <Input
               size="medium"
@@ -111,6 +109,9 @@ const Participants = observer(() => {
           </div>
         </div>
         <Table
+          scroll={{
+            y: 400,
+          }}
           columns={(isHost ? hostColumns : studentColumns) as any}
           data={participantList}
           rowKey={(record) => record.user.userUuid}></Table>
@@ -154,13 +155,15 @@ const TableName = ({ name }: { name: string }) => {
 const TableAuth = observer(({ userUuid, role }: { userUuid: string; role: EduRoleTypeEnum }) => {
   const {
     participantsUIStore: { isHostByUserRole },
+    presentationUIStore: { isBoardWidgetActive },
     boardApi: { grantedUsers, grantPrivilege },
   } = useStore();
   const isHost = isHostByUserRole(role);
   const granted = grantedUsers.has(userUuid);
   const tooltipContent = isHost ? 'host' : granted ? 'UnAuthorization' : 'Authorization';
+  const disabled = !isBoardWidgetActive;
   const handleAuth = () => {
-    grantPrivilege(userUuid, !granted);
+    !disabled && grantPrivilege(userUuid, !granted);
   };
   return (
     <ToolTip placement="bottom" content={tooltipContent}>

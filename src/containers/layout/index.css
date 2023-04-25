@@ -15,12 +15,14 @@
 }
 .fcr-layout-content-list-view {
   position: relative;
+  backdrop-filter: blur(6px);
+  background: #35374180;
+  z-index: 1;
 }
 .fcr-layout-content-list-on-top .fcr-layout-content-list-view {
-  background: #353741;
+  width: 100%;
   height: calc(135px + var(--fcr-status-bar-height));
   padding-top: var(--fcr-status-bar-height);
-  transition: all 0.2s;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -42,12 +44,11 @@
   overflow: hidden;
 }
 .fcr-layout-content-list-on-right .fcr-layout-content-list-view {
-  @apply fcr-bg-2;
   width: 210px;
-  padding-top: 57px;
-  padding-bottom: 66px;
-  transition: all 0.2s;
+  padding-top: var(--fcr-status-bar-height);
+  padding-bottom: var(--fcr-action-bar-height);
   display: flex;
+  height: 100%;
 }
 /** grid **/
 
@@ -149,13 +150,20 @@
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   cursor: pointer;
+  backdrop-filter: blur(6px);
+  background: #35374180;
 }
 .fcr-layout-content-list-view-collapse-button-col.fcr-layout-content-list-view-collapse-button-collapsed
   svg {
   transform: rotate(180deg);
 }
 /** listview transition **/
-
+.fcr-layout-content-list-view-enter,
+.fcr-layout-content-list-view-enter-active,
+.fcr-layout-content-list-view-exit,
+.fcr-layout-content-list-view-exit-active {
+  transition: all 0.2s;
+}
 .fcr-layout-content-list-on-top .fcr-layout-content-list-view-exit-active,
 .fcr-layout-content-list-on-top .fcr-layout-content-list-view-exit-done {
   height: 0;
@@ -174,6 +182,7 @@
 
 .fcr-layout-content-list-on-right .fcr-layout-content-list-view-enter-active,
 .fcr-layout-content-list-on-right .fcr-layout-content-list-view-enter-done {
+  transition: all 0.2s;
   width: 210px;
 }
 .fcr-layout-board-container {

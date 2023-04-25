@@ -17,6 +17,8 @@ export class PresentationUIStore extends EduUIStoreBase {
 
   @action.bound
   pinStream(streamUuid: string) {
+    this.isMainViewStreamPinned = false;
+
     this.setMainViewStream(streamUuid);
 
     this.isMainViewStreamPinned = true;
@@ -24,6 +26,10 @@ export class PresentationUIStore extends EduUIStoreBase {
   @action.bound
   removePinnedStream() {
     this.isMainViewStreamPinned = false;
+  }
+  @computed
+  get isListViewFloat() {
+    return this.isBoardWidgetActive;
   }
   @computed get pinnedUserUuid() {
     return this.isMainViewStreamPinned && this.mainViewStream?.fromUser.userUuid;

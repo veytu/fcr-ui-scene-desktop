@@ -11,6 +11,7 @@
 .fcr-action-bar-hide {
   transform: translateY(var(--fcr-action-bar-height));
 }
+
 .fcr-action-bar-left,
 .fcr-action-bar-mid,
 .fcr-action-bar-right {
@@ -52,16 +53,9 @@
   padding: 0 8px;
 }
 .fcr-action-bar-cancel-leave {
-  @apply fcr-text-1 fcr-font-medium;
-  width: 100px;
-  height: 48px;
-  font-size: 16px;
-  line-height: 48px;
   margin-right: 31px;
   margin-left: auto;
   text-align: center;
   cursor: pointer;
-}
-.fcr-action-bar-cancel-leave:hover {
-  text-decoration: underline;
+  align-self: center;
 }

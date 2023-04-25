@@ -6,6 +6,7 @@ import { Log } from 'agora-common-libs/lib/annotation';
 import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
 import { AgoraViewportBoundaries } from 'agora-common-libs/lib/widget';
 import { ClassDialogProps } from '@components/dialog/class-dialog';
+import { ClassroomState } from 'agora-edu-core';
 
 @Log.attach({ proxyMethods: false })
 export class LayoutUIStore extends EduUIStoreBase {
@@ -44,6 +45,12 @@ export class LayoutUIStore extends EduUIStoreBase {
   @bound
   setHasPopoverShowed(has: boolean) {
     this._hasPopoverShowed = has;
+  }
+  @computed get showLoading() {
+    const classroomState = this.classroomStore.connectionStore.classroomState;
+    return (
+      classroomState === ClassroomState.Connecting || classroomState === ClassroomState.Reconnecting
+    );
   }
   @computed get stageSize() {
     return this.layout === Layout.Grid || !this.showListView
@@ -156,7 +163,7 @@ export class LayoutUIStore extends EduUIStoreBase {
       const { calcWidth: width, calcHeight: height } = this.classroomSizeToBoardSize(
         containerEle as HTMLElement,
       );
-      const aspectRatio = 670 / 1630;
+      const aspectRatio = 670 / 1500;
 
       const curAspectRatio = height / width;
 
@@ -184,20 +191,20 @@ export class LayoutUIStore extends EduUIStoreBase {
     const width =
       containerNode instanceof Window ? containerNode.innerWidth : containerNode.clientWidth;
 
-    const calcWidth = this.layout === Layout.ListOnRight ? width - this.stageSize : width;
+    const calcWidth = width;
     const calcHeight =
       this.layout === Layout.ListOnRight
         ? height - this.statusBarHeight - this.actionBarHeight
-        : height - this.stageSize - this.statusBarHeight - this.actionBarHeight;
+        : height - this.statusBarHeight - this.actionBarHeight;
 
     return { calcWidth, calcHeight };
   };
   boardSizeToClassroomSize = ({ w, h }: { w: number; h: number }) => {
-    const width = this.layout === Layout.ListOnRight ? w + this.stageSize : w;
+    const width = w;
     const height =
       this.layout === Layout.ListOnRight
         ? h + this.statusBarHeight + this.actionBarHeight
-        : h + this.stageSize + this.statusBarHeight + this.actionBarHeight;
+        : h + this.statusBarHeight + this.actionBarHeight;
 
     return { width, height };
   };

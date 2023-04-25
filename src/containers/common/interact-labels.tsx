@@ -45,7 +45,7 @@ export const InteractLabelGroup = observer(
         )}
         {showReward && (
           <div className="fcr-stream-window-student-interact-item  fcr-bg-brand-6">
-            <SvgImg type={SvgIconEnum.FCR_STAR}></SvgImg>
+            <SvgImg type={SvgIconEnum.FCR_REWARD}></SvgImg>
             <span>{reward || 0}</span>
           </div>
         )}
