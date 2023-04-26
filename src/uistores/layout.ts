@@ -163,7 +163,7 @@ export class LayoutUIStore extends EduUIStoreBase {
       const { calcWidth: width, calcHeight: height } = this.classroomSizeToBoardSize(
         containerEle as HTMLElement,
       );
-      const aspectRatio = 670 / 1500;
+      const aspectRatio = 710 / 1500;
 
       const curAspectRatio = height / width;
 
@@ -217,6 +217,8 @@ export class LayoutUIStore extends EduUIStoreBase {
     this._viewportResizeObserver?.disconnect();
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseleave', this.handleMouseLeave);
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
   }
   onInstall(): void {
     document.addEventListener('mousemove', this.handleMouseMove);

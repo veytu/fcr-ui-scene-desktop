@@ -237,6 +237,9 @@ export class StatusBarUIStore extends EduUIStoreBase {
   get isRecordStoped() {
     return this.recordStatus === RecordStatus.stopped;
   }
-  onDestroy(): void {}
+  onDestroy(): void {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
+  }
   onInstall(): void {}
 }

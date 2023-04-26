@@ -210,7 +210,11 @@ export class NotiticationUIStore extends EduUIStoreBase {
     //   }
     // }
   }
-  onDestroy(): void {}
+  onDestroy(): void {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
+    EduEventCenter.shared.offClassroomEvents(this._handleClassroomEvent);
+  }
   onInstall(): void {
     EduEventCenter.shared.onClassroomEvents(this._handleClassroomEvent);
     this._disposers.push(

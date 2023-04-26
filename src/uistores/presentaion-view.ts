@@ -82,7 +82,10 @@ export class PresentationUIStore extends EduUIStoreBase {
     }
   }
 
-  onDestroy(): void {}
+  onDestroy(): void {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
+  }
   onInstall(): void {
     this._disposers.push(
       computed(() => this.classroomStore.connectionStore.scene).observe(

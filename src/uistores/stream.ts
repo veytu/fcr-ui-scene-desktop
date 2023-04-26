@@ -203,6 +203,8 @@ export class StreamUIStore extends EduUIStoreBase {
     }
   }
   onDestroy(): void {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
     this._subscribeTask?.stop();
     EduEventCenter.shared.offClassroomEvents(this._handleRewardsChange);
   }

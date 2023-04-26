@@ -105,7 +105,10 @@ export class ActionBarUIStore extends EduUIStoreBase {
   leaveClassroom() {
     this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
   }
-  onDestroy(): void {}
+  onDestroy(): void {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
+  }
   onInstall(): void {
     this._disposers.push(
       reaction(

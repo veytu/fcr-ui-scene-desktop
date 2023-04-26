@@ -72,6 +72,9 @@ export class ParticipantsUIStore extends EduUIStoreBase {
     return this.classroomStore.userStore.rewards.get(userUuid) || 0;
   });
 
-  onDestroy(): void {}
+  onDestroy(): void {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
+  }
   onInstall(): void {}
 }
