@@ -42,7 +42,9 @@ export const StreamWindow: FC = observer(() => {
           setMouseEnter(true);
         }}>
         <StreamPlaceHolder></StreamPlaceHolder>
-        {streamWindowContext?.streamPlayerVisible && <StreamPlayer></StreamPlayer>}
+        {streamWindowContext?.streamPlayerVisible && (
+          <StreamPlayer key={streamWindowContext.stream.stream.streamUuid}></StreamPlayer>
+        )}
         <UserInteract></UserInteract>
         <AwardAnimations></AwardAnimations>
         {<AudioVolumeEffect></AudioVolumeEffect>}

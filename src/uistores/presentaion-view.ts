@@ -18,7 +18,6 @@ export class PresentationUIStore extends EduUIStoreBase {
   @action.bound
   pinStream(streamUuid: string) {
     this.isMainViewStreamPinned = false;
-
     this.setMainViewStream(streamUuid);
 
     this.isMainViewStreamPinned = true;
@@ -58,7 +57,14 @@ export class PresentationUIStore extends EduUIStoreBase {
 
   @action
   setMainViewStream(streamUuid: string | null) {
-    if (this.isMainViewStreamPinned || this.getters.isBoardWidgetActive) return;
+    if (
+      this.isMainViewStreamPinned ||
+      this.getters.isBoardWidgetActive ||
+      this.getters.screenShareUIStream
+    )
+      return;
+    this.mainViewStreamUuid = null;
+
     this.mainViewStreamUuid = streamUuid;
   }
   @action
@@ -72,12 +78,11 @@ export class PresentationUIStore extends EduUIStoreBase {
     volumes.forEach((volume, key) => {
       if (volume * 100 > 50) activeStreamUuid = key;
     });
-    if (activeStreamUuid && !this.getters.screenShareUIStream)
-      this.setMainViewStream(activeStreamUuid);
+    if (activeStreamUuid) this.setMainViewStream(activeStreamUuid);
   }
   @action.bound
   private _handleMainCameraStream() {
-    if (!this.getters.screenShareUIStream && this.getters.cameraUIStreams.length) {
+    if (this.getters.cameraUIStreams.length) {
       this.setMainViewStream(this.getters.cameraUIStreams[0].stream.streamUuid);
     }
   }
@@ -134,7 +139,10 @@ export class PresentationUIStore extends EduUIStoreBase {
         },
         (screenShareUIStream) => {
           if (screenShareUIStream) {
-            this.setMainViewStream(screenShareUIStream.stream.streamUuid);
+            runInAction(() => {
+              this.mainViewStreamUuid = screenShareUIStream.stream.streamUuid;
+              this.isMainViewStreamPinned = false;
+            });
           } else {
             this.setMainViewStream(null);
 
