@@ -30,7 +30,7 @@ export const MicrophoneDevice: FC = observer(() => {
     layoutUIStore: { addDialog },
   } = useStore();
   const { toggleLocalAudioRecordingDevice } = useDeviceSwitch();
-  const text = isAudioRecordingDeviceEnabled ? 'Microphone' : 'Unmute';
+  const text = isAudioRecordingDeviceEnabled ? 'Mute' : 'Unmute';
 
   return (
     <ToolTip
@@ -79,7 +79,7 @@ export const CameraDevice: FC = observer(() => {
   } = useStore();
   const { toggleLocalCameraDevice } = useDeviceSwitch();
   const icon = isCameraDeviceEnabled ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
-  const text = isCameraDeviceEnabled ? 'Camera' : 'Unmute';
+  const text = isCameraDeviceEnabled ? 'Stop Video' : 'Start Video';
 
   return (
     <ToolTip

@@ -1,5 +1,6 @@
 .fcr-share {
   padding: 22px 24px 16px;
+  width: 231px;
 }
 .fcr-share-title {
   @apply fcr-text-1 fcr-font-title;
@@ -23,8 +24,15 @@
   gap: 9px;
   align-items: center;
 }
+.fcr-share-room-id > span:first-child {
+  flex-shrink: 0;
+}
 .fcr-share-room-id > span:nth-child(2) {
   @apply fcr-font-medium;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .fcr-share-room-link {
   @apply fcr-text-1 fcr-font-regular;
@@ -37,4 +45,8 @@
 }
 .fcr-share-room-link > span:last-child {
   @apply fcr-text-2;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

@@ -123,14 +123,16 @@ export class AgoraOnlineclassSDK {
    */
   static setParameters(params: string) {
     Logger.info(`[AgoraOnlineclassSDK]set parameters`, params);
-    const { host, ignoreUrlRegionPrefix, logo } = JSON.parse(params) || {};
+    const { host, ignoreUrlRegionPrefix, logo, shareUrl } = JSON.parse(params) || {};
 
     const config = getConfig() || {};
 
     if (host) {
       config.host = host;
     }
-
+    if (shareUrl) {
+      config.shareUrl = shareUrl;
+    }
     config.ignoreUrlRegionPrefix = ['dev', 'pre'].some((v) => (config.host as string).includes(v));
 
     if (ignoreUrlRegionPrefix) {

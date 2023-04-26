@@ -65,7 +65,7 @@ const LeavePopoverContent = observer(() => {
             block
             size="M"
             styleType="danger">
-            End the Classroom for All
+            End the Classroom
           </Button>
         )}
 
