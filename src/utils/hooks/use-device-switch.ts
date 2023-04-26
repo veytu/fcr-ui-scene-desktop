@@ -38,12 +38,13 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
     if (stream?.isLocal) {
       toggleLocalCameraDevice();
     } else {
-      if (stream)
+      if (stream) {
         updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
           videoState: stream.isVideoStreamPublished
             ? AgoraRteMediaPublishState.Unpublished
             : AgoraRteMediaPublishState.Published,
         });
+      }
     }
   };
 

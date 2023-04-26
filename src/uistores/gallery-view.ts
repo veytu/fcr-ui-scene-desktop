@@ -3,7 +3,7 @@ import { EduUIStoreBase } from './base';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 export class GalleryUIStore extends EduUIStoreBase {
   @observable mainViewStreamUuid: string | null = null;
-  pageSize = 25;
+  pageSize = 20;
   @observable currentPage = 1;
   @computed
   get mainViewStream() {
@@ -21,7 +21,18 @@ export class GalleryUIStore extends EduUIStoreBase {
   @computed get streamsByPage() {
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
-    return this.getters.cameraUIStreams.slice(start, end);
+    const currentPageStreams = this.getters.cameraUIStreams.slice(start, end);
+    const needFill =
+      this.getters.cameraUIStreams.length > this.pageSize &&
+      start + currentPageStreams.length >= this.getters.cameraUIStreams.length;
+    if (needFill) {
+      return this.getters.cameraUIStreams.slice(
+        this.getters.cameraUIStreams.length - this.pageSize,
+        this.getters.cameraUIStreams.length,
+      );
+    } else {
+      return currentPageStreams;
+    }
   }
   @action.bound
   setCurrentPage(page: number) {
