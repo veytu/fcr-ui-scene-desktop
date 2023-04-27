@@ -2,26 +2,28 @@ import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { ToolTip } from '@components/tooltip';
 import { useEffect, useState } from 'react';
 import { StatusBarItemWrapper } from '..';
+import fscreen from 'fscreen';
+
 import './index.css';
 export const FullscreenButton = () => {
   const [fullscreen, setFullscreen] = useState(false);
   const toggleFullscreen = () => {
     if (fullscreen) {
-      document.exitFullscreen();
+      fscreen.exitFullscreen();
     } else {
-      document.body.requestFullscreen();
+      fscreen.requestFullscreen(document.body);
     }
   };
   const handleFullscreenChanged = () => {
-    if (document.fullscreenElement) {
+    if (fscreen.fullscreenElement) {
       setFullscreen(true);
     } else {
       setFullscreen(false);
     }
   };
   useEffect(() => {
-    document.body.addEventListener('fullscreenchange', handleFullscreenChanged);
-    () => document.body.removeEventListener('fullscreenchange', handleFullscreenChanged);
+    fscreen.addEventListener('fullscreenchange', handleFullscreenChanged);
+    () => fscreen.removeEventListener('fullscreenchange', handleFullscreenChanged);
   }, []);
   return (
     <ToolTip placement="bottomRight" content={'Full-screen mode in the webpage'}>
