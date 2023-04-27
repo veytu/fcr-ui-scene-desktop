@@ -41,6 +41,7 @@ export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = 
       visible={visible}
       maskClosable={false}
       mask={false}
+      wrapClassName={'fcr-participants-dialog-wrap'}
       onClose={() => {
         setVisible(false);
       }}

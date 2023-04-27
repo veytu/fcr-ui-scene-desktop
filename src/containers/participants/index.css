@@ -1,7 +1,11 @@
+.fcr-participants-dialog-wrap {
+  pointer-events: none;
+}
 .fcr-participants-container {
   min-height: 590px;
   display: flex;
   flex-direction: column;
+  pointer-events: all;
 }
 .fcr-participants-container .fcr-table {
   flex: 1;
