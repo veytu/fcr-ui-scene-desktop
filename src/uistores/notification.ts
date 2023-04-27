@@ -210,6 +210,16 @@ export class NotiticationUIStore extends EduUIStoreBase {
     //   }
     // }
   }
+  private _getStateErrorReason(reason?: string): string {
+    switch (reason) {
+      case 'REMOTE_LOGIN':
+        return 'Kick out by other client';
+      case 'BANNED_BY_SERVER':
+        return 'Prohibited';
+      default:
+        return reason ?? 'Unknown error occured.';
+    }
+  }
   onDestroy(): void {
     this._disposers.forEach((d) => d());
     this._disposers = [];
@@ -248,21 +258,23 @@ export class NotiticationUIStore extends EduUIStoreBase {
         () => this.classroomStore.connectionStore.classroomState,
         (state) => {
           if (ClassroomState.Error === state) {
-            // this.classroomStore.connectionStore.leaveClassroom(
-            //   LeaveReason.leave,
-            //   new Promise((resolve) => {
-            //     this.shareUIStore.addConfirmDialog(
-            //       transI18n('toast.leave_room'),
-            //       this._getStateErrorReason(
-            //         this.classroomStore.connectionStore.classroomStateErrorReason,
-            //       ),
-            //       {
-            //         onOK: resolve,
-            //         actions: ['ok'],
-            //       },
-            //     );
-            //   }),
-            // );
+            this.classroomStore.connectionStore.leaveClassroom(
+              LeaveReason.leave,
+              new Promise((resolve) => {
+                this.getters.addDialog('confirm', {
+                  title: 'Leave Classroom',
+                  content: this._getStateErrorReason(
+                    this.classroomStore.connectionStore.classroomStateErrorReason,
+                  ),
+                  closable: false,
+
+                  onOk: resolve,
+                  okText: 'Leave the Room',
+                  okButtonProps: { styleType: 'danger' },
+                  cancelButtonVisible: false,
+                });
+              }),
+            );
           }
         },
       ),

@@ -9,10 +9,9 @@ export const ConfirmDialogWrapper: FC<ConfirmDialogProps> = observer((props) => 
   const {
     layoutUIStore: { classroomViewportClassName },
   } = useStore();
-  const handleVisibleChanged = (visible: boolean) => {
-    if (!visible) {
-      props.onClose?.();
-    }
+  const afterClose = () => {
+    console.log('afterClose');
+    props.onClose?.();
   };
   return (
     <ConfirmDialog
@@ -22,7 +21,7 @@ export const ConfirmDialogWrapper: FC<ConfirmDialogProps> = observer((props) => 
       maskClosable={false}
       visible={visible}
       {...props}
-      afterOpenChange={handleVisibleChanged}
+      afterClose={afterClose}
       onClose={() => {
         setVisible(false);
       }}

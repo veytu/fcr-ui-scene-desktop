@@ -7,12 +7,14 @@ import './index.css';
 export const Participants = observer(() => {
   const {
     participantsUIStore: {},
-    layoutUIStore: { addDialog },
+    layoutUIStore: { addDialog, hasDialogOf },
   } = useStore();
   return (
     <ToolTip content={'Participants'}>
       <ActionBarItem
-        onClick={() => addDialog('participants')}
+        onClick={() => {
+          if (!hasDialogOf('participants')) addDialog('participants');
+        }}
         icon={SvgIconEnum.FCR_PEOPLE}
         text={'Participants'}></ActionBarItem>
     </ToolTip>

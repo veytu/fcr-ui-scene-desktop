@@ -8,10 +8,8 @@ export const ClassInfoDialog: FC<ClassDialogProps> = observer((props) => {
   const {
     layoutUIStore: { classroomViewportClassName },
   } = useStore();
-  const handleVisibleChanged = (visible: boolean) => {
-    if (!visible) {
-      props.onClose?.();
-    }
+  const afterClose = () => {
+    props.onClose?.();
   };
   return (
     <ClassDialog
@@ -21,7 +19,7 @@ export const ClassInfoDialog: FC<ClassDialogProps> = observer((props) => {
       maskClosable={false}
       visible={visible}
       {...props}
-      afterOpenChange={handleVisibleChanged}
+      afterClose={afterClose}
       onClose={() => {
         setVisible(false);
       }}></ClassDialog>

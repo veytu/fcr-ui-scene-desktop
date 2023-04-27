@@ -7,6 +7,7 @@ import { observer } from 'mobx-react';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { StatusBarItemWrapper } from '..';
 import { PopoverWithTooltip } from '@components/popover';
+import { useEffect, useRef } from 'react';
 
 export const LayoutSwitchPopover = observer(() => {
   const {
@@ -80,9 +81,14 @@ export const LayoutSwitch = observer(() => {
   const {
     layoutUIStore: { layout: currentLayout, setHasPopoverShowed },
   } = useStore();
+  const popoverRef = useRef<{ closePopover: () => void } | null>(null);
+  useEffect(() => {
+    popoverRef.current?.closePopover();
+  }, [currentLayout]);
   return (
     <StatusBarItemWrapper>
       <PopoverWithTooltip
+        ref={popoverRef}
         popoverProps={{
           onVisibleChange(visible) {
             if (visible) {

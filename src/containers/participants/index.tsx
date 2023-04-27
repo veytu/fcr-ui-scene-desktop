@@ -28,11 +28,10 @@ const ParticipantsContext = createContext<ParticipantsContext | null>(null);
 const colors = themeVal('colors');
 export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = (props) => {
   const [visible, setVisible] = useState(true);
-  const handleVisibleChanged = (visible: boolean) => {
-    if (!visible) {
-      props.onClose?.();
-    }
+  const afterClose = () => {
+    props.onClose?.();
   };
+
   return (
     <BaseDialog
       {...props}
@@ -45,7 +44,7 @@ export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = 
       onClose={() => {
         setVisible(false);
       }}
-      afterOpenChange={handleVisibleChanged}>
+      afterClose={afterClose}>
       <Participants></Participants>
     </BaseDialog>
   );
