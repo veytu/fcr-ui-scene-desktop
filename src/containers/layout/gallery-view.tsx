@@ -48,7 +48,6 @@ const GalleryContainer = observer(() => {
   useEffect(() => {
     subscribeMass(streamsByPage.map((stream) => stream.stream));
   }, [streamsByPage]);
-
   const outerSize = useMemo(() => {
     let perCellWidth = bounds.width / numOfCols - 8;
 
@@ -74,24 +73,26 @@ const GalleryContainer = observer(() => {
       )}
 
       <div className="fcr-gallery-view-stream-wrapper" ref={ref}>
-        {matrix.map((rows, idx) => {
-          return (
-            <div className="fcr-gallery-view-stream-wrapper-row" key={idx}>
-              {rows.map(() => {
-                const stream = streamsByPage[count++];
+        <div>
+          {matrix.map((rows, idx) => {
+            return (
+              <div className="fcr-gallery-view-stream-wrapper-row" key={idx}>
+                {rows.map(() => {
+                  const stream = streamsByPage[count++];
 
-                return (
-                  <div key={stream.stream.streamUuid} style={{ ...outerSize }}>
-                    <StreamWindowContext.Provider
-                      value={convertStreamUIStatus(stream, 'main-view', layout, true)}>
-                      <StreamWindow></StreamWindow>
-                    </StreamWindowContext.Provider>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+                  return (
+                    <div key={stream.stream.streamUuid} style={{ ...outerSize }}>
+                      <StreamWindowContext.Provider
+                        value={convertStreamUIStatus(stream, 'main-view', layout, true)}>
+                        <StreamWindow></StreamWindow>
+                      </StreamWindowContext.Provider>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
