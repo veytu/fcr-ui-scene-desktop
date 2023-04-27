@@ -88,7 +88,7 @@ export const VideoPortal = observer(() => {
         <BeautySlider />
       </div>
       <div className="fcr-pretest__video-portal__toggles">
-        <PretestDeviceIcon onClick={deviceSettingUIStore.toggleCameraDevice} {...cameraIconProps} />
+        {/* <PretestDeviceIcon onClick={deviceSettingUIStore.toggleCameraDevice} {...cameraIconProps} />
         <PretestDeviceIcon
           onClick={deviceSettingUIStore.toggleAudioRecordingDevice}
           {...microphoneIconProps}
@@ -96,7 +96,7 @@ export const VideoPortal = observer(() => {
         <PretestDeviceIcon
           onClick={deviceSettingUIStore.toggleAudioPlaybackDevice}
           {...speakerIconProps}
-        />
+        /> */}
         <MirrorToggle />
       </div>
     </div>
