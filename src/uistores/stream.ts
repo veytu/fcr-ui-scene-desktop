@@ -3,6 +3,7 @@ import {
   AgoraRteEventType,
   AgoraRteVideoSourceType,
   AgoraUser,
+  AGRenderMode,
   AGRtcState,
   bound,
   Scheduler,
@@ -137,7 +138,11 @@ export class StreamUIStore extends EduUIStoreBase {
       const dom = this._videoDoms.get(stream.streamUuid);
       if (dom) {
         const needMirror = stream.videoSourceType !== AgoraRteVideoSourceType.ScreenShare;
-        setupRemoteVideo(stream, dom, needMirror);
+        const renderMode =
+          stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare
+            ? AGRenderMode.fit
+            : undefined;
+        setupRemoteVideo(stream, dom, needMirror, renderMode);
       }
     });
     // 更新已订阅列表
