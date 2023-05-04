@@ -125,6 +125,30 @@ export class ActionBarUIStore extends EduUIStoreBase {
       ),
     );
     this._disposers.push(
+      computed(() => this.classroomStore.streamStore.localShareStreamUuid).observe(
+        ({ newValue, oldValue }) => {
+          const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+
+          if (newValue && !oldValue) {
+            this.classroomStore.widgetStore.setActive(
+              `streamWindow-${newValue}`,
+              {
+                position: { xaxis: 1, yaxis: 1 },
+                size: { width: 1, height: 1 },
+                extra: {
+                  userUuid,
+                },
+              },
+              userUuid,
+            );
+          }
+          if (!newValue && oldValue) {
+            this.classroomStore.widgetStore.deleteWidget(`streamWindow-${oldValue}`);
+          }
+        },
+      ),
+    );
+    this._disposers.push(
       computed(() => this.classroomStore.connectionStore.scene).observe(
         ({ newValue, oldValue }) => {
           if (oldValue) {
