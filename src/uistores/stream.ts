@@ -14,10 +14,22 @@ import { computedFn } from 'mobx-utils';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { v4 as uuidv4 } from 'uuid';
 export class StreamUIStore extends EduUIStoreBase {
-  // private static readonly PAGE_SIZE_BY_MODE = {
-  //   [ViewMode.Divided]: 20,
-  //   [ViewMode.Surrounded]: 8,
-  // };
+  @observable pinnedStreamUuid = '';
+  @action.bound
+  addPin(streamUuid: string) {
+    this.pinnedStreamUuid = streamUuid;
+  }
+  @action.bound
+  removePin() {
+    this.pinnedStreamUuid = '';
+  }
+  @computed get pinDisabled() {
+    return (
+      this.getters.isBoardWidgetActive ||
+      (this.getters.isScreenSharing && !this.getters.isLocalScreenSharing)
+    );
+  }
+
   subSet = new Set<string>();
   @observable awardAnims: { id: string; userUuid: string }[] = [];
 
@@ -32,7 +44,9 @@ export class StreamUIStore extends EduUIStoreBase {
   streamAwardAnims = computedFn((stream: EduStreamUI): { id: string; userUuid: string }[] => {
     return this.awardAnims.filter((anim) => anim.userUuid === stream.fromUser.userUuid);
   });
-
+  @computed get pinnedStream() {
+    return this.getters.pinnedUIStream;
+  }
   @computed
   get cameraUIStreams() {
     return this.getters.cameraUIStreams;
@@ -227,6 +241,16 @@ export class StreamUIStore extends EduUIStoreBase {
           if (scene) {
             scene.addListener(AgoraRteEventType.UserRemoved, this._handleUserRemoved);
             this.classroomStore.streamStore.unpublishScreenShare();
+          }
+        },
+      ),
+    );
+    this._disposers.push(
+      reaction(
+        () => this.getters.pinnedUIStream,
+        () => {
+          if (!this.getters.pinnedUIStream) {
+            this.removePin();
           }
         },
       ),

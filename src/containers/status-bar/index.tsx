@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import classnames from 'classnames';
 import './index.css';
 
@@ -64,7 +64,7 @@ export const StatusBar = observer(() => {
   );
 });
 
-export const StatusBarItemWrapper: FC<React.PropsWithChildren> = (props) => {
+export const StatusBarItemWrapper: FC<PropsWithChildren<any>> = (props) => {
   const { children, ...others } = props;
   return (
     <div {...others} className="fcr-status-bar-item-wrapper">
@@ -76,6 +76,7 @@ const StatusBarCollapeButton = observer(() => {
   const {
     layoutUIStore: { layout, showListView, toggleShowListView },
   } = useStore();
+  console.log(showListView, 'showListView');
   const visible = !showListView && layout === Layout.ListOnTop;
   return visible ? (
     <ToolTip placement="bottom" content={'Show lectern'}>

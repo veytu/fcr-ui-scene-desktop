@@ -1,5 +1,4 @@
 import { useStore } from '@onlineclass/utils/hooks/use-store';
-import { generateShortUserName } from '@onlineclass/utils/short-name';
 import { observer } from 'mobx-react';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { AudioRecordinDeviceIcon } from '../action-bar/device';
@@ -21,14 +20,13 @@ import { SvgaPlayer } from '@components/svga-player';
 import { SoundPlayer } from '@components/sound-player';
 import RewardSVGA from './assets/svga/reward.svga';
 import RewardSound from './assets/audio/reward.mp3';
-import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 
 const colors = themeVal('colors');
 export const StreamWindow: FC = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
   const [mouseEnter, setMouseEnter] = useState(false);
   const {
-    layoutUIStore: { mouseEnterClass, layout },
+    layoutUIStore: { mouseEnterClass },
   } = useStore();
   return (
     <StreamWindowMouseContext.Provider
@@ -83,14 +81,14 @@ const StreamPlayer = observer(() => {
     classroomStore: {
       mediaStore: { setupLocalVideo },
     },
-    streamUIStore: { updateVideoDom, removeVideoDom },
+    streamUIStore: { updateVideoDom, removeVideoDom, pinDisabled },
     deviceSettingUIStore: { isLocalMirrorEnabled },
   } = useStore();
-  const { pinStream } = usePinStream();
+  const { addPin } = usePinStream();
   const { videoRenderable } = useVideoRenderable();
   const handleDoubleClick = () => {
     if (stream) {
-      pinStream(stream.stream.streamUuid);
+      !pinDisabled && addPin(stream.stream.streamUuid);
     }
   };
   useEffect(() => {
@@ -131,8 +129,13 @@ const UserInteract = observer(() => {
         `fcr-stream-window-interact-${streamWindowContext?.labelSize}`,
         {
           'fcr-stream-window-interact-with-status-bar-visible':
-            streamWindowContext?.topLabelAnimation &&
-            ((showStatusBar && !showListView) || layout !== Layout.ListOnTop),
+            (streamWindowContext?.topLabelAnimation &&
+              showStatusBar &&
+              layout !== Layout.ListOnTop) ||
+            (streamWindowContext?.topLabelAnimation &&
+              !showListView &&
+              showStatusBar &&
+              layout === Layout.ListOnTop),
           'fcr-stream-window-interact-with-action-bar-visible':
             streamWindowContext?.bottomLabelAnimation && showActiobBar,
         },
@@ -199,59 +202,18 @@ const StreamActions = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
   const streamWindowMouseContext = useContext(StreamWindowMouseContext);
   const size = streamWindowContext?.labelSize;
-
-  const {
-    statusBarUIStore: { isHost },
-  } = useStore();
-  const showAudioMuteAction =
-    streamWindowMouseContext?.mouseEnterWindow &&
-    isHost &&
-    streamWindowContext?.stream.role === EduRoleTypeEnum.student &&
-    streamWindowContext.renderAtMainView;
-  useEffect(() => {
-    if (!streamWindowMouseContext?.mouseEnterWindow) {
-      setPopoverVisibel(false);
-    }
-  }, [streamWindowMouseContext?.mouseEnterWindow]);
-
-  return (
-    <div className={classnames('fcr-stream-window-actions', `fcr-stream-window-actions-${size}`)}>
-      <MuteIcon size="large" visible={!!showAudioMuteAction}></MuteIcon>
-      {streamWindowMouseContext?.mouseEnterWindow && (
-        <Popover
-          visible={popoverVisible}
-          onVisibleChange={setPopoverVisibel}
-          overlayInnerStyle={{ width: 'auto' }}
-          placement="bottomRight"
-          mouseEnterDelay={0}
-          content={
-            <StreamActionPopover onItemClick={() => setPopoverVisibel(false)}></StreamActionPopover>
-          }>
-          <div className="fcr-stream-window-actions-item fcr-bg-brand-6">
-            <SvgImg
-              type={SvgIconEnum.FCR_MOBILE_MORE}
-              size={streamWindowContext?.labelIconSize}></SvgImg>
-          </div>
-        </Popover>
-      )}
-    </div>
-  );
-});
-
-const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void }) => {
   const {
     participantsUIStore: { sendReward },
-    presentationUIStore: { pinnedUserUuid },
+    streamUIStore: { pinnedStreamUuid, pinDisabled },
     boardApi: { grantPrivilege },
     classroomStore: {
       userStore: { kickOutOnceOrBan },
     },
     statusBarUIStore: { isHost },
   } = useStore();
-  const { pinStream, removePinnedStream } = usePinStream();
-  const streamWindowContext = useContext(StreamWindowContext);
+  const { addPin, removePin } = usePinStream();
 
-  const pinned = pinnedUserUuid === streamWindowContext?.stream.fromUser.userUuid;
+  const pinned = pinnedStreamUuid === streamWindowContext?.stream.stream.streamUuid;
 
   const { cameraTooltip, micTooltip, handleCameraClick, handleMicrophoneClick } = useDeviceSwitch(
     streamWindowContext?.stream,
@@ -319,9 +281,9 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
       icon: <SvgImg size={20} type={SvgIconEnum.FCR_PIN}></SvgImg>,
       label: pinned ? 'Unpin' : 'Pin',
       onClick: async () => {
-        pinned ? removePinnedStream() : pinStream(streamUuid);
+        pinned ? removePin() : addPin(streamUuid);
       },
-      visible: true,
+      visible: !pinDisabled,
     },
     {
       key: 'remove',
@@ -339,15 +301,67 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
       visible: showStreamWindowHostAction,
     },
   ];
-  return (
-    <div className="fcr-stream-window-actions-popover">
-      <div className="fcr-stream-window-actions-popover-name">
-        {streamWindowContext?.stream.fromUser.userName}
-      </div>
-      <div className="fcr-stream-window-actions-popover-items">
-        {streamWindowActionItems
-          .filter((item) => item.visible)
-          .map((item, index) => {
+  const streamWindowActionVisibleItems = streamWindowActionItems.filter((item) => item.visible);
+
+  const showAudioMuteAction =
+    streamWindowMouseContext?.mouseEnterWindow &&
+    isHost &&
+    streamWindowContext?.stream.role === EduRoleTypeEnum.student &&
+    streamWindowContext.renderAtMainView;
+  useEffect(() => {
+    if (!streamWindowMouseContext?.mouseEnterWindow) {
+      setPopoverVisibel(false);
+    }
+  }, [streamWindowMouseContext?.mouseEnterWindow]);
+
+  return streamWindowActionVisibleItems.length > 0 ? (
+    <div className={classnames('fcr-stream-window-actions', `fcr-stream-window-actions-${size}`)}>
+      <MuteIcon size="large" visible={!!showAudioMuteAction}></MuteIcon>
+      {streamWindowMouseContext?.mouseEnterWindow && (
+        <Popover
+          visible={popoverVisible}
+          onVisibleChange={setPopoverVisibel}
+          overlayInnerStyle={{ width: 'auto' }}
+          placement="bottomRight"
+          mouseEnterDelay={0}
+          content={
+            <StreamActionPopover
+              userName={streamWindowContext?.stream.userName || ''}
+              items={streamWindowActionVisibleItems}
+              onItemClick={() => setPopoverVisibel(false)}></StreamActionPopover>
+          }>
+          <div className="fcr-stream-window-actions-item fcr-bg-brand-6">
+            <SvgImg
+              type={SvgIconEnum.FCR_MOBILE_MORE}
+              size={streamWindowContext?.labelIconSize}></SvgImg>
+          </div>
+        </Popover>
+      )}
+    </div>
+  ) : null;
+});
+
+const StreamActionPopover = observer(
+  ({
+    onItemClick,
+    userName,
+    items,
+  }: {
+    onItemClick: () => void;
+    userName: string;
+    items: {
+      key: string;
+      icon: JSX.Element;
+      label: string;
+      onClick: () => void;
+      visible: boolean;
+    }[];
+  }) => {
+    return (
+      <div className="fcr-stream-window-actions-popover">
+        <div className="fcr-stream-window-actions-popover-name">{userName}</div>
+        <div className="fcr-stream-window-actions-popover-items">
+          {items.map((item, index) => {
             return (
               <>
                 <div
@@ -366,10 +380,11 @@ const StreamActionPopover = observer(({ onItemClick }: { onItemClick: () => void
               </>
             );
           })}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 const StreamWindowUserLabel = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);

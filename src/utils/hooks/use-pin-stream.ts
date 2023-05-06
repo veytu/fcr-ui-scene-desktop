@@ -4,11 +4,11 @@ import { useStore } from './use-store';
 export const usePinStream = () => {
   const {
     layoutUIStore: { layout, setLayout },
-    presentationUIStore: { pinStream: pin, removePinnedStream },
+    streamUIStore: { addPin, removePin },
   } = useStore();
-  const pinStream = (streamUuid: string) => {
+  const pin = (streamUuid: string) => {
     if (layout === Layout.Grid) setLayout(Layout.ListOnTop);
-    pin(streamUuid);
+    addPin(streamUuid);
   };
-  return { pinStream, removePinnedStream };
+  return { addPin: pin, removePin };
 };

@@ -38,6 +38,7 @@
   height: 100%;
   display: flex;
   flex-direction: row-reverse;
+  position: relative;
 }
 .fcr-layout-content-list-on-right .fcr-layout-content-main-view {
   flex: 1;
@@ -125,7 +126,6 @@
   transition: all 0.2s;
   z-index: 10;
 }
-
 .fcr-layout-content-list-view-collapse-button-row {
   height: 11px;
   cursor: pointer;
@@ -139,18 +139,17 @@
 .fcr-layout-content-list-view-collapse-button-row:hover {
   @apply fcr-bg-3;
 }
-
 .fcr-layout-content-list-view-collapse-button-col {
   @apply fcr-bg-2;
   position: absolute;
   width: 24px;
   height: 77px;
-  left: -24px;
   top: 0;
   bottom: 0;
+  /* transform: translateX(-210px); */
+  right: 210px;
   margin: auto 0;
   z-index: 20;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -159,6 +158,12 @@
   cursor: pointer;
   backdrop-filter: blur(6px);
   background: #35374180;
+  transition: all 0.2s;
+}
+
+.fcr-layout-content-list-view-collapse-button-col.fcr-layout-content-list-view-collapse-button-collapsed {
+  /* transform: translateX(0); */
+  right: 0;
 }
 .fcr-layout-content-list-view-collapse-button-col.fcr-layout-content-list-view-collapse-button-collapsed
   svg {
@@ -171,6 +176,7 @@
 .fcr-layout-content-list-view-exit-active {
   transition: all 0.2s;
 }
+.fcr-layout-content-list-on-top .fcr-layout-content-list-view-enter,
 .fcr-layout-content-list-on-top .fcr-layout-content-list-view-exit-active,
 .fcr-layout-content-list-on-top .fcr-layout-content-list-view-exit-done {
   height: 0;
@@ -181,6 +187,7 @@
   height: calc(135px + var(--fcr-status-bar-height));
   padding-top: var(--fcr-status-bar-height);
 }
+.fcr-layout-content-list-on-right .fcr-layout-content-list-view-enter,
 .fcr-layout-content-list-on-right .fcr-layout-content-list-view-exit-active,
 .fcr-layout-content-list-on-right .fcr-layout-content-list-view-exit-done {
   width: 0;
@@ -189,7 +196,6 @@
 
 .fcr-layout-content-list-on-right .fcr-layout-content-list-view-enter-active,
 .fcr-layout-content-list-on-right .fcr-layout-content-list-view-enter-done {
-  transition: all 0.2s;
   width: 210px;
 }
 .fcr-layout-board-container {

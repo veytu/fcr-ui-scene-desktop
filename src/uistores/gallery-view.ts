@@ -1,4 +1,4 @@
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 export class GalleryUIStore extends EduUIStoreBase {
@@ -16,23 +16,34 @@ export class GalleryUIStore extends EduUIStoreBase {
     return this.totalPage > 1;
   }
   @computed get totalPage() {
-    return Math.ceil(this.getters.cameraUIStreams.length / this.pageSize);
+    return Math.ceil(this.cameraUIStreamsSortByPin.length / this.pageSize);
   }
   @computed get streamsByPage() {
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
-    const currentPageStreams = this.getters.cameraUIStreams.slice(start, end);
+    const currentPageStreams = this.cameraUIStreamsSortByPin.slice(start, end);
     const needFill =
-      this.getters.cameraUIStreams.length > this.pageSize &&
-      start + currentPageStreams.length >= this.getters.cameraUIStreams.length;
+      this.cameraUIStreamsSortByPin.length > this.pageSize &&
+      start + currentPageStreams.length >= this.cameraUIStreamsSortByPin.length;
     if (needFill) {
-      return this.getters.cameraUIStreams.slice(
-        this.getters.cameraUIStreams.length - this.pageSize,
-        this.getters.cameraUIStreams.length,
+      return this.cameraUIStreamsSortByPin.slice(
+        this.cameraUIStreamsSortByPin.length - this.pageSize,
+        this.cameraUIStreamsSortByPin.length,
       );
     } else {
       return currentPageStreams;
     }
+  }
+  @computed get cameraUIStreamsSortByPin() {
+    return this.getters.cameraUIStreams.sort((a, b) => {
+      if (a.stream.streamUuid === this.getters.pinnedUIStream?.stream.streamUuid) {
+        return -1;
+      }
+      if (b.stream.streamUuid === this.getters.pinnedUIStream?.stream.streamUuid) {
+        return 1;
+      }
+      return 0;
+    });
   }
   @action.bound
   setCurrentPage(page: number) {
@@ -53,20 +64,6 @@ export class GalleryUIStore extends EduUIStoreBase {
     this._disposers = [];
   }
   onInstall(): void {
-    this._disposers.push(
-      reaction(
-        () => {
-          return this.getters.screenShareUIStream;
-        },
-        (screenShareUIStream) => {
-          if (screenShareUIStream) {
-            this.mainViewStreamUuid = screenShareUIStream.stream.streamUuid;
-          } else {
-            this._handleMainCameraStream();
-          }
-        },
-      ),
-    );
     this._disposers.push(
       reaction(() => {
         return this.getters.cameraUIStreams;

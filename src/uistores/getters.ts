@@ -2,7 +2,7 @@ import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
 import { extractUserStreams } from '@onlineclass/utils/stream';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { EduClassroomConfig, EduRoleTypeEnum, EduStream } from 'agora-edu-core';
-import { AgoraRteVideoSourceType } from 'agora-rte-sdk';
+import { AgoraRteMediaSourceState, AgoraRteVideoSourceType } from 'agora-rte-sdk';
 import { action, computed, observable } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { OnlineclassUIStore } from '.';
@@ -110,7 +110,18 @@ export class Getters {
   get cameraUIStreams() {
     return Array.from(this.cameraStreams).map((stream) => new EduStreamUI(stream));
   }
-
+  @computed
+  get teacherUIStream() {
+    return this.cameraUIStreams.find((stream) => {
+      return stream.role === EduRoleTypeEnum.teacher;
+    });
+  }
+  @computed
+  get localCameraStream() {
+    return this.cameraUIStreams.find((stream) => {
+      return stream.isLocal;
+    });
+  }
   @computed
   get screenShareUIStream() {
     const streamUuid = this._classroomUIStore.classroomStore.roomStore
@@ -119,7 +130,24 @@ export class Getters {
       this._classroomUIStore.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
     return stream ? new EduStreamUI(stream) : null;
   }
-
+  @computed
+  get isScreenSharing() {
+    return !!this.screenShareUIStream;
+  }
+  @computed
+  get isLocalScreenSharing() {
+    return (
+      this.classroomUIStore.classroomStore.mediaStore.localScreenShareTrackState ===
+      AgoraRteMediaSourceState.started
+    );
+  }
+  @computed
+  get pinnedUIStream() {
+    const stream = this._classroomUIStore.classroomStore.streamStore.streamByStreamUuid.get(
+      this.classroomUIStore.streamUIStore.pinnedStreamUuid,
+    );
+    return stream ? new EduStreamUI(stream) : null;
+  }
   userCameraStreamByUserUuid = computedFn((userUuid: string) => {
     const cameraStreams: EduStream[] = [];
     this.cameraStreams.forEach((stream) => {

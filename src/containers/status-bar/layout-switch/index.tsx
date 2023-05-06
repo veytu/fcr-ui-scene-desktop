@@ -12,6 +12,7 @@ import { useEffect, useRef } from 'react';
 export const LayoutSwitchPopover = observer(() => {
   const {
     layoutUIStore: { gridLayoutDisabled },
+    actionBarUIStore: { isScreenSharing },
   } = useStore();
   return (
     <div className="fcr-layout-switch">
@@ -26,7 +27,9 @@ export const LayoutSwitchPopover = observer(() => {
         <div className="fcr-layout-switch-title">Grid</div>
         {gridLayoutDisabled && (
           <div className="fcr-layout-switch-desc">
-            You cannot switch to grid view when opening the whiteboard
+            {isScreenSharing
+              ? 'You cannot switch to grid view when screen sharing'
+              : 'You cannot switch to grid view when opening the whiteboard'}
           </div>
         )}
         <div className="fcr-layout-switch-view-wrap">
@@ -57,6 +60,7 @@ export const layoutMap = {
 const LayoutCard = observer(({ layout }: { layout: Layout }) => {
   const {
     layoutUIStore: { layout: currentLayout, setLayout, gridLayoutDisabled },
+    actionBarUIStore: { isScreenSharing },
   } = useStore();
   const disabled = layout === Layout.Grid && gridLayoutDisabled;
   const { label, bigIcon } = layoutMap[layout];
@@ -84,6 +88,7 @@ export const LayoutSwitch = observer(() => {
   const popoverRef = useRef<{ closePopover: () => void } | null>(null);
   useEffect(() => {
     popoverRef.current?.closePopover();
+    setHasPopoverShowed(false);
   }, [currentLayout]);
   return (
     <StatusBarItemWrapper>

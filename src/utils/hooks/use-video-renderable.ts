@@ -8,16 +8,16 @@ export const useVideoRenderable = () => {
   const stream = streamWindowContext?.stream;
   const {
     layoutUIStore: { deviceSettingOpened, layout },
-    presentationUIStore: { mainViewStreamUuid },
+    presentationUIStore: { mainViewStream },
   } = useStore();
   const checkVideoVisible = () => {
     if (stream?.isLocal && deviceSettingOpened) return false;
     if (layout === Layout.Grid) return true;
     if (streamWindowContext?.renderAtMainView) {
-      return mainViewStreamUuid === stream?.stream.streamUuid;
+      return mainViewStream?.stream.streamUuid === stream?.stream.streamUuid;
     }
     if (streamWindowContext?.renderAtListView) {
-      return mainViewStreamUuid !== stream?.stream.streamUuid;
+      return mainViewStream?.stream.streamUuid !== stream?.stream.streamUuid;
     }
     return true;
   };

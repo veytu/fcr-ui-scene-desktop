@@ -70,15 +70,20 @@ export class LayoutUIStore extends EduUIStoreBase {
     return opened;
   }
   @computed get gridLayoutDisabled() {
-    return this.getters.isBoardWidgetActive;
+    return (
+      this.getters.isBoardWidgetActive ||
+      (this.getters.isScreenSharing && !this.getters.isLocalScreenSharing)
+    );
   }
   @computed
   get noAvailabelStream() {
     return (
       this.getters.cameraUIStreams.length < 1 ||
-      !this.getters.cameraUIStreams[0]?.isVideoStreamPublished
+      (this.getters.cameraUIStreams.length === 1 &&
+        !this.getters.cameraUIStreams[0]?.isVideoStreamPublished)
     );
   }
+  @computed
   get disableClearScreen() {
     return (
       this._isPointingBar ||
@@ -233,7 +238,24 @@ export class LayoutUIStore extends EduUIStoreBase {
         () => this.getters.isBoardWidgetActive,
         (isBoardWidgetActive) => {
           if (isBoardWidgetActive) {
+            this.activeStatusBarAndActionBar();
             if (this.layout === Layout.Grid) this.setLayout(Layout.ListOnTop);
+          }
+        },
+      ),
+    );
+    this._disposers.push(
+      reaction(
+        () => {
+          return this.getters.isScreenSharing;
+        },
+        (isScreenSharing) => {
+          if (
+            isScreenSharing &&
+            !this.getters.isLocalScreenSharing &&
+            this.layout === Layout.Grid
+          ) {
+            this.setLayout(Layout.ListOnTop);
           }
         },
       ),

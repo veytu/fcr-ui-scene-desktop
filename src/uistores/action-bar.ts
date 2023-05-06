@@ -30,12 +30,13 @@ export class ActionBarUIStore extends EduUIStoreBase {
   @observable showLeaveOption = false;
 
   shareScreenStateKeeperMap: Map<string, ShareStreamStateKeeper> = new Map();
-
+  @computed
+  get isScreenSharing() {
+    return this.getters.isScreenSharing;
+  }
   @computed
   get isLocalScreenSharing() {
-    return (
-      this.classroomStore.mediaStore.localScreenShareTrackState === AgoraRteMediaSourceState.started
-    );
+    return this.getters.isLocalScreenSharing;
   }
 
   @bound

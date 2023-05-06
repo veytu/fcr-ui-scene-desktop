@@ -22,16 +22,14 @@ export const InteractLabelGroup = observer(
       classroomStore: {
         userStore: { rewards, users },
       },
-      streamUIStore: { isUserGranted },
-      presentationUIStore: { pinnedUserUuid },
-      layoutUIStore: { layout },
+      streamUIStore: { isUserGranted, pinnedStream, pinDisabled },
     } = useStore();
     const currentUser = users.get(userUuid);
     const reward = rewards.get(userUuid);
     const isGranted = isUserGranted(userUuid);
     const showReward = currentUser?.userRole === EduRoleTypeEnum.student;
     const showPinned =
-      pinnedUserUuid === userUuid && placement !== 'status-bar' && layout !== Layout.Grid;
+      pinnedStream?.fromUser.userUuid === userUuid && placement !== 'status-bar' && !pinDisabled;
     return (
       <div
         className={classnames(
@@ -44,7 +42,11 @@ export const InteractLabelGroup = observer(
           </div>
         )}
         {showReward && (
-          <div className="fcr-stream-window-student-interact-item  fcr-bg-brand-6">
+          <div
+            className={classnames('fcr-stream-window-student-interact-item', {
+              'fcr-bg-brand-6': placement === 'status-bar',
+              'fcr-bg-1': placement !== 'status-bar',
+            })}>
             <SvgImg type={SvgIconEnum.FCR_REWARD}></SvgImg>
             <span>{reward || 0}</span>
           </div>

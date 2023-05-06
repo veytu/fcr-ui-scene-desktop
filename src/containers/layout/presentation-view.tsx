@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import './index.css';
 import { StreamWindow } from '../window';
 import { convertStreamUIStatus, StreamWindowContext } from '../window/context';
-import { CSSProperties, FC, PropsWithChildren, useEffect } from 'react';
+import { CSSProperties, FC, useEffect } from 'react';
 import { ListViewFloatPagination } from '@components/pagination';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { CSSTransition } from 'react-transition-group';
@@ -40,7 +40,12 @@ export const PresentationView = observer(() => {
     : {};
   return (
     <div className={classnames(`fcr-layout-content-${layout}`)}>
-      <CSSTransition timeout={200} in={showListView} classNames={'fcr-layout-content-list-view'}>
+      <CSSTransition
+        unmountOnExit
+        mountOnEnter
+        timeout={200}
+        in={showListView}
+        classNames={'fcr-layout-content-list-view'}>
         <div
           style={{ ...listViewFloatStyle }}
           className={classnames(`fcr-layout-content-list-view`)}>
@@ -70,9 +75,10 @@ export const PresentationView = observer(() => {
               );
             })}
           </div>
-          <ListViewCollapseButton></ListViewCollapseButton>
+          {layout === Layout.ListOnTop && <ListViewCollapseButton></ListViewCollapseButton>}
         </div>
       </CSSTransition>
+      {layout === Layout.ListOnRight && <ListViewCollapseButton></ListViewCollapseButton>}
 
       <div className={classnames(`fcr-layout-content-main-view`)}>
         {mainViewStream ? (
@@ -104,7 +110,7 @@ const ListViewCollapseButton = observer(() => {
     </div>
   );
 });
-const BoardViewContainer: FC<PropsWithChildren> = observer(() => {
+const BoardViewContainer: FC = observer(() => {
   const {
     layoutUIStore: { showActiobBar, showStatusBar },
   } = useStore();
