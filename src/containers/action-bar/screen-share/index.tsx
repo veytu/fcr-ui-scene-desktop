@@ -8,6 +8,7 @@ import { themeVal } from '@ui-kit-utils/tailwindcss';
 import { InfoToolTip } from '@components/tooltip/info';
 import { Button } from '@components/button';
 import { createPortal } from 'react-dom';
+import { Rnd } from 'react-rnd';
 
 export const ScreenShare = observer(() => {
   const {
@@ -66,13 +67,26 @@ const ScreenShareStatusBar = observer(() => {
   const {
     actionBarUIStore: { stopLocalScreenShare },
   } = useStore();
-  return createPortal(
-    <div className="fcr-screen-share-status-bar">
-      <span>Screen Sharing...</span>
-      <Button onClick={stopLocalScreenShare} size="XS" shape="rounded" styleType="danger">
-        Stop Sharing
-      </Button>
-    </div>,
-    document.body,
-  );
+  const portal = document.querySelector('.fcr-classroom-viewport');
+  return portal
+    ? createPortal(
+        <Rnd
+          default={{
+            x: portal.getBoundingClientRect().width / 2 - 144,
+            y: 0,
+            width: 285,
+            height: 40,
+          }}
+          style={{ zIndex: 101 }}
+          bounds=".fcr-classroom-viewport">
+          <div className="fcr-screen-share-status-bar">
+            <span>Screen Sharing...</span>
+            <Button onClick={stopLocalScreenShare} size="XS" shape="rounded" styleType="danger">
+              Stop Sharing
+            </Button>
+          </div>
+        </Rnd>,
+        portal,
+      )
+    : null;
 });

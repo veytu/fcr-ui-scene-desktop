@@ -7,7 +7,7 @@
 }
 .fcr-screen-share-status-bar {
   @apply fcr-bg-brand-6 fcr-rounded-8;
-  position: fixed;
+  position: absolute;
   top: 12px;
   left: 0;
   right: 0;

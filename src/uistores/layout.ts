@@ -215,7 +215,11 @@ export class LayoutUIStore extends EduUIStoreBase {
   };
   @action.bound
   _handleLayoutChanged() {
-    if (this.layout === Layout.Grid) this.showListView = false;
+    if (this.layout === Layout.Grid) {
+      this.showListView = false;
+    } else {
+      this.showListView = true;
+    }
     this._updateViewportBoundaries();
   }
   onDestroy(): void {
