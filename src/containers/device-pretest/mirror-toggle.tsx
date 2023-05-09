@@ -16,12 +16,12 @@ export const MirrorToggle = observer(() => {
           icon: SvgIconEnum.FCR_MIRRORIMAGE_RIGHT,
         };
   }, [deviceSettingUIStore.isLocalMirrorEnabled]);
-
+  const isCameraDeviceEnabled = deviceSettingUIStore.isCameraDeviceEnabled;
   return (
     <PretestDeviceIcon
       classNames="fcr-pretest__video-portal__toggles__mirror"
-      status="idle"
-      tooltip="Mirror"
+      status={isCameraDeviceEnabled ? 'idle' : 'disabled'}
+      tooltip={isCameraDeviceEnabled ? 'Mirror' : 'Mirror, please turn on the camera first'}
       onClick={deviceSettingUIStore.toggleLocalMirror}
       {...mirrorIconProps}
     />

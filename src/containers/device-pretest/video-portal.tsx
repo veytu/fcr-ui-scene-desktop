@@ -94,7 +94,9 @@ export const VideoPortal = observer(() => {
     <div className="fcr-pretest__video-portal">
       <div className="fcr-pretest__video-portal__header">
         <span>Are you ready to join?</span>
-        <Button onClick={setDevicePretestFinished}>Join</Button>
+        <Button size="S" onClick={setDevicePretestFinished}>
+          Join
+        </Button>
       </div>
       <div className="fcr-pretest__video-portal__video">
         <LocalVideoPlayer />

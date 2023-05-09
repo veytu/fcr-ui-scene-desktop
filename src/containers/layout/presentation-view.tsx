@@ -104,12 +104,12 @@ const ListViewCollapseButton = observer(() => {
 });
 const BoardViewContainer: FC = observer(() => {
   const {
-    layoutUIStore: { showActiobBar, showStatusBar },
+    layoutUIStore: { showActiobBar, showStatusBar, showListView },
   } = useStore();
 
   const boardContainerCls = classnames('fcr-layout-board-container', {
     'fcr-layout-board-container-with-action-bar': showActiobBar,
-    'fcr-layout-board-container-with-status-bar': showStatusBar,
+    'fcr-layout-board-container-with-status-bar': showStatusBar && !showListView,
   });
 
   return (

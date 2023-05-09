@@ -9,12 +9,15 @@ import './index.css';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { useDeviceSwitch } from '@onlineclass/utils/hooks/use-device-switch';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
+import { themeVal } from '@ui-kit-utils/tailwindcss';
+const colors = themeVal('colors');
 export const AudioRecordinDeviceIcon = observer(
   ({ size = 32, stream }: { size?: number; stream?: EduStreamUI }) => {
     const isMute = stream?.isMicStreamPublished;
     const icon = isMute ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
+    const color = !isMute ? { iconSecondary: colors['red']['6'] } : {};
 
-    return <SvgImg type={icon} size={size}></SvgImg>;
+    return <SvgImg type={icon} colors={color} size={size}></SvgImg>;
   },
 );
 export const MicrophoneDevice: FC = observer(() => {
@@ -80,7 +83,7 @@ export const CameraDevice: FC = observer(() => {
   const { toggleLocalCameraDevice } = useDeviceSwitch();
   const icon = isCameraDeviceEnabled ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
   const text = isCameraDeviceEnabled ? 'Stop Video' : 'Start Video';
-
+  const color = !isCameraDeviceEnabled ? { iconSecondary: colors['red']['6'] } : {};
   return (
     <ToolTip
       onVisibleChange={handleTooltipVisibleChanged}
@@ -89,7 +92,7 @@ export const CameraDevice: FC = observer(() => {
       <ActionBarItemWrapper>
         <div className="fcr-action-bar-device" onClick={toggleLocalCameraDevice}>
           <div className="fcr-action-bar-device-inner">
-            <SvgImg type={icon} size={32}></SvgImg>
+            <SvgImg type={icon} colors={color} size={32}></SvgImg>
             <div className="fcr-action-bar-device-text">{text}</div>
           </div>
           <Popover
