@@ -12,11 +12,6 @@ export class PresentationUIStore extends EduUIStoreBase {
     this.currentPage = page;
   }
 
-  @computed
-  get isListViewFloat() {
-    return this.isBoardWidgetActive;
-  }
-
   @computed get isBoardWidgetActive() {
     return this.getters.isBoardWidgetActive;
   }

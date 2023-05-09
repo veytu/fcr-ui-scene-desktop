@@ -10,6 +10,7 @@ import { BasicSettings } from './basic-settings';
 import { BeautyFilter } from './beauty-filter';
 import { VideoPortal } from './video-portal';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
+import { AgoraEduClassroomEvent, EduEventCenter, LeaveReason } from 'agora-edu-core';
 
 const tabContents = {
   'basic-settings': <BasicSettings />,
@@ -21,7 +22,7 @@ type TabKeyType = keyof typeof tabContents;
 
 export const DevicePretest = observer(() => {
   const transI18n = useI18n();
-  const { deviceSettingUIStore, setDevicePretestFinished } = useStore();
+  const { deviceSettingUIStore } = useStore();
 
   const [activeTab, setActiveTab] = useState<TabKeyType>('basic-settings');
   const handleActiveTab = (tabKey: string) => {
@@ -33,7 +34,9 @@ export const DevicePretest = observer(() => {
     { label: 'Background', key: 'virtual-background' },
     { label: 'Beauty Filter', key: 'beauty-filter' },
   ];
-
+  const onClose = () => {
+    EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.Destroyed, LeaveReason.leave);
+  };
   useEffect(() => {
     deviceSettingUIStore.startRecordingDeviceTest();
     return () => {
@@ -46,9 +49,7 @@ export const DevicePretest = observer(() => {
       {/* header */}
       <div className="fcr-pretest__header">
         <img className="fcr-pretest__logo" src={pretestLogo} />
-        <button
-          className="fcr-pretest__close-btn fcr-btn-click-effect"
-          onClick={setDevicePretestFinished}>
+        <button className="fcr-pretest__close-btn fcr-btn-click-effect" onClick={onClose}>
           <SvgImg type={SvgIconEnum.FCR_CLOSE} />
         </button>
       </div>

@@ -140,10 +140,8 @@
   @apply fcr-bg-3;
 }
 .fcr-layout-content-list-view-collapse-button-col {
-  @apply fcr-bg-2;
   position: absolute;
-  width: 24px;
-  height: 77px;
+
   top: 0;
   bottom: 0;
   /* transform: translateX(-210px); */
@@ -153,14 +151,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s;
+}
+.fcr-layout-content-list-view-collapse-button-col .fcr-layout-content-list-view-collapse-button {
+  @apply fcr-bg-2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 77px;
+
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   cursor: pointer;
   backdrop-filter: blur(6px);
   background: #35374180;
-  transition: all 0.2s;
 }
-
 .fcr-layout-content-list-view-collapse-button-col.fcr-layout-content-list-view-collapse-button-collapsed {
   /* transform: translateX(0); */
   right: 0;

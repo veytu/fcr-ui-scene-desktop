@@ -21,7 +21,6 @@ export class LayoutUIStore extends EduUIStoreBase {
   @observable
   actionBarHeight = 58;
 
-  @observable classroomViewportSize = { width: 0, height: 0 };
   @observable viewportBoundaries?: AgoraViewportBoundaries;
   @observable mouseEnterClass = false;
   @observable layoutReady = false;
@@ -148,48 +147,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   setLayoutReady(ready: boolean) {
     this.layoutReady = ready;
   }
-  @bound
-  addViewportResizeObserver() {
-    const observer = new ResizeObserver(this._updateViewportBoundaries);
 
-    const viewport = document.querySelector(`body`);
-    if (viewport) {
-      observer.observe(viewport);
-    }
-    return observer;
-  }
-
-  @bound
-  @Lodash.debounced(300)
-  private _updateViewportBoundaries() {
-    const containerEle = document.querySelector(`body`);
-
-    if (containerEle) {
-      const { calcWidth: width, calcHeight: height } = this.classroomSizeToBoardSize(
-        containerEle as HTMLElement,
-      );
-      const aspectRatio = 710 / 1500;
-
-      const curAspectRatio = height / width;
-
-      const boardSize = { height, width };
-
-      if (curAspectRatio > aspectRatio) {
-        // shrink height
-        boardSize.height = width * aspectRatio;
-      } else if (curAspectRatio < aspectRatio) {
-        // shrink width
-        boardSize.width = height / aspectRatio;
-      }
-
-      runInAction(() => {
-        this.classroomViewportSize = this.boardSizeToClassroomSize({
-          w: boardSize.width,
-          h: boardSize.height,
-        });
-      });
-    }
-  }
   classroomSizeToBoardSize = (containerNode: Window | HTMLElement) => {
     const height =
       containerNode instanceof Window ? containerNode.innerHeight : containerNode.clientHeight;
@@ -220,7 +178,6 @@ export class LayoutUIStore extends EduUIStoreBase {
     } else {
       this.showListView = true;
     }
-    this._updateViewportBoundaries();
   }
   onDestroy(): void {
     this._viewportResizeObserver?.disconnect();
@@ -235,7 +192,6 @@ export class LayoutUIStore extends EduUIStoreBase {
 
     this.resetClearScreenTask();
     this._disposers.push(reaction(() => this.layout, this._handleLayoutChanged));
-    this._disposers.push(reaction(() => this.showListView, this._updateViewportBoundaries));
 
     this._disposers.push(
       reaction(

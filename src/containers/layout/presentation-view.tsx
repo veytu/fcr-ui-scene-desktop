@@ -20,7 +20,6 @@ export const PresentationView = observer(() => {
       currentPage,
       setCurrentPage,
       showPager,
-      isListViewFloat,
       isBoardWidgetActive,
     },
   } = useStore();
@@ -30,14 +29,7 @@ export const PresentationView = observer(() => {
   }, [listViewStreamsByPage, mainViewStream]);
   const direction =
     layout === Layout.ListOnTop ? 'row' : layout === Layout.ListOnRight ? 'col' : 'row';
-  const listViewFloatStyle: CSSProperties = isListViewFloat
-    ? {
-        position: 'absolute',
-        zIndex: 99,
-        top: 0,
-        right: 0,
-      }
-    : {};
+
   return (
     <div className={classnames(`fcr-layout-content-${layout}`)}>
       <CSSTransition
@@ -46,9 +38,7 @@ export const PresentationView = observer(() => {
         timeout={200}
         in={showListView}
         classNames={'fcr-layout-content-list-view'}>
-        <div
-          style={{ ...listViewFloatStyle }}
-          className={classnames(`fcr-layout-content-list-view`)}>
+        <div className={classnames(`fcr-layout-content-list-view`)}>
           <div
             className={classnames(
               `fcr-layout-content-video-list`,
@@ -98,15 +88,17 @@ const ListViewCollapseButton = observer(() => {
   } = useStore();
   const direction =
     layout === Layout.ListOnTop ? 'row' : layout === Layout.ListOnRight ? 'col' : 'row';
+
   return (
     <div
-      onClick={toggleShowListView}
-      className={classnames(
-        'fcr-layout-content-list-view-collapse-button',
-        `fcr-layout-content-list-view-collapse-button-${direction}`,
-        { 'fcr-layout-content-list-view-collapse-button-collapsed': !showListView },
-      )}>
-      <SvgImg type={SvgIconEnum.FCR_RIGHT2} size={48}></SvgImg>
+      className={classnames(`fcr-layout-content-list-view-collapse-button-${direction}`, {
+        'fcr-layout-content-list-view-collapse-button-collapsed': !showListView,
+      })}>
+      <div
+        onClick={toggleShowListView}
+        className={classnames('fcr-layout-content-list-view-collapse-button')}>
+        <SvgImg type={SvgIconEnum.FCR_RIGHT2} size={48}></SvgImg>
+      </div>
     </div>
   );
 });

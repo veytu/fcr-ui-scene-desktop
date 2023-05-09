@@ -2,16 +2,19 @@ import React, { useMemo } from 'react';
 import { observer } from 'mobx-react';
 import { Button } from '@components/button';
 import { SvgIconEnum } from '@components/svg-img';
-import { PretestDeviceIcon } from '@components/svg-img/clickable-icon';
+import { PretestDeviceIcon, PretestDeviceIconProps } from '@components/svg-img/clickable-icon';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { BeautySlider } from './beauty-slider';
 import { MirrorToggle } from './mirror-toggle';
 import { LocalVideoPlayer } from '../video-player';
-
+import { themeVal } from '@ui-kit-utils/tailwindcss';
+const colors = themeVal('colors');
 export const VideoPortal = observer(() => {
   const { setDevicePretestFinished, deviceSettingUIStore } = useStore();
 
-  const cameraIconProps = useMemo(() => {
+  const cameraIconProps = useMemo<
+    { status: string; icon: SvgIconEnum; tooltip: string } & Partial<PretestDeviceIconProps>
+  >(() => {
     const isDeviceActive = deviceSettingUIStore.isCameraDeviceEnabled;
     const isNoDevice = deviceSettingUIStore.cameraDevicesList.length === 0;
 
@@ -32,6 +35,11 @@ export const VideoPortal = observer(() => {
       : {
           status: 'inactive' as const,
           icon: SvgIconEnum.FCR_CAMERAOFF,
+          iconProps: {
+            colors: {
+              iconSecondary: colors?.['notsb-inverse'],
+            },
+          },
           tooltip: 'Camera closed',
         };
   }, [deviceSettingUIStore.isCameraDeviceEnabled]);
@@ -57,6 +65,11 @@ export const VideoPortal = observer(() => {
       : {
           status: 'inactive' as const,
           icon: SvgIconEnum.FCR_NOMUTE,
+          iconProps: {
+            colors: {
+              iconSecondary: colors?.['notsb-inverse'],
+            },
+          },
           tooltip: 'Microphone closed',
         };
   }, [deviceSettingUIStore.isAudioRecordingDeviceEnabled]);
@@ -88,7 +101,7 @@ export const VideoPortal = observer(() => {
         <BeautySlider />
       </div>
       <div className="fcr-pretest__video-portal__toggles">
-        {/* <PretestDeviceIcon onClick={deviceSettingUIStore.toggleCameraDevice} {...cameraIconProps} />
+        <PretestDeviceIcon onClick={deviceSettingUIStore.toggleCameraDevice} {...cameraIconProps} />
         <PretestDeviceIcon
           onClick={deviceSettingUIStore.toggleAudioRecordingDevice}
           {...microphoneIconProps}
@@ -96,7 +109,7 @@ export const VideoPortal = observer(() => {
         <PretestDeviceIcon
           onClick={deviceSettingUIStore.toggleAudioPlaybackDevice}
           {...speakerIconProps}
-        /> */}
+        />
         <MirrorToggle />
       </div>
     </div>
