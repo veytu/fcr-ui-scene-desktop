@@ -73,7 +73,7 @@ const LayoutCard = observer(({ layout }: { layout: Layout }) => {
         'fcr-layout-switch-card-disabled': disabled,
       })}>
       <div className="fcr-layout-switch-card-checkbox">
-        <Radio label={label} checked={active}></Radio>
+        <Radio styleType="white" label={label} checked={active}></Radio>
       </div>
       <div className="fcr-layout-switch-card-icon">
         <SvgImg style={{ width: 100, height: 56 }} type={bigIcon}></SvgImg>
@@ -108,9 +108,12 @@ export const LayoutSwitch = observer(() => {
         }}
         toolTipProps={{ content: 'Switch Layout' }}>
         <div className="fcr-status-bar-layout">
-          <SvgImg type={layoutMap[currentLayout].smallIcon}></SvgImg>
+          <SvgImg type={layoutMap[currentLayout].smallIcon} size={20}></SvgImg>
           <span>Layout</span>
-          <SvgImg type={SvgIconEnum.FCR_DROPDOWN} size={20}></SvgImg>
+          <SvgImg
+            className="fcr-status-bar-layout-dropdown"
+            type={SvgIconEnum.FCR_DROPDOWN}
+            size={18}></SvgImg>
         </div>
       </PopoverWithTooltip>
     </StatusBarItemWrapper>

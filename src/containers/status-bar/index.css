@@ -6,7 +6,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 15px;
   transition: all 0.2s;
   pointer-events: all;
   position: relative;
@@ -19,13 +19,13 @@
 .fcr-status-bar-right {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: 5px;
 }
 .fcr-status-bar-logo img {
   height: var(--fcr-status-bar-item-height);
 }
 .fcr-status-bar-item-wrapper {
-  @apply fcr-bg-2 fcr-shadow-line-1-.5 fcr-rounded-8;
+  @apply fcr-bg-2 fcr-shadow-line-1-.5 fcr-rounded-4;
   height: var(--fcr-status-bar-item-height);
 
   display: flex;
@@ -48,7 +48,8 @@
 }
 .fcr-status-bar-layout > span {
   @apply fcr-text-1;
-  font-size: 16px;
+  font-size: 12px;
+  font-weight: 300;
 }
 .fcr-status-bar-collapse-button {
   @apply fcr-rounded-8 fcr-border-1;

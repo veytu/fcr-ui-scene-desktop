@@ -11,7 +11,7 @@ export const StatusBarWidgetSlot = observer(() => {
     <div className="fcr-status-bar-widget-slot">
       {eduToolApi.minimizedWidgetIcons.map(({ icon, widgetId }, index) => (
         <div className="fcr-minimized-widget-icon" key={index.toString()}>
-          <SvgImg type={icon} size={24} onClick={handleClick(widgetId)} />
+          <SvgImg type={icon} size={20} onClick={handleClick(widgetId)} />
         </div>
       ))}
     </div>

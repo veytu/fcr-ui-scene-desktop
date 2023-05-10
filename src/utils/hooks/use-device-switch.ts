@@ -9,6 +9,8 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
       streamStore: { updateRemotePublishState, updateLocalPublishState },
     },
   } = useStore();
+  const micEnabled = stream?.isMicDeviceEnabled && stream.isMicStreamPublished;
+  const cameraEnabled = stream?.isVideoDeviceEnabled && stream.isVideoStreamPublished;
   const toggleLocalCameraDevice = async () => {
     if (isCameraDeviceEnabled) {
       updateLocalPublishState({
@@ -66,7 +68,8 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
   return {
     cameraTooltip,
     micTooltip,
-
+    micEnabled,
+    cameraEnabled,
     handleCameraClick,
     handleMicrophoneClick,
     toggleLocalAudioRecordingDevice,

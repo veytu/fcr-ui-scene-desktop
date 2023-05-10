@@ -33,7 +33,7 @@ export const Whiteboard = observer(() => {
       text={
         <span
           style={{
-            color: isBoardWidgetActive ? colors['red'][6] : colors['text-1'],
+            color: isBoardWidgetActive ? colors['red'][6] : colors['text-2'],
           }}>
           Whiteboard
         </span>

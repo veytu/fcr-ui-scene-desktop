@@ -3,6 +3,7 @@ import { themeVal } from '@ui-kit-utils/tailwindcss';
 import './index.css';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { AGNetworkQuality } from 'agora-rte-sdk';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
 
 export const NetworkConnection = observer(() => {
   const {
@@ -62,8 +63,12 @@ export const NetworkDetail = observer(() => {
           <span>{delay}</span>
         </div>
         <div>
-          <span>{packetLoss}</span>
-          <span>{packetLoss}</span>
+          <span>
+            {packetLoss} <SvgImg size={14} type={SvgIconEnum.FCR_UPORDER}></SvgImg>
+          </span>
+          <span>
+            {packetLoss} <SvgImg size={14} type={SvgIconEnum.FCR_UPORDER}></SvgImg>
+          </span>
         </div>
       </div>
     </div>

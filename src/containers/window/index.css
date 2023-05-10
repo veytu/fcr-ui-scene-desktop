@@ -1,6 +1,6 @@
 .fcr-stream-window-wrap,
 .fcr-stream-window-placeholder {
-  @apply fcr-bg-4 fcr-rounded-8 fcr-shadow-line-1-.5;
+  @apply fcr-bg-4 fcr-rounded-4 fcr-shadow-line-1-.5;
 
   width: 100%;
   height: 100%;
@@ -32,7 +32,7 @@
   min-width: 81px;
 }
 .fcr-stream-window-player {
-  @apply fcr-rounded-8;
+  @apply fcr-rounded-4;
 
   position: absolute;
   top: 0;
@@ -55,10 +55,10 @@
 }
 
 .fcr-stream-window-interact-large {
-  padding: 12px 12px;
+  padding: 6px 6px;
 }
 .fcr-stream-window-interact-small {
-  padding: 6px 8px;
+  padding: 2px 2px;
 }
 .fcr-stream-window-interact-with-status-bar-visible {
   padding-top: calc(var(--fcr-status-bar-height) + 12px);
@@ -81,16 +81,17 @@
 }
 
 .fcr-stream-window-user-role {
-  @apply fcr-rounded-24 fcr-bg-gradient-1 fcr-text-white fcr-font-medium;
+  @apply fcr-rounded-24 fcr-bg-gradient-1 fcr-text-white;
   height: 24px;
   font-size: 16px;
   line-height: 24px;
   display: flex;
   padding-right: 10px;
+  font-weight: 400;
 }
 
 .fcr-stream-window-user-name {
-  @apply fcr-text-1 fcr-font-medium;
+  @apply fcr-text-1;
   height: 24px;
   font-size: 16px;
   line-height: 24px;
@@ -98,25 +99,28 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: 300;
 }
 /** small size **/
 .fcr-stream-window-user-label-small {
-  height: 16px;
+  height: 18px;
 }
 .fcr-stream-window-user-label-small .fcr-stream-window-user-name {
-  @apply fcr-text-1 fcr-font-medium;
-  height: 16px;
-  font-size: 10px;
-  line-height: 16px;
+  @apply fcr-text-1;
+  height: 18px;
+  font-size: 12px;
+  line-height: 18px;
   padding: 0 8px;
+  font-weight: 300;
 }
 .fcr-stream-window-user-label-small .fcr-stream-window-user-role {
   @apply fcr-rounded-24 fcr-bg-gradient-1 fcr-text-white fcr-font-medium;
-  height: 16px;
-  font-size: 10px;
-  line-height: 16px;
+  height: 18px;
+  font-size: 12px;
+  line-height: 18px;
   display: flex;
   padding-right: 8px;
+  font-weight: 300;
 }
 .fcr-stream-window-user-label-small .fcr-stream-window-user-role > span:only-child {
   padding-left: 8px;
@@ -131,7 +135,7 @@
 
 .fcr-stream-window-actions-item,
 .fcr-stream-window-mute-icon {
-  @apply fcr-rounded-8;
+  @apply fcr-rounded-4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -140,38 +144,42 @@
 }
 .fcr-stream-window-actions-item > span,
 .fcr-stream-window-mute-icon > span {
-  @apply fcr-font-title fcr-text-white;
-  font-size: 20px;
+  @apply fcr-text-white;
+  font-size: 12px;
   line-height: 20px;
   padding-right: 10px;
   text-align: center;
+  font-weight: 300;
 }
 .fcr-stream-window-actions-item > span,
 .fcr-stream-window-mute-icon > span {
   padding: 0 8px;
 }
-
+.fcr-stream-window-actions-popover {
+  width: 175px;
+  padding: 0 10px 10px;
+}
 .fcr-stream-window-actions-popover-name {
   @apply fcr-text-2;
   font-size: 10px;
   line-height: 12px;
 
-  padding: 10px 14px 5px;
+  padding: 10px 0 10px 2px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 175px;
 }
 .fcr-stream-window-actions-popover-item {
+  @apply fcr-rounded-4;
   height: 30px;
   display: flex;
   flex-direction: row;
   gap: 6px;
   align-items: center;
-  padding-left: 14px;
-  margin: 5px 0;
-  padding-right: 15px;
+  margin: 2px 0;
   user-select: none;
+  padding-left: 2px;
 }
 .fcr-stream-window-actions-popover-item:hover {
   @apply fcr-bg-hover;
@@ -179,8 +187,13 @@
 .fcr-stream-window-actions-popover-item-label {
   @apply fcr-text-1;
   font-size: 12px;
-  line-height: 12px;
+  line-height: 130%;
+  font-weight: 300;
 }
+/* .fcr-stream-window-actions-popover-item svg {
+  position: relative;
+  left: -10px;
+} */
 .fcr-stream-window-mute-icon {
   height: 30px;
   transition: all 0.2s;
@@ -191,18 +204,11 @@
   display: flex;
   flex-direction: row;
   gap: 4px;
-  position: absolute;
-  top: 6px;
-  left: 6px;
   transition: all 0.2s;
-}
-.fcr-stream-window-actions-small {
-  left: auto;
-  right: 6px;
 }
 
 .fcr-stream-window-actions-small .fcr-stream-window-actions-item {
-  @apply fcr-rounded-6;
+  @apply fcr-rounded-4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,14 +228,14 @@
   height: 18px;
   position: absolute;
   top: auto;
-  bottom: 6px;
-  right: 6px;
+  bottom: 2px;
+  right: 2px;
 }
 .fcr-stream-window-mute-icon-small > span {
-  @apply fcr-font-medium;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 10px;
   padding: 0 6px;
+  font-weight: 300;
 }
 
 .fcr-stream-window-bottom-right-mic {
@@ -249,10 +255,13 @@
 
 .fcr-stream-window-actions-popover-divider {
   @apply fcr-border-1;
-  width: calc(100% - 40px);
+  width: calc(100% - 20px);
   border-top-style: solid;
   border-top-width: 1px;
   align-self: flex-end;
+  position: relative;
+  left: 10px;
+  margin: 5px 0;
 }
 .fcr-stream-window-actions-popover-items {
   display: flex;

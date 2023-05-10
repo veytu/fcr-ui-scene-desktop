@@ -20,7 +20,7 @@ import { ToolTip } from '@components/tooltip';
 export const StatusBar = observer(() => {
   const {
     layoutUIStore: { showStatusBar, setIsPointingBar, noAvailabelStream },
-    statusBarUIStore: { localUser },
+    statusBarUIStore: { localUser, isStudent },
     presentationUIStore: { isBoardWidgetActive },
   } = useStore();
   const { logo } = getConfig();
@@ -51,8 +51,9 @@ export const StatusBar = observer(() => {
       </div>
       <div className="fcr-status-bar-right">
         <StatusBarWidgetSlot></StatusBarWidgetSlot>
-
-        <InteractLabelGroup userUuid={userUuid} placement={'status-bar'}></InteractLabelGroup>
+        {isStudent && (
+          <InteractLabelGroup userUuid={userUuid} placement={'status-bar'}></InteractLabelGroup>
+        )}
 
         <RecordStatus></RecordStatus>
         <ClassDuration></ClassDuration>

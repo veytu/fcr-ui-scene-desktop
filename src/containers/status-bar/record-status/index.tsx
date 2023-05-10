@@ -34,13 +34,15 @@ export const RecordStatus = observer(() => {
             colors={{
               iconPrimary: recordActive ? colors['red']['6'] : colors['notsb-inverse'],
             }}
-            type={SvgIconEnum.FCR_RECORDING_STOP}></SvgImg>
+            type={SvgIconEnum.FCR_RECORDING_STOP}
+            size={20}></SvgImg>
           <span>{text}</span>
         </div>
         {isHost && isRecording && (
           <ToolTip content={recordOnHold ? 'Click to start' : 'Click to pause'}>
             <div className="fcr-status-bar-record-action fcr-divider" onClick={handleRecordStatus}>
               <SvgImg
+                size={20}
                 type={
                   recordOnHold ? SvgIconEnum.FCR_RECORDING_PLAY : SvgIconEnum.FCR_STOP
                 }></SvgImg>

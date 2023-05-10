@@ -14,8 +14,9 @@
 .fcr-action-bar-device-text {
   @apply fcr-text-2;
   line-height: 12px;
-  font-size: 10px;
+  font-size: 12px;
   text-align: center;
+  font-weight: 300;
 }
 .fcr-action-bar-device-extra {
   @apply fcr-rounded-6;
@@ -36,20 +37,35 @@
   transition: all 0.2s;
 }
 .fcr-device-popover-content-device {
-  padding-top: 20px;
+  padding-top: 10px;
 }
 .fcr-device-popover-content-device:not(:first-child) {
   @apply fcr-border-1;
   border-top-width: 1px;
   border-top-style: solid;
+  margin-top: 10px;
 }
 .fcr-device-popover-content-device-label {
-  @apply fcr-font-title fcr-text-1;
-  font-size: 16px;
-  padding: 0 24px;
+  @apply fcr-text-1;
+  font-size: 14px;
+  line-height: 30px;
+  font-weight: 700;
+  padding: 0 15px 6px;
 }
 .fcr-device-popover-content-device-options > div {
-  padding: 12px 24px;
+  padding: 0 10px;
+}
+.fcr-device-popover-content-device-options .fcr-radio {
+  @apply fcr-rounded-4;
+  height: 32px;
+  width: 100%;
+  padding-left: 5px;
+}
+.fcr-device-popover-content-device-options .fcr-radio:hover {
+  @apply fcr-bg-brand-6;
+}
+.fcr-device-popover-content-device-options .fcr-radio-label {
+  padding-left: 10px;
 }
 .fcr-device-popover-content-more {
   @apply fcr-border-1;
@@ -63,6 +79,7 @@
   padding-left: 24px;
   user-select: none;
   cursor: pointer;
+  margin-top: 10px;
 }
 .fcr-device-popover-content-more > span {
   @apply fcr-text-2 fcr-font-medium;

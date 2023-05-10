@@ -5,6 +5,7 @@ import './index.css';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { Layout } from '@onlineclass/uistores/type';
+import { usePinStream } from '@onlineclass/utils/hooks/use-pin-stream';
 const interactLabelGroupSizeMap = {
   'status-bar': 'normal',
   'list-view': 'small',
@@ -29,7 +30,8 @@ export const InteractLabelGroup = observer(
     const isGranted = isUserGranted(userUuid);
     const showReward = currentUser?.userRole === EduRoleTypeEnum.student;
     const showPinned =
-      pinnedStream?.fromUser.userUuid === userUuid && placement !== 'status-bar' && !pinDisabled;
+      pinnedStream?.fromUser.userUuid === userUuid && placement === 'main-view' && !pinDisabled;
+    const { removePin } = usePinStream();
     return (
       <div
         className={classnames(
@@ -45,7 +47,7 @@ export const InteractLabelGroup = observer(
           <div
             className={classnames('fcr-stream-window-student-interact-item', {
               'fcr-bg-brand-6': placement === 'status-bar',
-              'fcr-bg-1': placement !== 'status-bar',
+              'fcr-bg-2': placement !== 'status-bar',
             })}>
             <SvgImg type={SvgIconEnum.FCR_REWARD}></SvgImg>
             <span>{reward || 0}</span>
@@ -53,8 +55,11 @@ export const InteractLabelGroup = observer(
         )}
 
         {showPinned && (
-          <div className="fcr-stream-window-student-interact-item  fcr-bg-1">
-            <SvgImg type={SvgIconEnum.FCR_PIN}></SvgImg>
+          <div
+            onClick={removePin}
+            className="fcr-stream-window-student-interact-item fcr-stream-window-student-interact-item-remove-pin fcr-bg-2">
+            <SvgImg type={SvgIconEnum.FCR_REMOVE_PIN}></SvgImg>
+            Remove Pin
           </div>
         )}
 

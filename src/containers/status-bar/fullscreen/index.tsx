@@ -30,6 +30,7 @@ export const FullscreenButton = () => {
       <StatusBarItemWrapper>
         <div onClick={toggleFullscreen} className="fcr-status-bar-fullscreen">
           <SvgImg
+            size={20}
             type={
               fullscreen ? SvgIconEnum.FCR_WINDOW_SMALLER : SvgIconEnum.FCR_WINDOW_BIGGER
             }></SvgImg>

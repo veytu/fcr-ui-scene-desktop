@@ -1,9 +1,8 @@
 .fcr-status-bar-widget-slot .fcr-minimized-widget-icon {
-  @apply fcr-bg-2 fcr-border-1 fcr-rounded-8 fcr-shadow-line-1-.5;
+  @apply fcr-bg-2  fcr-rounded-4 fcr-shadow-line-1-.5;
   height: 28px;
   width: 28px;
-  border-width: 1px;
-  border-style: solid;
+
   display: flex;
   align-items: center;
   justify-content: center;

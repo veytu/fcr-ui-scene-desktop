@@ -49,9 +49,9 @@ export const StatusBarInfo: FC = () => {
             topDeckContent: <NetworkConnection></NetworkConnection>,
             bottomDeckContent: <NetworkDetail></NetworkDetail>,
           }}
-          toolTipProps={{ content: 'Show Network Details' }}>
+          toolTipProps={{ content: 'Show Network Details', placement: 'bottomLeft' }}>
           <div className="fcr-status-bar-info-network">
-            <SvgImg type={SvgIconEnum.FCR_V2_SIGNAL_GOOD}></SvgImg>
+            <SvgImg type={SvgIconEnum.FCR_V2_SIGNAL_GOOD} size={20}></SvgImg>
           </div>
         </DoubleDeckPopoverWithTooltip>
         <div className={classnames('fcr-status-bar-info-id', 'fcr-divider')}>
@@ -76,7 +76,7 @@ export const StatusBarInfo: FC = () => {
           }}
           toolTipProps={{ content: 'Sharing conference chain' }}>
           <div className="fcr-status-bar-info-share">
-            <SvgImg type={SvgIconEnum.FCR_SHARE}></SvgImg>
+            <SvgImg type={SvgIconEnum.FCR_SHARE} size={20}></SvgImg>
           </div>
         </PopoverWithTooltip>
       </div>

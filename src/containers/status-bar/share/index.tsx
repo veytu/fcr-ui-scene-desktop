@@ -1,10 +1,11 @@
 import { Button } from '@components/button';
-import { SvgIconEnum } from '@components/svg-img';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { EduClassroomConfig } from 'agora-edu-core';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import './index.css';
 import { ToastApi } from '@components/toast';
 import { getConfig } from '@onlineclass/utils/launch-options-holder';
+import { ClickableIcon } from '@components/svg-img/clickable-icon';
 
 export const Share = () => {
   const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
@@ -23,11 +24,9 @@ export const Share = () => {
           onCopy={() =>
             ToastApi.open({ toastProps: { type: 'info', content: 'success to copy room id' } })
           }>
-          <Button
-            data-clipboard-text={shareUrl}
-            preIcon={SvgIconEnum.FCR_SHARE}
-            type="secondary"
-            size="XXS"></Button>
+          <div className="fcr-share-room-id-copy" data-clipboard-text={shareUrl}>
+            <SvgImg size={20} type={SvgIconEnum.FCR_COPY}></SvgImg>
+          </div>
         </CopyToClipboard>
       </div>
       <div className="fcr-share-room-link">
@@ -39,7 +38,7 @@ export const Share = () => {
         onCopy={() =>
           ToastApi.open({ toastProps: { type: 'info', content: 'success to copy share link' } })
         }>
-        <Button size="S" block shape="rounded" preIcon={SvgIconEnum.FCR_SHARE}>
+        <Button size="XS" block shape="rounded" preIcon={SvgIconEnum.FCR_LINK}>
           Copy Link
         </Button>
       </CopyToClipboard>

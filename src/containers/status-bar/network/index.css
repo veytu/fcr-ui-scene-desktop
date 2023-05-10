@@ -1,11 +1,11 @@
 .fcr-network-connection {
-  padding: 22px 26px 24px;
+  padding: 10px 15px 15px;
 }
 .fcr-network-connection-title {
   @apply fcr-text-1 fcr-font-medium;
-  font-size: 16px;
-  line-height: 16px;
-  padding-bottom: 18px;
+  font-size: 14px;
+  line-height: 30px;
+  padding-bottom: 6px;
 }
 .fcr-network-connection-status {
   @apply fcr-text-1 fcr-font-medium;
@@ -13,32 +13,35 @@
   line-height: 22px;
 }
 .fcr-network-connection-detail {
-  padding: 12px 24px 20px;
+  padding: 0 15px 10px;
   display: flex;
   flex-direction: row;
-  gap: 10px;
 }
 .fcr-network-connection-detail-key {
-  flex-shrink: 0;
+  padding-right: 17px;
 }
 .fcr-network-connection-detail-key,
 .fcr-network-connection-detail-value {
   display: flex;
   flex-direction: column;
-  gap: 24px;
 }
 .fcr-network-connection-detail-key > div {
   @apply fcr-text-2 fcr-font-regular;
-  font-size: 13px;
-  line-height: 13px;
+  font-size: 12px;
+  line-height: 32px;
 }
 .fcr-network-connection-detail-value > div {
   display: flex;
-  flex-wrap: wrap;
-  gap: 13px;
+  flex-direction: column;
 }
 .fcr-network-connection-detail-value > div > span {
   @apply fcr-font-medium fcr-text-1;
-  font-size: 13px;
-  line-height: 13px;
+  font-size: 12px;
+  line-height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.fcr-network-connection-detail-value > div > span:last-child svg {
+  transform: rotate(180deg);
 }

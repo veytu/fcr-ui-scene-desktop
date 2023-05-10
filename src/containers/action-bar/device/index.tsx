@@ -164,6 +164,7 @@ const VideoDeviceListPopoverContent = observer(({ onMoreClick }: { onMoreClick: 
                 <div key={device.value} onClick={() => setCameraDevice(device.value)}>
                   <Radio
                     name="video"
+                    styleType="transparent"
                     checked={cameraDeviceId === device.value}
                     label={device.text}></Radio>
                 </div>
@@ -206,6 +207,7 @@ const AudioDeviceListPopoverContent = observer(({ onMoreClick }: { onMoreClick: 
                 <div onClick={() => setAudioRecordingDevice(device.value)} key={device.value}>
                   <Radio
                     name="mic"
+                    styleType="transparent"
                     checked={audioRecordingDeviceId === device.value}
                     label={device.text}></Radio>
                 </div>
@@ -222,6 +224,7 @@ const AudioDeviceListPopoverContent = observer(({ onMoreClick }: { onMoreClick: 
                 <div onClick={() => setAudioPlaybackDevice(device.value)} key={device.value}>
                   <Radio
                     name="speaker"
+                    styleType="transparent"
                     checked={audioPlaybackDeviceId === device.value}
                     label={device.text}></Radio>
                 </div>

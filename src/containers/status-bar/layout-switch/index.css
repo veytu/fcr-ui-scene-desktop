@@ -1,14 +1,19 @@
+.fcr-status-bar-layout:hover .fcr-status-bar-layout-dropdown {
+  transform: translateY(2px);
+  transition: all 0.2s;
+}
 .fcr-layout-switch {
   max-width: 328px;
-  padding: 22px 24px 24px;
+  padding: 10px 19px 18px;
 }
 .fcr-layout-switch-speaker-view {
-  padding-bottom: 24px;
+  padding-bottom: 14px;
 }
 .fcr-layout-switch-title {
   @apply fcr-font-title fcr-text-1;
-  font-size: 16px;
-  line-height: 16px;
+  font-size: 14px;
+  line-height: 30px;
+  margin-bottom: 6px;
 }
 .fcr-layout-switch-card {
   @apply fcr-rounded-12 fcr-bg-4;
@@ -16,6 +21,7 @@
   height: 114px;
   position: relative;
   padding: 8px;
+  padding-top: 0;
 }
 .fcr-layout-switch-card::after {
   @apply fcr-border-brand-5 fcr-rounded-16;
@@ -44,7 +50,6 @@
   display: flex;
   flex-direction: row;
   gap: 20px;
-  padding-top: 14px;
 }
 .fcr-layout-switch-card-icon {
   @apply fcr-bg-2 fcr-rounded-8;
@@ -55,9 +60,9 @@
   height: 72px;
 }
 .fcr-layout-switch-card-checkbox {
-  padding-top: 2px;
+  padding-top: 7px;
   padding-left: 4px;
-  padding-bottom: 6px;
+  padding-bottom: 7px;
 }
 .fcr-layout-switch-card-checkbox .fcr-radio {
   width: 100%;

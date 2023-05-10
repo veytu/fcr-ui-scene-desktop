@@ -5,6 +5,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 .fcr-layout-content-main-view {
   position: relative;
@@ -39,6 +40,7 @@
   display: flex;
   flex-direction: row-reverse;
   position: relative;
+  gap: 2px;
 }
 .fcr-layout-content-list-on-right .fcr-layout-content-main-view {
   flex: 1;
@@ -71,7 +73,7 @@
 .fcr-layout-content-video-list {
   flex: 1;
   display: flex;
-  gap: 8px;
+  gap: 4px;
   justify-content: center;
   position: relative;
   overflow: hidden;
@@ -158,8 +160,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 77px;
+  width: 18px;
+  height: 60px;
 
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
@@ -170,6 +172,10 @@
 .fcr-layout-content-list-view-collapse-button-col.fcr-layout-content-list-view-collapse-button-collapsed {
   /* transform: translateX(0); */
   right: 0;
+}
+.fcr-layout-content-list-view-collapse-button-col svg {
+  position: relative;
+  left: 2px;
 }
 .fcr-layout-content-list-view-collapse-button-col.fcr-layout-content-list-view-collapse-button-collapsed
   svg {

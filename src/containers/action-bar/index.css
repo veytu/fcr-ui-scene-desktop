@@ -1,5 +1,5 @@
 .fcr-action-bar {
-  @apply fcr-bg-2;
+  @apply fcr-bg-2 fcr-border-1;
   width: 100%;
   height: var(--fcr-action-bar-height);
   display: flex;
@@ -7,6 +7,8 @@
   justify-content: space-between;
   transition: all 0.2s;
   pointer-events: all;
+  border-top-width: 1px;
+  border-top-style: solid;
 }
 .fcr-action-bar-hide {
   transform: translateY(var(--fcr-action-bar-height));
@@ -47,7 +49,8 @@
   opacity: 0.5;
 }
 .fcr-action-bar-item-text {
-  @apply fcr-text-2 fcr-font-regular;
+  @apply fcr-text-2;
+  font-weight: 300;
   font-size: 10px;
   line-height: 12px;
   padding: 0 8px;

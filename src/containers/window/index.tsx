@@ -215,23 +215,27 @@ const StreamActions = observer(() => {
 
   const pinned = pinnedStreamUuid === streamWindowContext?.stream.stream.streamUuid;
 
-  const { cameraTooltip, micTooltip, handleCameraClick, handleMicrophoneClick } = useDeviceSwitch(
-    streamWindowContext?.stream,
-  );
+  const {
+    cameraTooltip,
+    micTooltip,
+    handleCameraClick,
+    handleMicrophoneClick,
+    micEnabled,
+    cameraEnabled,
+  } = useDeviceSwitch(streamWindowContext?.stream);
   const userUuid = streamWindowContext?.stream.fromUser.userUuid || '';
   const streamUuid = streamWindowContext?.stream.stream.streamUuid || '';
 
   const showStreamWindowHostAction =
     isHost && streamWindowContext?.stream.role === EduRoleTypeEnum.student;
-
   const streamWindowActionItems = [
     {
       key: 'mic',
       icon: (
         <SvgImg
           size={20}
-          colors={{ iconPrimary: colors['custom-2'] }}
-          type={SvgIconEnum.FCR_MUTE}></SvgImg>
+          colors={{ iconSecondary: colors['red']['6'] }}
+          type={micEnabled ? SvgIconEnum.FCR_NOMUTE : SvgIconEnum.FCR_MUTE}></SvgImg>
       ),
       label: micTooltip,
       onClick: handleMicrophoneClick,
@@ -243,8 +247,8 @@ const StreamActions = observer(() => {
       icon: (
         <SvgImg
           size={20}
-          colors={{ iconPrimary: colors['custom-2'] }}
-          type={SvgIconEnum.FCR_CAMERA}></SvgImg>
+          colors={{ iconSecondary: colors['red']['6'] }}
+          type={cameraEnabled ? SvgIconEnum.FCR_CAMERAOFF : SvgIconEnum.FCR_CAMERA}></SvgImg>
       ),
       label: cameraTooltip,
       onClick: handleCameraClick,
@@ -278,8 +282,10 @@ const StreamActions = observer(() => {
     {
       key: 'pin',
 
-      icon: <SvgImg size={20} type={SvgIconEnum.FCR_PIN}></SvgImg>,
-      label: pinned ? 'Unpin' : 'Pin',
+      icon: (
+        <SvgImg size={20} type={pinned ? SvgIconEnum.FCR_REMOVE_PIN : SvgIconEnum.FCR_PIN}></SvgImg>
+      ),
+      label: pinned ? 'Remove Pin' : 'Add Pin',
       onClick: async () => {
         pinned ? removePin() : addPin(streamUuid);
       },
@@ -362,6 +368,9 @@ const StreamActionPopover = observer(
         <div className="fcr-stream-window-actions-popover-name">{userName}</div>
         <div className="fcr-stream-window-actions-popover-items">
           {items.map((item, index) => {
+            const addDivider =
+              index !== items.length - 1 && (item.key === 'camera' || item.key === 'pin');
+
             return (
               <>
                 <div
@@ -374,9 +383,7 @@ const StreamActionPopover = observer(
                   {item.icon}
                   <div className="fcr-stream-window-actions-popover-item-label">{item.label}</div>
                 </div>
-                {index % 2 === 1 && (
-                  <div className="fcr-stream-window-actions-popover-divider"></div>
-                )}
+                {addDivider && <div className="fcr-stream-window-actions-popover-divider"></div>}
               </>
             );
           })}
@@ -405,7 +412,7 @@ const StreamWindowUserLabel = observer(() => {
               size={streamWindowContext?.audioIconSize}></AudioRecordinDeviceIcon>
           )}
 
-          <span>host</span>
+          <span>Host</span>
         </div>
       )}
       {streamWindowContext?.showNameOnBottomLeft && (
