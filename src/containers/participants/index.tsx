@@ -1,5 +1,5 @@
 import { BaseDialog, BaseDialogProps } from '@components/dialog';
-import { createContext, FC, PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { createContext, FC, PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react';
 import { Input } from '@components/input';
 import { Table } from '@components/table';
 
@@ -7,7 +7,6 @@ import './index.css';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
-import { generateShortUserName } from '@onlineclass/utils/short-name';
 import { ToolTip } from '@components/tooltip';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { DialogToolTip } from '@components/tooltip/dialog';
@@ -18,46 +17,63 @@ import { themeVal } from '@ui-kit-utils/tailwindcss';
 import classnames from 'classnames';
 import { ToastApiFactory } from '@components/toast';
 import { useDeviceSwitch } from '@onlineclass/utils/hooks/use-device-switch';
-import { Avatar } from '@components/avatar';
 import { AgoraRteMediaPublishState } from 'agora-rte-sdk';
+
 interface ParticipantsContext {
   toastApi: ToastApiFactory | null;
 }
 const ParticipantsContext = createContext<ParticipantsContext | null>(null);
 
 const colors = themeVal('colors');
-export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = (props) => {
-  const [visible, setVisible] = useState(true);
-  const afterClose = () => {
-    props.onClose?.();
-  };
+export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = observer(
+  (props) => {
+    const [visible, setVisible] = useState(true);
+    const {
+      statusBarUIStore: { isHost },
+    } = useStore();
+    const afterClose = () => {
+      props.onClose?.();
+    };
+    const { hostColumns, studentColumns } = useParticipantsColumn();
 
-  return (
-    <BaseDialog
-      {...props}
-      classNames={'fcr-participants-dialog'}
-      width={720}
-      visible={visible}
-      maskClosable={false}
-      mask={false}
-      wrapClassName={'fcr-participants-dialog-wrap'}
-      onClose={() => {
-        setVisible(false);
-      }}
-      afterClose={afterClose}>
-      <Participants></Participants>
-    </BaseDialog>
-  );
-};
-const Participants = observer(() => {
+    const tableColumns = isHost ? hostColumns : studentColumns;
+    const tableWidth = useMemo(() => {
+      return tableColumns.reduce((prev, columns) => {
+        return prev + columns.width;
+      }, 0);
+    }, [tableColumns]);
+    return (
+      <BaseDialog
+        {...props}
+        width={tableWidth < 430 ? 430 : tableWidth}
+        classNames={'fcr-participants-dialog'}
+        visible={visible}
+        maskClosable={false}
+        mask={false}
+        wrapClassName={'fcr-participants-dialog-wrap'}
+        onClose={() => {
+          setVisible(false);
+        }}
+        afterClose={afterClose}>
+        <Participants columns={tableColumns}></Participants>
+      </BaseDialog>
+    );
+  },
+);
+const Participants = observer(({ columns }: { columns: any }) => {
   const {
-    participantsUIStore: { participantList, participantStudentList, searchKey, setSearchKey },
+    participantsUIStore: {
+      participantList,
+      participantStudentList,
+      searchKey,
+      setSearchKey,
+      tableIconSize,
+    },
     statusBarUIStore: { isHost },
     classroomStore: {
       streamStore: { updateRemotePublishStateBatch },
     },
   } = useStore();
-  const { hostColumns, studentColumns } = useParticipantsColumn();
   const participantsContainerRef = useRef<HTMLDivElement | null>(null);
   const toastApiRef = useRef<ToastApiFactory | null>(null);
   useEffect(() => {
@@ -92,6 +108,7 @@ const Participants = observer(() => {
     );
     toastApiRef.current?.open({ toastProps: { type: 'normal', content: 'Unmute All' } });
   };
+
   return (
     <ParticipantsContext.Provider value={{ toastApi: toastApiRef.current }}>
       <div ref={participantsContainerRef} className="fcr-participants-container">
@@ -112,7 +129,7 @@ const Participants = observer(() => {
           scroll={{
             y: 400,
           }}
-          columns={(isHost ? hostColumns : studentColumns) as any}
+          columns={columns as any}
           data={participantList}
           rowKey={(record) => record.user.userUuid}></Table>
 
@@ -123,7 +140,7 @@ const Participants = observer(() => {
                 disabled={participantStudentList.length <= 0}
                 onClick={handleMuteAll}
                 preIcon={SvgIconEnum.FCR_ALL_MUTE}
-                size="S"
+                size="XS"
                 type="secondary">
                 Mute All
               </Button>
@@ -133,7 +150,7 @@ const Participants = observer(() => {
                 disabled={participantStudentList.length <= 0}
                 onClick={handleUnMuteAll}
                 preIcon={SvgIconEnum.FCR_ALL_UNMUTE}
-                size="S"
+                size="XS"
                 type="secondary">
                 Ask all to Unmute
               </Button>
@@ -147,14 +164,14 @@ const Participants = observer(() => {
 const TableName = ({ name }: { name: string }) => {
   return (
     <div className="fcr-participants-table-name">
-      <Avatar size={30} textSize={14} nickName={name}></Avatar>
+      {/* <Avatar size={30} textSize={14} nickName={name}></Avatar> */}
       <div className="fcr-participants-table-name-text">{name}</div>
     </div>
   );
 };
 const TableAuth = observer(({ userUuid, role }: { userUuid: string; role: EduRoleTypeEnum }) => {
   const {
-    participantsUIStore: { isHostByUserRole },
+    participantsUIStore: { isHostByUserRole, tableIconSize },
     presentationUIStore: { isBoardWidgetActive },
     boardApi: { grantedUsers, grantPrivilege },
   } = useStore();
@@ -175,7 +192,7 @@ const TableAuth = observer(({ userUuid, role }: { userUuid: string; role: EduRol
             <SvgImg
               type={SvgIconEnum.FCR_HOST}
               colors={{ iconPrimary: granted ? colors['yellow'] : colors['icon-1'] }}
-              size={36}></SvgImg>
+              size={tableIconSize}></SvgImg>
           </TableIconWrapper>
         )}
       </div>
@@ -207,6 +224,7 @@ const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
     classroomStore: {
       userStore: { localUser },
     },
+    participantsUIStore: { tableIconSize },
   } = useStore();
   const isSelf = stream?.fromUser.userUuid === localUser?.userUuid;
   const actionDisabled = !isHost && !isSelf;
@@ -215,7 +233,7 @@ const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
   return (
     <ToolTip placement="bottom" content={cameraTooltip}>
       <TableIconWrapper disabled={actionDisabled} onClick={handleCameraClick}>
-        <SvgImg type={icon} size={36}></SvgImg>
+        <SvgImg type={icon} size={tableIconSize}></SvgImg>
       </TableIconWrapper>
     </ToolTip>
   );
@@ -228,20 +246,21 @@ const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
     classroomStore: {
       userStore: { localUser },
     },
+    participantsUIStore: { tableIconSize },
   } = useStore();
   const isSelf = stream?.fromUser.userUuid === localUser?.userUuid;
   const actionDisabled = !isHost && !isSelf;
   return (
     <ToolTip content={micTooltip} placement="bottom">
       <TableIconWrapper disabled={actionDisabled} onClick={handleMicrophoneClick}>
-        <SvgImg type={icon} size={36}></SvgImg>
+        <SvgImg type={icon} size={tableIconSize}></SvgImg>
       </TableIconWrapper>
     </ToolTip>
   );
 });
 const TableReward = observer(({ userUuid, role }: { userUuid: string; role: EduRoleTypeEnum }) => {
   const {
-    participantsUIStore: { sendReward, rewardsByUserUuid, isHostByUserRole },
+    participantsUIStore: { sendReward, rewardsByUserUuid, isHostByUserRole, tableIconSize },
   } = useStore();
   const rewards = rewardsByUserUuid(userUuid);
   const {
@@ -257,7 +276,7 @@ const TableReward = observer(({ userUuid, role }: { userUuid: string; role: EduR
       <TableIconWrapper disabled={actionDisabled} onClick={() => sendReward(userUuid)}>
         <>
           {rewards > 0 && <div className="fcr-participants-table-rewards">{rewards}</div>}
-          <SvgImg type={SvgIconEnum.FCR_REWARD} size={36}></SvgImg>
+          <SvgImg type={SvgIconEnum.FCR_REWARD} size={tableIconSize}></SvgImg>
         </>
       </TableIconWrapper>
     </ToolTip>
@@ -266,7 +285,7 @@ const TableReward = observer(({ userUuid, role }: { userUuid: string; role: EduR
 const TableRemove = observer(({ userUuid, role }: { userUuid: string; role: EduRoleTypeEnum }) => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const {
-    participantsUIStore: { isHostByUserRole },
+    participantsUIStore: { isHostByUserRole, tableIconSize },
   } = useStore();
   const isStreamFromHost = isHostByUserRole(role);
 
@@ -286,7 +305,7 @@ const TableRemove = observer(({ userUuid, role }: { userUuid: string; role: EduR
         trigger="click"
         placement="right">
         <TableIconWrapper>
-          <SvgImg type={SvgIconEnum.FCR_ONELEAVE} size={36}></SvgImg>
+          <SvgImg type={SvgIconEnum.FCR_ONELEAVE} size={tableIconSize}></SvgImg>
         </TableIconWrapper>
       </DialogToolTip>
     </ToolTip>
@@ -311,11 +330,12 @@ const RemoveDialogContent = observer(
             value={kickOutType}
             onChange={(value) => value && setKickOutType(value)}>
             <Radio value="once" label="Remove the student from the classroom"></Radio>
+            <div className="fcr-participants-table-remove-options-divider"></div>
             <Radio value="ban" label="Ban the student from re-entering the classroom"></Radio>
           </RadioGroup>
         </div>
         <div className="fcr-participants-table-remove-btns">
-          <Button onClick={onClose} shape="rounded" size="S" styleType="gray">
+          <Button onClick={onClose} shape="rounded" size="XS" styleType="gray">
             Cancel
           </Button>
           <Button
@@ -324,7 +344,7 @@ const RemoveDialogContent = observer(
               onClose?.();
             }}
             shape="rounded"
-            size="S">
+            size="XS">
             Remove
           </Button>
         </div>
@@ -345,40 +365,40 @@ const useParticipantsColumn = () => {
       render: (_: unknown, item: UserTableItem) => {
         return <TableName name={item.user.userName}></TableName>;
       },
-      width: 150,
+      width: 85,
       align: 'left',
     },
     {
       title: 'Auth',
-      width: 100,
+      width: 50,
       render: (_: unknown, item: UserTableItem) => {
         return <TableAuth role={item.user.userRole} userUuid={item.user.userUuid}></TableAuth>;
       },
     },
     {
       title: 'Camera',
-      width: 100,
+      width: 68,
       render: (_: unknown, item: UserTableItem) => {
         return <TableCamera stream={item.stream}></TableCamera>;
       },
     },
     {
       title: 'Microphone',
-      width: 100,
+      width: 92,
       render: (_: unknown, item: UserTableItem) => {
         return <TableMicrophone stream={item.stream}></TableMicrophone>;
       },
     },
     {
       title: 'Reward',
-      width: 100,
+      width: 66,
       render: (_: unknown, item: UserTableItem) => {
         return <TableReward role={item.user.userRole} userUuid={item.user.userUuid}></TableReward>;
       },
     },
     {
       title: 'Remove',
-      width: 100,
+      width: 67,
       render: (_: unknown, item: UserTableItem) => {
         return <TableRemove role={item.user.userRole} userUuid={item.user.userUuid}></TableRemove>;
       },
@@ -391,26 +411,26 @@ const useParticipantsColumn = () => {
         return <TableName name={item.user.userName}></TableName>;
       },
       align: 'left',
-      width: 200,
+      width: 85,
     },
 
     {
       title: 'Camera',
-      width: 150,
+      width: 68,
       render: (_: unknown, item: UserTableItem) => {
         return <TableCamera stream={item.stream}></TableCamera>;
       },
     },
     {
       title: 'Microphone',
-      width: 150,
+      width: 92,
       render: (_: unknown, item: UserTableItem) => {
         return <TableMicrophone stream={item.stream}></TableMicrophone>;
       },
     },
     {
       title: 'Reward',
-      width: 150,
+      width: 78,
       render: (_: unknown, item: UserTableItem) => {
         return <TableReward role={item.user.userRole} userUuid={item.user.userUuid}></TableReward>;
       },

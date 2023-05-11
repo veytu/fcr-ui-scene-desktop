@@ -26,7 +26,8 @@ export const Record = observer(() => {
     } else {
       addDialog('confirm', {
         title: 'Recording Prompt',
-        content: 'Are you sure you want to stop recording?',
+        content:
+          'Are you sure you want to stop recording？\nThe recording file will be generated after the course ends and displayed on the course details page.',
         cancelText: 'Cancel',
         okText: 'Stop',
         onOk: stopRecording,
@@ -45,7 +46,6 @@ export const Record = observer(() => {
         icon={{
           type: icon,
           colors: { iconPrimary: iconColor },
-          className: classnames({ 'fcr-status-bar-record-starting': !isRecordStoped }),
         }}
         text={text}></ActionBarItem>
     </ToolTip>

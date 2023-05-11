@@ -39,7 +39,7 @@ export const LeaveCheck = observer(() => {
       overlayInnerStyle={{ width: 289 }}
       content={<LeavePopoverContent></LeavePopoverContent>}>
       <div className="fcr-action-bar-cancel-leave">
-        <Button onClick={() => setShowLeaveOption(false)} size="XS" styleType="gray">
+        <Button onClick={() => setShowLeaveOption(false)} size="M" styleType="gray">
           Cancel
         </Button>
       </div>
@@ -69,7 +69,12 @@ const LeavePopoverContent = observer(() => {
           </Button>
         )}
 
-        <Button block onClick={leaveClassroom} size="M" type="secondary" styleType="danger">
+        <Button
+          block
+          onClick={leaveClassroom}
+          size="M"
+          type={showEndClassButton ? 'secondary' : 'primary'}
+          styleType="danger">
           Leave the Classroom
         </Button>
       </div>

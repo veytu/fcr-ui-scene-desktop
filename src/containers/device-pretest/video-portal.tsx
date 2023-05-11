@@ -112,7 +112,7 @@ export const VideoPortal = observer(() => {
           onClick={deviceSettingUIStore.toggleAudioPlaybackDevice}
           {...speakerIconProps}
         />
-        <MirrorToggle />
+        <MirrorToggle placement="pretest" />
       </div>
     </div>
   );

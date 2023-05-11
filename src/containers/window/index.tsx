@@ -113,7 +113,12 @@ const StreamPlayer = observer(() => {
   }, [stream, stream?.isLocal, stream?.stream.streamUuid, videoRenderable]);
 
   return (
-    <div ref={ref} onDoubleClick={handleDoubleClick} className="fcr-stream-window-player"></div>
+    <div
+      ref={ref}
+      onDoubleClick={handleDoubleClick}
+      className={classnames('fcr-stream-window-player', {
+        'fcr-stream-window-player-gray-bg': streamWindowContext?.videoBackgroundGray,
+      })}></div>
   );
 });
 
@@ -466,7 +471,9 @@ const AudioVolumeEffect = observer(
       isAudioRecordingDeviceEnabled,
       stream?.isMicStreamPublished,
     ]);
-    return showAudioVolumeEffect ? <div className={'fcr-audio-volume-effect'}></div> : null;
+    return showAudioVolumeEffect && !streamWindowContext?.disableAudioVolumeEffect ? (
+      <div className={'fcr-audio-volume-effect'}></div>
+    ) : null;
   },
 );
 

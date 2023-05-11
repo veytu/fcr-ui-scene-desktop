@@ -20,7 +20,7 @@ export const AudioSettings = observer(() => {
         <MicrophoneSelect />
         <div className="fcr-pretest__settings__volume">
           <SvgImg type={SvgIconEnum.FCR_MUTE} />
-          <VolumeIndicator value={localRecordingTestVolume} barCount={18} />
+          <VolumeIndicator value={localRecordingTestVolume} barCount={15} />
         </div>
       </div>
       <div className="fcr-device-settings__speaker">
@@ -29,8 +29,8 @@ export const AudioSettings = observer(() => {
         </div>
         <SpeakerSelect />
         <div className="fcr-pretest__settings__volume">
-          <SvgImg type={SvgIconEnum.FCR_MUTE} />
-          <VolumeIndicator value={localPlaybackTestVolume} barCount={18} />
+          <SvgImg type={SvgIconEnum.FCR_V2_LOUDER} />
+          <VolumeIndicator value={localPlaybackTestVolume} barCount={15} />
         </div>
 
         <Checkbox size="small" label={'AI noise reduction'} onChange={toggleAiDenoiser} />

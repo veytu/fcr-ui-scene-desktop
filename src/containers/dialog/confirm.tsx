@@ -21,6 +21,7 @@ export const ConfirmDialogWrapper: FC<ConfirmDialogProps> = observer((props) => 
       maskClosable={false}
       visible={visible}
       {...props}
+      closable={props.closable || false}
       afterClose={afterClose}
       onClose={() => {
         setVisible(false);

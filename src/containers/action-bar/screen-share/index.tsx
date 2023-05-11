@@ -81,7 +81,7 @@ const ScreenShareStatusBar = observer(() => {
           bounds=".fcr-classroom-viewport">
           <div className="fcr-screen-share-status-bar">
             <span>Screen Sharing...</span>
-            <Button onClick={stopLocalScreenShare} size="XS" shape="rounded" styleType="danger">
+            <Button onClick={stopLocalScreenShare} size="XXS" shape="rounded" styleType="danger">
               Stop Sharing
             </Button>
           </div>

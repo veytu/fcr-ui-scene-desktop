@@ -35,7 +35,7 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
   };
   const cameraTooltip = stream?.isVideoStreamPublished
     ? 'Turn off the camera'
-    : 'Ask to turn on the camera';
+    : 'Request to start video';
   const handleCameraClick = () => {
     if (stream?.isLocal) {
       toggleLocalCameraDevice();
@@ -50,9 +50,7 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
     }
   };
 
-  const micTooltip = stream?.isMicStreamPublished
-    ? 'Turn off the microphone'
-    : 'Ask to turn on the microphone';
+  const micTooltip = stream?.isMicStreamPublished ? 'Turn off the microphone' : 'Request to unmute';
   const handleMicrophoneClick = () => {
     if (stream?.isLocal) {
       toggleLocalAudioRecordingDevice();

@@ -1,17 +1,15 @@
+.fcr-device-settings__dialog .fcr-dialog-body {
+  padding: 0;
+}
 .fcr-device-settings__dialog-wrapper {
-  position: absolute;
-  width: 620px;
-  height: 584px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  width: 490px;
+  height: 450px;
   display: flex;
   flex-direction: column;
-  z-index: 101;
 }
 .fcr-device-settings__header {
-  @apply fcr-bg-brand-6 fcr-rounded-24 fcr-border-brand-6 fcr-font-title;
-  height: 50px;
+  @apply fcr-bg-brand-6 fcr-rounded-16 fcr-border-brand-6 fcr-font-title;
+  height: 36px;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-style: solid;
@@ -19,8 +17,9 @@
   position: relative;
   display: flex;
   align-items: center;
-  padding-left: 26px;
-  font-size: 20px;
+  padding-left: 15px;
+  font-size: 14px;
+  flex-shrink: 0;
   color: theme(colors.white);
 }
 
@@ -31,6 +30,7 @@
   border-top-right-radius: 0;
   border-style: solid;
   border-width: 1px;
+  border-top: none;
 }
 
 .fcr-device-settings__close {
@@ -38,8 +38,8 @@
   position: absolute;
   right: -7px;
   top: -5px;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -56,10 +56,10 @@
   @apply fcr-border-1;
   border-style: solid;
   border-right-width: 1px;
-  width: 130px;
+  width: 100px;
   font-size: 14px;
   flex-shrink: 0;
-  padding: 9px 0;
+  padding: 10px 0;
   color: theme(colors.white);
 }
 
@@ -82,6 +82,9 @@ li.fcr-device-settings__nav-list-item--active {
   width: 22px;
   height: 22px;
   margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .fcr-device-settings__surrounding--green {
   background: #83bc53;
@@ -91,18 +94,22 @@ li.fcr-device-settings__nav-list-item--active {
 }
 
 .fcr-device-settings__preview {
-  padding: 19px 19px 0 19px;
+  padding: 0 15px 0;
   flex-grow: 1;
 }
 
 .fcr-device-settings__video-preview {
-  width: 450px;
-  height: 254px;
+  @apply fcr-rounded-8;
+  width: 360px;
+  height: 200px;
   position: relative;
-  margin-top: 10px;
-  margin-bottom: 28px;
+  margin-bottom: 12px;
 }
 
+.fcr-device-settings__preview .fcr-video-player-wrapper {
+  @apply fcr-rounded-8;
+  overflow: hidden;
+}
 .fcr-device-settings__video-preview__device-select {
   position: absolute;
   bottom: 10px;
@@ -115,6 +122,9 @@ li.fcr-device-settings__nav-list-item--active {
   @apply fcr-font-title;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  height: 36px;
+  font-size: 14px;
   color: theme(colors.white);
 }
 
@@ -130,7 +140,6 @@ li.fcr-device-settings__nav-list-item--active {
 }
 
 .fcr-device-settings__video-preview .fcr-video-player {
-  @apply fcr-rounded-14;
   overflow: hidden;
 }
 
@@ -141,7 +150,7 @@ li.fcr-device-settings__nav-list-item--active {
 .fcr-device-settings__microphone,
 .fcr-device-settings__speaker {
   @apply fcr-text-1 fcr-font-title fcr-rounded-16;
-  padding: 20px 20px;
+  padding: 0 10px 20px;
 }
 
 .fcr-device-settings__microphone {
@@ -155,17 +164,18 @@ li.fcr-device-settings__nav-list-item--active {
 
 .fcr-device-settings__label {
   padding-left: 12px;
-  line-height: 1;
-  margin-bottom: 16px;
+  line-height: 36px;
 }
 
 .fcr-pretest__settings__volume {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 20px 0;
+  margin: 15px 0 20px;
 }
-
 .fcr-device-settings__microphone .fcr-pretest__settings__volume {
   margin-bottom: 0;
+}
+.fcr-device-settings__audio {
+  padding-top: 15px;
 }

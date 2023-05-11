@@ -12,7 +12,7 @@
   left: 0;
   right: 0;
   margin: 0 auto;
-  height: 40px;
+  height: 32px;
   width: fit-content;
   padding-left: 20px;
   padding-right: 4px;
@@ -20,5 +20,5 @@
 }
 .fcr-screen-share-status-bar span {
   @apply fcr-text-1;
-  font-size: 16px;
+  font-size: 12px;
 }

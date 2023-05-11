@@ -18,10 +18,15 @@ export const convertStreamUIStatus = (
 ) => {
   const renderAtMainView = placement === 'main-view';
   const renderAtListView = placement === 'list-view';
+  const videoBackgroundGray = renderAtMainView && !isGrid && layout !== Layout.Grid;
 
   const topLabelAnimation = renderAtMainView && !isGrid;
   const bottomLabelAnimation = renderAtMainView && !isGrid;
-  const streamWindowBackgroundColorCls = renderAtMainView && !isGrid ? 'fcr-bg-1' : 'fcr-bg-4';
+  const streamWindowBackgroundColorCls = videoBackgroundGray
+    ? 'fcr-bg-3'
+    : renderAtMainView && !isGrid
+    ? 'fcr-bg-1'
+    : 'fcr-bg-4';
   const showMicrophoneIconOnRoleLabel = renderAtMainView;
   const showMicrophoneIconOnBottomRight = renderAtListView;
   const labelSize = renderAtMainView ? 'large' : 'small';
@@ -32,6 +37,7 @@ export const convertStreamUIStatus = (
   const audioIconSize = labelSize === 'large' ? 24 : 16;
   const isHostRemote = stream.role === EduRoleTypeEnum.teacher;
   const renderMode = renderAtMainView && !isGrid ? 0 : 1;
+  const disableAudioVolumeEffect = renderAtMainView && layout !== Layout.Grid;
   return {
     topLabelAnimation,
     bottomLabelAnimation,
@@ -51,5 +57,7 @@ export const convertStreamUIStatus = (
     renderAtListView,
     isHostRemote,
     placement,
+    videoBackgroundGray,
+    disableAudioVolumeEffect,
   };
 };

@@ -12,7 +12,7 @@ import { CSSTransition } from 'react-transition-group';
 export const PresentationView = observer(() => {
   const {
     streamUIStore: { subscribeMass },
-    layoutUIStore: { layout, showListView },
+    layoutUIStore: { layout, showListView, showStatusBar },
     presentationUIStore: {
       mainViewStream,
       listViewStreamsByPage,
@@ -38,7 +38,11 @@ export const PresentationView = observer(() => {
         timeout={200}
         in={showListView}
         classNames={'fcr-layout-content-list-view'}>
-        <div className={classnames(`fcr-layout-content-list-view`)}>
+        <div
+          className={classnames(`fcr-layout-content-list-view`, {
+            'fcr-layout-content-list-view-without-status-bar':
+              layout === Layout.ListOnTop && !showStatusBar,
+          })}>
           <div
             className={classnames(
               `fcr-layout-content-video-list`,
@@ -91,6 +95,7 @@ const ListViewCollapseButton = observer(() => {
 
   return (
     <div
+      onClick={() => direction === 'row' && toggleShowListView()}
       className={classnames(`fcr-layout-content-list-view-collapse-button-${direction}`, {
         'fcr-layout-content-list-view-collapse-button-collapsed': !showListView,
       })}>

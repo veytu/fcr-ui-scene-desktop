@@ -49,11 +49,11 @@ const GalleryContainer = observer(() => {
     subscribeMass(streamsByPage.map((stream) => stream.stream));
   }, [streamsByPage]);
   const outerSize = useMemo(() => {
-    let perCellWidth = bounds.width / numOfCols - 8;
+    let perCellWidth = bounds.width / numOfCols - 5;
 
     let perCellHeight = perCellWidth * 0.5625;
 
-    const maxCellHeight = bounds.height / numOfRows - 8;
+    const maxCellHeight = bounds.height / numOfRows - 5;
 
     if (perCellHeight > maxCellHeight) {
       perCellHeight = maxCellHeight;

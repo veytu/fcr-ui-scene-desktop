@@ -5,7 +5,7 @@
   pointer-events: all;
 }
 .fcr-participants-container {
-  min-height: 590px;
+  min-height: 490px;
   display: flex;
   flex-direction: column;
 }
@@ -31,13 +31,13 @@
   padding: 0;
 }
 .fcr-participants-header {
-  height: 50px;
+  height: 44px;
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 .fcr-participants-footer {
-  height: 60px;
+  height: 50px;
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -46,24 +46,30 @@
 }
 .fcr-participants-title {
   @apply fcr-font-title fcr-text-1;
-  font-size: 20px;
+  font-size: 13px;
   line-height: 20px;
   padding-left: 25px;
 }
 .fcr-participants-count {
-  @apply fcr-font-regular fcr-text-1;
-  font-size: 14px;
-  line-height: 14px;
+  @apply fcr-text-1;
+  font-size: 12px;
   padding-left: 4px;
-  padding-right: 34px;
+  font-size: 300;
+  padding-right: 40px;
+}
+.fcr-participants-search {
+  flex: 1;
+  padding-right: 55px;
 }
 .fcr-participants-table-name {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-left: 21px;
+  padding-left: 15px;
   display: flex;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .fcr-participants-table-name-label {
   padding-left: 21px;
@@ -83,12 +89,15 @@
   font-size: 12px;
   padding-left: 8px;
   line-height: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .fcr-participants-table-icon-wrap {
   @apply fcr-rounded-full;
 
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,26 +130,26 @@
 }
 .fcr-participants-table-remove-title {
   @apply fcr-text-1 fcr-font-title;
-  font-size: 20px;
-  line-height: 20px;
+  font-size: 14px;
+  line-height: 14px;
   padding-bottom: 9px;
-  padding-top: 9px;
 }
 .fcr-participants-table-remove-options {
   display: flex;
   flex-direction: column;
 }
 .fcr-participants-table-remove-options .fcr-radio-label {
+  line-height: 130%;
   white-space: normal;
   padding-top: 8px;
   padding-bottom: 8px;
 }
 
 .fcr-participants-table-remove-btns {
-  padding-top: 16px;
   width: 100%;
   display: flex;
   justify-content: space-between;
+  padding-top: 7px;
 }
 .fcr-participants-table-cell-wrap {
   display: flex;
@@ -151,4 +160,13 @@
 }
 .fcr-participants-container .fcr-table .fcr-table-row:hover {
   @apply fcr-bg-brand-6;
+}
+.fcr-participants-table-remove-options-divider {
+  @apply fcr-border-1;
+  height: 0;
+  width: calc(100% - 37px + 12px);
+  border-top-width: 1px;
+  border-top-style: solid;
+  position: relative;
+  left: 37px;
 }

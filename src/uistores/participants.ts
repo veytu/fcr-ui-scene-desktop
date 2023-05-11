@@ -5,6 +5,7 @@ import { action, computed, observable } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { computedFn } from 'mobx-utils';
 export class ParticipantsUIStore extends EduUIStoreBase {
+  tableIconSize = 28;
   get isHost() {
     return this.getters.isHost;
   }

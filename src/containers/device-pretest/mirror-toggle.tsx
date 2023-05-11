@@ -4,7 +4,7 @@ import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { observer } from 'mobx-react';
 import { useMemo } from 'react';
 
-export const MirrorToggle = observer(() => {
+export const MirrorToggle = observer(({ placement }: { placement: 'setting' | 'pretest' }) => {
   const { deviceSettingUIStore } = useStore();
   const mirrorIconProps = useMemo(() => {
     const enabled = deviceSettingUIStore.isLocalMirrorEnabled;
@@ -19,6 +19,7 @@ export const MirrorToggle = observer(() => {
   const isCameraDeviceEnabled = deviceSettingUIStore.isCameraDeviceEnabled;
   return (
     <PretestDeviceIcon
+      size={placement === 'pretest' ? 'large' : 'small'}
       classNames="fcr-pretest__video-portal__toggles__mirror"
       status={isCameraDeviceEnabled ? 'idle' : 'disabled'}
       tooltip={isCameraDeviceEnabled ? 'Mirror' : 'Mirror, please turn on the camera first'}

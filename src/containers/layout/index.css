@@ -15,9 +15,9 @@
   overflow: hidden;
 }
 .fcr-layout-content-list-view {
+  @apply fcr-bg-3;
   position: relative;
   backdrop-filter: blur(6px);
-  background: #35374180;
   z-index: 1;
 }
 .fcr-layout-content-list-on-top .fcr-layout-content-list-view {
@@ -27,6 +27,11 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: all 0.2s;
+}
+.fcr-layout-content-list-on-top .fcr-layout-content-list-view-without-status-bar {
+  height: 135px;
+  padding-top: 0;
 }
 .fcr-layout-content-list-view.fcr-layout-content-list-view-hide {
   height: 0;
@@ -80,7 +85,7 @@
 }
 .fcr-layout-content-video-list-row {
   flex-direction: row;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .fcr-layout-content-video-list-col {
@@ -107,12 +112,12 @@
   width: fit-content;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px;
 }
 .fcr-gallery-view-stream-wrapper-row {
   width: 100%;
   display: flex;
-  gap: 8px;
+  gap: 5px;
 }
 .fcr-gallery-view-pager {
   top: 0;

@@ -14,7 +14,9 @@ export const BasicSettings = observer(() => {
   return (
     <div className="fcr-pretest-settings">
       <div className="fcr-pretest__settings__item">
-        <span className="fcr-pretest__settings__label">Camera</span>
+        <span className="fcr-pretest__settings__label fcr-pretest__settings__label-title">
+          Camera
+        </span>
         <CameraSelect />
       </div>
       <div className="fcr-pretest__settings__item">

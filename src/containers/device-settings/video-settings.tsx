@@ -29,7 +29,7 @@ export const VideoSettings = () => {
     <div className="fcr-device-settings__video">
       <div className="fcr-device-settings__video-preview-title">
         <span>Effect Preview</span>
-        <MirrorToggle />
+        <MirrorToggle placement="setting" />
       </div>
       <div className="fcr-device-settings__video-preview">
         <LocalVideoPlayer />
