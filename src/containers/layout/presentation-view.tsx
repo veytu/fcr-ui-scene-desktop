@@ -100,7 +100,7 @@ const ListViewCollapseButton = observer(() => {
         'fcr-layout-content-list-view-collapse-button-collapsed': !showListView,
       })}>
       <div
-        onClick={toggleShowListView}
+        onClick={() => direction !== 'row' && toggleShowListView()}
         className={classnames('fcr-layout-content-list-view-collapse-button')}>
         <SvgImg type={SvgIconEnum.FCR_RIGHT2} size={48}></SvgImg>
       </div>
