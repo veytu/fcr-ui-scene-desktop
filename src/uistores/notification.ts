@@ -1,3 +1,4 @@
+import { SvgIconEnum } from '@components/svg-img';
 import { ToastApi } from '@components/toast';
 import {
   AgoraEduClassroomEvent,
@@ -52,13 +53,30 @@ export class NotiticationUIStore extends EduUIStoreBase {
     // teacher grant permission
     if (event === AgoraEduClassroomEvent.TeacherGrantPermission) {
       ToastApi.open({
-        toastProps: { type: 'info', content: 'The teacher invites you to the whiteboard' },
+        persist: true,
+        duration: 15000,
+
+        toastProps: {
+          type: 'warn',
+          icon: SvgIconEnum.FCR_HOST,
+
+          content: 'The teacher invites you to the whiteboard',
+          closable: true,
+        },
       });
     }
     // teacher revoke permission
     if (event === AgoraEduClassroomEvent.TeacherRevokePermission) {
       ToastApi.open({
-        toastProps: { type: 'info', content: 'The teacher cancelled your whiteboard permission' },
+        persist: true,
+        duration: 15000,
+
+        toastProps: {
+          icon: SvgIconEnum.FCR_HOST,
+          type: 'warn',
+          content: 'The teacher cancelled your whiteboard permission',
+          closable: true,
+        },
       });
     }
     // // user accpeted to stage

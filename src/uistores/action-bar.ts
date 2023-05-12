@@ -10,6 +10,7 @@ import {
 } from 'agora-rte-sdk';
 import { isElectron } from '@onlineclass/utils/check';
 import { getConfig } from '@onlineclass/utils/launch-options-holder';
+import { ToastApi } from '@components/toast';
 export class ActionBarUIStore extends EduUIStoreBase {
   @computed get showEndClassButton() {
     return this.getters.isHost;
@@ -111,6 +112,20 @@ export class ActionBarUIStore extends EduUIStoreBase {
     this._disposers = [];
   }
   onInstall(): void {
+    this._disposers.push(
+      computed(() => this.classroomStore.mediaStore.localScreenShareTrackState).observe(
+        ({ oldValue, newValue }) => {
+          if (oldValue && !newValue) {
+            ToastApi.open({
+              toastProps: {
+                type: 'info',
+                content: 'You have stopped sharing',
+              },
+            });
+          }
+        },
+      ),
+    );
     this._disposers.push(
       reaction(
         () => this.screenShareStateAccessor,

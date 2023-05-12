@@ -26,7 +26,7 @@ export const FullscreenButton = () => {
     () => fscreen.removeEventListener('fullscreenchange', handleFullscreenChanged);
   }, []);
   return (
-    <ToolTip placement="bottomRight" content={'Full-screen mode in the webpage'}>
+    <ToolTip placement="bottomRight" content={fullscreen ? 'Exit full-screen' : 'Full-screen'}>
       <StatusBarItemWrapper>
         <div onClick={toggleFullscreen} className="fcr-status-bar-fullscreen">
           <SvgImg

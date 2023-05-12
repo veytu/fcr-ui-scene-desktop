@@ -61,7 +61,10 @@ const LeavePopoverContent = observer(() => {
       <div className="fcr-action-bar-leave-popover-btns">
         {showEndClassButton && (
           <Button
-            onClick={() => updateClassState(ClassState.close)}
+            onClick={async () => {
+              await updateClassState(ClassState.close);
+              leaveClassroom();
+            }}
             block
             size="M"
             styleType="danger">

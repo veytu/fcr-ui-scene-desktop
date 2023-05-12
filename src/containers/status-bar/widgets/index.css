@@ -8,3 +8,6 @@
   justify-content: center;
   cursor: pointer;
 }
+.fcr-status-bar-widget-slot .fcr-minimized-widget-icon:hover {
+  @apply fcr-bg-brand;
+}

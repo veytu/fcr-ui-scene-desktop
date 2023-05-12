@@ -1,4 +1,5 @@
 import { SvgIconEnum } from '@components/svg-img';
+import { ToolTip } from '@components/tooltip';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { observer } from 'mobx-react';
 import { ActionBarItem } from '..';
@@ -10,10 +11,12 @@ export const Chat = observer(() => {
   return (
     <div>
       <div id="fcr-chatroom-slot"></div>
-      <ActionBarItem
-        onClick={openChatDialog}
-        icon={SvgIconEnum.FCR_CHAT2}
-        text={'Chat'}></ActionBarItem>
+      <ToolTip content="Chat">
+        <ActionBarItem
+          onClick={openChatDialog}
+          icon={SvgIconEnum.FCR_CHAT2}
+          text={'Chat'}></ActionBarItem>
+      </ToolTip>
     </div>
   );
 });

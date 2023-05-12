@@ -51,7 +51,7 @@
 .fcr-action-bar-item-text {
   @apply fcr-text-2;
   font-weight: 300;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 12px;
   padding: 0 8px;
 }
@@ -61,4 +61,7 @@
   text-align: center;
   cursor: pointer;
   align-self: center;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }

@@ -1,30 +1,40 @@
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { ActionBarItemWithPopover } from '..';
 import { observer } from 'mobx-react';
 import './index.css';
 import { PredefinedWidgetTrack } from 'agora-common-libs/lib/widget/helper';
+import { ToolTip } from '@components/tooltip';
 export const ToolBox = observer(() => {
   const {
     layoutUIStore: { setHasPopoverShowed },
   } = useStore();
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+
   return (
-    <ActionBarItemWithPopover
-      popoverProps={{
-        onVisibleChange(visible) {
-          if (visible) {
-            setHasPopoverShowed(true);
-          } else {
-            setHasPopoverShowed(false);
-          }
-        },
-        overlayInnerStyle: { width: 'auto' },
-        trigger: 'click',
-        content: <ToolBoxPopoverContent></ToolBoxPopoverContent>,
-      }}
-      icon={SvgIconEnum.FCR_WHITEBOARD_TOOLBOX}
-      text={'ToolBox'}></ActionBarItemWithPopover>
+    <>
+      <ToolTip visible={tooltipVisible} onVisibleChange={setTooltipVisible} content="ToolBox">
+        <div>
+          <ActionBarItemWithPopover
+            popoverProps={{
+              onVisibleChange(visible) {
+                if (visible) {
+                  setTooltipVisible(false);
+                  setHasPopoverShowed(true);
+                } else {
+                  setHasPopoverShowed(false);
+                }
+              },
+              overlayInnerStyle: { width: 'auto' },
+              trigger: 'click',
+              content: <ToolBoxPopoverContent></ToolBoxPopoverContent>,
+            }}
+            icon={SvgIconEnum.FCR_WHITEBOARD_TOOLBOX}
+            text={'ToolBox'}></ActionBarItemWithPopover>
+        </div>
+      </ToolTip>
+    </>
   );
 });
 const ToolBoxPopoverContent = observer(() => {

@@ -3,13 +3,13 @@
 }
 .fcr-device-settings__dialog-wrapper {
   width: 490px;
-  height: 450px;
+  height: 530px;
   display: flex;
   flex-direction: column;
 }
 .fcr-device-settings__header {
   @apply fcr-bg-brand-6 fcr-rounded-16 fcr-border-brand-6 fcr-font-title;
-  height: 36px;
+  height: 32px;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-style: solid;
@@ -24,29 +24,36 @@
 }
 
 .fcr-device-settings__body {
-  @apply fcr-bg-2 fcr-rounded-24 fcr-border-1;
-  flex-grow: 1;
+  @apply fcr-bg-2 fcr-rounded-16 fcr-border-1;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-style: solid;
   border-width: 1px;
   border-top: none;
+  flex: 1;
+  overflow: hidden;
 }
 
 .fcr-device-settings__close {
-  @apply fcr-rounded-full fcr-bg-white;
+  @apply fcr-rounded-full fcr-bg-white fcr-border-transparent;
   position: absolute;
-  right: -7px;
-  top: -5px;
+  right: -11px;
+  top: -11px;
   width: 24px;
   height: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  border-width: 3px;
+  border-style: solid;
+  box-sizing: content-box;
+  background-clip: padding-box;
   color: theme(colors.black);
 }
-
+.fcr-device-settings__close:hover {
+  @apply fcr-border-brand-6;
+}
 .fcr-device-settings {
   display: flex;
   height: 100%;
@@ -96,14 +103,20 @@ li.fcr-device-settings__nav-list-item--active {
 .fcr-device-settings__preview {
   padding: 0 15px 0;
   flex-grow: 1;
+  display: flex;
 }
-
+.fcr-device-settings__video {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 .fcr-device-settings__video-preview {
   @apply fcr-rounded-8;
   width: 360px;
   height: 200px;
   position: relative;
   margin-bottom: 12px;
+  flex-shrink: 0;
 }
 
 .fcr-device-settings__preview .fcr-video-player-wrapper {
@@ -125,9 +138,14 @@ li.fcr-device-settings__nav-list-item--active {
   align-items: center;
   height: 36px;
   font-size: 14px;
+  flex-shrink: 0;
   color: theme(colors.white);
 }
-
+.fcr-device-settings__video-preview-title .fcr-clickabel-icon {
+  @apply fcr-rounded-6 fcr-bg-4;
+  width: 24px;
+  height: 24px;
+}
 .fcr-device-settings__video-preview__sidebar {
   position: absolute;
   height: 100%;
@@ -142,29 +160,34 @@ li.fcr-device-settings__nav-list-item--active {
 .fcr-device-settings__video-preview .fcr-video-player {
   overflow: hidden;
 }
-
+.fcr-device-settings__video-tabs {
+  flex: 1;
+}
 .fcr-device-settings__video-tabs .fcr-tabs {
   width: 100%;
 }
 
 .fcr-device-settings__microphone,
 .fcr-device-settings__speaker {
-  @apply fcr-text-1 fcr-font-title fcr-rounded-16;
+  @apply fcr-text-1 fcr-font-title fcr-rounded-8;
   padding: 0 10px 20px;
 }
 
 .fcr-device-settings__microphone {
   @apply fcr-bg-4;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .fcr-device-settings__speaker {
   @apply fcr-bg-4;
 }
-
+.fcr-device-settings__speaker .fcr-checkbox-label {
+  font-size: 12px;
+}
 .fcr-device-settings__label {
   padding-left: 12px;
   line-height: 36px;
+  font-size: 13px;
 }
 
 .fcr-pretest__settings__volume {

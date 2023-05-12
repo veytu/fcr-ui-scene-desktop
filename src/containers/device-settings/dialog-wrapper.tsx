@@ -16,6 +16,7 @@ export const DeviceSettingsDialog: FC<PropsWithChildren<{ id: string }>> = ({ id
   return (
     // <Rnd enableResizing={false}>
     <BaseDialog
+      width={490}
       wrapClassName="fcr-device-settings__dialog"
       visible={visible}
       afterClose={handleClose}
