@@ -37,15 +37,16 @@ export const ActionBar = observer(() => {
             <CameraDevice></CameraDevice>
           </div>
           <div className="fcr-action-bar-mid">
-            {showToolBox && <ToolBox></ToolBox>}
-            {showWhiteBoard && <Whiteboard></Whiteboard>}
+            <Participants></Participants>
+            <Chat></Chat>
             {showScreenShare && <ScreenShare></ScreenShare>}
             {showRecord && <Record></Record>}
+            {showToolBox && <ToolBox></ToolBox>}
+            {showWhiteBoard && <Whiteboard></Whiteboard>}
           </div>
           <div className="fcr-action-bar-right">
             {/* <RaiseHands></RaiseHands> */}
-            <Chat></Chat>
-            <Participants></Participants>
+
             <Setting></Setting>
             <Leave></Leave>
           </div>
