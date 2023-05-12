@@ -11,14 +11,26 @@ export const ToolBox = observer(() => {
     layoutUIStore: { setHasPopoverShowed },
   } = useStore();
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [popoverVisible, setPopoverVisible] = useState(false);
 
   return (
     <>
-      <ToolTip visible={tooltipVisible} onVisibleChange={setTooltipVisible} content="ToolBox">
+      <ToolTip
+        visible={tooltipVisible}
+        onVisibleChange={(visible: boolean) => {
+          if (popoverVisible) {
+            setTooltipVisible(false);
+            return;
+          }
+          setTooltipVisible(visible);
+        }}
+        content="ToolBox">
         <div>
           <ActionBarItemWithPopover
             popoverProps={{
+              visible: popoverVisible,
               onVisibleChange(visible) {
+                setPopoverVisible(visible);
                 if (visible) {
                   setTooltipVisible(false);
                   setHasPopoverShowed(true);
@@ -28,7 +40,10 @@ export const ToolBox = observer(() => {
               },
               overlayInnerStyle: { width: 'auto' },
               trigger: 'click',
-              content: <ToolBoxPopoverContent></ToolBoxPopoverContent>,
+              content: (
+                <ToolBoxPopoverContent
+                  onClick={() => setPopoverVisible(false)}></ToolBoxPopoverContent>
+              ),
             }}
             icon={SvgIconEnum.FCR_WHITEBOARD_TOOLBOX}
             text={'ToolBox'}></ActionBarItemWithPopover>
@@ -37,7 +52,7 @@ export const ToolBox = observer(() => {
     </>
   );
 });
-const ToolBoxPopoverContent = observer(() => {
+const ToolBoxPopoverContent = observer(({ onClick }: { onClick: () => void }) => {
   const { getters } = useStore();
   const isWidgetActive = (widgetId: string) => getters.activeWidgetIds.includes(widgetId);
   return (
@@ -48,7 +63,14 @@ const ToolBoxPopoverContent = observer(() => {
           // { label: 'Timer', id: 'timer', icon: SvgIconEnum.FCR_V2_TIMER },
           { label: 'Poll', id: 'poll', icon: SvgIconEnum.FCR_V2_VOTE },
         ].map(({ id, icon, label }) => (
-          <ToolBoxItem key={id} id={id} icon={icon} label={label} active={isWidgetActive(id)} />
+          <ToolBoxItem
+            key={id}
+            id={id}
+            icon={icon}
+            label={label}
+            onClick={onClick}
+            active={isWidgetActive(id)}
+          />
         ))}
       </div>
     </div>
@@ -59,9 +81,10 @@ interface ToolBoxItemProps {
   icon: SvgIconEnum;
   label: string;
   active: boolean;
+  onClick: () => void;
 }
 const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
-  const { icon, label, active, id } = props;
+  const { icon, label, active, id, onClick } = props;
   const { widgetUIStore, eduToolApi } = useStore();
 
   const handleClick = () => {
@@ -72,6 +95,7 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
         trackProperties: PredefinedWidgetTrack.TrackCentered,
       });
     }
+    onClick();
   };
 
   return (

@@ -174,7 +174,7 @@ const VideoDeviceListPopoverContent = observer(({ onMoreClick }: { onMoreClick: 
         </div>
       </div>
       <div className="fcr-device-popover-content-more" onClick={onMoreClick}>
-        <SvgImg type={SvgIconEnum.FCR_SETTING} size={32}></SvgImg>
+        <SvgImg type={SvgIconEnum.FCR_SETTING} size={24}></SvgImg>
         <span>More Setting</span>
       </div>
     </div>
@@ -199,7 +199,7 @@ const AudioDeviceListPopoverContent = observer(({ onMoreClick }: { onMoreClick: 
       }}>
       <div className="fcr-device-popover-content-device-list">
         <div className="fcr-device-popover-content-device">
-          <div className="fcr-device-popover-content-device-label">Select Microphone</div>
+          <div className="fcr-device-popover-content-device-label">Microphone</div>
 
           <div className="fcr-device-popover-content-device-options">
             {recordingDevicesList.map((device) => {
@@ -234,7 +234,7 @@ const AudioDeviceListPopoverContent = observer(({ onMoreClick }: { onMoreClick: 
         </div>
       </div>
       <div className="fcr-device-popover-content-more" onClick={onMoreClick}>
-        <SvgImg type={SvgIconEnum.FCR_SETTING} size={32}></SvgImg>
+        <SvgImg type={SvgIconEnum.FCR_SETTING} size={24}></SvgImg>
         <span>More Setting</span>
       </div>
     </div>

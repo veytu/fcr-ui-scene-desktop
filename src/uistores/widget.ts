@@ -311,7 +311,17 @@ export class WidgetUIStore extends EduUIStoreBase {
       });
     }
   }
-
+  @bound
+  private _handlePollActiveStateChanged(state: boolean) {
+    if (this.getters.isStudent && !state) {
+      ToastApi.open({
+        toastProps: {
+          type: 'info',
+          content: 'Teacher has ended the poll.',
+        },
+      });
+    }
+  }
   onInstall() {
     this._registeredWidgets = this._getEnabledWidgets();
     this.classroomStore.widgetStore.addWidgetStateListener(this._stateListener);
@@ -359,6 +369,10 @@ export class WidgetUIStore extends EduUIStoreBase {
               messageType: AgoraExtensionWidgetEvent.WidgetBecomeInactive,
               onMessage: this._handleBecomeInactive,
             });
+            oldController.removeBroadcastListener({
+              messageType: AgoraExtensionWidgetEvent.PollActiveStateChanged,
+              onMessage: this._handlePollActiveStateChanged,
+            });
           }
           // install widgets
           if (controller) {
@@ -375,6 +389,10 @@ export class WidgetUIStore extends EduUIStoreBase {
             controller.addBroadcastListener({
               messageType: AgoraExtensionWidgetEvent.WidgetBecomeInactive,
               onMessage: this._handleBecomeInactive,
+            });
+            controller.addBroadcastListener({
+              messageType: AgoraExtensionWidgetEvent.PollActiveStateChanged,
+              onMessage: this._handlePollActiveStateChanged,
             });
           }
         },

@@ -12,12 +12,16 @@ import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { DialogToolTip } from '@components/tooltip/dialog';
 import { Button } from '@components/button';
 import { Radio, RadioGroup } from '@components/radio';
-import { EduRoleTypeEnum, EduUserStruct } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoleTypeEnum, EduUserStruct } from 'agora-edu-core';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
 import classnames from 'classnames';
 import { ToastApiFactory } from '@components/toast';
 import { useDeviceSwitch } from '@onlineclass/utils/hooks/use-device-switch';
 import { AgoraRteMediaPublishState } from 'agora-rte-sdk';
+import {
+  ParticipantsOrderDirection,
+  ParticipantsTableSortKeysEnum,
+} from '@onlineclass/uistores/participants';
 
 interface ParticipantsContext {
   toastApi: ToastApiFactory | null;
@@ -175,12 +179,13 @@ const TableAuth = observer(({ userUuid, role }: { userUuid: string; role: EduRol
     presentationUIStore: { isBoardWidgetActive },
     boardApi: { grantedUsers, grantPrivilege },
   } = useStore();
+  const isHostLocal = EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
   const isHost = isHostByUserRole(role);
   const granted = grantedUsers.has(userUuid);
   const tooltipContent = isHost ? 'host' : granted ? 'UnAuthorization' : 'Authorization';
   const disabled = !isBoardWidgetActive;
   const handleAuth = () => {
-    !disabled && grantPrivilege(userUuid, !granted);
+    !disabled && isHostLocal && grantPrivilege(userUuid, !granted);
   };
   return (
     <ToolTip placement="bottom" content={tooltipContent}>
@@ -230,17 +235,18 @@ const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
   const actionDisabled = !isHost && !isSelf;
   const { cameraTooltip, handleCameraClick } = useDeviceSwitch(stream);
   const icon = stream?.isVideoStreamPublished ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
+  const iconColor = stream?.isVideoStreamPublished ? {} : { iconSecondary: colors['red']['6'] };
+
   return (
     <ToolTip placement="bottom" content={cameraTooltip}>
       <TableIconWrapper disabled={actionDisabled} onClick={handleCameraClick}>
-        <SvgImg type={icon} size={tableIconSize}></SvgImg>
+        <SvgImg colors={iconColor} type={icon} size={tableIconSize}></SvgImg>
       </TableIconWrapper>
     </ToolTip>
   );
 });
 const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
   const { micTooltip, handleMicrophoneClick } = useDeviceSwitch(stream);
-  const icon = stream?.isMicStreamPublished ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
   const {
     statusBarUIStore: { isHost },
     classroomStore: {
@@ -250,10 +256,14 @@ const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
   } = useStore();
   const isSelf = stream?.fromUser.userUuid === localUser?.userUuid;
   const actionDisabled = !isHost && !isSelf;
+  const icon = stream?.isMicStreamPublished ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
+
+  const iconColor = stream?.isMicStreamPublished ? {} : { iconSecondary: colors['red']['6'] };
+
   return (
     <ToolTip content={micTooltip} placement="bottom">
       <TableIconWrapper disabled={actionDisabled} onClick={handleMicrophoneClick}>
-        <SvgImg type={icon} size={tableIconSize}></SvgImg>
+        <SvgImg colors={iconColor} type={icon} size={tableIconSize}></SvgImg>
       </TableIconWrapper>
     </ToolTip>
   );
@@ -357,7 +367,39 @@ type UserTableItem = {
   stream: EduStreamUI;
   user: EduUserStruct;
 };
-
+const SortedColumnsHeader = observer(({ sortKey }: { sortKey: string }) => {
+  const {
+    participantsUIStore: { orderKey, orderDirection, setOrderDirection, setOrderKey },
+  } = useStore();
+  const [hover, setHover] = useState(false);
+  const active = orderKey === sortKey;
+  const direction: ParticipantsOrderDirection = active ? orderDirection : 'asc';
+  const handleSortClick = () => {
+    if (active) {
+      setOrderDirection(orderDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setOrderKey(sortKey);
+      setOrderDirection('asc');
+    }
+  };
+  return (
+    <div
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      className="fcr-participants-table-sorted-header"
+      onClick={handleSortClick}>
+      {sortKey}
+      <SvgImg
+        className={classnames('fcr-participants-table-sorted-header-icon', {
+          'fcr-participants-table-sorted-header-icon-desc': direction === 'desc',
+          'fcr-participants-table-sorted-header-icon-active': active,
+        })}
+        colors={hover ? { iconPrimary: colors['brand']['6'] } : {}}
+        type={SvgIconEnum.FCR_UPORDER}
+        size={14}></SvgImg>
+    </div>
+  );
+});
 const useParticipantsColumn = () => {
   const hostColumns = [
     {
@@ -369,28 +411,28 @@ const useParticipantsColumn = () => {
       align: 'left',
     },
     {
-      title: 'Auth',
+      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Auth} />,
       width: 50,
       render: (_: unknown, item: UserTableItem) => {
         return <TableAuth role={item.user.userRole} userUuid={item.user.userUuid}></TableAuth>;
       },
     },
     {
-      title: 'Camera',
+      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Camera} />,
       width: 68,
       render: (_: unknown, item: UserTableItem) => {
         return <TableCamera stream={item.stream}></TableCamera>;
       },
     },
     {
-      title: 'Microphone',
+      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Microphone} />,
       width: 92,
       render: (_: unknown, item: UserTableItem) => {
         return <TableMicrophone stream={item.stream}></TableMicrophone>;
       },
     },
     {
-      title: 'Reward',
+      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Reward} />,
       width: 66,
       render: (_: unknown, item: UserTableItem) => {
         return <TableReward role={item.user.userRole} userUuid={item.user.userUuid}></TableReward>;
@@ -413,23 +455,29 @@ const useParticipantsColumn = () => {
       align: 'left',
       width: 85,
     },
-
     {
-      title: 'Camera',
+      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Auth} />,
+      width: 50,
+      render: (_: unknown, item: UserTableItem) => {
+        return <TableAuth role={item.user.userRole} userUuid={item.user.userUuid}></TableAuth>;
+      },
+    },
+    {
+      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Camera} />,
       width: 68,
       render: (_: unknown, item: UserTableItem) => {
         return <TableCamera stream={item.stream}></TableCamera>;
       },
     },
     {
-      title: 'Microphone',
+      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Microphone} />,
       width: 92,
       render: (_: unknown, item: UserTableItem) => {
         return <TableMicrophone stream={item.stream}></TableMicrophone>;
       },
     },
     {
-      title: 'Reward',
+      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Reward} />,
       width: 78,
       render: (_: unknown, item: UserTableItem) => {
         return <TableReward role={item.user.userRole} userUuid={item.user.userUuid}></TableReward>;

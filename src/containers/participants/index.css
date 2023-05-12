@@ -42,13 +42,13 @@
   flex-direction: row;
   gap: 10px;
   align-items: center;
-  padding-left: 20px;
+  padding-left: 15px;
 }
 .fcr-participants-title {
   @apply fcr-font-title fcr-text-1;
   font-size: 13px;
   line-height: 20px;
-  padding-left: 25px;
+  padding-left: 15px;
 }
 .fcr-participants-count {
   @apply fcr-text-1;
@@ -72,7 +72,7 @@
   text-overflow: ellipsis;
 }
 .fcr-participants-table-name-label {
-  padding-left: 21px;
+  padding-left: 15px;
 }
 .fcr-participants-table-name-logo {
   @apply fcr-rounded-full fcr-font-medium fcr-text-white fcr-bg-brand-4;
@@ -87,7 +87,7 @@
   @apply fcr-font-regular fcr-text-white;
 
   font-size: 12px;
-  padding-left: 8px;
+
   line-height: 12px;
   overflow: hidden;
   white-space: nowrap;
@@ -169,4 +169,24 @@
   border-top-style: solid;
   position: relative;
   left: 37px;
+}
+
+.fcr-participants-table-sorted-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  justify-content: center;
+}
+.fcr-participants-table-sorted-header-icon-desc {
+  transform: rotate(180deg);
+}
+.fcr-participants-table-sorted-header-icon:not(.fcr-participants-table-sorted-header-icon-active) {
+  opacity: 0;
+}
+.fcr-participants-table-sorted-header:hover
+  .fcr-participants-table-sorted-header-icon:not(.fcr-participants-table-sorted-header-icon-active) {
+  opacity: 1;
+}
+.fcr-participants-table-sorted-header:hover {
+  @apply fcr-text-brand-6;
 }
