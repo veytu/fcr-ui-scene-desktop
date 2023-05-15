@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import './index.css';
 import { StreamWindow } from '../window';
 import { convertStreamUIStatus, StreamWindowContext } from '../window/context';
-import { CSSProperties, FC, useEffect } from 'react';
+import { CSSProperties, FC, useEffect, useState } from 'react';
 import { ListViewFloatPagination } from '@components/pagination';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { CSSTransition } from 'react-transition-group';
@@ -90,9 +90,30 @@ const ListViewCollapseButton = observer(() => {
   const {
     layoutUIStore: { layout, toggleShowListView, showListView },
   } = useStore();
+  const [showCollapseButton, setShowCollapseButton] = useState(false);
   const direction =
     layout === Layout.ListOnTop ? 'row' : layout === Layout.ListOnRight ? 'col' : 'row';
+  useEffect(() => {
+    if (direction === 'col') {
+      document.addEventListener('mousemove', handleMoueMove);
+    } else {
+      document.removeEventListener('mousemove', handleMoueMove);
+    }
+    return () => {
+      document.removeEventListener('mousemove', handleMoueMove);
+    };
+  }, [direction]);
+  const handleMoueMove = (event: MouseEvent) => {
+    const distanceFromRight = document.documentElement.clientWidth - event.clientX;
 
+    if (distanceFromRight < 300) {
+      setShowCollapseButton(true);
+    } else {
+      setShowCollapseButton(false);
+    }
+  };
+  const colDirectionStyle =
+    direction === 'col' ? (showCollapseButton ? { opacity: 1, transition: 'all .2s' } : {}) : {};
   return (
     <div
       onClick={() => direction === 'row' && toggleShowListView()}
@@ -100,6 +121,7 @@ const ListViewCollapseButton = observer(() => {
         'fcr-layout-content-list-view-collapse-button-collapsed': !showListView,
       })}>
       <div
+        style={colDirectionStyle}
         onClick={() => direction !== 'row' && toggleShowListView()}
         className={classnames('fcr-layout-content-list-view-collapse-button')}>
         <SvgImg type={SvgIconEnum.FCR_RIGHT2} size={48}></SvgImg>
