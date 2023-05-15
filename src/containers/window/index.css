@@ -1,6 +1,9 @@
+.fcr-stream-window-wrap {
+  --stream-window-padding-small: 5px;
+}
 .fcr-stream-window-wrap,
 .fcr-stream-window-placeholder {
-  @apply fcr-bg-4 fcr-rounded-4 fcr-shadow-line-1-.5;
+  @apply fcr-bg-4 fcr-rounded-6 fcr-shadow-line-1-.5;
 
   width: 100%;
   height: 100%;
@@ -32,7 +35,7 @@
   min-width: 81px;
 }
 .fcr-stream-window-player {
-  @apply fcr-rounded-4;
+  @apply fcr-rounded-6;
 
   position: absolute;
   top: 0;
@@ -61,7 +64,7 @@
   padding: 6px 6px;
 }
 .fcr-stream-window-interact-small {
-  padding: 2px 2px;
+  padding: var(--stream-window-padding-small);
 }
 .fcr-stream-window-interact-with-status-bar-visible {
   padding-top: calc(var(--fcr-status-bar-height) + 12px);
@@ -74,6 +77,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.fcr-stream-window-interact-bottom {
+  gap: 6px;
 }
 .fcr-stream-window-user-label {
   @apply fcr-rounded-24 fcr-bg-2;
@@ -234,8 +240,8 @@
   height: 18px;
   position: absolute;
   top: auto;
-  bottom: 2px;
-  right: 2px;
+  bottom: var(--stream-window-padding-small);
+  right: var(--stream-window-padding-small);
 }
 .fcr-stream-window-mute-icon-small > span {
   font-size: 12px;
@@ -274,16 +280,18 @@
   flex-direction: column;
 }
 .fcr-audio-volume-effect {
-  @apply fcr-border-green fcr-rounded-4;
-  border-width: 3px;
+  @apply fcr-border-green fcr-rounded-6;
+  border-width: 2px;
   position: absolute;
-  width: calc(100% + 2px);
-  height: calc(100% + 2px);
+  /* width: calc(100% + 2px);
+  height: calc(100% + 2px); */
+  width: calc(100%);
+  height: calc(100%);
   border-style: solid;
   pointer-events: none;
-  box-sizing: content-box;
-  left: -4px;
-  top: -4px;
+  box-sizing: border-box;
+  left: 0px;
+  top: 0px;
 }
 
 .fcr-stream-window-reward-anim {

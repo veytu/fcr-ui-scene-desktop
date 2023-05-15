@@ -23,7 +23,20 @@ export class NotiticationUIStore extends EduUIStoreBase {
       const { sessionInfo } = EduClassroomConfig.shared;
 
       if (user.userUuid === sessionInfo.userUuid) {
-        this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
+        this.classroomStore.connectionStore.leaveClassroom(
+          LeaveReason.kickOut,
+          new Promise((resolve, reject) => {
+            this.getters.addDialog('confirm', {
+              title: 'Leave Classroom',
+              content: 'You have been removed from the classroom.',
+              closable: false,
+              onOk: resolve,
+              okText: 'Leave the Room',
+              okButtonProps: { styleType: 'danger' },
+              cancelButtonVisible: false,
+            });
+          }),
+        );
       }
     }
     // teacher turn on my mic
@@ -255,7 +268,7 @@ export class NotiticationUIStore extends EduUIStoreBase {
               new Promise((resolve) => {
                 this.getters.addDialog('class-info', {
                   title: 'The host has end the room.',
-                  content: 'The class has ended.Please click the button to leave the classroom.',
+                  content: 'The class has ended. Please click the button to leave the classroom.',
                   actions: [
                     {
                       text: 'Leave the Room',

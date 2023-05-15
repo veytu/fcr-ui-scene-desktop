@@ -22,7 +22,7 @@ export const Share = () => {
         <CopyToClipboard
           text={roomUuid}
           onCopy={() =>
-            ToastApi.open({ toastProps: { type: 'info', content: 'success to copy room id' } })
+            ToastApi.open({ toastProps: { type: 'info', content: 'Room ID copied to clipboard' } })
           }>
           <div className="fcr-share-room-id-copy" data-clipboard-text={shareUrl}>
             <SvgImg size={20} type={SvgIconEnum.FCR_COPY}></SvgImg>
@@ -36,7 +36,9 @@ export const Share = () => {
       <CopyToClipboard
         text={shareUrl as string}
         onCopy={() =>
-          ToastApi.open({ toastProps: { type: 'info', content: 'success to copy share link' } })
+          ToastApi.open({
+            toastProps: { type: 'info', content: 'Invitation link copied to clipboard' },
+          })
         }>
         <Button size="XS" block shape="rounded" preIcon={SvgIconEnum.FCR_LINK}>
           Copy Link

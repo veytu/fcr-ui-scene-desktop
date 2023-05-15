@@ -98,7 +98,9 @@ const Participants = observer(({ columns }: { columns: any }) => {
         };
       }),
     );
-    toastApiRef.current?.open({ toastProps: { type: 'normal', content: 'Mute All' } });
+    toastApiRef.current?.open({
+      toastProps: { type: 'normal', content: 'Mute All', size: 'small' },
+    });
   };
   const handleUnMuteAll = async () => {
     await updateRemotePublishStateBatch(
@@ -110,7 +112,9 @@ const Participants = observer(({ columns }: { columns: any }) => {
         };
       }),
     );
-    toastApiRef.current?.open({ toastProps: { type: 'normal', content: 'Unmute All' } });
+    toastApiRef.current?.open({
+      toastProps: { type: 'normal', content: 'Unmute All', size: 'small' },
+    });
   };
 
   return (

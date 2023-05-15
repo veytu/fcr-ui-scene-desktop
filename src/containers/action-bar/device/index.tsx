@@ -23,6 +23,7 @@ export const AudioRecordinDeviceIcon = observer(
 export const MicrophoneDevice: FC = observer(() => {
   const {
     tootipVisible,
+    popoverOpened,
     handlePopoverVisibleChanged,
     handleTooltipVisibleChanged,
     setPopoverOpened,
@@ -47,6 +48,7 @@ export const MicrophoneDevice: FC = observer(() => {
             <div className="fcr-action-bar-device-text">{text}</div>
           </div>
           <Popover
+            visible={popoverOpened}
             onVisibleChange={handlePopoverVisibleChanged}
             trigger="click"
             content={
@@ -72,6 +74,7 @@ export const MicrophoneDevice: FC = observer(() => {
 export const CameraDevice: FC = observer(() => {
   const {
     tootipVisible,
+    popoverOpened,
     handlePopoverVisibleChanged,
     handleTooltipVisibleChanged,
     setPopoverOpened,
@@ -96,6 +99,7 @@ export const CameraDevice: FC = observer(() => {
             <div className="fcr-action-bar-device-text">{text}</div>
           </div>
           <Popover
+            visible={popoverOpened}
             onVisibleChange={handlePopoverVisibleChanged}
             content={
               <VideoDeviceListPopoverContent
@@ -137,6 +141,7 @@ const useDeviceTooltipVisible = () => {
     visible && setTootipVisible(false);
   };
   return {
+    popoverOpened,
     tootipVisible,
     handleTooltipVisibleChanged,
     handlePopoverVisibleChanged,
@@ -173,9 +178,11 @@ const VideoDeviceListPopoverContent = observer(({ onMoreClick }: { onMoreClick: 
           </div>
         </div>
       </div>
-      <div className="fcr-device-popover-content-more" onClick={onMoreClick}>
-        <SvgImg type={SvgIconEnum.FCR_SETTING} size={24}></SvgImg>
-        <span>More Setting</span>
+      <div className="fcr-device-popover-content-more">
+        <div className={'fcr-device-popover-content-more-item'} onClick={onMoreClick}>
+          <SvgImg type={SvgIconEnum.FCR_SETTING} size={24}></SvgImg>
+          <span>More Setting</span>
+        </div>
       </div>
     </div>
   );
@@ -233,9 +240,11 @@ const AudioDeviceListPopoverContent = observer(({ onMoreClick }: { onMoreClick: 
           </div>
         </div>
       </div>
-      <div className="fcr-device-popover-content-more" onClick={onMoreClick}>
-        <SvgImg type={SvgIconEnum.FCR_SETTING} size={24}></SvgImg>
-        <span>More Setting</span>
+      <div className="fcr-device-popover-content-more">
+        <div className={'fcr-device-popover-content-more-item'} onClick={onMoreClick}>
+          <SvgImg type={SvgIconEnum.FCR_SETTING} size={24}></SvgImg>
+          <span>More Setting</span>
+        </div>
       </div>
     </div>
   );

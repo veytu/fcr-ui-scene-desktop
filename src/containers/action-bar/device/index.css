@@ -76,7 +76,7 @@
   flex-direction: row;
   align-items: center;
   gap: 10px;
-  padding-left: 12px;
+  padding: 0 10px;
   user-select: none;
   cursor: pointer;
   margin-top: 10px;
@@ -84,4 +84,16 @@
 .fcr-device-popover-content-more > span {
   @apply fcr-text-2 fcr-font-medium;
   font-size: 12px;
+}
+.fcr-device-popover-content-more-item {
+  @apply fcr-rounded-4;
+  height: 32px;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding-left: 3px;
+  gap: 8px;
+}
+.fcr-device-popover-content-more-item:hover {
+  @apply fcr-bg-brand-6;
 }

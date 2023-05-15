@@ -110,7 +110,20 @@ export class OnlineclassUIStore {
       await joinClassroom();
     } catch (e) {
       if (AGError.isOf(e as AGError, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
-        return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
+        return this.classroomStore.connectionStore.leaveClassroom(
+          LeaveReason.kickOut,
+          new Promise((resolve, reject) => {
+            this.getters.addDialog('confirm', {
+              title: 'Leave Classroom',
+              content: 'You have been removed from the classroom.',
+              closable: false,
+              onOk: resolve,
+              okText: 'Leave the Room',
+              okButtonProps: { styleType: 'danger' },
+              cancelButtonVisible: false,
+            });
+          }),
+        );
       }
 
       return this.classroomStore.connectionStore.leaveClassroom(

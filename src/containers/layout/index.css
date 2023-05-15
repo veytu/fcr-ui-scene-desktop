@@ -85,7 +85,8 @@
 }
 .fcr-layout-content-video-list-row {
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
+  padding-bottom: 2px;
 }
 
 .fcr-layout-content-video-list-col {
@@ -134,7 +135,7 @@
   z-index: 10;
 }
 .fcr-layout-content-list-view-collapse-button-row {
-  height: 11px;
+  height: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -144,7 +145,7 @@
   transform: rotate(-90deg);
 }
 .fcr-layout-content-list-view-collapse-button-row:hover {
-  @apply fcr-bg-3;
+  @apply fcr-bg-1;
 }
 .fcr-layout-content-list-view-collapse-button-col {
   position: absolute;

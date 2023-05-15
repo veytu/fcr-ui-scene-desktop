@@ -2,6 +2,8 @@
   @apply fcr-bg-1;
   height: 100%;
   padding: 25px 32px;
+  display: flex;
+  flex-direction: column;
 }
 
 .fcr-pretest__header {
@@ -23,14 +25,23 @@
 .fcr-pretest__logo {
   width: 239px;
 }
-
+.fcr-pretest__content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+}
+@media (max-height: 782px) {
+  .fcr-pretest__content {
+    align-items: flex-start;
+  }
+}
 .fcr-pretest__center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 450px;
-  min-height: 690px;
+  /* min-height: 690px; */
+  flex-shrink: 0;
+  height: fit-content;
 }
 
 .fcr-pretest__video-portal {

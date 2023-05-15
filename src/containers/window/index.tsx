@@ -27,12 +27,21 @@ export const StreamWindow: FC = observer(() => {
   const [mouseEnter, setMouseEnter] = useState(false);
   const {
     layoutUIStore: { mouseEnterClass },
+    streamUIStore: { pinDisabled },
   } = useStore();
+  const { addPin } = usePinStream();
+  const stream = streamWindowContext?.stream;
+  const handleDoubleClick = () => {
+    if (stream) {
+      !pinDisabled && addPin(stream.stream.streamUuid);
+    }
+  };
   return (
     <StreamWindowMouseContext.Provider
       value={{ mouseEnterWindow: mouseEnter, mouseEnterClass: mouseEnterClass }}>
       <div
         className={classnames('fcr-stream-window-wrap')}
+        onDoubleClick={handleDoubleClick}
         onMouseLeave={() => {
           setMouseEnter(false);
         }}
@@ -84,13 +93,9 @@ const StreamPlayer = observer(() => {
     streamUIStore: { updateVideoDom, removeVideoDom, pinDisabled },
     deviceSettingUIStore: { isLocalMirrorEnabled },
   } = useStore();
-  const { addPin } = usePinStream();
+
   const { videoRenderable } = useVideoRenderable();
-  const handleDoubleClick = () => {
-    if (stream) {
-      !pinDisabled && addPin(stream.stream.streamUuid);
-    }
-  };
+
   useEffect(() => {
     if (stream) {
       if (stream.isLocal) {
@@ -115,7 +120,6 @@ const StreamPlayer = observer(() => {
   return (
     <div
       ref={ref}
-      onDoubleClick={handleDoubleClick}
       className={classnames('fcr-stream-window-player', {
         'fcr-stream-window-player-gray-bg': streamWindowContext?.videoBackgroundGray,
       })}></div>
@@ -209,7 +213,7 @@ const StreamActions = observer(() => {
   const size = streamWindowContext?.labelSize;
   const {
     participantsUIStore: { sendReward },
-    streamUIStore: { pinnedStreamUuid, pinDisabled },
+    streamUIStore: { pinnedStreamUuid, pinDisabled, isUserGranted },
     boardApi: { grantPrivilege },
     classroomStore: {
       userStore: { kickOutOnceOrBan },
@@ -217,6 +221,7 @@ const StreamActions = observer(() => {
     statusBarUIStore: { isHost },
   } = useStore();
   const { addPin, removePin } = usePinStream();
+  const isGranted = isUserGranted(streamWindowContext?.stream.fromUser.userUuid || '');
 
   const pinned = pinnedStreamUuid === streamWindowContext?.stream.stream.streamUuid;
 
@@ -266,11 +271,11 @@ const StreamActions = observer(() => {
         <SvgImg
           size={20}
           type={SvgIconEnum.FCR_HOST}
-          colors={{ iconPrimary: colors['yellow'] }}></SvgImg>
+          colors={isGranted ? { iconPrimary: colors['yellow'] } : {}}></SvgImg>
       ),
-      label: 'Grant Authorization',
+      label: isGranted ? 'Deauthorization' : 'Authorization',
       onClick: () => {
-        grantPrivilege(userUuid, true);
+        grantPrivilege(userUuid, !isGranted);
       },
       visible: showStreamWindowHostAction,
     },

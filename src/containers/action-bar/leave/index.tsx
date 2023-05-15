@@ -49,6 +49,7 @@ export const LeaveCheck = observer(() => {
 const LeavePopoverContent = observer(() => {
   const {
     actionBarUIStore: { showEndClassButton, leaveClassroom },
+    layoutUIStore: { addDialog },
     classroomStore: {
       roomStore: { updateClassState },
     },
@@ -62,8 +63,14 @@ const LeavePopoverContent = observer(() => {
         {showEndClassButton && (
           <Button
             onClick={async () => {
-              await updateClassState(ClassState.close);
-              leaveClassroom();
+              addDialog('confirm', {
+                title: 'End the Classroom',
+                content: 'Are you sure you want to end the classroom?',
+                onOk: async () => {
+                  await updateClassState(ClassState.close);
+                  leaveClassroom();
+                },
+              });
             }}
             block
             size="M"

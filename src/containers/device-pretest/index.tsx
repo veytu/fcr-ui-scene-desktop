@@ -53,12 +53,14 @@ export const DevicePretest = observer(() => {
           <SvgImg type={SvgIconEnum.FCR_CLOSE} />
         </button>
       </div>
-      {/* center area */}
-      <div className="fcr-pretest__center">
-        <VideoPortal />
-        <div className="fcr-pretest__settings">
-          <FashionTabs items={tabItems} activeKey={activeTab} onChange={handleActiveTab} />
-          {tabContents[activeTab]}
+      <div className="fcr-pretest__content fcr-scrollbar-override">
+        {/* center area */}
+        <div className="fcr-pretest__center">
+          <VideoPortal />
+          <div className="fcr-pretest__settings">
+            <FashionTabs items={tabItems} activeKey={activeTab} onChange={handleActiveTab} />
+            {tabContents[activeTab]}
+          </div>
         </div>
       </div>
     </div>
