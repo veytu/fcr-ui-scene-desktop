@@ -35,3 +35,14 @@ export const fetchMediaFileByUrl = async ({
 
   return Promise.reject('Not implemented');
 };
+export const formatRoomID = (id: string, separator = ' ') => {
+  id = id.replace(/\s+/g, '');
+  if (id.length > 9) {
+    id = id.slice(0, 9);
+  }
+  const result = [];
+  for (let i = 0; i < id.length; i = i + 3) {
+    result.push(id.slice(i, i + 3));
+  }
+  return result.join(separator);
+};

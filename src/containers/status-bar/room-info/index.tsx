@@ -8,8 +8,9 @@ import { StatusBarItemWrapper } from '..';
 import { NetworkConnection, NetworkDetail } from '../network';
 import { Share } from '../share';
 import classnames from 'classnames';
-
+import { isNumber } from 'lodash';
 import './index.css';
+import { formatRoomID } from '@onlineclass/utils';
 export const StatusBarInfo: FC = () => {
   const ref = useRef<HTMLSpanElement | null>(null);
   const {
@@ -24,7 +25,7 @@ export const StatusBarInfo: FC = () => {
         ToastApi.open({
           toastProps: {
             type: 'info',
-            content: 'copy success',
+            content: 'Room ID copied to clipboard',
           },
         });
       });
@@ -57,7 +58,7 @@ export const StatusBarInfo: FC = () => {
         <div className={classnames('fcr-status-bar-info-id', 'fcr-divider')}>
           <span>ID:</span>
           <span ref={ref} data-clipboard-text={roomUuid}>
-            {roomUuid}
+            {isNumber(roomUuid) ? formatRoomID(roomUuid) : roomUuid}
           </span>
         </div>
         <PopoverWithTooltip
