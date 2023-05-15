@@ -161,6 +161,9 @@
   justify-content: center;
   transition: all 0.2s;
 }
+.fcr-layout-content-list-view-collapse-button-col::after {
+  content: '';
+}
 .fcr-layout-content-list-view-collapse-button-col .fcr-layout-content-list-view-collapse-button {
   @apply fcr-bg-2;
   display: flex;

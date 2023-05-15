@@ -6,6 +6,7 @@ import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { Layout } from '@onlineclass/uistores/type';
 import { usePinStream } from '@onlineclass/utils/hooks/use-pin-stream';
+import { ToolTip } from '@components/tooltip';
 const interactLabelGroupSizeMap = {
   'status-bar': 'normal',
   'list-view': 'small',
@@ -32,6 +33,18 @@ export const InteractLabelGroup = observer(
     const showPinned =
       pinnedStream?.fromUser.userUuid === userUuid && placement === 'main-view' && !pinDisabled;
     const { removePin } = usePinStream();
+    const rewardItem = (
+      <div
+        className={classnames('fcr-stream-window-student-interact-item', {
+          'fcr-bg-brand-6': placement === 'status-bar',
+          'fcr-bg-2': placement !== 'status-bar',
+        })}>
+        <SvgImg type={SvgIconEnum.FCR_REWARD}></SvgImg>
+        <span>{reward || 0}</span>
+      </div>
+    );
+    const rewardItemRenderer =
+      placement === 'status-bar' ? <ToolTip content="You ward">{rewardItem}</ToolTip> : rewardItem;
     return (
       <div
         className={classnames(
@@ -43,16 +56,7 @@ export const InteractLabelGroup = observer(
             <SvgImg type={SvgIconEnum.FCR_HOST}></SvgImg>
           </div>
         )}
-        {showReward && (
-          <div
-            className={classnames('fcr-stream-window-student-interact-item', {
-              'fcr-bg-brand-6': placement === 'status-bar',
-              'fcr-bg-2': placement !== 'status-bar',
-            })}>
-            <SvgImg type={SvgIconEnum.FCR_REWARD}></SvgImg>
-            <span>{reward || 0}</span>
-          </div>
-        )}
+        {showReward && rewardItemRenderer}
 
         {showPinned && (
           <div

@@ -2,6 +2,8 @@ import { Popover } from '@components/popover';
 import { Radio } from '@components/radio';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { ToolTip } from '@components/tooltip';
+import { MicrophoneIndicator } from '@components/svg-img/mic';
+
 import { FC, useState } from 'react';
 import { ActionBarItemWrapper } from '..';
 import { observer } from 'mobx-react';
@@ -13,11 +15,20 @@ import { themeVal } from '@ui-kit-utils/tailwindcss';
 const colors = themeVal('colors');
 export const AudioRecordinDeviceIcon = observer(
   ({ size = 32, stream }: { size?: number; stream?: EduStreamUI }) => {
-    const isMute = stream?.isMicStreamPublished;
-    const icon = isMute ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
-    const color = !isMute ? { iconSecondary: colors['red']['6'] } : {};
-
-    return <SvgImg type={icon} colors={color} size={size}></SvgImg>;
+    const isMute = !stream?.isMicStreamPublished;
+    const {
+      streamUIStore: { remoteStreamVolume, localVolume },
+    } = useStore();
+    const isLocalStream = stream?.isLocal;
+    const volume = isLocalStream ? localVolume : remoteStreamVolume(stream);
+    return isMute ? (
+      <SvgImg
+        type={SvgIconEnum.FCR_NOMUTE}
+        colors={{ iconSecondary: colors['red']['6'] }}
+        size={size}></SvgImg>
+    ) : (
+      <MicrophoneIndicator size={size} voicePercent={volume} />
+    );
   },
 );
 export const MicrophoneDevice: FC = observer(() => {

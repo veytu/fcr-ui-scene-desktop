@@ -10,13 +10,14 @@ export class EduTool {
   private _controller?: AgoraWidgetController;
   private _disposers: IReactionDisposer[] = [];
   @observable
-  private _minimizedStateMap = new Map<string, { icon: SvgIconEnum }>();
+  private _minimizedStateMap = new Map<string, { icon: SvgIconEnum; tooltip?: string }>();
 
   @computed
   get minimizedWidgetIcons() {
-    return Array.from(this._minimizedStateMap.entries()).map(([widgetId, { icon }]) => ({
+    return Array.from(this._minimizedStateMap.entries()).map(([widgetId, { icon ,tooltip}]) => ({
       icon,
       widgetId,
+      tooltip
     }));
   }
 
@@ -29,13 +30,15 @@ export class EduTool {
     minimized,
     widgetId,
     icon,
+    tooltip,
   }: {
     minimized: boolean;
     widgetId: string;
     icon: SvgIconEnum;
+    tooltip?: string;
   }) {
     if (minimized) {
-      this._minimizedStateMap.set(widgetId, { icon });
+      this._minimizedStateMap.set(widgetId, { icon, tooltip });
     } else {
       this._minimizedStateMap.delete(widgetId);
     }

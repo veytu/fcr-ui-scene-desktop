@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { Popover } from '@components/popover';
 import { Button } from '@components/button';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ClassState } from 'agora-edu-core';
 export const Leave = observer(() => {
   const {
@@ -26,20 +26,30 @@ export const LeaveCheck = observer(() => {
     actionBarUIStore: { setShowLeaveOption },
     layoutUIStore: { setHasPopoverShowed },
   } = useStore();
+  const [popoverVisible, setPopoverVisible] = useState(false);
   useEffect(() => {
-    setHasPopoverShowed(true);
-    return () => {
-      setHasPopoverShowed(false);
-    };
+    setPopoverVisible(true);
   }, []);
+  const hanldleVisibleChange = (visible: boolean) => {
+    setPopoverVisible(visible);
+  };
+  const afterVisibleChange = (visible: boolean) => {
+    setHasPopoverShowed(visible);
+    if (!visible) {
+      setShowLeaveOption(false);
+    }
+  };
   return (
     <Popover
       placement="topRight"
-      visible
+      trigger="click"
+      visible={popoverVisible}
+      afterVisibleChange={afterVisibleChange}
+      onVisibleChange={hanldleVisibleChange}
       overlayInnerStyle={{ width: 289 }}
       content={<LeavePopoverContent></LeavePopoverContent>}>
       <div className="fcr-action-bar-cancel-leave">
-        <Button onClick={() => setShowLeaveOption(false)} size="M" styleType="gray">
+        <Button onClick={() => setPopoverVisible(false)} size="M" styleType="gray">
           Cancel
         </Button>
       </div>
