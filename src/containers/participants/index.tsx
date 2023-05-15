@@ -187,43 +187,61 @@ const TableAuth = observer(({ userUuid, role }: { userUuid: string; role: EduRol
   const isHost = isHostByUserRole(role);
   const granted = grantedUsers.has(userUuid);
   const tooltipContent = isHost ? 'host' : granted ? 'UnAuthorization' : 'Authorization';
-  const disabled = !isBoardWidgetActive;
+  const disabled = !isBoardWidgetActive || !isHostLocal;
   const handleAuth = () => {
     !disabled && isHostLocal && grantPrivilege(userUuid, !granted);
   };
   return (
-    <ToolTip placement="bottom" content={tooltipContent}>
-      <div className="fcr-participants-table-auth">
-        {isHost ? (
-          'Host'
-        ) : (
-          <TableIconWrapper onClick={handleAuth}>
-            <SvgImg
-              type={SvgIconEnum.FCR_HOST}
-              colors={{ iconPrimary: granted ? colors['yellow'] : colors['icon-1'] }}
-              size={tableIconSize}></SvgImg>
-          </TableIconWrapper>
-        )}
-      </div>
-    </ToolTip>
+    <div className="fcr-participants-table-auth">
+      {isHost ? (
+        'Host'
+      ) : (
+        <TableIconWrapper tooltip={tooltipContent} disabled={disabled} onClick={handleAuth}>
+          <SvgImg
+            type={SvgIconEnum.FCR_HOST}
+            colors={{ iconPrimary: granted ? colors['yellow'] : colors['icon-1'] }}
+            size={tableIconSize}></SvgImg>
+        </TableIconWrapper>
+      )}
+    </div>
   );
 });
-const TableIconWrapper: FC<PropsWithChildren<{ onClick?: () => void; disabled?: boolean }>> = (
-  props,
-) => {
-  const { children, disabled = false, ...others } = props;
+const TableIconWrapper: FC<
+  PropsWithChildren<{ onClick?: () => void; disabled?: boolean; tooltip?: string }>
+> = (props) => {
+  const { children, disabled = false, tooltip, ...others } = props;
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const handleVisibleChanged = (visible: boolean) => {
+    if (!tooltip || disabled) {
+      return setTooltipVisible(false);
+    }
+    setTooltipVisible(visible);
+  };
   return (
-    <div
-      className={classnames('fcr-participants-table-cell-wrap', {
-        'fcr-participants-table-cell-wrap-disabled': disabled,
-      })}>
+    <ToolTip
+      visible={tooltipVisible}
+      onVisibleChange={handleVisibleChanged}
+      placement="bottom"
+      content={tooltip}>
       <div
-        {...others}
-        onClick={() => !disabled && props.onClick?.()}
-        className="fcr-participants-table-icon-wrap">
-        {children}
+        className={classnames('fcr-participants-table-cell-wrap', {
+          'fcr-participants-table-cell-wrap-disabled': disabled,
+        })}>
+        <div
+          {...others}
+          onClick={() => !disabled && props.onClick?.()}
+          className={classnames('fcr-participants-table-icon-wrap', {
+            'fcr-participants-table-icon-wrap-disable': disabled,
+          })}>
+          <div
+            style={{
+              pointerEvents: disabled ? 'none' : 'all',
+            }}>
+            {children}
+          </div>
+        </div>
       </div>
-    </div>
+    </ToolTip>
   );
 };
 
@@ -242,11 +260,9 @@ const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
   const iconColor = stream?.isVideoStreamPublished ? {} : { iconSecondary: colors['red']['6'] };
 
   return (
-    <ToolTip placement="bottom" content={cameraTooltip}>
-      <TableIconWrapper disabled={actionDisabled} onClick={handleCameraClick}>
-        <SvgImg colors={iconColor} type={icon} size={tableIconSize}></SvgImg>
-      </TableIconWrapper>
-    </ToolTip>
+    <TableIconWrapper tooltip={cameraTooltip} disabled={actionDisabled} onClick={handleCameraClick}>
+      <SvgImg colors={iconColor} type={icon} size={tableIconSize}></SvgImg>
+    </TableIconWrapper>
   );
 });
 const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
@@ -265,11 +281,12 @@ const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
   const iconColor = stream?.isMicStreamPublished ? {} : { iconSecondary: colors['red']['6'] };
 
   return (
-    <ToolTip content={micTooltip} placement="bottom">
-      <TableIconWrapper disabled={actionDisabled} onClick={handleMicrophoneClick}>
-        <SvgImg colors={iconColor} type={icon} size={tableIconSize}></SvgImg>
-      </TableIconWrapper>
-    </ToolTip>
+    <TableIconWrapper
+      tooltip={micTooltip}
+      disabled={actionDisabled}
+      onClick={handleMicrophoneClick}>
+      <SvgImg colors={iconColor} type={icon} size={tableIconSize}></SvgImg>
+    </TableIconWrapper>
   );
 });
 const TableReward = observer(({ userUuid, role }: { userUuid: string; role: EduRoleTypeEnum }) => {
@@ -286,14 +303,15 @@ const TableReward = observer(({ userUuid, role }: { userUuid: string; role: EduR
   return isStreamFromHost ? (
     <>{'-'}</>
   ) : (
-    <ToolTip placement="bottom" content="Reward">
-      <TableIconWrapper disabled={actionDisabled} onClick={() => sendReward(userUuid)}>
-        <>
-          {rewards > 0 && <div className="fcr-participants-table-rewards">{rewards}</div>}
-          <SvgImg type={SvgIconEnum.FCR_REWARD} size={tableIconSize}></SvgImg>
-        </>
-      </TableIconWrapper>
-    </ToolTip>
+    <TableIconWrapper
+      tooltip={'Reward'}
+      disabled={actionDisabled}
+      onClick={() => sendReward(userUuid)}>
+      <>
+        {rewards > 0 && <div className="fcr-participants-table-rewards">{rewards}</div>}
+        <SvgImg type={SvgIconEnum.FCR_REWARD} size={tableIconSize}></SvgImg>
+      </>
+    </TableIconWrapper>
   );
 });
 const TableRemove = observer(({ userUuid, role }: { userUuid: string; role: EduRoleTypeEnum }) => {
@@ -306,23 +324,21 @@ const TableRemove = observer(({ userUuid, role }: { userUuid: string; role: EduR
   return isStreamFromHost ? (
     <>{'-'}</>
   ) : (
-    <ToolTip placement="bottom" content="Remove">
-      <DialogToolTip
-        visible={dialogVisible}
-        onVisibleChange={setDialogVisible}
-        onClose={() => setDialogVisible(false)}
-        content={
-          <RemoveDialogContent
-            userUuid={userUuid}
-            onClose={() => setDialogVisible(false)}></RemoveDialogContent>
-        }
-        trigger="click"
-        placement="right">
-        <TableIconWrapper>
-          <SvgImg type={SvgIconEnum.FCR_ONELEAVE} size={tableIconSize}></SvgImg>
-        </TableIconWrapper>
-      </DialogToolTip>
-    </ToolTip>
+    <DialogToolTip
+      visible={dialogVisible}
+      onVisibleChange={setDialogVisible}
+      onClose={() => setDialogVisible(false)}
+      content={
+        <RemoveDialogContent
+          userUuid={userUuid}
+          onClose={() => setDialogVisible(false)}></RemoveDialogContent>
+      }
+      trigger="click"
+      placement="right">
+      <TableIconWrapper tooltip="Remove">
+        <SvgImg type={SvgIconEnum.FCR_ONELEAVE} size={tableIconSize}></SvgImg>
+      </TableIconWrapper>
+    </DialogToolTip>
   );
 });
 const RemoveDialogContent = observer(

@@ -103,8 +103,11 @@
   justify-content: center;
   position: relative;
 }
-.fcr-participants-table-icon-wrap:hover {
+.fcr-participants-table-icon-wrap:not(.fcr-participants-table-icon-wrap-disable):hover {
   @apply fcr-bg-brand-4;
+}
+.fcr-participants-table-icon-wrap-disable {
+  cursor: not-allowed;
 }
 .fcr-participants-table-auth {
   display: flex;
