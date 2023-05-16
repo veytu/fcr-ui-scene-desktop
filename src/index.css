@@ -1,7 +1,8 @@
 :root {
   --fcr-status-bar-height: 36px;
-
   --fcr-action-bar-height: 58px;
+  --fcr-top-list-view-height: 135px;
+  --fcr-right-list-view-width: 210px;
 }
 
 .fcr-classroom-viewport {

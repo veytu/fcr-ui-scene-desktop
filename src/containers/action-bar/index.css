@@ -50,7 +50,7 @@
 }
 .fcr-action-bar-item-text {
   @apply fcr-text-2;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 12px;
   line-height: 12px;
   padding: 0 8px;
