@@ -184,7 +184,7 @@
   transform: rotate(180deg);
 }
 .fcr-participants-table-sorted-header-icon:not(.fcr-participants-table-sorted-header-icon-active) {
-  opacity: 0;
+  opacity: 0.2;
 }
 .fcr-participants-table-sorted-header:hover
   .fcr-participants-table-sorted-header-icon:not(.fcr-participants-table-sorted-header-icon-active) {

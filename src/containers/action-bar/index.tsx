@@ -110,9 +110,9 @@ export const ActionBarItemWithPopover: FC<ActionBarItemWithPopoverProps> = (prop
   return (
     <Popover
       {...popoverProps}
-      onVisibleChange={(visible) => {
+      afterVisibleChange={(visible) => {
         setPopoverOpend(visible);
-        popoverProps?.onVisibleChange?.(visible);
+        popoverProps?.afterVisibleChange?.(visible);
       }}>
       <ActionBarItem active={popoverOpened} icon={icon} text={text}></ActionBarItem>
     </Popover>

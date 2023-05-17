@@ -2,6 +2,7 @@ import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
+import { ToolTip } from '@components/tooltip';
 
 export const VirtualBackground = observer(() => {
   const { deviceSettingUIStore } = useStore();
@@ -21,20 +22,23 @@ export const VirtualBackground = observer(() => {
   return (
     <div className="fcr-pretest-virtual-background">
       <ul className="fcr-pretest-virtual-background__list">
-        <li className={noneButtonCls}>
-          <div
-            className="fcr-pretest-virtual-background__list-item-inner"
-            onClick={closeVirtualBackground}>
-            <div className="fcr-pretest-virtual-background__check">
-              <SvgImg
-                className="fcr-pretest-beauty-filter__list-item-status-icon"
-                type={SvgIconEnum.FCR_SETTING_NONE}
-                size={40}
-                colors={{ iconPrimary: 'currentColor' }}
-              />
+        <ToolTip content="None">
+          <li className={noneButtonCls}>
+            <div
+              className="fcr-pretest-virtual-background__list-item-inner"
+              onClick={closeVirtualBackground}>
+              <div className="fcr-pretest-virtual-background__check">
+                <SvgImg
+                  className="fcr-pretest-beauty-filter__list-item-status-icon"
+                  type={SvgIconEnum.FCR_SETTING_NONE}
+                  size={40}
+                  colors={{ iconPrimary: 'currentColor' }}
+                />
+              </div>
             </div>
-          </div>
-        </li>
+          </li>
+        </ToolTip>
+
         {virtualBackgroundList.map(({ url, type }, index) => {
           const isActive = isVirtualBackgroundEnabled && url === activeBackgroundUrl;
 

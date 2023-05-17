@@ -24,20 +24,24 @@ export const RecordStatus = observer(() => {
     : recordOnHold
     ? 'Paused'
     : 'Recording';
+
   const recordActive = isRecording && !recordOnHold;
   return !isRecordStoped ? (
     <StatusBarItemWrapper>
       <div className="fcr-status-bar-record">
-        <div className="fcr-status-bar-record-status">
-          <SvgImg
-            className={classnames({ 'fcr-status-bar-record-starting': recordActive })}
-            colors={{
-              iconPrimary: recordActive ? colors['red']['6'] : colors['notsb-inverse'],
-            }}
-            type={SvgIconEnum.FCR_RECORDING_STOP}
-            size={20}></SvgImg>
-          <span>{text}</span>
-        </div>
+        <ToolTip content={'Record'}>
+          <div className="fcr-status-bar-record-status">
+            <SvgImg
+              className={classnames({ 'fcr-status-bar-record-starting': recordActive })}
+              colors={{
+                iconPrimary: recordActive ? colors['red']['6'] : colors['notsb-inverse'],
+              }}
+              type={SvgIconEnum.FCR_RECORDING_STOP}
+              size={20}></SvgImg>
+            <span>{text}</span>
+          </div>
+        </ToolTip>
+
         {isHost && isRecording && (
           <ToolTip content={recordOnHold ? 'Click to start' : 'Click to pause'}>
             <div className="fcr-status-bar-record-action fcr-divider" onClick={handleRecordStatus}>

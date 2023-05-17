@@ -33,7 +33,8 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
       });
     }
   };
-  const cameraTooltip = stream?.isVideoStreamPublished
+  const localCameraTooltip = stream?.isVideoStreamPublished ? 'Turn off the camera' : 'Start video';
+  const remoteCameraTooltip = stream?.isVideoStreamPublished
     ? 'Turn off the camera'
     : 'Request to start video';
   const handleCameraClick = () => {
@@ -49,8 +50,10 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
       }
     }
   };
-
-  const micTooltip = stream?.isMicStreamPublished ? 'Turn off the microphone' : 'Request to unmute';
+  const localMicTooltip = stream?.isMicStreamPublished ? 'Mute' : 'Unmute';
+  const remoteMicTooltip = stream?.isMicStreamPublished
+    ? 'Turn off the microphone'
+    : 'Request to unmute';
   const handleMicrophoneClick = () => {
     if (stream?.isLocal) {
       toggleLocalAudioRecordingDevice();
@@ -64,8 +67,8 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
     }
   };
   return {
-    cameraTooltip,
-    micTooltip,
+    cameraTooltip: stream?.isLocal ? localCameraTooltip : remoteCameraTooltip,
+    micTooltip: stream?.isLocal ? localMicTooltip : remoteMicTooltip,
     micEnabled,
     cameraEnabled,
     handleCameraClick,

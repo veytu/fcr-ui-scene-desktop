@@ -44,7 +44,7 @@ export const InteractLabelGroup = observer(
       </div>
     );
     const rewardItemRenderer =
-      placement === 'status-bar' ? <ToolTip content="You ward">{rewardItem}</ToolTip> : rewardItem;
+      placement === 'status-bar' ? <ToolTip content="Your ward">{rewardItem}</ToolTip> : rewardItem;
     return (
       <div
         className={classnames(
