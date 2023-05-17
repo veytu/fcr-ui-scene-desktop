@@ -46,30 +46,15 @@ export const Widget = observer(({ widget }: { widget: AgoraWidgetBase }) => {
   }, []);
 
   const renderWidgetInner = () => {
-    const tsw = widget as unknown as AgoraTrackSyncedWidget;
-    if (tsw.track) {
-      return (
-        <WidgetTrackControl widget={widget}>
-          <div
-            className="fcr-widget-inner"
-            ref={(ref) => {
-              if (ref) widget.render(ref);
-              else widget.unload();
-            }}
-          />
-        </WidgetTrackControl>
-      );
-    } else {
-      return (
-        <div
-          className="fcr-widget-inner"
-          ref={(ref) => {
-            if (ref) widget.render(ref);
-            else widget.unload();
-          }}
-        />
-      );
-    }
+    return (
+      <div
+        className="fcr-widget-inner"
+        ref={(ref) => {
+          if (ref) widget.render(ref);
+          else widget.unload();
+        }}
+      />
+    );
   };
 
   if (mounted) {

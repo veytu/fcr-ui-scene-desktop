@@ -125,7 +125,7 @@ const Participants = observer(({ columns }: { columns: any }) => {
           <div className="fcr-participants-count">(Student {participantStudentList.length})</div>
           <div className="fcr-participants-search">
             <Input
-              size="medium"
+              size="small"
               value={searchKey}
               onChange={setSearchKey}
               iconPrefix={SvgIconEnum.FCR_V2_SEARCH}
