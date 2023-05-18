@@ -118,7 +118,7 @@ export class OnlineclassUIStore {
               content: 'You have been removed from the classroom.',
               closable: false,
               onOk: resolve,
-              okText: 'Leave the Room',
+              okText: 'OK',
               okButtonProps: { styleType: 'danger' },
               cancelButtonVisible: false,
             });

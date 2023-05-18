@@ -12,6 +12,11 @@ export enum ParticipantsTableSortKeysEnum {
 }
 export type ParticipantsOrderDirection = 'asc' | 'desc';
 export class ParticipantsUIStore extends EduUIStoreBase {
+  @observable participantsDialogVisible = false;
+  @action.bound
+  setParticipantsDialogVisible(visible: boolean) {
+    this.participantsDialogVisible = visible;
+  }
   @observable orderKey = 'Auth';
   @action.bound
   setOrderKey(orderKey: string) {

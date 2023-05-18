@@ -6,14 +6,19 @@ import { ActionBarItem } from '..';
 import './index.css';
 export const Participants = observer(() => {
   const {
-    participantsUIStore: {},
-    layoutUIStore: { addDialog, hasDialogOf },
+    participantsUIStore: { setParticipantsDialogVisible },
+    layoutUIStore: { addDialog, hasDialogOf, deleteDialog },
   } = useStore();
   return (
     <ToolTip content={'Participants'}>
       <ActionBarItem
         onClick={() => {
-          if (!hasDialogOf('participants')) addDialog('participants');
+          if (!hasDialogOf('participants')) {
+            addDialog('participants');
+            setParticipantsDialogVisible(true);
+          } else {
+            setParticipantsDialogVisible(false);
+          }
         }}
         icon={SvgIconEnum.FCR_PEOPLE}
         text={'Participants'}></ActionBarItem>

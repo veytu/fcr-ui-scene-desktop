@@ -33,9 +33,9 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
       });
     }
   };
-  const localCameraTooltip = stream?.isVideoStreamPublished ? 'Turn off the camera' : 'Start video';
+  const localCameraTooltip = stream?.isVideoStreamPublished ? 'Stop video' : 'Start video';
   const remoteCameraTooltip = stream?.isVideoStreamPublished
-    ? 'Turn off the camera'
+    ? 'Stop video'
     : 'Request to start video';
   const handleCameraClick = () => {
     if (stream?.isLocal) {
@@ -51,9 +51,7 @@ export const useDeviceSwitch = (stream?: EduStreamUI) => {
     }
   };
   const localMicTooltip = stream?.isMicStreamPublished ? 'Mute' : 'Unmute';
-  const remoteMicTooltip = stream?.isMicStreamPublished
-    ? 'Turn off the microphone'
-    : 'Request to unmute';
+  const remoteMicTooltip = stream?.isMicStreamPublished ? 'Mute' : 'Request to unmute';
   const handleMicrophoneClick = () => {
     if (stream?.isLocal) {
       toggleLocalAudioRecordingDevice();

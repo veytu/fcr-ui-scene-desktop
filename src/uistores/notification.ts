@@ -28,10 +28,10 @@ export class NotiticationUIStore extends EduUIStoreBase {
           new Promise((resolve, reject) => {
             this.getters.addDialog('confirm', {
               title: 'Leave Classroom',
-              content: 'You have been removed from the classroom.',
+              content: 'You have been removed from the classroom by the teacher',
               closable: false,
               onOk: resolve,
-              okText: 'Leave the Room',
+              okText: 'OK',
               okButtonProps: { styleType: 'danger' },
               cancelButtonVisible: false,
             });

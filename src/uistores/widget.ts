@@ -1,6 +1,7 @@
 import {
   AgoraMultiInstanceWidget,
   AgoraTrackSyncedWidget,
+  AgoraUiCapableConfirmDialogProps,
   AgoraViewportBoundaries,
   AgoraWidgetBase,
   AgoraWidgetLifecycle,
@@ -299,6 +300,9 @@ export class WidgetUIStore extends EduUIStoreBase {
           duration,
           toastProps: { type: toastTypeMap[type], content: message },
         });
+      },
+      addConfirmDialog: (params: AgoraUiCapableConfirmDialogProps) => {
+        this.getters.addDialog('confirm', params);
       },
     };
   }

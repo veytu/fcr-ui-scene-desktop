@@ -1,7 +1,7 @@
 import { AgoraWidgetController } from 'agora-edu-core';
-import { IReactionDisposer } from 'mobx';
+import { IReactionDisposer, observable } from 'mobx';
 import { bound, Log, Logger } from 'agora-rte-sdk';
-import { AgoraExtensionRoomEvent } from './events';
+import { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from './events';
 @Log.attach({ proxyMethods: false })
 export class Chat {
   logger!: Logger;
@@ -14,15 +14,32 @@ export class Chat {
       this.logger.warn('Widget controller not ready, cannot broadcast message');
     }
   }
+  @observable chatDialogVisible = false;
+  @bound
+  _handleChatDialogVisibleChanged(visible: boolean) {
+    this.chatDialogVisible = visible;
+  }
   @bound
   openChatDialog() {
     this._sendBoardCommandMessage(AgoraExtensionRoomEvent.OpenChatDialog);
   }
+  @bound
+  closeChatDialog() {
+    this._sendBoardCommandMessage(AgoraExtensionRoomEvent.CloseChatDialog);
+  }
   install(controller: AgoraWidgetController) {
     this._controller = controller;
+    controller.addBroadcastListener({
+      messageType: AgoraExtensionWidgetEvent.ChatDialogVisibleChanged,
+      onMessage: this._handleChatDialogVisibleChanged,
+    });
   }
   uninstall() {
     this._disposers.forEach((d) => d());
     this._disposers = [];
+    this._controller?.removeBroadcastListener({
+      messageType: AgoraExtensionWidgetEvent.ChatDialogVisibleChanged,
+      onMessage: this._handleChatDialogVisibleChanged,
+    });
   }
 }

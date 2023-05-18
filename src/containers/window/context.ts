@@ -27,7 +27,7 @@ export const convertStreamUIStatus = (
     : renderAtMainView && !isGrid
     ? 'fcr-bg-1'
     : 'fcr-bg-4';
-  const showMicrophoneIconOnRoleLabel = renderAtMainView;
+  const showMicrophoneIconOnUserLabel = renderAtMainView;
   const showMicrophoneIconOnBottomRight = renderAtListView;
   const labelSize = renderAtMainView ? 'large' : 'small';
   const isVideoStreamPublished = stream.isVideoStreamPublished;
@@ -35,9 +35,9 @@ export const convertStreamUIStatus = (
   const showRoundedNamePlaceholder = renderAtMainView;
   const labelIconSize = labelSize === 'large' ? 30 : 24;
   const audioIconSize = labelSize === 'large' ? 24 : 16;
-  const isHostRemote = stream.role === EduRoleTypeEnum.teacher;
+  const isHostStream = stream.role === EduRoleTypeEnum.teacher;
   const renderMode = renderAtMainView && !isGrid ? 0 : 1;
-  const disableAudioVolumeEffect = renderAtMainView && layout !== Layout.Grid;
+  const disableAudioVolumeEffect = renderAtMainView;
   return {
     topLabelAnimation,
     bottomLabelAnimation,
@@ -47,15 +47,15 @@ export const convertStreamUIStatus = (
     labelIconSize,
     audioIconSize,
     renderMode,
-    showMicrophoneIconOnRoleLabel,
+    showMicrophoneIconOnUserLabel,
     showMicrophoneIconOnBottomRight,
     showNameOnBottomLeft,
     showRoundedNamePlaceholder,
-    showHostLabel: isHostRemote,
+    showHostLabel: isHostStream,
     streamWindowBackgroundColorCls,
     renderAtMainView,
     renderAtListView,
-    isHostRemote,
+    isHostStream,
     placement,
     videoBackgroundGray,
     disableAudioVolumeEffect,

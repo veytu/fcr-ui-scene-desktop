@@ -44,7 +44,10 @@ export class ActionBarUIStore extends EduUIStoreBase {
   openChatDialog() {
     this.getters.chatApi.openChatDialog();
   }
-
+  @bound
+  closeChatDialog() {
+    this.getters.chatApi.closeChatDialog();
+  }
   @action.bound
   setShowLeaveOption(show: boolean) {
     this.showLeaveOption = show;

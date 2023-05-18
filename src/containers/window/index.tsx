@@ -416,17 +416,26 @@ const StreamWindowUserLabel = observer(() => {
       )}>
       {streamWindowContext?.showHostLabel && (
         <div className="fcr-stream-window-user-role">
-          {streamWindowContext.showMicrophoneIconOnRoleLabel && (
-            <AudioRecordinDeviceIcon
-              stream={streamWindowContext.stream}
-              size={streamWindowContext?.audioIconSize}></AudioRecordinDeviceIcon>
-          )}
+          {streamWindowContext.showMicrophoneIconOnUserLabel &&
+            streamWindowContext.isHostStream && (
+              <AudioRecordinDeviceIcon
+                stream={streamWindowContext.stream}
+                size={streamWindowContext?.audioIconSize}></AudioRecordinDeviceIcon>
+            )}
 
           <span>Host</span>
         </div>
       )}
       {streamWindowContext?.showNameOnBottomLeft && (
-        <div className="fcr-stream-window-user-name">{stream?.userName}</div>
+        <div className="fcr-stream-window-user-name">
+          {streamWindowContext.showMicrophoneIconOnUserLabel &&
+            !streamWindowContext.isHostStream && (
+              <AudioRecordinDeviceIcon
+                stream={streamWindowContext.stream}
+                size={streamWindowContext?.audioIconSize}></AudioRecordinDeviceIcon>
+            )}
+          {stream?.userName}
+        </div>
       )}
     </div>
   ) : (
@@ -486,14 +495,20 @@ const AwardAnimations = observer(() => {
   const {
     streamUIStore: { streamAwardAnims, removeAward },
   } = useStore();
+  const ref = useRef<HTMLDivElement>(null);
   const streamWindowContext = useContext(StreamWindowContext);
   const stream = streamWindowContext?.stream;
+
   return stream ? (
-    <div className="fcr-stream-window-reward-anim">
+    <div ref={ref} className="fcr-stream-window-reward-anim">
       {streamAwardAnims(stream).map((anim: { id: string; userUuid: string }) => {
+        const width = ref.current?.clientWidth || 0;
+        const height = ref.current?.clientHeight || 0;
         return (
           <SvgaPlayer
             key={anim.id}
+            width={width}
+            height={height}
             style={{ position: 'absolute' }}
             url={RewardSVGA}
             onFinish={() => {

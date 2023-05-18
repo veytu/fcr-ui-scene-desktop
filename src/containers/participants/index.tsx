@@ -31,8 +31,8 @@ const ParticipantsContext = createContext<ParticipantsContext | null>(null);
 const colors = themeVal('colors');
 export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = observer(
   (props) => {
-    const [visible, setVisible] = useState(true);
     const {
+      participantsUIStore: { participantsDialogVisible, setParticipantsDialogVisible },
       statusBarUIStore: { isHost },
     } = useStore();
     const afterClose = () => {
@@ -51,12 +51,12 @@ export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = 
         {...props}
         width={tableWidth < 430 ? 430 : tableWidth}
         classNames={'fcr-participants-dialog'}
-        visible={visible}
+        visible={participantsDialogVisible}
         maskClosable={false}
         mask={false}
         wrapClassName={'fcr-participants-dialog-wrap'}
         onClose={() => {
-          setVisible(false);
+          setParticipantsDialogVisible(false);
         }}
         afterClose={afterClose}>
         <Participants columns={tableColumns}></Participants>
@@ -113,7 +113,7 @@ const Participants = observer(({ columns }: { columns: any }) => {
       }),
     );
     toastApiRef.current?.open({
-      toastProps: { type: 'normal', content: 'Unmute All', size: 'small' },
+      toastProps: { type: 'normal', content: 'Request to unmute all', size: 'small' },
     });
   };
 
@@ -160,7 +160,7 @@ const Participants = observer(({ columns }: { columns: any }) => {
                 preIcon={SvgIconEnum.FCR_ALL_UNMUTE}
                 size="XS"
                 type="secondary">
-                Ask all to Unmute
+                Request to unmute all
               </Button>
             </ToolTip>
           </div>
@@ -325,6 +325,7 @@ const TableRemove = observer(({ userUuid, role }: { userUuid: string; role: EduR
     <>{'-'}</>
   ) : (
     <DialogToolTip
+      overlayOffset={0}
       visible={dialogVisible}
       onVisibleChange={setDialogVisible}
       onClose={() => setDialogVisible(false)}

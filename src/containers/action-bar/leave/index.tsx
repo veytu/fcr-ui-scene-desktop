@@ -70,6 +70,9 @@ const LeavePopoverContent = observer(() => {
         Are you sure you want to end your classroom？
       </div>
       <div className="fcr-action-bar-leave-popover-btns">
+        <Button type={'primary'} block onClick={leaveClassroom} size="M" styleType="danger">
+          Leave the Classroom
+        </Button>
         {showEndClassButton && (
           <Button
             onClick={async () => {
@@ -83,20 +86,12 @@ const LeavePopoverContent = observer(() => {
               });
             }}
             block
+            type={'secondary'}
             size="M"
             styleType="danger">
             End the Classroom
           </Button>
         )}
-
-        <Button
-          block
-          onClick={leaveClassroom}
-          size="M"
-          type={showEndClassButton ? 'secondary' : 'primary'}
-          styleType="danger">
-          Leave the Classroom
-        </Button>
       </div>
     </div>
   );
