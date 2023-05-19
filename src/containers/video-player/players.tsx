@@ -21,7 +21,7 @@ export const LocalVideoPlayer = observer(() => {
   return (
     <div className="fcr-video-player-wrapper">
       <div ref={videoRef} className="fcr-video-player" />
-      <div className='fcr-video-player__placeholder'>
+      <div className="fcr-video-player__placeholder">
         <Avatar size={80} textSize={24} nickName={userName} />
       </div>
     </div>

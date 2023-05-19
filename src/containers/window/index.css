@@ -82,7 +82,7 @@
   gap: 6px;
 }
 .fcr-stream-window-user-label {
-  @apply fcr-rounded-24 fcr-bg-2;
+  @apply fcr-rounded-24 fcr-bg-2-a70;
   height: 24px;
   display: flex;
   flex-direction: row;

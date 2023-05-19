@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { VerticalSlider } from '@components/slider';
 import { SvgIconEnum } from '@components/svg-img';
 import { ClickableIcon } from '@components/svg-img/clickable-icon';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { observer } from 'mobx-react';
+import { DeviceTabKeysContext } from '.';
 
 export const BeautySlider = observer(() => {
   const { deviceSettingUIStore } = useStore();
@@ -13,7 +14,7 @@ export const BeautySlider = observer(() => {
     activeBeautyType,
     setBeautyFilter,
   } = deviceSettingUIStore;
-
+  const activeTab = useContext(DeviceTabKeysContext);
   const sliderValue = activeBeautyValue * 100;
 
   const handleBeautyValueChange = (value: number) => {
@@ -28,7 +29,7 @@ export const BeautySlider = observer(() => {
     }
   };
 
-  return isBeautyFilterEnabled && activeBeautyType ? (
+  return isBeautyFilterEnabled && activeBeautyType && activeTab === 'beauty-filter' ? (
     <div className="fcr-pretest__video-portal__sidebar">
       <VerticalSlider value={sliderValue} onChange={handleBeautyValueChange} />
       <ClickableIcon icon={SvgIconEnum.FCR_RESET} size="small" onClick={handleResetBeautyValue} />

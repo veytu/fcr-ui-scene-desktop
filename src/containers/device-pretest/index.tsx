@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import pretestLogo from '@res/images/pretest-logo.png';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import './index.css';
@@ -19,7 +19,7 @@ const tabContents = {
 };
 
 type TabKeyType = keyof typeof tabContents;
-
+export const DeviceTabKeysContext = createContext<TabKeyType>('basic-settings');
 export const DevicePretest = observer(() => {
   const transI18n = useI18n();
   const { deviceSettingUIStore } = useStore();
@@ -53,16 +53,18 @@ export const DevicePretest = observer(() => {
           <SvgImg type={SvgIconEnum.FCR_CLOSE} />
         </button>
       </div>
-      <div className="fcr-pretest__content fcr-scrollbar-override">
-        {/* center area */}
-        <div className="fcr-pretest__center">
-          <VideoPortal />
-          <div className="fcr-pretest__settings">
-            <FashionTabs items={tabItems} activeKey={activeTab} onChange={handleActiveTab} />
-            {tabContents[activeTab]}
+      <DeviceTabKeysContext.Provider value={activeTab}>
+        <div className="fcr-pretest__content fcr-scrollbar-override">
+          {/* center area */}
+          <div className="fcr-pretest__center">
+            <VideoPortal />
+            <div className="fcr-pretest__settings">
+              <FashionTabs items={tabItems} activeKey={activeTab} onChange={handleActiveTab} />
+              {tabContents[activeTab]}
+            </div>
           </div>
         </div>
-      </div>
+      </DeviceTabKeysContext.Provider>
     </div>
   );
 });

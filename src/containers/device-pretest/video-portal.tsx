@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { observer } from 'mobx-react';
 import { Button } from '@components/button';
 import { SvgIconEnum } from '@components/svg-img';
@@ -8,6 +8,7 @@ import { BeautySlider } from './beauty-slider';
 import { MirrorToggle } from './mirror-toggle';
 import { LocalVideoPlayer } from '../video-player';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
+import { DeviceTabKeysContext } from '.';
 const colors = themeVal('colors');
 export const VideoPortal = observer(() => {
   const { setDevicePretestFinished, deviceSettingUIStore } = useStore();
@@ -99,6 +100,7 @@ export const VideoPortal = observer(() => {
         </Button>
       </div>
       <div className="fcr-pretest__video-portal__video">
+        <VideoOffTips />
         <LocalVideoPlayer />
         <BeautySlider />
       </div>
@@ -116,4 +118,24 @@ export const VideoPortal = observer(() => {
       </div>
     </div>
   );
+});
+const VideoOffTips = observer(() => {
+  const activeTab = useContext(DeviceTabKeysContext);
+  const {
+    deviceSettingUIStore: { isCameraDeviceEnabled, isBeautyFilterEnabled, activeBeautyType },
+  } = useStore();
+  const activeBeautySlider =
+    activeTab === 'beauty-filter' && isBeautyFilterEnabled && activeBeautyType;
+  return !isCameraDeviceEnabled && activeTab !== 'basic-settings' ? (
+    <div
+      style={{
+        width: `calc(100% - ${activeBeautySlider ? '56px' : '0px'})`,
+        borderTopRightRadius: `${activeBeautySlider ? '16px' : '0px'}`,
+      }}
+      className="fcr-pretest__video-portal__tips">
+      {activeTab === 'virtual-background'
+        ? 'Before using and previewing background effects, please start the camera.'
+        : 'Before using and previewing beauty filter effects, please start the camera.'}
+    </div>
+  ) : null;
 });

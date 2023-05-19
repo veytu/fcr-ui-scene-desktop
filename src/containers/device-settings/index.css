@@ -130,7 +130,9 @@ li.fcr-device-settings__nav-list-item--active {
   width: 240px;
   z-index: 20;
 }
-
+.fcr-device-settings__video-preview__device-select .fcr-dropdown {
+  @apply fcr-bg-8-a90 fcr-border-1-a50;
+}
 .fcr-device-settings__video-preview-title {
   @apply fcr-font-title;
   display: flex;

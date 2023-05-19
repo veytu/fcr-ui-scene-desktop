@@ -22,6 +22,7 @@ import {
   ParticipantsOrderDirection,
   ParticipantsTableSortKeysEnum,
 } from '@onlineclass/uistores/participants';
+import { useAuthorization } from '@onlineclass/utils/hooks/use-authorization';
 
 interface ParticipantsContext {
   toastApi: ToastApiFactory | null;
@@ -181,23 +182,24 @@ const TableAuth = observer(({ userUuid, role }: { userUuid: string; role: EduRol
   const {
     participantsUIStore: { isHostByUserRole, tableIconSize },
     presentationUIStore: { isBoardWidgetActive },
-    boardApi: { grantedUsers, grantPrivilege },
   } = useStore();
+  const { tooltip, toggleAuthorization, granted } = useAuthorization(userUuid);
   const isHostLocal = EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
   const isHost = isHostByUserRole(role);
-  const granted = grantedUsers.has(userUuid);
-  const tooltipContent = isHost ? 'host' : granted ? 'UnAuthorization' : 'Authorization';
-  const disabled = !isBoardWidgetActive || !isHostLocal;
-  const handleAuth = () => {
-    !disabled && isHostLocal && grantPrivilege(userUuid, !granted);
-  };
+  const tooltipContent = isHost ? 'host' : tooltip;
+  const disabled = !isHostLocal || !isBoardWidgetActive;
+
   return (
     <div className="fcr-participants-table-auth">
       {isHost ? (
         'Host'
       ) : (
-        <TableIconWrapper tooltip={tooltipContent} disabled={disabled} onClick={handleAuth}>
+        <TableIconWrapper
+          tooltip={tooltipContent}
+          disabled={disabled}
+          onClick={toggleAuthorization}>
           <SvgImg
+            onClick={() => disabled && toggleAuthorization()}
             type={SvgIconEnum.FCR_HOST}
             colors={{ iconPrimary: granted ? colors['yellow'] : colors['icon-1'] }}
             size={tableIconSize}></SvgImg>
@@ -233,12 +235,7 @@ const TableIconWrapper: FC<
           className={classnames('fcr-participants-table-icon-wrap', {
             'fcr-participants-table-icon-wrap-disable': disabled,
           })}>
-          <div
-            style={{
-              pointerEvents: disabled ? 'none' : 'all',
-            }}>
-            {children}
-          </div>
+          <div>{children}</div>
         </div>
       </div>
     </ToolTip>

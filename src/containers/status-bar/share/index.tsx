@@ -6,7 +6,8 @@ import './index.css';
 import { ToastApi } from '@components/toast';
 import { getConfig } from '@onlineclass/utils/launch-options-holder';
 import { ClickableIcon } from '@components/svg-img/clickable-icon';
-
+import { formatRoomID } from '@onlineclass/utils';
+import { isNumber } from 'lodash';
 export const Share = () => {
   const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
 
@@ -18,7 +19,9 @@ export const Share = () => {
       <div className="fcr-share-room-name">Tracy’s Room</div>
       <div className="fcr-share-room-id">
         <span>Room ID</span>
-        <span data-clipboard-text={shareUrl}>{roomUuid}</span>
+        <span data-clipboard-text={shareUrl}>
+          {isNumber(roomUuid) ? formatRoomID(roomUuid) : roomUuid}
+        </span>
         <CopyToClipboard
           text={roomUuid}
           onCopy={() =>

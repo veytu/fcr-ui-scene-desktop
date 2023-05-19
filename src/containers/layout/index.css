@@ -27,7 +27,6 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: all 0.2s;
 }
 .fcr-layout-content-list-on-top .fcr-layout-content-list-view-without-status-bar {
   height: 135px;
@@ -189,11 +188,13 @@
   transform: rotate(180deg);
 }
 /** listview transition **/
-.fcr-layout-content-list-view-enter,
-.fcr-layout-content-list-view-enter-active,
-.fcr-layout-content-list-view-exit,
-.fcr-layout-content-list-view-exit-active {
-  transition: all 0.2s;
+.fcr-layout-content-list-on-top .fcr-layout-content-list-view-enter-active,
+.fcr-layout-content-list-on-top .fcr-layout-content-list-view-exit-active {
+  transition: height 0.2s;
+}
+.fcr-layout-content-list-on-right .fcr-layout-content-list-view-enter-active,
+.fcr-layout-content-list-on-right .fcr-layout-content-list-view-exit-active {
+  transition: width 0.2s;
 }
 .fcr-layout-content-list-on-top .fcr-layout-content-list-view-enter,
 .fcr-layout-content-list-on-top .fcr-layout-content-list-view-exit-active,

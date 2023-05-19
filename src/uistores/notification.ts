@@ -267,11 +267,11 @@ export class NotiticationUIStore extends EduUIStoreBase {
               LeaveReason.leave,
               new Promise((resolve) => {
                 this.getters.addDialog('class-info', {
-                  title: 'The host has end the room.',
-                  content: 'The class has ended. Please click the button to leave the classroom.',
+                  title: 'The class has ended',
+                  content: 'Please click the button to leave the classroom.',
                   actions: [
                     {
-                      text: 'Leave the Room',
+                      text: 'Leave',
                       styleType: 'danger',
                       onClick: resolve,
                     },

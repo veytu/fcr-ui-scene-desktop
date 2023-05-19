@@ -93,7 +93,12 @@ export const SpeakerSelect = observer(() => {
         placeholder={'No device'}
         disabled={playbackDevicesList.length === 0}
       />
-      <Button preIcon={SvgIconEnum.FCR_V2_LOUDER} size="S" shape="rounded" onClick={handleTest}>
+      <Button
+        styleType="white"
+        preIcon={SvgIconEnum.FCR_V2_LOUDER}
+        size="S"
+        shape="rounded"
+        onClick={handleTest}>
         Test
       </Button>
     </div>

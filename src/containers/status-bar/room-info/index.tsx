@@ -11,12 +11,14 @@ import classnames from 'classnames';
 import { isNumber } from 'lodash';
 import './index.css';
 import { formatRoomID } from '@onlineclass/utils';
+import { useNetwork } from '@onlineclass/utils/hooks/use-network';
 export const StatusBarInfo: FC = () => {
   const ref = useRef<HTMLSpanElement | null>(null);
   const {
     statusBarUIStore: { roomUuid },
     layoutUIStore: { setHasPopoverShowed },
   } = useStore();
+  const network = useNetwork();
   useEffect(() => {
     let clipboard: ClipboardJS | undefined;
     if (ref.current) {
@@ -52,7 +54,7 @@ export const StatusBarInfo: FC = () => {
           }}
           toolTipProps={{ content: 'Show Network Details', placement: 'bottomLeft' }}>
           <div className="fcr-status-bar-info-network">
-            <SvgImg type={SvgIconEnum.FCR_V2_SIGNAL_GOOD} size={20}></SvgImg>
+            <SvgImg type={network.icon} size={20}></SvgImg>
           </div>
         </DoubleDeckPopoverWithTooltip>
         <div className={classnames('fcr-status-bar-info-id', 'fcr-divider')}>

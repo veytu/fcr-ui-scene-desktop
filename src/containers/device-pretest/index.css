@@ -64,8 +64,12 @@
   font-size: 16px;
 }
 .fcr-pretest__video-portal__video {
+  @apply fcr-rounded-8;
   position: relative;
   flex-grow: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  overflow: hidden;
 }
 
 .fcr-pretest__video-portal__toggles {
@@ -105,7 +109,7 @@
   font-weight: 700;
 }
 
-.fcr-pretest__settings__label svg {
+.fcr-pretest__settings__label > svg {
   margin-left: auto;
   margin-right: 1px;
   color: theme(colors.block-6);
@@ -298,4 +302,21 @@
 
 .fcr-pretest-beauty-filter__list-item-label {
   transform: scale(0.9) translateY(2px);
+}
+.fcr-pretest__video-portal__tips {
+  @apply fcr-text-1;
+  height: 50px;
+  font-size: 12px;
+  line-height: 130%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(66, 98, 255, 0.7);
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  transition: all 0.2s;
+  padding: 0 12px;
+  word-break: break-word;
 }

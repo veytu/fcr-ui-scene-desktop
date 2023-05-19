@@ -37,7 +37,7 @@ export const InteractLabelGroup = observer(
       <div
         className={classnames('fcr-stream-window-student-interact-item', {
           'fcr-bg-brand-6': placement === 'status-bar',
-          'fcr-bg-2': placement !== 'status-bar',
+          'fcr-bg-2-a70': placement !== 'status-bar',
         })}>
         <SvgImg type={SvgIconEnum.FCR_REWARD}></SvgImg>
         <span>{reward || 0}</span>

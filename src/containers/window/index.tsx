@@ -20,6 +20,8 @@ import { SvgaPlayer } from '@components/svga-player';
 import { SoundPlayer } from '@components/sound-player';
 import RewardSVGA from './assets/svga/reward.svga';
 import RewardSound from './assets/audio/reward.mp3';
+import { AGRemoteVideoStreamType, AGRenderMode } from 'agora-rte-sdk';
+import { useAuthorization } from '@onlineclass/utils/hooks/use-authorization';
 
 const colors = themeVal('colors');
 export const StreamWindow: FC = observer(() => {
@@ -89,8 +91,9 @@ const StreamPlayer = observer(() => {
   const {
     classroomStore: {
       mediaStore: { setupLocalVideo },
+      streamStore: { setRemoteVideoStreamType },
     },
-    streamUIStore: { updateVideoDom, removeVideoDom, pinDisabled },
+    streamUIStore: { updateVideoDom, removeVideoDom },
     deviceSettingUIStore: { isLocalMirrorEnabled },
   } = useStore();
 
@@ -105,7 +108,16 @@ const StreamPlayer = observer(() => {
       } else {
         if (ref.current) {
           if (videoRenderable) {
-            updateVideoDom(stream.stream.streamUuid, ref.current);
+            updateVideoDom(stream.stream.streamUuid, {
+              dom: ref.current,
+              renderMode: renderMode ?? AGRenderMode.fill,
+            });
+            setRemoteVideoStreamType(
+              stream.stream.streamUuid,
+              renderMode === AGRenderMode.fit
+                ? AGRemoteVideoStreamType.HIGH_STREAM
+                : AGRemoteVideoStreamType.LOW_STREAM,
+            );
           } else {
             removeVideoDom(stream.stream.streamUuid);
           }
@@ -187,9 +199,8 @@ const StreamBottomRightAudioStatus = observer(() => {
   } = useStore();
   const showAudioMuteAction =
     streamWindowMouseContext?.mouseEnterWindow &&
-    isHost &&
-    streamWindowContext?.stream.role === EduRoleTypeEnum.student &&
-    streamWindowContext.renderAtListView;
+    (isHost || streamWindowContext?.stream.isLocal) &&
+    streamWindowContext?.renderAtListView;
   const showMicIcon = streamWindowContext?.showMicrophoneIconOnBottomRight && !showAudioMuteAction;
 
   return (
@@ -221,7 +232,6 @@ const StreamActions = observer(() => {
     statusBarUIStore: { isHost },
   } = useStore();
   const { addPin, removePin } = usePinStream();
-  const isGranted = isUserGranted(streamWindowContext?.stream.fromUser.userUuid || '');
 
   const pinned = pinnedStreamUuid === streamWindowContext?.stream.stream.streamUuid;
 
@@ -238,6 +248,7 @@ const StreamActions = observer(() => {
 
   const showStreamWindowHostAction =
     isHost && streamWindowContext?.stream.role === EduRoleTypeEnum.student;
+  const { tooltip, toggleAuthorization, granted } = useAuthorization(userUuid);
   const streamWindowActionItems = [
     {
       key: 'mic',
@@ -271,12 +282,10 @@ const StreamActions = observer(() => {
         <SvgImg
           size={20}
           type={SvgIconEnum.FCR_HOST}
-          colors={isGranted ? { iconPrimary: colors['yellow'] } : {}}></SvgImg>
+          colors={granted ? { iconPrimary: colors['yellow'] } : {}}></SvgImg>
       ),
-      label: isGranted ? 'Deauthorization' : 'Authorization',
-      onClick: () => {
-        grantPrivilege(userUuid, !isGranted);
-      },
+      label: tooltip,
+      onClick: toggleAuthorization,
       visible: showStreamWindowHostAction,
     },
     {

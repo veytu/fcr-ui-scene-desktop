@@ -13,6 +13,10 @@ import { EduUIStoreBase } from './base';
 import { computedFn } from 'mobx-utils';
 import { EduStreamUI } from '@onlineclass/utils/stream/struct';
 import { v4 as uuidv4 } from 'uuid';
+type RenderableVideoDom = {
+  dom: HTMLDivElement;
+  renderMode: AGRenderMode;
+};
 export class StreamUIStore extends EduUIStoreBase {
   @observable pinnedStreamUuid = '';
   @action.bound
@@ -40,7 +44,7 @@ export class StreamUIStore extends EduUIStoreBase {
   @observable
   quitSub: EduStream[] = [];
   private _subscribeTask?: Scheduler.Task;
-  private _videoDoms = new Map<string, HTMLDivElement>();
+  private _videoDoms = new Map<string, RenderableVideoDom>();
   streamAwardAnims = computedFn((stream: EduStreamUI): { id: string; userUuid: string }[] => {
     return this.awardAnims.filter((anim) => anim.userUuid === stream.fromUser.userUuid);
   });
@@ -66,8 +70,8 @@ export class StreamUIStore extends EduUIStoreBase {
     this.waitingSub = subst;
   }
   @bound
-  updateVideoDom(streamUuid: string, dom: HTMLDivElement) {
-    this._videoDoms.set(streamUuid, dom);
+  updateVideoDom(streamUuid: string, renderableVideoDom: RenderableVideoDom) {
+    this._videoDoms.set(streamUuid, renderableVideoDom);
   }
 
   @bound
@@ -104,8 +108,7 @@ export class StreamUIStore extends EduUIStoreBase {
       return !doneSub.includes(stream);
     });
 
-    const { muteRemoteVideoStreamMass, setupRemoteVideo, setRemoteVideoStreamType } =
-      this.classroomStore.streamStore;
+    const { muteRemoteVideoStreamMass, setupRemoteVideo } = this.classroomStore.streamStore;
 
     if (toUnsub.length) {
       await muteRemoteVideoStreamMass(toUnsub, true);
@@ -149,14 +152,11 @@ export class StreamUIStore extends EduUIStoreBase {
 
     // 重新渲染视频流
     doneSub.forEach((stream) => {
-      const dom = this._videoDoms.get(stream.streamUuid);
-      if (dom) {
+      const renderableVideoDom = this._videoDoms.get(stream.streamUuid);
+      if (renderableVideoDom) {
         const needMirror = stream.videoSourceType !== AgoraRteVideoSourceType.ScreenShare;
-        const renderMode =
-          stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare
-            ? AGRenderMode.fit
-            : undefined;
-        setupRemoteVideo(stream, dom, needMirror, renderMode);
+        console.log(renderableVideoDom.renderMode, 'renderableVideoDom.renderMode');
+        setupRemoteVideo(stream, renderableVideoDom.dom, needMirror, renderableVideoDom.renderMode);
       }
     });
     // 更新已订阅列表
