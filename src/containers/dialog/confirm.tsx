@@ -10,9 +10,9 @@ export const ConfirmDialogWrapper: FC<ConfirmDialogProps> = observer((props) => 
     layoutUIStore: { classroomViewportClassName },
   } = useStore();
   const afterClose = () => {
-    console.log('afterClose');
     props.onClose?.();
   };
+  console.log('ConfirmDialogWrapper', props);
   return (
     <ConfirmDialog
       getContainer={() => {

@@ -1,4 +1,4 @@
-import { SvgIconEnum } from '@components/svg-img';
+import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { ToastApi } from '@components/toast';
 import {
   AgoraEduClassroomEvent,
@@ -123,10 +123,18 @@ export class NotiticationUIStore extends EduUIStoreBase {
     //     );
     //   }
     // }
-    // // capture screen permission denied received
-    // if (event === AgoraEduClassroomEvent.CaptureScreenPermissionDenied) {
-    //   this.shareUIStore.addToast(transI18n('toast2.screen_permission_denied'), 'error');
-    // }
+    // capture screen permission denied received
+    if (event === AgoraEduClassroomEvent.CaptureScreenPermissionDenied) {
+      this.getters.addDialog('confirm', {
+        title: 'Notice',
+        content: 'Before using screen sharing, please first enable screen recording permissions.',
+        okButtonProps: {
+          styleType: 'danger',
+        },
+        cancelButtonVisible: false,
+        icon: <SvgImg type={SvgIconEnum.FCR_BELL} size={50}></SvgImg>,
+      });
+    }
     // // user join group
     // if (event === AgoraEduClassroomEvent.UserJoinGroup) {
     //   const { role } = EduClassroomConfig.shared.sessionInfo;
