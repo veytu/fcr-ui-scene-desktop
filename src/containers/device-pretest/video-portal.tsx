@@ -90,7 +90,12 @@ export const VideoPortal = observer(() => {
           tooltip: 'Speaker closed',
         };
   }, [deviceSettingUIStore.isAudioPlaybackDeviceEnabled]);
+  const activeTab = useContext(DeviceTabKeysContext);
 
+  const beautyFilterVisible =
+    deviceSettingUIStore.isBeautyFilterEnabled &&
+    deviceSettingUIStore.activeBeautyType &&
+    activeTab === 'beauty-filter';
   return (
     <div className="fcr-pretest__video-portal">
       <div className="fcr-pretest__video-portal__header">
@@ -102,7 +107,7 @@ export const VideoPortal = observer(() => {
       <div className="fcr-pretest__video-portal__video">
         <VideoOffTips />
         <LocalVideoPlayer />
-        <BeautySlider />
+        {beautyFilterVisible && <BeautySlider />}
       </div>
       <div className="fcr-pretest__video-portal__toggles">
         <PretestDeviceIcon onClick={deviceSettingUIStore.toggleCameraDevice} {...cameraIconProps} />
@@ -124,6 +129,7 @@ const VideoOffTips = observer(() => {
   const {
     deviceSettingUIStore: { isCameraDeviceEnabled, isBeautyFilterEnabled, activeBeautyType },
   } = useStore();
+
   const activeBeautySlider =
     activeTab === 'beauty-filter' && isBeautyFilterEnabled && activeBeautyType;
   return !isCameraDeviceEnabled && activeTab !== 'basic-settings' ? (

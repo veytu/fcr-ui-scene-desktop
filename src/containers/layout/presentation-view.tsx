@@ -6,7 +6,7 @@ import './index.css';
 import { StreamWindow } from '../window';
 import { convertStreamUIStatus, StreamWindowContext } from '../window/context';
 import { CSSProperties, FC, useEffect, useState } from 'react';
-import { ListViewFloatPagination } from '@components/pagination';
+import { ListViewPagination } from '@components/pagination';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { CSSTransition } from 'react-transition-group';
 export const PresentationView = observer(() => {
@@ -48,26 +48,24 @@ export const PresentationView = observer(() => {
               `fcr-layout-content-video-list`,
               `fcr-layout-content-video-list-${direction}`,
             )}>
-            {showPager && (
-              <ListViewFloatPagination
-                onChange={setCurrentPage}
-                direction={direction}
-                total={totalPage}
-                current={currentPage}></ListViewFloatPagination>
-            )}
+            <ListViewPagination
+              onChange={setCurrentPage}
+              direction={direction}
+              total={totalPage}
+              current={currentPage}>
+              {listViewStreamsByPage.map((stream) => {
+                const sideStreamSize = { width: 192, height: 114 };
 
-            {listViewStreamsByPage.map((stream) => {
-              const sideStreamSize = { width: 192, height: 114 };
-
-              return (
-                <div key={stream.stream.streamUuid} style={{ ...sideStreamSize }}>
-                  <StreamWindowContext.Provider
-                    value={convertStreamUIStatus(stream, 'list-view', layout, false)}>
-                    <StreamWindow></StreamWindow>
-                  </StreamWindowContext.Provider>
-                </div>
-              );
-            })}
+                return (
+                  <div key={stream.stream.streamUuid} style={{ ...sideStreamSize }}>
+                    <StreamWindowContext.Provider
+                      value={convertStreamUIStatus(stream, 'list-view', layout, false)}>
+                      <StreamWindow></StreamWindow>
+                    </StreamWindowContext.Provider>
+                  </div>
+                );
+              })}
+            </ListViewPagination>
           </div>
           {layout === Layout.ListOnTop && <ListViewCollapseButton></ListViewCollapseButton>}
         </div>

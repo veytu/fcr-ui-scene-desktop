@@ -6,6 +6,8 @@ import { FashionTabs } from '@components/tabs';
 import { VirtualBackground } from '../device-pretest/virtual-background';
 import { BeautyFilter } from '../device-pretest/beauty-filter';
 import { CameraSelect } from '../device-pretest/device-select';
+import { observer } from 'mobx-react';
+import { useStore } from '@onlineclass/utils/hooks/use-store';
 
 const tabContents = {
   'virtual-background': <VirtualBackground />,
@@ -14,7 +16,10 @@ const tabContents = {
 
 type TabKeyType = keyof typeof tabContents;
 
-export const VideoSettings = () => {
+export const VideoSettings = observer(() => {
+  const {
+    deviceSettingUIStore: { isBeautyFilterEnabled, activeBeautyType },
+  } = useStore();
   const [activeTab, setActiveTab] = useState<TabKeyType>('virtual-background');
   const handleActiveTab = (tabKey: string) => {
     setActiveTab(tabKey as TabKeyType);
@@ -24,7 +29,8 @@ export const VideoSettings = () => {
     { label: 'Background', key: 'virtual-background' },
     { label: 'Beauty Filter', key: 'beauty-filter' },
   ];
-
+  const beautySliderVisible =
+    activeTab === 'beauty-filter' && isBeautyFilterEnabled && activeBeautyType;
   return (
     <div className="fcr-device-settings__video">
       <div className="fcr-device-settings__video-preview-title">
@@ -34,7 +40,7 @@ export const VideoSettings = () => {
       <div className="fcr-device-settings__video-preview">
         <LocalVideoPlayer />
         <div className="fcr-device-settings__video-preview__sidebar">
-          <BeautySlider />
+          {beautySliderVisible && <BeautySlider />}
         </div>
         <div className="fcr-device-settings__video-preview__device-select">
           <CameraSelect />
@@ -46,4 +52,4 @@ export const VideoSettings = () => {
       </div>
     </div>
   );
-};
+});

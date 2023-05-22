@@ -8,13 +8,7 @@ import { DeviceTabKeysContext } from '.';
 
 export const BeautySlider = observer(() => {
   const { deviceSettingUIStore } = useStore();
-  const {
-    isBeautyFilterEnabled,
-    activeBeautyValue = 0,
-    activeBeautyType,
-    setBeautyFilter,
-  } = deviceSettingUIStore;
-  const activeTab = useContext(DeviceTabKeysContext);
+  const { activeBeautyValue = 0, activeBeautyType, setBeautyFilter } = deviceSettingUIStore;
   const sliderValue = activeBeautyValue * 100;
 
   const handleBeautyValueChange = (value: number) => {
@@ -29,10 +23,10 @@ export const BeautySlider = observer(() => {
     }
   };
 
-  return isBeautyFilterEnabled && activeBeautyType && activeTab === 'beauty-filter' ? (
+  return (
     <div className="fcr-pretest__video-portal__sidebar">
       <VerticalSlider value={sliderValue} onChange={handleBeautyValueChange} />
       <ClickableIcon icon={SvgIconEnum.FCR_RESET} size="small" onClick={handleResetBeautyValue} />
     </div>
-  ) : null;
+  );
 });

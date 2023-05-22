@@ -12,7 +12,7 @@ export const Chat = observer(() => {
   return (
     <div>
       <div id="fcr-chatroom-slot"></div>
-      <ToolTip content="Chat">
+      <ToolTip content={chatDialogVisible ? 'Close chat' : 'Open chat'}>
         <ActionBarItem
           onClick={() => (chatDialogVisible ? closeChatDialog() : openChatDialog())}
           icon={SvgIconEnum.FCR_CHAT2}

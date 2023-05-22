@@ -7,13 +7,14 @@ import './index.css';
 export const Participants = observer(() => {
   const {
     participantsUIStore: { setParticipantsDialogVisible },
-    layoutUIStore: { addDialog, hasDialogOf, deleteDialog },
+    layoutUIStore: { addDialog, hasDialogOf },
   } = useStore();
+  const participantsDialogVisible = hasDialogOf('participants');
   return (
-    <ToolTip content={'Participants'}>
+    <ToolTip content={participantsDialogVisible ? 'Close participants' : 'Open participants'}>
       <ActionBarItem
         onClick={() => {
-          if (!hasDialogOf('participants')) {
+          if (!participantsDialogVisible) {
             addDialog('participants');
             setParticipantsDialogVisible(true);
           } else {
