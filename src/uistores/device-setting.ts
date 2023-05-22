@@ -58,10 +58,18 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   @observable
   private _aiDenoiserEnabled = false;
 
+  @computed
+  get noCameraDevice() {
+    return this.cameraDevicesList.length === 0;
+  }
+
   get cameraDeviceId() {
     return this._cameraDeviceId;
   }
-
+  @computed
+  get noAudioRecordingDevice() {
+    return this.recordingDevicesList.length === 0;
+  }
   get audioRecordingDeviceId() {
     return this._audioRecordingDeviceId;
   }

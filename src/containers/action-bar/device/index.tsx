@@ -15,7 +15,7 @@ import { themeVal } from '@ui-kit-utils/tailwindcss';
 const colors = themeVal('colors');
 export const AudioRecordinDeviceIcon = observer(
   ({ size = 32, stream }: { size?: number; stream?: EduStreamUI }) => {
-    const isMute = !stream?.isMicStreamPublished;
+    const isMute = !stream?.isMicStreamPublished || !stream.isMicDeviceEnabled;
     const {
       streamUIStore: { remoteStreamVolume, localVolume },
     } = useStore();
@@ -41,22 +41,30 @@ export const MicrophoneDevice: FC = observer(() => {
   } = useDeviceTooltipVisible();
   const {
     streamUIStore: { localStream },
-    deviceSettingUIStore: { isAudioRecordingDeviceEnabled },
+    deviceSettingUIStore: { isAudioRecordingDeviceEnabled, noAudioRecordingDevice },
     layoutUIStore: { addDialog },
   } = useStore();
   const { toggleLocalAudioRecordingDevice } = useDeviceSwitch();
-  const text = isAudioRecordingDeviceEnabled ? 'Mute' : 'Unmute';
+  const text = noAudioRecordingDevice
+    ? 'No device'
+    : isAudioRecordingDeviceEnabled
+    ? 'Mute'
+    : 'Unmute';
 
   return (
-    <ToolTip
-      visible={tootipVisible}
-      onVisibleChange={handleTooltipVisibleChanged}
-      content={'Microphone'}>
+    <ToolTip visible={tootipVisible} onVisibleChange={handleTooltipVisibleChanged} content={text}>
       <ActionBarItemWrapper>
         <div className="fcr-action-bar-device" onClick={toggleLocalAudioRecordingDevice}>
           <div className="fcr-action-bar-device-inner">
-            <AudioRecordinDeviceIcon stream={localStream}></AudioRecordinDeviceIcon>
-            <div className="fcr-action-bar-device-text">{text}</div>
+            {noAudioRecordingDevice ? (
+              <SvgImg
+                type={SvgIconEnum.FCR_MUTECRASH}
+                colors={{ iconSecondary: colors['red']['6'] }}
+                size={32}></SvgImg>
+            ) : (
+              <AudioRecordinDeviceIcon stream={localStream}></AudioRecordinDeviceIcon>
+            )}
+            <div className="fcr-action-bar-device-text">{'Microphone'}</div>
           </div>
           <Popover
             visible={popoverOpened}
@@ -91,23 +99,25 @@ export const CameraDevice: FC = observer(() => {
     setPopoverOpened,
   } = useDeviceTooltipVisible();
   const {
-    deviceSettingUIStore: { isCameraDeviceEnabled },
+    deviceSettingUIStore: { isCameraDeviceEnabled, noCameraDevice },
     layoutUIStore: { addDialog },
   } = useStore();
   const { toggleLocalCameraDevice } = useDeviceSwitch();
-  const icon = isCameraDeviceEnabled ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
-  const text = isCameraDeviceEnabled ? 'Stop Video' : 'Start Video';
-  const color = !isCameraDeviceEnabled ? { iconSecondary: colors['red']['6'] } : {};
+  const icon = noCameraDevice
+    ? SvgIconEnum.FCR_CAMERACRASH
+    : isCameraDeviceEnabled
+    ? SvgIconEnum.FCR_CAMERA
+    : SvgIconEnum.FCR_CAMERAOFF;
+  const text = noCameraDevice ? 'No device' : isCameraDeviceEnabled ? 'Stop Video' : 'Start Video';
+  const color =
+    !isCameraDeviceEnabled || noCameraDevice ? { iconSecondary: colors['red']['6'] } : {};
   return (
-    <ToolTip
-      onVisibleChange={handleTooltipVisibleChanged}
-      visible={tootipVisible}
-      content={'Camera'}>
+    <ToolTip onVisibleChange={handleTooltipVisibleChanged} visible={tootipVisible} content={text}>
       <ActionBarItemWrapper>
         <div className="fcr-action-bar-device" onClick={toggleLocalCameraDevice}>
           <div className="fcr-action-bar-device-inner">
             <SvgImg type={icon} colors={color} size={32}></SvgImg>
-            <div className="fcr-action-bar-device-text">{text}</div>
+            <div className="fcr-action-bar-device-text">{'Camera'}</div>
           </div>
           <Popover
             visible={popoverOpened}
@@ -175,6 +185,11 @@ const VideoDeviceListPopoverContent = observer(({ onMoreClick }: { onMoreClick: 
           <div className="fcr-device-popover-content-device-label">Local Camera</div>
 
           <div className="fcr-device-popover-content-device-options">
+            {cameraDevicesList.length === 0 && (
+              <div>
+                <Radio name="No device" styleType="transparent" checked label={'No device'}></Radio>
+              </div>
+            )}
             {cameraDevicesList.map((device) => {
               return (
                 <div key={device.value} onClick={() => setCameraDevice(device.value)}>
@@ -220,6 +235,11 @@ const AudioDeviceListPopoverContent = observer(({ onMoreClick }: { onMoreClick: 
           <div className="fcr-device-popover-content-device-label">Microphone</div>
 
           <div className="fcr-device-popover-content-device-options">
+            {recordingDevicesList.length === 0 && (
+              <div>
+                <Radio name="No device" styleType="transparent" checked label={'No device'}></Radio>
+              </div>
+            )}
             {recordingDevicesList.map((device) => {
               return (
                 <div onClick={() => setAudioRecordingDevice(device.value)} key={device.value}>
@@ -237,6 +257,11 @@ const AudioDeviceListPopoverContent = observer(({ onMoreClick }: { onMoreClick: 
           <div className="fcr-device-popover-content-device-label">Speakers</div>
 
           <div className="fcr-device-popover-content-device-options">
+            {playbackDevicesList.length === 0 && (
+              <div>
+                <Radio name="No device" styleType="transparent" checked label={'No device'}></Radio>
+              </div>
+            )}
             {playbackDevicesList.map((device) => {
               return (
                 <div onClick={() => setAudioPlaybackDevice(device.value)} key={device.value}>

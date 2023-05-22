@@ -58,7 +58,7 @@ export const ActionBar = observer(() => {
 interface ActionBarItemWrapperProps {
   classNames?: string;
 }
-export const ActionBarItemWrapper: FC<React.PropsWithChildren & ActionBarItemWrapperProps> = (
+export const ActionBarItemWrapper: FC<React.PropsWithChildren<ActionBarItemWrapperProps>> = (
   props,
 ) => {
   const { children, classNames, ...others } = props;
