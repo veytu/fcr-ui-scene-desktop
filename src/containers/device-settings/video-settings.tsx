@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BeautySlider } from '../device-pretest/beauty-slider';
 import { MirrorToggle } from '../device-pretest/mirror-toggle';
 import { LocalVideoPlayer } from '../video-player';

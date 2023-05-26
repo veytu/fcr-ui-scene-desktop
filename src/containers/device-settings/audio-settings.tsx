@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { VolumeIndicator } from '@components/volume';
 import { observer } from 'mobx-react';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
@@ -8,9 +8,17 @@ import { SvgIconEnum, SvgImg } from '@components/svg-img';
 
 export const AudioSettings = observer(() => {
   const { deviceSettingUIStore } = useStore();
-  const { localRecordingTestVolume, localPlaybackTestVolume, toggleAiDenoiser } =
-    deviceSettingUIStore;
-
+  const {
+    localRecordingTestVolume,
+    localPlaybackTestVolume,
+    toggleAiDenoiser,
+    startAudioRecordingPreview,
+    stopAudioRecordingPreview,
+  } = deviceSettingUIStore;
+  useEffect(() => {
+    startAudioRecordingPreview();
+    return stopAudioRecordingPreview;
+  }, []);
   return (
     <div className="fcr-device-settings__audio">
       <div className="fcr-device-settings__microphone">

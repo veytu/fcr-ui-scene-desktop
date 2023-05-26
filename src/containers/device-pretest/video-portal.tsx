@@ -16,7 +16,7 @@ export const VideoPortal = observer(() => {
   const cameraIconProps = useMemo<
     { status: string; icon: SvgIconEnum; tooltip: string } & Partial<PretestDeviceIconProps>
   >(() => {
-    const isDeviceActive = deviceSettingUIStore.isCameraDeviceEnabled;
+    const isDeviceActive = deviceSettingUIStore.isPreviewCameraDeviceEnabled;
     const isNoDevice = deviceSettingUIStore.cameraDevicesList.length === 0;
 
     if (isNoDevice) {
@@ -43,10 +43,13 @@ export const VideoPortal = observer(() => {
           },
           tooltip: 'Camera closed',
         };
-  }, [deviceSettingUIStore.isCameraDeviceEnabled]);
+  }, [
+    deviceSettingUIStore.isPreviewCameraDeviceEnabled,
+    deviceSettingUIStore.cameraDevicesList.length,
+  ]);
 
   const microphoneIconProps = useMemo(() => {
-    const enabled = deviceSettingUIStore.isAudioRecordingDeviceEnabled;
+    const enabled = deviceSettingUIStore.isPreviewAudioRecordingDeviceEnabled;
     const isNoDevice = deviceSettingUIStore.recordingDevicesList.length === 0;
 
     if (isNoDevice) {
@@ -73,7 +76,10 @@ export const VideoPortal = observer(() => {
           },
           tooltip: 'Microphone closed',
         };
-  }, [deviceSettingUIStore.isAudioRecordingDeviceEnabled]);
+  }, [
+    deviceSettingUIStore.isPreviewAudioRecordingDeviceEnabled,
+    deviceSettingUIStore.recordingDevicesList.length,
+  ]);
 
   const speakerIconProps = useMemo(() => {
     const enabled = deviceSettingUIStore.isAudioPlaybackDeviceEnabled;
@@ -110,9 +116,12 @@ export const VideoPortal = observer(() => {
         {beautyFilterVisible && <BeautySlider />}
       </div>
       <div className="fcr-pretest__video-portal__toggles">
-        <PretestDeviceIcon onClick={deviceSettingUIStore.toggleCameraDevice} {...cameraIconProps} />
         <PretestDeviceIcon
-          onClick={deviceSettingUIStore.toggleAudioRecordingDevice}
+          onClick={deviceSettingUIStore.toggleCameraPreview}
+          {...cameraIconProps}
+        />
+        <PretestDeviceIcon
+          onClick={deviceSettingUIStore.toggleAudioRecordingPreview}
           {...microphoneIconProps}
         />
         <PretestDeviceIcon
@@ -127,12 +136,12 @@ export const VideoPortal = observer(() => {
 const VideoOffTips = observer(() => {
   const activeTab = useContext(DeviceTabKeysContext);
   const {
-    deviceSettingUIStore: { isCameraDeviceEnabled, isBeautyFilterEnabled, activeBeautyType },
+    deviceSettingUIStore: { isPreviewCameraDeviceEnabled, isBeautyFilterEnabled, activeBeautyType },
   } = useStore();
 
   const activeBeautySlider =
     activeTab === 'beauty-filter' && isBeautyFilterEnabled && activeBeautyType;
-  return !isCameraDeviceEnabled && activeTab !== 'basic-settings' ? (
+  return !isPreviewCameraDeviceEnabled && activeTab !== 'basic-settings' ? (
     <div
       style={{
         width: `calc(100% - ${activeBeautySlider ? '56px' : '0px'})`,
