@@ -23,6 +23,11 @@ import {
   ParticipantsTableSortKeysEnum,
 } from '@onlineclass/uistores/participants';
 import { useAuthorization } from '@onlineclass/utils/hooks/use-authorization';
+import {
+  CustomMessageCommandType,
+  CustomMessageDeviceState,
+  CustomMessageDeviceType,
+} from '@onlineclass/uistores/type';
 
 interface ParticipantsContext {
   toastApi: ToastApiFactory | null;
@@ -67,16 +72,11 @@ export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = 
 );
 const Participants = observer(({ columns }: { columns: any }) => {
   const {
-    participantsUIStore: {
-      participantList,
-      participantStudentList,
-      searchKey,
-      setSearchKey,
-      tableIconSize,
-    },
+    participantsUIStore: { participantList, participantStudentList, searchKey, setSearchKey },
     statusBarUIStore: { isHost },
     classroomStore: {
       streamStore: { updateRemotePublishStateBatch },
+      roomStore: { sendCustomChannelMessage },
     },
   } = useStore();
   const participantsContainerRef = useRef<HTMLDivElement | null>(null);
@@ -99,6 +99,13 @@ const Participants = observer(({ columns }: { columns: any }) => {
         };
       }),
     );
+    sendCustomChannelMessage({
+      cmd: CustomMessageCommandType.deviceSwitchBatch,
+      data: {
+        deviceType: CustomMessageDeviceType.mic,
+        deviceState: CustomMessageDeviceState.close, // 0.close, 1.open
+      },
+    });
     toastApiRef.current?.open({
       toastProps: { type: 'normal', content: 'Mute All', size: 'small' },
     });
@@ -113,6 +120,13 @@ const Participants = observer(({ columns }: { columns: any }) => {
         };
       }),
     );
+    sendCustomChannelMessage({
+      cmd: CustomMessageCommandType.deviceSwitchBatch,
+      data: {
+        deviceType: CustomMessageDeviceType.mic,
+        deviceState: CustomMessageDeviceState.open, // 0.close, 1.open
+      },
+    });
     toastApiRef.current?.open({
       toastProps: { type: 'normal', content: 'Request to unmute all', size: 'small' },
     });
@@ -252,9 +266,12 @@ const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
   } = useStore();
   const isSelf = stream?.fromUser.userUuid === localUser?.userUuid;
   const actionDisabled = !isHost && !isSelf;
-  const { cameraTooltip, handleCameraClick } = useDeviceSwitch(stream);
-  const icon = stream?.isVideoStreamPublished ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
-  const iconColor = stream?.isVideoStreamPublished ? {} : { iconSecondary: colors['red']['6'] };
+  const {
+    cameraTooltip,
+    handleCameraClick,
+    cameraIcon: icon,
+    cameraIconColor: iconColor,
+  } = useDeviceSwitch(stream);
 
   return (
     <TableIconWrapper tooltip={cameraTooltip} disabled={actionDisabled} onClick={handleCameraClick}>
@@ -263,7 +280,12 @@ const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
   );
 });
 const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
-  const { micTooltip, handleMicrophoneClick } = useDeviceSwitch(stream);
+  const {
+    micTooltip,
+    handleMicrophoneClick,
+    micIcon: icon,
+    micIconColor: iconColor,
+  } = useDeviceSwitch(stream);
   const {
     statusBarUIStore: { isHost },
     classroomStore: {
@@ -273,9 +295,6 @@ const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
   } = useStore();
   const isSelf = stream?.fromUser.userUuid === localUser?.userUuid;
   const actionDisabled = !isHost && !isSelf;
-  const icon = stream?.isMicStreamPublished ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
-
-  const iconColor = stream?.isMicStreamPublished ? {} : { iconSecondary: colors['red']['6'] };
 
   return (
     <TableIconWrapper

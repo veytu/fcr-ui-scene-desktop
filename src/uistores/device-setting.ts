@@ -14,6 +14,7 @@ import { IBeautyProcessor } from 'agora-extension-beauty-effect';
 import { EduUIStoreBase } from './base';
 import {
   AgoraRtcLocalVideoCanvas,
+  AgoraRteCustomMessage,
   AgoraRteMediaPublishState,
   AgoraRteMediaSourceState,
   bound,
@@ -25,6 +26,13 @@ import { fetchMediaFileByUrl } from '@onlineclass/utils';
 import { getLaunchOptions } from '@onlineclass/utils/launch-options-holder';
 import concat from 'lodash/concat';
 import map from 'lodash/map';
+import {
+  CustomMessageCommandType,
+  CustomMessageData,
+  CustomMessageDeviceSwitchType,
+  CustomMessageDeviceState,
+  CustomMessageDeviceType,
+} from './type';
 
 /**
  * 设备设置
@@ -372,12 +380,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
         track.setDeviceId(this.cameraDeviceId);
         track.start();
-        this._cameraDeviceEnabled = true;
       }
     } else {
       const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
       track.stop();
-      this._cameraDeviceEnabled = false;
     }
   }
   @bound
@@ -530,6 +536,71 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       this._aiDenoiserEnabled = true;
     }
   }
+  @bound
+  private _onReceiveChannelMessage(message: AgoraRteCustomMessage) {
+    const data = message.payload as CustomMessageData<CustomMessageDeviceSwitchType>;
+    const cmd = data.cmd;
+    switch (cmd) {
+      case CustomMessageCommandType.deviceSwitchBatch: {
+        const deviceSwitchData = data.data;
+        if (deviceSwitchData.deviceState === CustomMessageDeviceState.open) {
+          if (message.fromUser.userUuid === this.classroomStore.userStore.localUser?.userUuid)
+            return;
+          if (deviceSwitchData.deviceType === CustomMessageDeviceType.camera) {
+            this.getters.addDialog('confirm', {
+              title: 'Request to start video',
+              content: 'Teacher requests to start video',
+              onOk: () => {
+                this.enableCamera(true);
+              },
+            });
+          }
+          if (deviceSwitchData.deviceType === CustomMessageDeviceType.mic) {
+            this.getters.addDialog('confirm', {
+              title: 'Request to unmute',
+              content: 'Teacher requests to unmute',
+              onOk: () => {
+                this.enableAudioRecording(true);
+              },
+            });
+          }
+        }
+      }
+    }
+  }
+  @bound
+  private _onReceivePeerMessage(message: AgoraRteCustomMessage) {
+    const data = message.payload as CustomMessageData<CustomMessageDeviceSwitchType>;
+    const cmd = data.cmd;
+    switch (cmd) {
+      case CustomMessageCommandType.deviceSwitch: {
+        const deviceSwitchData = data.data;
+        if (deviceSwitchData.deviceState === CustomMessageDeviceState.open) {
+          if (message.fromUser.userUuid === this.classroomStore.userStore.localUser?.userUuid)
+            return;
+
+          if (deviceSwitchData.deviceType === CustomMessageDeviceType.camera) {
+            this.getters.addDialog('confirm', {
+              title: 'Request to start video',
+              content: 'Teacher requests to start video',
+              onOk: () => {
+                this.enableCamera(true);
+              },
+            });
+          }
+          if (deviceSwitchData.deviceType === CustomMessageDeviceType.mic) {
+            this.getters.addDialog('confirm', {
+              title: 'Request to unmute',
+              content: 'Teacher requests to unmute',
+              onOk: () => {
+                this.enableAudioRecording(true);
+              },
+            });
+          }
+        }
+      }
+    }
+  }
 
   /**
    * @internal
@@ -546,7 +617,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       this._beautyType = 'smooth';
       this._beautyOptions = { smooth: 0.5, brightening: 0.6, blush: 0.1 };
     });
-
+    this.classroomStore.roomStore.addCustomMessageObserver({
+      onReceiveChannelMessage: this._onReceiveChannelMessage,
+      onReceivePeerMessage: this._onReceivePeerMessage,
+    });
     this._disposers.push(
       reaction(
         () => {
@@ -891,6 +965,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
    * @internal
    */
   onDestroy(): void {
+    this.classroomStore.roomStore.removeCustomMessageObserver({
+      onReceiveChannelMessage: this._onReceiveChannelMessage,
+      onReceivePeerMessage: this._onReceivePeerMessage,
+    });
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }
