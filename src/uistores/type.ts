@@ -13,6 +13,8 @@ export type CustomMessageData<T> = {
 export enum CustomMessageCommandType {
   deviceSwitch = 'deviceSwitch',
   deviceSwitchBatch = 'deviceSwitchBatch',
+  handsUp = 'handsUp',
+  handsUpAll = 'handsUpAll',
 }
 export type CustomMessageDeviceSwitchType = {
   deviceState: CustomMessageDeviceState;
@@ -23,6 +25,18 @@ export enum CustomMessageDeviceType {
   mic = 2,
 }
 export enum CustomMessageDeviceState {
-  open = 0,
-  close = 1,
+  close = 0,
+
+  open = 1,
 }
+export type CustomMessageHandsUpType = {
+  userUuid: string;
+  state: CustomMessageHandsUpState;
+};
+export enum CustomMessageHandsUpState {
+  lowerHand = 0,
+  raiseHand = 1,
+}
+export type CustomMessageHandsUpAllType = {
+  operation: CustomMessageHandsUpState;
+};

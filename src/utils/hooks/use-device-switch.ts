@@ -30,6 +30,7 @@ export const useDeviceSwitch = (userStream?: EduStreamUI) => {
   const micEnabled = isLocal
     ? isAudioRecordingDeviceEnabled
     : stream?.isMicDeviceEnabled && stream.isMicStreamPublished;
+
   const cameraEnabled = isLocal
     ? isCameraDeviceEnabled
     : stream?.isVideoDeviceEnabled && stream.isVideoStreamPublished;

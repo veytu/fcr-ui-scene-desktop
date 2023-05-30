@@ -38,13 +38,7 @@ export const ClassRoomDialogContainer = observer(() => {
           case 'device-settings':
             return <DeviceSettingsDialog key={id} id={id} />;
           case 'participants':
-            return (
-              <ParticipantsDialog
-                key={id}
-                onClose={() => {
-                  deleteDialog(id);
-                }}></ParticipantsDialog>
-            );
+            return <ParticipantsDialog key={id}></ParticipantsDialog>;
           case 'class-info':
             const classDialog = props as ClassDialogProps;
 

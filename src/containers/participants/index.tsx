@@ -74,6 +74,7 @@ const Participants = observer(({ columns }: { columns: any }) => {
   const {
     participantsUIStore: { participantList, participantStudentList, searchKey, setSearchKey },
     statusBarUIStore: { isHost },
+    actionBarUIStore: { lowerAllHands },
     classroomStore: {
       streamStore: { updateRemotePublishStateBatch },
       roomStore: { sendCustomChannelMessage },
@@ -124,7 +125,7 @@ const Participants = observer(({ columns }: { columns: any }) => {
       cmd: CustomMessageCommandType.deviceSwitchBatch,
       data: {
         deviceType: CustomMessageDeviceType.mic,
-        deviceState: CustomMessageDeviceState.open, // 0.close, 1.open
+        deviceState: CustomMessageDeviceState.open, //
       },
     });
     toastApiRef.current?.open({
@@ -158,6 +159,16 @@ const Participants = observer(({ columns }: { columns: any }) => {
 
         {isHost && (
           <div className="fcr-participants-footer">
+            <ToolTip placement="top" content="Lower All Hands">
+              <Button
+                disabled={participantStudentList.length <= 0}
+                onClick={lowerAllHands}
+                preIcon={SvgIconEnum.FCR_LOWER_HAND}
+                size="XS"
+                type="secondary">
+                Lower All Hands
+              </Button>
+            </ToolTip>
             <ToolTip placement="top" content="Mute All">
               <Button
                 disabled={participantStudentList.length <= 0}
@@ -256,6 +267,23 @@ const TableIconWrapper: FC<
   );
 };
 
+const TableRaiseHand = observer(({ stream }: { stream?: EduStreamUI }) => {
+  const {
+    actionBarUIStore: { handsUpMap, lowerHand },
+    statusBarUIStore: { isHost },
+    participantsUIStore: { tableIconSize },
+  } = useStore();
+  const userUuid = stream?.fromUser.userUuid || '';
+  const isHandsUp = handsUpMap.has(userUuid);
+
+  return isHandsUp ? (
+    <TableIconWrapper tooltip={'Lower Hand'} disabled={!isHost} onClick={() => lowerHand(userUuid)}>
+      <SvgImg type={SvgIconEnum.FCR_STUDENT_RASIEHAND} size={tableIconSize}></SvgImg>
+    </TableIconWrapper>
+  ) : (
+    <>{'-'}</>
+  );
+});
 const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
   const {
     statusBarUIStore: { isHost },
@@ -455,6 +483,13 @@ const useParticipantsColumn = () => {
       },
     },
     {
+      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.RaiseHand} />,
+      width: 88,
+      render: (_: unknown, item: UserTableItem) => {
+        return <TableRaiseHand stream={item.stream}></TableRaiseHand>;
+      },
+    },
+    {
       title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Camera} />,
       width: 68,
       render: (_: unknown, item: UserTableItem) => {
@@ -497,6 +532,13 @@ const useParticipantsColumn = () => {
       width: 50,
       render: (_: unknown, item: UserTableItem) => {
         return <TableAuth role={item.user.userRole} userUuid={item.user.userUuid}></TableAuth>;
+      },
+    },
+    {
+      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.RaiseHand} />,
+      width: 88,
+      render: (_: unknown, item: UserTableItem) => {
+        return <TableRaiseHand stream={item.stream}></TableRaiseHand>;
       },
     },
     {

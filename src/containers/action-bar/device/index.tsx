@@ -15,13 +15,15 @@ import { themeVal } from '@ui-kit-utils/tailwindcss';
 const colors = themeVal('colors');
 export const AudioRecordinDeviceIcon = observer(
   ({ size = 32, stream }: { size?: number; stream?: EduStreamUI }) => {
-    const isMute = !stream?.isMicStreamPublished || !stream.isMicDeviceEnabled;
     const {
       streamUIStore: { remoteStreamVolume, localVolume },
     } = useStore();
+    const { micEnabled } = useDeviceSwitch(stream);
+
     const isLocalStream = stream?.isLocal;
+
     const volume = isLocalStream ? localVolume : remoteStreamVolume(stream);
-    return isMute ? (
+    return !micEnabled ? (
       <SvgImg
         type={SvgIconEnum.FCR_NOMUTE}
         colors={{ iconSecondary: colors['red']['6'] }}
@@ -41,15 +43,11 @@ export const MicrophoneDevice: FC = observer(() => {
   } = useDeviceTooltipVisible();
   const {
     streamUIStore: { localStream },
-    deviceSettingUIStore: { isAudioRecordingDeviceEnabled, noAudioRecordingDevice },
+    deviceSettingUIStore: { noAudioRecordingDevice },
     layoutUIStore: { addDialog },
   } = useStore();
-  const { toggleLocalAudioRecordingDevice } = useDeviceSwitch();
-  const text = noAudioRecordingDevice
-    ? 'No device'
-    : isAudioRecordingDeviceEnabled
-    ? 'Mute'
-    : 'Unmute';
+  const { toggleLocalAudioRecordingDevice, micEnabled } = useDeviceSwitch();
+  const text = noAudioRecordingDevice ? 'No device' : micEnabled ? 'Mute' : 'Unmute';
 
   return (
     <ToolTip visible={tootipVisible} onVisibleChange={handleTooltipVisibleChanged} content={text}>
@@ -99,18 +97,17 @@ export const CameraDevice: FC = observer(() => {
     setPopoverOpened,
   } = useDeviceTooltipVisible();
   const {
-    deviceSettingUIStore: { isCameraDeviceEnabled, noCameraDevice },
+    deviceSettingUIStore: { noCameraDevice },
     layoutUIStore: { addDialog },
   } = useStore();
-  const { toggleLocalCameraDevice } = useDeviceSwitch();
+  const { toggleLocalCameraDevice, cameraEnabled } = useDeviceSwitch();
   const icon = noCameraDevice
     ? SvgIconEnum.FCR_CAMERACRASH
-    : isCameraDeviceEnabled
+    : cameraEnabled
     ? SvgIconEnum.FCR_CAMERA
     : SvgIconEnum.FCR_CAMERAOFF;
-  const text = noCameraDevice ? 'No device' : isCameraDeviceEnabled ? 'Stop Video' : 'Start Video';
-  const color =
-    !isCameraDeviceEnabled || noCameraDevice ? { iconSecondary: colors['red']['6'] } : {};
+  const text = noCameraDevice ? 'No device' : cameraEnabled ? 'Stop Video' : 'Start Video';
+  const color = !cameraEnabled || noCameraDevice ? { iconSecondary: colors['red']['6'] } : {};
   return (
     <ToolTip onVisibleChange={handleTooltipVisibleChanged} visible={tootipVisible} content={text}>
       <ActionBarItemWrapper>

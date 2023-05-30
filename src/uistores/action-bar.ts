@@ -1,17 +1,120 @@
 import { EduUIStoreBase } from './base';
-import { observable, computed, reaction, action } from 'mobx';
+import { observable, computed, reaction, action, runInAction } from 'mobx';
 import { ShareStreamStateKeeper } from '@onlineclass/utils/stream/state-keeper';
 import { ClassroomState, EduClassroomConfig, LeaveReason, RecordMode } from 'agora-edu-core';
 import {
   AgoraRteAudioSourceType,
+  AgoraRteCustomMessage,
   AgoraRteMediaPublishState,
   AgoraRteMediaSourceState,
+  Scheduler,
   bound,
 } from 'agora-rte-sdk';
+import { computedFn } from 'mobx-utils';
+
 import { isElectron } from '@onlineclass/utils/check';
 import { getConfig } from '@onlineclass/utils/launch-options-holder';
 import { ToastApi } from '@components/toast';
+import { getRandomInt } from '@onlineclass/utils';
+import {
+  CustomMessageCommandType,
+  CustomMessageData,
+  CustomMessageHandsUpAllType,
+  CustomMessageHandsUpState,
+  CustomMessageHandsUpType,
+} from './type';
 export class ActionBarUIStore extends EduUIStoreBase {
+  // for student hands up
+  private _handsUpTask: Scheduler.Task | null = null;
+  @observable isHandsUp = false;
+
+  @action.bound
+  raiseHand() {
+    if (this.isHandsUp) return;
+    const localUserUuid = this.classroomStore.userStore.localUser!.userUuid;
+    this.isHandsUp = true;
+    this.addHandsUpStudent(localUserUuid);
+    const intervalInMs = getRandomInt(2000, 4000);
+    this._handsUpTask = Scheduler.shared.addIntervalTask(
+      () => {
+        const message: CustomMessageData<CustomMessageHandsUpType> = {
+          cmd: CustomMessageCommandType.handsUp,
+          data: {
+            userUuid: localUserUuid,
+            state: CustomMessageHandsUpState.raiseHand,
+          },
+        };
+        this.classroomStore.roomStore.sendCustomChannelMessage(message);
+        this.addHandsUpStudent(localUserUuid);
+      },
+      intervalInMs,
+      true,
+    );
+  }
+  @action.bound
+  lowerHand(userUuid?: string) {
+    const localUserUuid = this.classroomStore.userStore.localUser!.userUuid;
+    this.isHandsUp = false;
+    this.removeHandsUpStudent(localUserUuid);
+    this._handsUpTask?.stop();
+    const message: CustomMessageData<CustomMessageHandsUpType> = {
+      cmd: CustomMessageCommandType.handsUp,
+      data: {
+        userUuid: userUuid || localUserUuid,
+        state: CustomMessageHandsUpState.lowerHand,
+      },
+    };
+    this.classroomStore.roomStore.sendCustomChannelMessage(message);
+  }
+  //for all hands up
+  @observable
+  handsUpMap: Map<string, number> = new Map();
+  private _handsUpListScanTask: Scheduler.Task | null = null;
+  @action.bound
+  addHandsUpStudent(userUuid: string) {
+    this.handsUpMap.set(userUuid, Date.now());
+  }
+  @action.bound
+  removeHandsUpStudent(userUuid: string) {
+    this.handsUpMap.delete(userUuid);
+  }
+  @action.bound
+  clearHandsUpStudent() {
+    this.handsUpMap.clear();
+  }
+  isHandsUpByUserUuid = computedFn((userUuid: string) => {
+    return this.handsUpMap.has(userUuid);
+  });
+  @action.bound
+  startHandsUpMapScan() {
+    const gapInMs = 6000;
+    this._handsUpListScanTask = Scheduler.shared.addIntervalTask(() => {
+      const now = Date.now();
+      this.handsUpMap.forEach((time, key) => {
+        if (now - time > gapInMs) {
+          runInAction(() => {
+            this.removeHandsUpStudent(key);
+          });
+        }
+      });
+    }, gapInMs);
+  }
+  @action.bound
+  stopHandsUpListScan() {
+    this._handsUpListScanTask?.stop();
+  }
+  @action.bound
+  lowerAllHands() {
+    const message: CustomMessageData<CustomMessageHandsUpAllType> = {
+      cmd: CustomMessageCommandType.handsUpAll,
+      data: {
+        operation: CustomMessageHandsUpState.lowerHand,
+      },
+    };
+    this.classroomStore.roomStore.sendCustomChannelMessage(message);
+    this.handsUpMap.clear();
+  }
+
   @computed get showEndClassButton() {
     return this.getters.isHost;
   }
@@ -110,11 +213,73 @@ export class ActionBarUIStore extends EduUIStoreBase {
   leaveClassroom() {
     this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
   }
+  @bound
+  private _onReceiveChannelMessage(message: AgoraRteCustomMessage) {
+    const cmd = message.payload.cmd as CustomMessageCommandType;
+    const localUserUuid = this.classroomStore.userStore.localUser?.userUuid;
+
+    if (message.fromUser.userUuid !== localUserUuid) {
+      switch (cmd) {
+        case CustomMessageCommandType.handsUp: {
+          const data = message.payload.data as CustomMessageHandsUpType;
+          const { userUuid, state } = data;
+
+          if (state === CustomMessageHandsUpState.raiseHand) {
+            this.addHandsUpStudent(userUuid);
+          } else if (state === CustomMessageHandsUpState.lowerHand) {
+            this.removeHandsUpStudent(userUuid);
+          }
+          if (this.getters.isStudent) {
+            if (state === CustomMessageHandsUpState.lowerHand) {
+              const localUserUuid = this.classroomStore.userStore.localUser?.userUuid;
+              if (userUuid === localUserUuid) {
+                this.lowerHand();
+                ToastApi.open({
+                  toastProps: {
+                    type: 'info',
+                    content: 'Teacher lower your hand',
+                  },
+                });
+              }
+            }
+          }
+          break;
+        }
+        case CustomMessageCommandType.handsUpAll: {
+          if (this.getters.isStudent) {
+            const data = message.payload.data as CustomMessageHandsUpAllType;
+            const { operation } = data;
+            if (operation === CustomMessageHandsUpState.lowerHand) {
+              this.lowerHand();
+              ToastApi.open({
+                toastProps: {
+                  type: 'info',
+                  content: 'Teacher lower all hands',
+                },
+              });
+            }
+          }
+        }
+      }
+    }
+  }
+  @bound
+  private _onReceivePeerMessage(message: AgoraRteCustomMessage) {}
   onDestroy(): void {
     this._disposers.forEach((d) => d());
     this._disposers = [];
+    this.classroomStore.roomStore.removeCustomMessageObserver({
+      onReceiveChannelMessage: this._onReceiveChannelMessage,
+      onReceivePeerMessage: this._onReceivePeerMessage,
+    });
+    this.stopHandsUpListScan();
   }
   onInstall(): void {
+    this.startHandsUpMapScan();
+    this.classroomStore.roomStore.addCustomMessageObserver({
+      onReceiveChannelMessage: this._onReceiveChannelMessage,
+      onReceivePeerMessage: this._onReceivePeerMessage,
+    });
     this._disposers.push(
       computed(() => this.classroomStore.mediaStore.localScreenShareTrackState).observe(
         ({ oldValue, newValue }) => {

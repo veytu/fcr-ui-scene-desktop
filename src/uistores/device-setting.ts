@@ -423,7 +423,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
       track.setRecordingDevice(this.audioRecordingDeviceId);
       track.start();
-      this._audioRecordingDeviceEnabled = true;
     }
   }
   @bound
@@ -442,7 +441,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     } else {
       const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
       track.stop();
-      this._audioRecordingDeviceEnabled = false;
     }
   }
   @bound

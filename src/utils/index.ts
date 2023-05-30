@@ -46,3 +46,6 @@ export const formatRoomID = (id: string, separator = ' ') => {
   }
   return result.join(separator);
 };
+export const getRandomInt = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
