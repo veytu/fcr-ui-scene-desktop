@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BeautySlider } from '../device-pretest/beauty-slider';
 import { MirrorToggle } from '../device-pretest/mirror-toggle';
 import { LocalVideoPlayer } from '../video-player';
@@ -18,13 +18,21 @@ type TabKeyType = keyof typeof tabContents;
 
 export const VideoSettings = observer(() => {
   const {
-    deviceSettingUIStore: { isBeautyFilterEnabled, activeBeautyType },
+    deviceSettingUIStore: {
+      isBeautyFilterEnabled,
+      activeBeautyType,
+      startCameraPreview,
+      stopCameraPreview,
+    },
   } = useStore();
   const [activeTab, setActiveTab] = useState<TabKeyType>('virtual-background');
   const handleActiveTab = (tabKey: string) => {
     setActiveTab(tabKey as TabKeyType);
   };
-
+  useEffect(() => {
+    startCameraPreview();
+    return stopCameraPreview;
+  }, []);
   const tabItems = [
     { label: 'Background', key: 'virtual-background' },
     { label: 'Beauty Filter', key: 'beauty-filter' },

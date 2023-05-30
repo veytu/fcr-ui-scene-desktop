@@ -42,6 +42,16 @@ import {
  */
 @Log.attach()
 export class DeviceSettingUIStore extends EduUIStoreBase {
+  private _pretestCameraEnabled = false;
+  private _pretestMicEnabled = false;
+  @bound
+  setPretestCameraEnabled(enable: boolean) {
+    this._pretestCameraEnabled = enable;
+  }
+  @bound
+  setPretestMicEnabled(enable: boolean) {
+    this._pretestMicEnabled = enable;
+  }
   // for publish tracks
   private _virtualBackgroundProcessor?: IVirtualBackgroundProcessor;
   private _beautyEffectProcessor?: IBeautyProcessor;
@@ -250,7 +260,9 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     return {
       classroomState: this.classroomStore.connectionStore.classroomState,
       cameraDeviceId: this._cameraDeviceId,
-      localCameraStreamUuid: this.classroomStore.streamStore.localCameraStreamUuid,
+      localCameraStream: this.classroomStore.streamStore.streamByStreamUuid.get(
+        this.classroomStore.streamStore.localCameraStreamUuid || '',
+      ),
     };
   }
 
@@ -265,7 +277,9 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     return {
       classroomState: this.classroomStore.connectionStore.classroomState,
       recordingDeviceId: this._audioRecordingDeviceId,
-      localMicStreamUuid: this.classroomStore.streamStore.localMicStreamUuid,
+      localMicStream: this.classroomStore.streamStore.streamByStreamUuid.get(
+        this.classroomStore.streamStore.localMicStreamUuid || '',
+      ),
     };
   }
 
@@ -445,10 +459,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   }
   @bound
   toggleAudioRecordingPreview() {
-    if (this.isAudioRecordingDeviceEnabled) {
-      this.enableAudioRecording(false);
+    if (this.isPreviewAudioRecordingDeviceEnabled) {
+      this.stopAudioRecordingPreview();
     } else {
-      this.enableAudioRecording(true);
+      this.startAudioRecordingPreview();
     }
   }
   @action.bound
@@ -803,14 +817,11 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
           }
         }
         if (newValue.classroomState === ClassroomState.Connected) {
-          if (!oldValue?.localCameraStreamUuid && newValue.localCameraStreamUuid) {
-            const stream = this.classroomStore.streamStore.streamByStreamUuid.get(
-              newValue.localCameraStreamUuid,
-            );
-            if (stream?.videoState === AgoraRteMediaPublishState.Published) {
-              if (this._previewCameraDeviceEnabled) this.enableCamera(true);
+          if (!oldValue?.localCameraStream && newValue.localCameraStream) {
+            const stream = newValue.localCameraStream;
+            if (stream.videoState === AgoraRteMediaPublishState.Published) {
+              if (this._pretestCameraEnabled) this.enableCamera(true);
             }
-            this.stopCameraPreview();
           }
         }
       }),
@@ -831,14 +842,11 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
           }
         }
         if (newValue.classroomState === ClassroomState.Connected) {
-          if (!oldValue?.localMicStreamUuid && newValue.localMicStreamUuid) {
-            const stream = this.classroomStore.streamStore.streamByStreamUuid.get(
-              newValue.localMicStreamUuid,
-            );
-            if (stream?.audioState === AgoraRteMediaPublishState.Published) {
-              if (this._previewAudioRecordingDeviceEnabled) this.enableAudioRecording(true);
+          if (!oldValue?.localMicStream && newValue.localMicStream) {
+            const stream = newValue.localMicStream;
+            if (stream.audioState === AgoraRteMediaPublishState.Published) {
+              if (this._pretestMicEnabled) this.enableAudioRecording(true);
             }
-            this.stopAudioRecordingPreview();
           }
         }
       }),

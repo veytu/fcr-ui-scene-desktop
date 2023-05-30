@@ -8,10 +8,7 @@ export const LocalVideoPlayer = observer(() => {
   const { deviceSettingUIStore } = useStore();
   const videoRef = useRef<HTMLDivElement>(null);
   const { userName } = getLaunchOptions();
-  useEffect(() => {
-    deviceSettingUIStore.startCameraPreview();
-    return deviceSettingUIStore.stopCameraPreview;
-  }, []);
+
   useEffect(() => {
     if (videoRef.current) {
       deviceSettingUIStore.setupLocalVideoPreview(
