@@ -69,10 +69,7 @@ export class LayoutUIStore extends EduUIStoreBase {
     return opened;
   }
   @computed get gridLayoutDisabled() {
-    return (
-      this.getters.isBoardWidgetActive ||
-      (this.getters.isScreenSharing && !this.getters.isLocalScreenSharing)
-    );
+    return this.getters.isScreenSharing && !this.getters.isLocalScreenSharing;
   }
   @computed
   get noAvailabelStream() {
@@ -88,8 +85,7 @@ export class LayoutUIStore extends EduUIStoreBase {
       this._isPointingBar ||
       this._hasPopoverShowed ||
       (this.layout === Layout.Grid && this.getters.cameraUIStreams.length > 1) ||
-      this.noAvailabelStream ||
-      this.getters.isBoardWidgetActive
+      this.noAvailabelStream
     );
   }
   get classroomViewportClassName() {
@@ -194,17 +190,6 @@ export class LayoutUIStore extends EduUIStoreBase {
     this.resetClearScreenTask();
     this._disposers.push(reaction(() => this.layout, this._handleLayoutChanged));
 
-    this._disposers.push(
-      reaction(
-        () => this.getters.isBoardWidgetActive,
-        (isBoardWidgetActive) => {
-          if (isBoardWidgetActive) {
-            this.activeStatusBarAndActionBar();
-            if (this.layout === Layout.Grid) this.setLayout(Layout.ListOnTop);
-          }
-        },
-      ),
-    );
     this._disposers.push(
       reaction(
         () => {

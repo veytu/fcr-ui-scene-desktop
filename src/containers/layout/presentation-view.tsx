@@ -79,7 +79,6 @@ export const PresentationView = observer(() => {
             <StreamWindow></StreamWindow>
           </StreamWindowContext.Provider>
         ) : null}
-        {isBoardWidgetActive && <BoardViewContainer></BoardViewContainer>}
       </div>
     </div>
   );

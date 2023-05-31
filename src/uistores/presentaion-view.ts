@@ -16,7 +16,6 @@ export class PresentationUIStore extends EduUIStoreBase {
     return this.getters.isBoardWidgetActive;
   }
   @computed get mainViewStream() {
-    if (this.isBoardWidgetActive) return null;
     //观众优先展示屏幕分享
     if (this.getters.screenShareUIStream && !this.getters.isLocalScreenSharing)
       return this.getters.screenShareUIStream;
@@ -45,23 +44,5 @@ export class PresentationUIStore extends EduUIStoreBase {
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }
-  onInstall(): void {
-    this._disposers.push(
-      reaction(
-        () => this.classroomStore.streamStore.localShareStreamUuid,
-        () => {
-          const screenShareEnabled = !!this.classroomStore.streamStore.localShareStreamUuid;
-          if (screenShareEnabled) {
-            if (this.isBoardWidgetActive) {
-              this._cacheBoardEnableStatus = true;
-              this.getters.boardApi.disable();
-            }
-          } else {
-            if (this._cacheBoardEnableStatus) this.getters.boardApi.enable();
-            this._cacheBoardEnableStatus = false;
-          }
-        },
-      ),
-    );
-  }
+  onInstall(): void {}
 }

@@ -29,7 +29,7 @@ export const StatusBar = observer(() => {
     <div
       className={classnames('fcr-status-bar', {
         'fcr-status-bar-hide': !showStatusBar,
-        'fcr-bg-transparent': noAvailabelStream && !isBoardWidgetActive,
+        'fcr-bg-transparent': noAvailabelStream,
       })}
       onMouseEnter={() => {
         setIsPointingBar(true);

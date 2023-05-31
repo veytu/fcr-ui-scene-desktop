@@ -28,10 +28,7 @@ export class StreamUIStore extends EduUIStoreBase {
     this.pinnedStreamUuid = '';
   }
   @computed get pinDisabled() {
-    return (
-      this.getters.isBoardWidgetActive ||
-      (this.getters.isScreenSharing && !this.getters.isLocalScreenSharing)
-    );
+    return this.getters.isScreenSharing && !this.getters.isLocalScreenSharing;
   }
 
   subSet = new Set<string>();
