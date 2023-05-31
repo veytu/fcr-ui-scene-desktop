@@ -1,3 +1,7 @@
+.fcr-status-bar-widget-slot {
+  display: flex;
+  gap: 5px;
+}
 .fcr-status-bar-widget-slot .fcr-minimized-widget-icon {
   @apply fcr-bg-2  fcr-rounded-4 fcr-shadow-line-1-.5;
   height: 28px;

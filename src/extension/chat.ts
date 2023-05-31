@@ -7,7 +7,7 @@ export class Chat {
   logger!: Logger;
   private _controller?: AgoraWidgetController;
   private _disposers: IReactionDisposer[] = [];
-  private _sendBoardCommandMessage(event: AgoraExtensionRoomEvent, args?: unknown) {
+  private _sendMessage(event: AgoraExtensionRoomEvent, args?: unknown) {
     if (this._controller) {
       this._controller.broadcast(event, args);
     } else {
@@ -21,11 +21,11 @@ export class Chat {
   }
   @bound
   openChatDialog() {
-    this._sendBoardCommandMessage(AgoraExtensionRoomEvent.OpenChatDialog);
+    this._sendMessage(AgoraExtensionRoomEvent.OpenChatDialog);
   }
   @bound
   closeChatDialog() {
-    this._sendBoardCommandMessage(AgoraExtensionRoomEvent.CloseChatDialog);
+    this._sendMessage(AgoraExtensionRoomEvent.CloseChatDialog);
   }
   install(controller: AgoraWidgetController) {
     this._controller = controller;

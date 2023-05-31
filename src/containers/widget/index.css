@@ -7,6 +7,14 @@
   pointer-events: none;
 }
 
+.fcr-widget-container.fcr-z-0 {
+  z-index: 1000;
+}
+
+.fcr-widget-container.fcr-z-10 {
+  z-index: 1010;
+}
+
 .fcr-widget-container > * {
   pointer-events: all;
 }

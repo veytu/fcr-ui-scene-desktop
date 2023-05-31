@@ -14,10 +14,10 @@ export class EduTool {
 
   @computed
   get minimizedWidgetIcons() {
-    return Array.from(this._minimizedStateMap.entries()).map(([widgetId, { icon ,tooltip}]) => ({
+    return Array.from(this._minimizedStateMap.entries()).map(([widgetId, { icon, tooltip }]) => ({
       icon,
       widgetId,
-      tooltip
+      tooltip,
     }));
   }
 
@@ -44,8 +44,13 @@ export class EduTool {
     }
   }
 
+  @action.bound
+  private _handleWidgetDestroy({ widgetId }: { widgetId: string }) {
+    this._minimizedStateMap.delete(widgetId);
+  }
+
   setWidgetMinimized(minimized: boolean, widgetId: string) {
-    this._sendBoardCommandMessage(AgoraExtensionRoomEvent.SetMinimize, { widgetId, minimized });
+    this._sendMessage(AgoraExtensionRoomEvent.SetMinimize, { widgetId, minimized });
   }
 
   install(controller: AgoraWidgetController) {
@@ -53,6 +58,11 @@ export class EduTool {
     controller.addBroadcastListener({
       messageType: AgoraExtensionWidgetEvent.Minimize,
       onMessage: this._handleMinimizedStateChange,
+    });
+
+    controller.addBroadcastListener({
+      messageType: AgoraExtensionWidgetEvent.WidgetDestroyed,
+      onMessage: this._handleWidgetDestroy,
     });
   }
 
@@ -62,11 +72,16 @@ export class EduTool {
       onMessage: this._handleMinimizedStateChange,
     });
 
+    this._controller?.removeBroadcastListener({
+      messageType: AgoraExtensionWidgetEvent.WidgetDestroyed,
+      onMessage: this._handleWidgetDestroy,
+    });
+
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }
 
-  private _sendBoardCommandMessage(event: AgoraExtensionRoomEvent, args?: unknown) {
+  private _sendMessage(event: AgoraExtensionRoomEvent, args?: unknown) {
     if (this._controller) {
       this._controller.broadcast(event, args);
     } else {

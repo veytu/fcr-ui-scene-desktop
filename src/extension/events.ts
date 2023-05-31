@@ -1,4 +1,11 @@
 /**
+ * 此文件包含 SDK 中支持的事件，如果发现下列事件中与 SDK 中定义的事件有差异，则当前库与 SDK 版本不匹配
+ *
+ * This file includes events that should be supported by SDK,
+ * if below events have difference with events in SDK, it's considerd there's a version mismatch between this lib and SDK
+ */
+
+/**
  * 此类事件从教室发出，在Widget中监听
  */
 /** @en
@@ -120,4 +127,8 @@ export enum AgoraExtensionWidgetEvent {
   Minimize = 'minimize',
   //聊天对话框开启状态变更
   ChatDialogVisibleChanged = 'chat-dialog-visible-changed',
+  // Widget创建成功
+  WidgetCreated = 'widget-created',
+  // Widget销毁成功
+  WidgetDestroyed = 'widget-destroyed',
 }
