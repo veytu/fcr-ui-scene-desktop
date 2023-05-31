@@ -11,7 +11,7 @@ export const LocalVideoPlayer = observer(() => {
 
   useEffect(() => {
     if (videoRef.current) {
-      deviceSettingUIStore.setupLocalVideo(
+      deviceSettingUIStore.setupLocalVideoPreview(
         videoRef.current,
         deviceSettingUIStore.isLocalMirrorEnabled,
       );

@@ -9,6 +9,7 @@ export enum ParticipantsTableSortKeysEnum {
   Camera = 'Camera',
   Microphone = 'Microphone',
   Reward = 'Reward',
+  RaiseHand = 'Raise hand',
 }
 export type ParticipantsOrderDirection = 'asc' | 'desc';
 export class ParticipantsUIStore extends EduUIStoreBase {
@@ -16,6 +17,10 @@ export class ParticipantsUIStore extends EduUIStoreBase {
   @action.bound
   setParticipantsDialogVisible(visible: boolean) {
     this.participantsDialogVisible = visible;
+  }
+  @action.bound
+  toggleParticipantsDialogVisible() {
+    this.participantsDialogVisible = !this.participantsDialogVisible;
   }
   @observable orderKey = 'Auth';
   @action.bound
@@ -70,6 +75,19 @@ export class ParticipantsUIStore extends EduUIStoreBase {
         } else if (
           this.getters.boardApi.grantedUsers.has(next.user.userUuid) &&
           !this.getters.boardApi.grantedUsers.has(prev.user.userUuid)
+        ) {
+          return this.orderDirection === 'asc' ? 1 : -1;
+        }
+        return 0;
+      }
+      if (this.orderKey === ParticipantsTableSortKeysEnum.RaiseHand) {
+        const isHandsUpByUserUuid =
+          this.getters.classroomUIStore.actionBarUIStore.isHandsUpByUserUuid;
+        if (isHandsUpByUserUuid(prev.user.userUuid) && !isHandsUpByUserUuid(next.user.userUuid)) {
+          return this.orderDirection === 'asc' ? -1 : 1;
+        } else if (
+          isHandsUpByUserUuid(next.user.userUuid) &&
+          !isHandsUpByUserUuid(prev.user.userUuid)
         ) {
           return this.orderDirection === 'asc' ? 1 : -1;
         }
@@ -131,5 +149,7 @@ export class ParticipantsUIStore extends EduUIStoreBase {
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }
-  onInstall(): void {}
+  onInstall(): void {
+    this.getters.addDialog('participants');
+  }
 }

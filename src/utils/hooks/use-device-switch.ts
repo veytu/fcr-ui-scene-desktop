@@ -1,72 +1,149 @@
 import { AgoraRteMediaPublishState } from 'agora-rte-sdk';
 import { EduStreamUI } from '../stream/struct';
 import { useStore } from './use-store';
-
-export const useDeviceSwitch = (stream?: EduStreamUI) => {
+import { SvgIconEnum } from '@components/svg-img';
+import { themeVal } from '@ui-kit-utils/tailwindcss';
+import {
+  CustomMessageCommandType,
+  CustomMessageDeviceState,
+  CustomMessageDeviceType,
+} from '@onlineclass/uistores/type';
+const colors = themeVal('colors');
+export const useDeviceSwitch = (userStream?: EduStreamUI) => {
   const {
-    deviceSettingUIStore: { isCameraDeviceEnabled, isAudioRecordingDeviceEnabled },
+    layoutUIStore: { addDialog },
+    deviceSettingUIStore: {
+      isCameraDeviceEnabled,
+      isAudioRecordingDeviceEnabled,
+      enableCamera,
+      enableAudioRecording,
+    },
+    streamUIStore: { localStream },
     classroomStore: {
-      streamStore: { updateRemotePublishState, updateLocalPublishState },
+      streamStore: { updateRemotePublishState },
+      roomStore: { sendCustomPeerMessage },
     },
   } = useStore();
-  const micEnabled = stream?.isMicDeviceEnabled && stream.isMicStreamPublished;
-  const cameraEnabled = stream?.isVideoDeviceEnabled && stream.isVideoStreamPublished;
+  const stream = userStream || localStream;
+
+  const isLocal = !userStream || stream?.isLocal;
+  const micEnabled = isLocal
+    ? isAudioRecordingDeviceEnabled
+    : stream?.isMicDeviceEnabled && stream.isMicStreamPublished;
+
+  const cameraEnabled = isLocal
+    ? isCameraDeviceEnabled
+    : stream?.isVideoDeviceEnabled && stream.isVideoStreamPublished;
   const toggleLocalCameraDevice = async () => {
     if (isCameraDeviceEnabled) {
-      updateLocalPublishState({
-        videoState: AgoraRteMediaPublishState.Unpublished,
-      });
+      enableCamera(false);
     } else {
-      updateLocalPublishState({
-        videoState: AgoraRteMediaPublishState.Published,
-      });
+      if (stream?.isVideoStreamPublished) {
+        enableCamera(true);
+      } else {
+        addDialog('confirm', {
+          title: 'Notice',
+          content: 'You can raise hand to request the teacher to start video.',
+          cancelButtonVisible: false,
+          okButtonProps: {
+            styleType: 'danger',
+          },
+        });
+      }
     }
   };
   const toggleLocalAudioRecordingDevice = async () => {
     if (isAudioRecordingDeviceEnabled) {
-      updateLocalPublishState({
-        audioState: AgoraRteMediaPublishState.Unpublished,
-      });
+      enableAudioRecording(false);
     } else {
-      updateLocalPublishState({
-        audioState: AgoraRteMediaPublishState.Published,
-      });
+      if (stream?.isMicStreamPublished) {
+        enableAudioRecording(true);
+      } else {
+        addDialog('confirm', {
+          title: 'Notice',
+          content: 'You can raise hand to request the teacher to unmute.',
+          cancelButtonVisible: false,
+          okButtonProps: {
+            styleType: 'danger',
+          },
+        });
+      }
     }
   };
   const localCameraTooltip = stream?.isVideoStreamPublished ? 'Stop video' : 'Start video';
   const remoteCameraTooltip = stream?.isVideoStreamPublished
     ? 'Stop video'
     : 'Request to start video';
+  const cameraTooltip = isLocal ? localCameraTooltip : remoteCameraTooltip;
   const handleCameraClick = () => {
-    if (stream?.isLocal) {
+    if (isLocal) {
       toggleLocalCameraDevice();
     } else {
       if (stream) {
-        updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
-          videoState: stream.isVideoStreamPublished
-            ? AgoraRteMediaPublishState.Unpublished
-            : AgoraRteMediaPublishState.Published,
-        });
+        if (cameraEnabled) {
+          updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
+            videoState: AgoraRteMediaPublishState.Unpublished,
+          });
+        } else {
+          updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
+            videoState: AgoraRteMediaPublishState.Published,
+          });
+          sendCustomPeerMessage(
+            {
+              cmd: CustomMessageCommandType.deviceSwitch,
+              data: {
+                deviceType: CustomMessageDeviceType.camera,
+                deviceState: CustomMessageDeviceState.open,
+              },
+            },
+            stream.fromUser.userUuid,
+          );
+        }
       }
     }
   };
   const localMicTooltip = stream?.isMicStreamPublished ? 'Mute' : 'Unmute';
   const remoteMicTooltip = stream?.isMicStreamPublished ? 'Mute' : 'Request to unmute';
+  const micTooltip = isLocal ? localMicTooltip : remoteMicTooltip;
   const handleMicrophoneClick = () => {
-    if (stream?.isLocal) {
+    if (isLocal) {
       toggleLocalAudioRecordingDevice();
     } else {
-      if (stream)
-        updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
-          audioState: stream.isMicStreamPublished
-            ? AgoraRteMediaPublishState.Unpublished
-            : AgoraRteMediaPublishState.Published,
-        });
+      if (stream) {
+        if (micEnabled) {
+          updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
+            audioState: AgoraRteMediaPublishState.Unpublished,
+          });
+        } else {
+          updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
+            audioState: AgoraRteMediaPublishState.Published,
+          });
+
+          sendCustomPeerMessage(
+            {
+              cmd: CustomMessageCommandType.deviceSwitch,
+              data: {
+                deviceType: CustomMessageDeviceType.mic,
+                deviceState: CustomMessageDeviceState.open, // 0.close, 1.open
+              },
+            },
+            stream.fromUser.userUuid,
+          );
+        }
+      }
     }
   };
+  const cameraIcon = cameraEnabled ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
+  const cameraIconColor = cameraEnabled ? {} : { iconSecondary: colors['red']['6'] };
+  const micIcon = micEnabled ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
+  const micIconColor = micEnabled ? {} : { iconSecondary: colors['red']['6'] };
   return {
-    cameraTooltip: stream?.isLocal ? localCameraTooltip : remoteCameraTooltip,
-    micTooltip: stream?.isLocal ? localMicTooltip : remoteMicTooltip,
+    micIcon,
+    micIconColor,
+    cameraIcon,
+    cameraIconColor,
+    cameraTooltip,
+    micTooltip,
     micEnabled,
     cameraEnabled,
     handleCameraClick,

@@ -155,7 +155,6 @@ export class StreamUIStore extends EduUIStoreBase {
       const renderableVideoDom = this._videoDoms.get(stream.streamUuid);
       if (renderableVideoDom) {
         const needMirror = stream.videoSourceType !== AgoraRteVideoSourceType.ScreenShare;
-        console.log(renderableVideoDom.renderMode, 'renderableVideoDom.renderMode');
         setupRemoteVideo(stream, renderableVideoDom.dom, needMirror, renderableVideoDom.renderMode);
       }
     });

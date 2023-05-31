@@ -14,6 +14,7 @@ import { Participants } from './participants';
 import { Setting } from './setting';
 import { Leave, LeaveCheck } from './leave';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
+import { RaiseHands } from './raise-hands';
 export const ActionBar = observer(() => {
   const {
     layoutUIStore: { showActiobBar, setIsPointingBar },
@@ -42,11 +43,11 @@ export const ActionBar = observer(() => {
             {showScreenShare && <ScreenShare></ScreenShare>}
             {showRecord && <Record></Record>}
             {showToolBox && <ToolBox></ToolBox>}
+            <RaiseHands></RaiseHands>
+
             {showWhiteBoard && <Whiteboard></Whiteboard>}
           </div>
           <div className="fcr-action-bar-right">
-            {/* <RaiseHands></RaiseHands> */}
-
             <Setting></Setting>
             <Leave></Leave>
           </div>

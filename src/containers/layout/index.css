@@ -139,6 +139,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 .fcr-layout-content-list-view-collapse-button-row svg {
   transform: rotate(-90deg);

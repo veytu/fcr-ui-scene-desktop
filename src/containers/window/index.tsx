@@ -176,10 +176,10 @@ const UserInteract = observer(() => {
     </div>
   );
 });
-const MuteIcon = ({ size, visible }: { size: 'large' | 'small'; visible: boolean }) => {
+const MuteIcon = observer(({ size, visible }: { size: 'large' | 'small'; visible: boolean }) => {
   const streamWindowContext = useContext(StreamWindowContext);
 
-  const { handleMicrophoneClick } = useDeviceSwitch(streamWindowContext?.stream);
+  const { handleMicrophoneClick, micEnabled } = useDeviceSwitch(streamWindowContext?.stream);
 
   return visible ? (
     <div
@@ -187,10 +187,10 @@ const MuteIcon = ({ size, visible }: { size: 'large' | 'small'; visible: boolean
       className={classnames(
         `fcr-stream-window-mute-icon fcr-stream-window-mute-icon-${size} fcr-bg-brand-6`,
       )}>
-      <span> {streamWindowContext?.stream.isMicStreamPublished ? 'Mute' : 'Unmute'}</span>
+      <span> {micEnabled ? 'Mute' : 'Unmute'}</span>
     </div>
   ) : null;
-};
+});
 const StreamBottomRightAudioStatus = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
   const streamWindowMouseContext = useContext(StreamWindowMouseContext);
@@ -224,8 +224,7 @@ const StreamActions = observer(() => {
   const size = streamWindowContext?.labelSize;
   const {
     participantsUIStore: { sendReward },
-    streamUIStore: { pinnedStreamUuid, pinDisabled, isUserGranted },
-    boardApi: { grantPrivilege },
+    streamUIStore: { pinnedStreamUuid, pinDisabled },
     classroomStore: {
       userStore: { kickOutOnceOrBan },
     },

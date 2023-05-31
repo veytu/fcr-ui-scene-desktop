@@ -16,7 +16,7 @@ export const MirrorToggle = observer(({ placement }: { placement: 'setting' | 'p
           icon: SvgIconEnum.FCR_MIRRORIMAGE_RIGHT,
         };
   }, [deviceSettingUIStore.isLocalMirrorEnabled]);
-  const isCameraDeviceEnabled = deviceSettingUIStore.isCameraDeviceEnabled;
+  const isCameraDeviceEnabled = deviceSettingUIStore.isPreviewCameraDeviceEnabled;
   return (
     <PretestDeviceIcon
       size={placement === 'pretest' ? 'large' : 'small'}

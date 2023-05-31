@@ -215,9 +215,6 @@ export abstract class SceneSubscription {
   }
 
   protected isMuted(stream: AgoraStream) {
-    const enableVideoDevice = stream.videoState === AgoraRteMediaPublishState.Published;
-
-    const enableAudioDevice = stream.audioState === AgoraRteMediaPublishState.Published;
     const unmuteVideo =
       stream.videoSourceState === AgoraRteMediaSourceState.started &&
       stream.videoState === AgoraRteMediaPublishState.Published;
@@ -229,8 +226,6 @@ export abstract class SceneSubscription {
     return {
       muteVideo: !unmuteVideo,
       muteAudio: !unmuteAudio,
-      enableVideoDevice,
-      enableAudioDevice,
     };
   }
 
@@ -260,17 +255,17 @@ export abstract class SceneSubscription {
   }
 
   protected muteLocalStream(scene: AgoraRteScene, stream: AgoraStream) {
-    const { muteVideo, muteAudio, enableAudioDevice, enableVideoDevice } = this.isMuted(stream);
+    const { muteVideo, muteAudio } = this.isMuted(stream);
 
     const connType = this.getStreamConnType(stream);
 
     switch (stream.videoSourceType) {
       case AgoraRteVideoSourceType.Camera:
         this.logger.info(
-          `muteLocalVideo, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteVideo}], enableDevice:{audio:${enableAudioDevice},video: ${enableVideoDevice}}`,
+          `muteLocalVideo, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteVideo}]`,
         );
-        this.getters.classroomUIStore.deviceSettingUIStore.enableCamera(enableVideoDevice);
-        this.getters.classroomUIStore.deviceSettingUIStore.enableAudioRecording(enableAudioDevice);
+        muteVideo && this.getters.classroomUIStore.deviceSettingUIStore.enableCamera(false);
+        muteAudio && this.getters.classroomUIStore.deviceSettingUIStore.enableAudioRecording(false);
 
         scene.rtcChannel.muteLocalVideoStream(muteVideo, connType);
         this.putRegistry(stream.streamUuid, { muteVideo });

@@ -23,6 +23,11 @@ import {
   ParticipantsTableSortKeysEnum,
 } from '@onlineclass/uistores/participants';
 import { useAuthorization } from '@onlineclass/utils/hooks/use-authorization';
+import {
+  CustomMessageCommandType,
+  CustomMessageDeviceState,
+  CustomMessageDeviceType,
+} from '@onlineclass/uistores/type';
 
 interface ParticipantsContext {
   toastApi: ToastApiFactory | null;
@@ -67,16 +72,12 @@ export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = 
 );
 const Participants = observer(({ columns }: { columns: any }) => {
   const {
-    participantsUIStore: {
-      participantList,
-      participantStudentList,
-      searchKey,
-      setSearchKey,
-      tableIconSize,
-    },
+    participantsUIStore: { participantList, participantStudentList, searchKey, setSearchKey },
     statusBarUIStore: { isHost },
+    actionBarUIStore: { lowerAllHands },
     classroomStore: {
       streamStore: { updateRemotePublishStateBatch },
+      roomStore: { sendCustomChannelMessage },
     },
   } = useStore();
   const participantsContainerRef = useRef<HTMLDivElement | null>(null);
@@ -99,6 +100,13 @@ const Participants = observer(({ columns }: { columns: any }) => {
         };
       }),
     );
+    sendCustomChannelMessage({
+      cmd: CustomMessageCommandType.deviceSwitchBatch,
+      data: {
+        deviceType: CustomMessageDeviceType.mic,
+        deviceState: CustomMessageDeviceState.close, // 0.close, 1.open
+      },
+    });
     toastApiRef.current?.open({
       toastProps: { type: 'normal', content: 'Mute All', size: 'small' },
     });
@@ -113,6 +121,13 @@ const Participants = observer(({ columns }: { columns: any }) => {
         };
       }),
     );
+    sendCustomChannelMessage({
+      cmd: CustomMessageCommandType.deviceSwitchBatch,
+      data: {
+        deviceType: CustomMessageDeviceType.mic,
+        deviceState: CustomMessageDeviceState.open, //
+      },
+    });
     toastApiRef.current?.open({
       toastProps: { type: 'normal', content: 'Request to unmute all', size: 'small' },
     });
@@ -144,6 +159,16 @@ const Participants = observer(({ columns }: { columns: any }) => {
 
         {isHost && (
           <div className="fcr-participants-footer">
+            <ToolTip placement="top" content="Lower All Hands">
+              <Button
+                disabled={participantStudentList.length <= 0}
+                onClick={lowerAllHands}
+                preIcon={SvgIconEnum.FCR_LOWER_HAND}
+                size="XS"
+                type="secondary">
+                Lower All Hands
+              </Button>
+            </ToolTip>
             <ToolTip placement="top" content="Mute All">
               <Button
                 disabled={participantStudentList.length <= 0}
@@ -242,6 +267,23 @@ const TableIconWrapper: FC<
   );
 };
 
+const TableRaiseHand = observer(({ stream }: { stream?: EduStreamUI }) => {
+  const {
+    actionBarUIStore: { handsUpMap, lowerHand },
+    statusBarUIStore: { isHost },
+    participantsUIStore: { tableIconSize },
+  } = useStore();
+  const userUuid = stream?.fromUser.userUuid || '';
+  const isHandsUp = handsUpMap.has(userUuid);
+
+  return isHandsUp ? (
+    <TableIconWrapper tooltip={'Lower Hand'} disabled={!isHost} onClick={() => lowerHand(userUuid)}>
+      <SvgImg type={SvgIconEnum.FCR_STUDENT_RASIEHAND} size={tableIconSize}></SvgImg>
+    </TableIconWrapper>
+  ) : (
+    <>{'-'}</>
+  );
+});
 const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
   const {
     statusBarUIStore: { isHost },
@@ -252,9 +294,12 @@ const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
   } = useStore();
   const isSelf = stream?.fromUser.userUuid === localUser?.userUuid;
   const actionDisabled = !isHost && !isSelf;
-  const { cameraTooltip, handleCameraClick } = useDeviceSwitch(stream);
-  const icon = stream?.isVideoStreamPublished ? SvgIconEnum.FCR_CAMERA : SvgIconEnum.FCR_CAMERAOFF;
-  const iconColor = stream?.isVideoStreamPublished ? {} : { iconSecondary: colors['red']['6'] };
+  const {
+    cameraTooltip,
+    handleCameraClick,
+    cameraIcon: icon,
+    cameraIconColor: iconColor,
+  } = useDeviceSwitch(stream);
 
   return (
     <TableIconWrapper tooltip={cameraTooltip} disabled={actionDisabled} onClick={handleCameraClick}>
@@ -263,7 +308,12 @@ const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
   );
 });
 const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
-  const { micTooltip, handleMicrophoneClick } = useDeviceSwitch(stream);
+  const {
+    micTooltip,
+    handleMicrophoneClick,
+    micIcon: icon,
+    micIconColor: iconColor,
+  } = useDeviceSwitch(stream);
   const {
     statusBarUIStore: { isHost },
     classroomStore: {
@@ -273,9 +323,6 @@ const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
   } = useStore();
   const isSelf = stream?.fromUser.userUuid === localUser?.userUuid;
   const actionDisabled = !isHost && !isSelf;
-  const icon = stream?.isMicStreamPublished ? SvgIconEnum.FCR_MUTE : SvgIconEnum.FCR_NOMUTE;
-
-  const iconColor = stream?.isMicStreamPublished ? {} : { iconSecondary: colors['red']['6'] };
 
   return (
     <TableIconWrapper
@@ -436,6 +483,13 @@ const useParticipantsColumn = () => {
       },
     },
     {
+      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.RaiseHand} />,
+      width: 88,
+      render: (_: unknown, item: UserTableItem) => {
+        return <TableRaiseHand stream={item.stream}></TableRaiseHand>;
+      },
+    },
+    {
       title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Camera} />,
       width: 68,
       render: (_: unknown, item: UserTableItem) => {
@@ -478,6 +532,13 @@ const useParticipantsColumn = () => {
       width: 50,
       render: (_: unknown, item: UserTableItem) => {
         return <TableAuth role={item.user.userRole} userUuid={item.user.userUuid}></TableAuth>;
+      },
+    },
+    {
+      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.RaiseHand} />,
+      width: 88,
+      render: (_: unknown, item: UserTableItem) => {
+        return <TableRaiseHand stream={item.stream}></TableRaiseHand>;
       },
     },
     {

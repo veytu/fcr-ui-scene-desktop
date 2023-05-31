@@ -25,6 +25,7 @@ export const InteractLabelGroup = observer(
         userStore: { rewards, users },
       },
       streamUIStore: { isUserGranted, pinnedStream, pinDisabled },
+      actionBarUIStore: { isHandsUpByUserUuid },
     } = useStore();
     const currentUser = users.get(userUuid);
     const reward = rewards.get(userUuid);
@@ -33,6 +34,7 @@ export const InteractLabelGroup = observer(
     const showPinned =
       pinnedStream?.fromUser.userUuid === userUuid && placement === 'main-view' && !pinDisabled;
     const { removePin } = usePinStream();
+    const isHandsUp = isHandsUpByUserUuid(userUuid);
     const rewardItem = (
       <div
         className={classnames('fcr-stream-window-student-interact-item', {
@@ -56,6 +58,11 @@ export const InteractLabelGroup = observer(
             <SvgImg type={SvgIconEnum.FCR_HOST}></SvgImg>
           </div>
         )}
+        {isHandsUp && (
+          <div className="fcr-stream-window-student-interact-item  fcr-bg-yellowwarm">
+            <SvgImg type={SvgIconEnum.FCR_STUDENT_RASIEHAND}></SvgImg>
+          </div>
+        )}
         {showReward && rewardItemRenderer}
 
         {showPinned && (
@@ -66,12 +73,6 @@ export const InteractLabelGroup = observer(
             Remove Pin
           </div>
         )}
-
-        {/* <div className="fcr-stream-window-student-interact-item  fcr-bg-brand-6">
-          <SvgImg
-            type={SvgIconEnum.FCR_STUDENT_RASIEHAND}
-            ></SvgImg>
-        </div> */}
       </div>
     );
   },

@@ -132,6 +132,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   deleteDialog = (type: string) => {
     this.getters.deleteDialog(type);
   };
+
   @action.bound
   handleMouseMove() {
     this.mouseEnterClass = true;
