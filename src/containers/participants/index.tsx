@@ -35,44 +35,16 @@ interface ParticipantsContext {
 const ParticipantsContext = createContext<ParticipantsContext | null>(null);
 
 const colors = themeVal('colors');
-export const ParticipantsDialog: FC<React.PropsWithChildren<BaseDialogProps>> = observer(
-  (props) => {
-    const {
-      participantsUIStore: { participantsDialogVisible, setParticipantsDialogVisible },
-      statusBarUIStore: { isHost },
-    } = useStore();
-    const afterClose = () => {
-      props.onClose?.();
-    };
-    const { hostColumns, studentColumns } = useParticipantsColumn();
 
-    const tableColumns = isHost ? hostColumns : studentColumns;
-    const tableWidth = useMemo(() => {
-      return tableColumns.reduce((prev, columns) => {
-        return prev + columns.width;
-      }, 0);
-    }, [tableColumns]);
-    return (
-      <BaseDialog
-        {...props}
-        width={tableWidth < 430 ? 430 : tableWidth}
-        classNames={'fcr-participants-dialog'}
-        visible={participantsDialogVisible}
-        maskClosable={false}
-        mask={false}
-        wrapClassName={'fcr-participants-dialog-wrap'}
-        onClose={() => {
-          setParticipantsDialogVisible(false);
-        }}
-        afterClose={afterClose}>
-        <Participants columns={tableColumns}></Participants>
-      </BaseDialog>
-    );
-  },
-);
-const Participants = observer(({ columns }: { columns: any }) => {
+export const Participants = observer(() => {
   const {
-    participantsUIStore: { participantList, participantStudentList, searchKey, setSearchKey },
+    participantsUIStore: {
+      participantList,
+      participantStudentList,
+      searchKey,
+      setSearchKey,
+      setParticipantsDialogVisible,
+    },
     statusBarUIStore: { isHost },
     actionBarUIStore: { lowerAllHands },
     classroomStore: {
@@ -80,6 +52,15 @@ const Participants = observer(({ columns }: { columns: any }) => {
       roomStore: { sendCustomChannelMessage },
     },
   } = useStore();
+  const { hostColumns, studentColumns } = useParticipantsColumn();
+
+  const tableColumns = isHost ? hostColumns : studentColumns;
+  const tableWidth = useMemo(() => {
+    return tableColumns.reduce((prev, columns) => {
+      return prev + columns.width;
+    }, 0);
+  }, [tableColumns]);
+
   const participantsContainerRef = useRef<HTMLDivElement | null>(null);
   const toastApiRef = useRef<ToastApiFactory | null>(null);
   useEffect(() => {
@@ -135,7 +116,10 @@ const Participants = observer(({ columns }: { columns: any }) => {
 
   return (
     <ParticipantsContext.Provider value={{ toastApi: toastApiRef.current }}>
-      <div ref={participantsContainerRef} className="fcr-participants-container">
+      <div
+        ref={participantsContainerRef}
+        style={{ width: tableWidth }}
+        className="fcr-participants-container">
         <div className="fcr-participants-header">
           <div className="fcr-participants-title">Participants</div>
           <div className="fcr-participants-count">(Student {participantStudentList.length})</div>
@@ -148,12 +132,17 @@ const Participants = observer(({ columns }: { columns: any }) => {
               placeholder="Search"
             />
           </div>
+          <div
+            className="fcr-participants-header-close"
+            onClick={() => setParticipantsDialogVisible(false)}>
+            <SvgImg type={SvgIconEnum.FCR_CLOSE} size={16}></SvgImg>
+          </div>
         </div>
         <Table
           scroll={{
             y: 400,
           }}
-          columns={columns as any}
+          columns={tableColumns as any}
           data={participantList}
           rowKey={(record) => record.user.userUuid}></Table>
 

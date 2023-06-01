@@ -48,9 +48,7 @@ export class Getters {
   get boardApi() {
     return this._classroomUIStore.boardApi;
   }
-  get chatApi() {
-    return this._classroomUIStore.chatApi;
-  }
+
   get eduTool() {
     return this._classroomUIStore.eduToolApi;
   }

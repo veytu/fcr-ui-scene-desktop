@@ -12,7 +12,6 @@ export const ConfirmDialogWrapper: FC<ConfirmDialogProps> = observer((props) => 
   const afterClose = () => {
     props.onClose?.();
   };
-  console.log('ConfirmDialogWrapper', props);
   return (
     <ConfirmDialog
       getContainer={() => {

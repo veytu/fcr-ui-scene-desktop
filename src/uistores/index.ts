@@ -25,7 +25,6 @@ import { PresentationUIStore } from './presentaion-view';
 import { SubscriptionUIStore } from './subscription';
 import { ParticipantsUIStore } from './participants';
 import { NotiticationUIStore } from './notification';
-import { Chat } from '@onlineclass/extension/chat';
 import { EduTool } from '@onlineclass/extension/edu-tool';
 
 export class OnlineclassUIStore {
@@ -48,7 +47,6 @@ export class OnlineclassUIStore {
   readonly notiticationUIStore: NotiticationUIStore;
 
   readonly boardApi = new Board();
-  readonly chatApi = new Chat();
   readonly eduToolApi = new EduTool();
 
   constructor() {

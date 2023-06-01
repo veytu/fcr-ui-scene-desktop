@@ -5,17 +5,19 @@
   pointer-events: all;
 }
 .fcr-participants-container {
+  @apply fcr-bg-2 fcr-rounded-16;
   min-height: 490px;
   display: flex;
   flex-direction: column;
+  backdrop-filter: blur(25px);
 }
 .fcr-participants-container .fcr-table {
   flex: 1;
 }
-.fcr-participants-container .fcr-table-body::-webkit-scrollbar {
+.fcr-participants-container::-webkit-scrollbar {
   @apply fcr-bg-2;
 }
-.fcr-participants-container .fcr-table-body::-webkit-scrollbar-thumb {
+.fcr-participants-container::-webkit-scrollbar-thumb {
   @apply fcr-bg-4 fcr-rounded-8;
 }
 .fcr-participants-dialog.fcr-dialog {
@@ -35,6 +37,22 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  position: relative;
+}
+.fcr-participants-header-close {
+  @apply fcr-rounded-full fcr-bg-1;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 9px;
+  right: 16px;
+}
+.fcr-participants-header-close:hover {
+  @apply fcr-bg-brand-6;
 }
 .fcr-participants-footer {
   height: 50px;

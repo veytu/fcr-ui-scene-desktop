@@ -6,15 +6,16 @@ import { ActionBarItem } from '..';
 import './index.css';
 export const Chat = observer(() => {
   const {
-    chatApi: { chatDialogVisible },
     actionBarUIStore: { openChatDialog, closeChatDialog },
+    eduToolApi: { isWidgetVisible },
   } = useStore();
+  const chatVisible = isWidgetVisible('easemobIM');
   return (
     <div>
       <div id="fcr-chatroom-slot"></div>
-      <ToolTip content={chatDialogVisible ? 'Close chat' : 'Open chat'}>
+      <ToolTip content={chatVisible ? 'Close chat' : 'Open chat'}>
         <ActionBarItem
-          onClick={() => (chatDialogVisible ? closeChatDialog() : openChatDialog())}
+          onClick={() => (chatVisible ? closeChatDialog() : openChatDialog())}
           icon={SvgIconEnum.FCR_CHAT2}
           text={'Chat'}></ActionBarItem>
       </ToolTip>

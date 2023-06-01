@@ -5,7 +5,6 @@ import { observer } from 'mobx-react';
 import { ConfirmDialogWrapper } from './confirm';
 import { Logger } from 'agora-common-libs/lib/annotation';
 import { DeviceSettingsDialog } from '../device-settings/dialog-wrapper';
-import { ParticipantsDialog } from '../participants';
 import { ClassDialogProps } from '@components/dialog/class-dialog';
 import { ClassInfoDialog } from './class-info';
 
@@ -37,8 +36,7 @@ export const ClassRoomDialogContainer = observer(() => {
             );
           case 'device-settings':
             return <DeviceSettingsDialog key={id} id={id} />;
-          case 'participants':
-            return <ParticipantsDialog key={id}></ParticipantsDialog>;
+
           case 'class-info':
             const classDialog = props as ClassDialogProps;
 

@@ -381,7 +381,6 @@ export class WidgetUIStore extends EduUIStoreBase {
           // install widgets
           if (controller) {
             this.getters.boardApi.install(controller);
-            this.getters.chatApi.install(controller);
             this.getters.eduTool.install(controller);
 
             this._installWidgets(controller);

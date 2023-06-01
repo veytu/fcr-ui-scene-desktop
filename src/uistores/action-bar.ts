@@ -145,11 +145,11 @@ export class ActionBarUIStore extends EduUIStoreBase {
 
   @bound
   openChatDialog() {
-    this.getters.chatApi.openChatDialog();
+    this.getters.eduTool.setWidgetVisible('easemobIM', true);
   }
   @bound
   closeChatDialog() {
-    this.getters.chatApi.closeChatDialog();
+    this.getters.eduTool.setWidgetVisible('easemobIM', false);
   }
   @action.bound
   setShowLeaveOption(show: boolean) {
