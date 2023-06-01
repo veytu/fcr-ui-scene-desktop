@@ -176,14 +176,52 @@ export class LayoutUIStore extends EduUIStoreBase {
       this.showListView = true;
     }
   }
-  onDestroy(): void {
+
+  @bound
+  private _addViewportResizeObserver() {
+    const observer = new ResizeObserver(this._updateViewportBoundaries);
+
+    const viewport = document.querySelector(`body`);
+    if (viewport) {
+      observer.observe(viewport);
+    }
+    this._viewportResizeObserver = observer;
+  }
+
+  private _removeViewportResizeObserver() {
     this._viewportResizeObserver?.disconnect();
+  }
+
+  @bound
+  @Lodash.debounced(300)
+  private _updateViewportBoundaries() {
+    const containerEle = document.querySelector(`body`);
+
+    if (containerEle) {
+      const { left, right, top, bottom, width, height } = containerEle.getBoundingClientRect();
+
+      runInAction(() => {
+        this.viewportBoundaries = {
+          left,
+          right,
+          top,
+          bottom,
+          width,
+          height,
+        };
+      });
+    }
+  }
+
+  onDestroy(): void {
+    this._removeViewportResizeObserver();
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseleave', this.handleMouseLeave);
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }
   onInstall(): void {
+    this._addViewportResizeObserver();
     document.addEventListener('mousemove', this.handleMouseMove);
     document.addEventListener('mouseleave', this.handleMouseLeave);
 
