@@ -67,7 +67,6 @@ export enum AgoraExtensionRoomEvent {
   OrientationStatesChanged = 'orientation-changed',
   // 移动端大班课横屏清屏状态变化
   MobileLandscapeToolBarVisibleChanged = 'mobile-landscape-tool-bar-visible-changed',
-
   //设置插件最小化
   SetMinimize = 'set-minimize',
   //插件可见性变化
