@@ -46,6 +46,7 @@ export class EduTool {
     } else {
       this._minimizedStateMap.delete(widgetId);
     }
+    this._sendMessage(AgoraExtensionRoomEvent.SetMinimize, { widgetId, minimized });
   }
   @action.bound
   private _handleVisibleStateChange({ widgetId, visible }: { widgetId: string; visible: boolean }) {
