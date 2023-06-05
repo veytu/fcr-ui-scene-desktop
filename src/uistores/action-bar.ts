@@ -54,13 +54,15 @@ export class ActionBarUIStore extends EduUIStoreBase {
   @action.bound
   lowerHand(userUuid?: string) {
     const localUserUuid = this.classroomStore.userStore.localUser!.userUuid;
+
+    const uuid = userUuid || localUserUuid;
     this.isHandsUp = false;
-    this.removeHandsUpStudent(localUserUuid);
+    this.removeHandsUpStudent(uuid);
     this._handsUpTask?.stop();
     const message: CustomMessageData<CustomMessageHandsUpType> = {
       cmd: CustomMessageCommandType.handsUp,
       data: {
-        userUuid: userUuid || localUserUuid,
+        userUuid: uuid,
         state: CustomMessageHandsUpState.lowerHand,
       },
     };
@@ -130,6 +132,9 @@ export class ActionBarUIStore extends EduUIStoreBase {
   }
   @computed get showRecord() {
     return this.getters.isHost;
+  }
+  @computed get showRaiseHands() {
+    return this.getters.isStudent;
   }
   @observable showLeaveOption = false;
 

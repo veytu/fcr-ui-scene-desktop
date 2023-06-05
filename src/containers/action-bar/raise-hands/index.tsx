@@ -8,14 +8,7 @@ import { useEffect, useState } from 'react';
 import { DialogToolTip } from '@components/tooltip/dialog';
 import classnames from 'classnames';
 export const RaiseHands = observer(() => {
-  const {
-    statusBarUIStore: { isStudent },
-  } = useStore();
-  return isStudent ? (
-    <StudentRaiseHands></StudentRaiseHands>
-  ) : (
-    <TeacherRaiseHands></TeacherRaiseHands>
-  );
+  return <StudentRaiseHands></StudentRaiseHands>;
 });
 const StudentRaiseHands = observer(() => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -56,51 +49,6 @@ const StudentRaiseHands = observer(() => {
           }}
           icon={SvgIconEnum.FCR_STUDENT_RASIEHAND}
           text={'RaiseHands'}></ActionBarItem>
-      </DialogToolTip>
-    </ToolTip>
-  );
-});
-const TeacherRaiseHands = observer(() => {
-  const [tooltipVisible, setTooltipVisible] = useState(false);
-  const [dialogTooltipVisible, setDialogTooltipVisible] = useState(false);
-  const {
-    actionBarUIStore: { handsUpMap },
-    participantsUIStore: { setParticipantsDialogVisible, participantsDialogVisible },
-  } = useStore();
-  useEffect(() => {
-    if (handsUpMap.size > 0 && !participantsDialogVisible) {
-      setDialogTooltipVisible(true);
-    } else {
-      setDialogTooltipVisible(false);
-    }
-  }, [handsUpMap.size, participantsDialogVisible]);
-
-  return (
-    <ToolTip
-      visible={tooltipVisible}
-      onVisibleChange={(visible) => {
-        if (dialogTooltipVisible) {
-          setTooltipVisible(false);
-        } else {
-          setTooltipVisible(visible);
-        }
-      }}
-      content={'RaiseHands'}>
-      <DialogToolTip
-        closeable={false}
-        overlayClassName="fcr-action-bar-raise-hand-dialog"
-        content={
-          <span
-            className="fcr-action-bar-raise-hand-content"
-            onClick={() => {
-              setParticipantsDialogVisible(true);
-              setDialogTooltipVisible(false);
-            }}>
-            <span>🙋</span> {handsUpMap.size} people raised hand, please click to view.
-          </span>
-        }
-        visible={dialogTooltipVisible}>
-        <ActionBarItem icon={SvgIconEnum.FCR_RAISEHANDS} text={'RaiseHands'}></ActionBarItem>
       </DialogToolTip>
     </ToolTip>
   );

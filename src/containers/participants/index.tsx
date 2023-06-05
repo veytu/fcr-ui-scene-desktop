@@ -1,4 +1,3 @@
-import { BaseDialog, BaseDialogProps } from '@components/dialog';
 import { createContext, FC, PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react';
 import { Input } from '@components/input';
 import { Table } from '@components/table';
@@ -207,7 +206,7 @@ const TableAuth = observer(({ userUuid, role }: { userUuid: string; role: EduRol
     <div className="fcr-participants-table-auth">
       {isHost ? (
         'Host'
-      ) : (
+      ) : isHostLocal || granted ? (
         <TableIconWrapper
           tooltip={tooltipContent}
           disabled={disabled}
@@ -218,6 +217,8 @@ const TableAuth = observer(({ userUuid, role }: { userUuid: string; role: EduRol
             colors={{ iconPrimary: granted ? colors['yellow'] : colors['icon-1'] }}
             size={tableIconSize}></SvgImg>
         </TableIconWrapper>
+      ) : (
+        '-'
       )}
     </div>
   );

@@ -302,7 +302,7 @@ export class WidgetUIStore extends EduUIStoreBase {
         });
       },
       addConfirmDialog: (params: AgoraUiCapableConfirmDialogProps) => {
-        this.getters.addDialog('confirm', params);
+        this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', params);
       },
     };
   }
@@ -363,7 +363,6 @@ export class WidgetUIStore extends EduUIStoreBase {
           if (oldController) {
             this._uninstallWidgets(oldController);
             this.getters.boardApi.uninstall();
-            this.getters.chatApi.uninstall();
             this.getters.eduTool.uninstall();
             oldController.removeBroadcastListener({
               messageType: AgoraExtensionWidgetEvent.WidgetBecomeActive,

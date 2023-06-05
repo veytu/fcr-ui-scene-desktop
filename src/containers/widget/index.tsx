@@ -116,6 +116,13 @@ const useZIndex = (id: string) => {
 const WidgetDraggableWrapper: FC<PropsWithChildren<{ widget: AgoraWidgetBase }>> = observer(
   (props) => {
     const { children, widget } = props;
+    //@ts-ignore
+    const defaultRect = widget.defaultRect as {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    };
     const [rndStyle, setRndStyle] = useState<CSSProperties>({});
     const [transitionType, setTransitionType] = useState<'minimize' | 'visible'>('visible');
 
@@ -162,19 +169,16 @@ const WidgetDraggableWrapper: FC<PropsWithChildren<{ widget: AgoraWidgetBase }>>
         }
       },
     });
-    const { ref: positionRef, position, setPosition } = useDraggablePosition({ centered: true });
     const refHandle = (ele: HTMLDivElement) => {
       minimizeRef.current = ele;
-      positionRef.current = ele;
     };
 
     return (
       <Rnd
+        default={defaultRect}
         style={rndStyle}
         bounds={`.${classroomViewportClassName}`}
         enableResizing={false}
-        position={position}
-        onDrag={(_, { x, y }) => setPosition({ x, y })}
         dragHandleClassName={
           (widget as AgoraWidgetBase & AgoraTrackSyncedWidget).dragHandleClassName
         }
@@ -241,13 +245,10 @@ const useDraggablePosition = ({
   const ref = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     centered &&
-      setTimeout(() => {
-        setPosition({
-          x: document.body.getBoundingClientRect().width / 2 - (ref.current?.offsetWidth || 0) / 2,
-          y:
-            document.body.getBoundingClientRect().height / 2 - (ref.current?.offsetHeight || 0) / 2,
-        });
-      }, 500);
+      setPosition({
+        x: document.body.getBoundingClientRect().width / 2 - (ref.current?.offsetWidth || 0) / 2,
+        y: document.body.getBoundingClientRect().height / 2 - (ref.current?.offsetHeight || 0) / 2,
+      });
   }, []);
   return { position, setPosition, ref };
 };

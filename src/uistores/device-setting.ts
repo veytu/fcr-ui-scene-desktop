@@ -32,6 +32,7 @@ import {
   CustomMessageDeviceSwitchType,
   CustomMessageDeviceState,
   CustomMessageDeviceType,
+  DeviceSwitchDialogId,
 } from './type';
 
 /**
@@ -412,6 +413,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   startCameraPreview() {
     const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
     const processors = [];
+
     if (this._virtualBackgroundProcessorForPreview) {
       processors.push(this._virtualBackgroundProcessorForPreview);
     }
@@ -559,22 +561,34 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
           if (message.fromUser.userUuid === this.classroomStore.userStore.localUser?.userUuid)
             return;
           if (deviceSwitchData.deviceType === CustomMessageDeviceType.camera) {
-            this.getters.addDialog('confirm', {
-              title: 'Request to start video',
-              content: 'Teacher requests to start video',
-              onOk: () => {
-                this.enableCamera(true);
-              },
-            });
+            const dialogId = DeviceSwitchDialogId.StartVideo;
+            const hasStartVideoDialog =
+              this.getters.classroomUIStore.layoutUIStore.isDialogIdExist(dialogId);
+
+            if (!hasStartVideoDialog && !this._cameraDeviceEnabled) {
+              this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+                id: dialogId,
+                title: 'Request to start video',
+                content: 'Teacher requests to start video',
+                onOk: () => {
+                  this.enableCamera(true);
+                },
+              });
+            }
           }
           if (deviceSwitchData.deviceType === CustomMessageDeviceType.mic) {
-            this.getters.addDialog('confirm', {
-              title: 'Request to unmute',
-              content: 'Teacher requests to unmute',
-              onOk: () => {
-                this.enableAudioRecording(true);
-              },
-            });
+            const dialogId = DeviceSwitchDialogId.Unmute;
+            const hasUnmuteDialog =
+              this.getters.classroomUIStore.layoutUIStore.isDialogIdExist(dialogId);
+            if (!hasUnmuteDialog && !this._audioRecordingDeviceEnabled) {
+              this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+                title: 'Request to unmute',
+                content: 'Teacher requests to unmute',
+                onOk: () => {
+                  this.enableAudioRecording(true);
+                },
+              });
+            }
           }
         }
       }
@@ -592,22 +606,35 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             return;
 
           if (deviceSwitchData.deviceType === CustomMessageDeviceType.camera) {
-            this.getters.addDialog('confirm', {
-              title: 'Request to start video',
-              content: 'Teacher requests to start video',
-              onOk: () => {
-                this.enableCamera(true);
-              },
-            });
+            const dialogId = DeviceSwitchDialogId.StartVideo;
+            const hasStartVideoDialog =
+              this.getters.classroomUIStore.layoutUIStore.isDialogIdExist(dialogId);
+
+            if (!hasStartVideoDialog && !this._cameraDeviceEnabled) {
+              this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+                id: dialogId,
+                title: 'Request to start video',
+                content: 'Teacher requests to start video',
+                onOk: () => {
+                  this.enableCamera(true);
+                },
+              });
+            }
           }
           if (deviceSwitchData.deviceType === CustomMessageDeviceType.mic) {
-            this.getters.addDialog('confirm', {
-              title: 'Request to unmute',
-              content: 'Teacher requests to unmute',
-              onOk: () => {
-                this.enableAudioRecording(true);
-              },
-            });
+            const dialogId = DeviceSwitchDialogId.Unmute;
+            const hasUnmuteDialog =
+              this.getters.classroomUIStore.layoutUIStore.isDialogIdExist(dialogId);
+            if (!hasUnmuteDialog && !this._audioRecordingDeviceEnabled) {
+              this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+                id: dialogId,
+                title: 'Request to unmute',
+                content: 'Teacher requests to unmute',
+                onOk: () => {
+                  this.enableAudioRecording(true);
+                },
+              });
+            }
           }
         }
       }
@@ -673,6 +700,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
               .then((processor) => {
                 this.logger.info('VirtualBackgroundProcessor initialized');
                 this._virtualBackgroundProcessorForPreview = processor;
+                this.classroomStore.mediaStore.addPreviewCameraProcessors([processor]);
               });
 
             getProcessorInitializer<IBeautyProcessor>(builtInExtensions.beautyEffectExtension)
@@ -680,6 +708,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
               .then((processor) => {
                 this.logger.info('BeautyEffectProcessor initialized');
                 this._beautyEffectProcessorForPreview = processor;
+                this.classroomStore.mediaStore.addPreviewCameraProcessors([processor]);
               });
 
             getProcessorInitializer<IAIDenoiserProcessor>(builtInExtensions.aiDenoiserExtension)
@@ -687,6 +716,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
               .then((processor) => {
                 this.logger.info('AiDenoiserProcessor initialized');
                 this._aiDenoiserProcessorForPreview = processor;
+                this.classroomStore.mediaStore.addPreviewMicrophoneProcessors([processor]);
               });
           }
         },
@@ -888,6 +918,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 type: type === 'image' ? 'img' : 'video',
                 source: data,
               });
+              console.log(
+                this._virtualBackgroundProcessorForPreview,
+                'this._virtualBackgroundProcessorForPreview',
+              );
             });
 
             this._virtualBackgroundProcessor?.enable();

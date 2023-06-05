@@ -1,12 +1,13 @@
 import { EduUIStoreBase } from './base';
 import { observable, action, computed, reaction, runInAction } from 'mobx';
-import { DialogType, Layout } from './type';
+import { CommonDialogType, DialogType, Layout } from './type';
 import { bound, Lodash, Scheduler } from 'agora-rte-sdk';
 import { Log } from 'agora-common-libs/lib/annotation';
 import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
 import { AgoraViewportBoundaries } from 'agora-common-libs/lib/widget';
 import { ClassDialogProps } from '@components/dialog/class-dialog';
 import { ClassroomState } from 'agora-edu-core';
+import { v4 as uuidv4 } from 'uuid';
 
 @Log.attach({ proxyMethods: false })
 export class LayoutUIStore extends EduUIStoreBase {
@@ -37,6 +38,35 @@ export class LayoutUIStore extends EduUIStoreBase {
   toggleShowListView() {
     this.showListView = !this.showListView;
   }
+  @observable dialogMap: Map<string, { type: DialogType }> = new Map();
+
+  hasDialogOf(type: DialogType) {
+    let exist = false;
+    this.dialogMap.forEach(({ type: dialogType }) => {
+      if (dialogType === type) {
+        exist = true;
+      }
+    });
+
+    return exist;
+  }
+  isDialogIdExist(id: string) {
+    return this.dialogMap.has(id);
+  }
+  addDialog(type: 'confirm', params: CommonDialogType<ConfirmDialogProps>): void;
+  addDialog(type: 'device-settings'): void;
+  addDialog(type: 'participants'): void;
+  addDialog(type: 'class-info', params: CommonDialogType<ClassDialogProps>): void;
+
+  @action.bound
+  addDialog(type: unknown, params?: CommonDialogType<unknown>) {
+    this.dialogMap.set(params?.id || uuidv4(), { ...(params as any), type: type as DialogType });
+  }
+
+  @action.bound
+  deleteDialog = (id: string) => {
+    this.dialogMap.delete(id);
+  };
   @bound
   setIsPointingBar(disable: boolean) {
     this._isPointingBar = disable;
@@ -58,9 +88,7 @@ export class LayoutUIStore extends EduUIStoreBase {
       ? 210
       : 135;
   }
-  @computed get dialogMap() {
-    return this.getters.dialogMap;
-  }
+
   @computed get deviceSettingOpened() {
     let opened = false;
     this.dialogMap.forEach((dialog) => {
@@ -108,25 +136,6 @@ export class LayoutUIStore extends EduUIStoreBase {
     this.activeStatusBarAndActionBar();
     this._clearScreenTask?.stop();
     this._clearScreenTask = Scheduler.shared.addDelayTask(this.clearScreen, this._clearScreenDelay);
-  };
-  @bound
-  hasDialogOf(type: DialogType) {
-    return this.getters.hasDialogOf(type);
-  }
-
-  addDialog(type: 'confirm', params: ConfirmDialogProps): void;
-  addDialog(type: 'device-settings'): void;
-  addDialog(type: 'participants'): void;
-  addDialog(type: 'class-info', params: ClassDialogProps): void;
-
-  @action.bound
-  addDialog(type: unknown, params?: unknown) {
-    this.getters.addDialog(type as any, params as any);
-  }
-
-  @action.bound
-  deleteDialog = (type: string) => {
-    this.getters.deleteDialog(type);
   };
 
   @action.bound
@@ -239,6 +248,18 @@ export class LayoutUIStore extends EduUIStoreBase {
             !this.getters.isLocalScreenSharing &&
             this.layout === Layout.Grid
           ) {
+            this.setLayout(Layout.ListOnTop);
+          }
+        },
+      ),
+    );
+    this._disposers.push(
+      reaction(
+        () => {
+          return this.getters.isBoardWidgetActive;
+        },
+        (isBoardWidgetActive) => {
+          if (isBoardWidgetActive && this.layout === Layout.Grid) {
             this.setLayout(Layout.ListOnTop);
           }
         },

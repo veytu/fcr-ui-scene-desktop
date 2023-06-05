@@ -18,7 +18,14 @@ import { RaiseHands } from './raise-hands';
 export const ActionBar = observer(() => {
   const {
     layoutUIStore: { showActiobBar, setIsPointingBar },
-    actionBarUIStore: { showLeaveOption, showRecord, showScreenShare, showToolBox, showWhiteBoard },
+    actionBarUIStore: {
+      showLeaveOption,
+      showRecord,
+      showRaiseHands,
+      showScreenShare,
+      showToolBox,
+      showWhiteBoard,
+    },
   } = useStore();
   return (
     <div
@@ -43,7 +50,7 @@ export const ActionBar = observer(() => {
             {showScreenShare && <ScreenShare></ScreenShare>}
             {showRecord && <Record></Record>}
             {showToolBox && <ToolBox></ToolBox>}
-            <RaiseHands></RaiseHands>
+            {showRaiseHands && <RaiseHands></RaiseHands>}
 
             {showWhiteBoard && <Whiteboard></Whiteboard>}
           </div>

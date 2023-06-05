@@ -26,7 +26,7 @@ export class NotiticationUIStore extends EduUIStoreBase {
         this.classroomStore.connectionStore.leaveClassroom(
           LeaveReason.kickOut,
           new Promise((resolve, reject) => {
-            this.getters.addDialog('confirm', {
+            this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
               title: 'Leave Classroom',
               content: 'You have been removed from the classroom by the teacher',
               closable: false,
@@ -102,7 +102,7 @@ export class NotiticationUIStore extends EduUIStoreBase {
     // }
     // capture screen permission denied received
     if (event === AgoraEduClassroomEvent.CaptureScreenPermissionDenied) {
-      this.getters.addDialog('confirm', {
+      this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
         title: 'Notice',
         content: 'Before using screen sharing, please first enable screen recording permissions.',
         okButtonProps: {
@@ -251,7 +251,7 @@ export class NotiticationUIStore extends EduUIStoreBase {
             this.classroomStore.connectionStore.leaveClassroom(
               LeaveReason.leave,
               new Promise((resolve) => {
-                this.getters.addDialog('class-info', {
+                this.getters.classroomUIStore.layoutUIStore.addDialog('class-info', {
                   title: 'The class has ended',
                   content: 'Please click the button to leave the classroom.',
                   actions: [
@@ -277,7 +277,7 @@ export class NotiticationUIStore extends EduUIStoreBase {
             this.classroomStore.connectionStore.leaveClassroom(
               LeaveReason.leave,
               new Promise((resolve) => {
-                this.getters.addDialog('confirm', {
+                this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
                   title: 'Leave Classroom',
                   content: this._getStateErrorReason(
                     this.classroomStore.connectionStore.classroomStateErrorReason,

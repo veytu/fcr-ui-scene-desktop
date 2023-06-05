@@ -111,7 +111,7 @@ export class OnlineclassUIStore {
         return this.classroomStore.connectionStore.leaveClassroom(
           LeaveReason.kickOut,
           new Promise((resolve, reject) => {
-            this.getters.addDialog('confirm', {
+            this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
               title: 'Leave Classroom',
               content: 'You have been removed from the classroom.',
               closable: false,
@@ -127,7 +127,7 @@ export class OnlineclassUIStore {
       return this.classroomStore.connectionStore.leaveClassroom(
         LeaveReason.leave,
         new Promise((resolve) => {
-          this.getters.addDialog('confirm', {
+          this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
             closable: false,
             title: 'Join Error',
             content: (e as AGError).message,

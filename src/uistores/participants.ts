@@ -149,7 +149,5 @@ export class ParticipantsUIStore extends EduUIStoreBase {
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }
-  onInstall(): void {
-    this.getters.addDialog('participants');
-  }
+  onInstall(): void {}
 }

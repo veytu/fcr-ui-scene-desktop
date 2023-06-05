@@ -40,3 +40,10 @@ export enum CustomMessageHandsUpState {
 export type CustomMessageHandsUpAllType = {
   operation: CustomMessageHandsUpState;
 };
+export type CommonDialogType<T = unknown> = {
+  id?: string;
+} & T;
+export enum DeviceSwitchDialogId {
+  StartVideo = 'start-video',
+  Unmute = 'unmute',
+}
