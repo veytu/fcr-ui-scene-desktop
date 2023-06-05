@@ -67,10 +67,16 @@ export enum AgoraExtensionRoomEvent {
   OrientationStatesChanged = 'orientation-changed',
   // 移动端大班课横屏清屏状态变化
   MobileLandscapeToolBarVisibleChanged = 'mobile-landscape-tool-bar-visible-changed',
-  //设置插件最小化
+  // 打开聊天对话框
+  OpenChatDialog = 'open-chat-dialog',
+  // 关闭聊天对话框
+  CloseChatDialog = 'close-chat-dialog',
+  // 设置插件最小化
   SetMinimize = 'set-minimize',
-  //插件可见性变化
+  // 插件可见性变化
   VisibleChanged = 'visible-changed',
+  // 布局变化
+  LayoutChanged = 'layout-changed',
 }
 
 /**
@@ -123,7 +129,8 @@ export enum AgoraExtensionWidgetEvent {
   RequestMobileLandscapeToolBarVisible = 'request-mobile-landscape-tool-bar-visible',
   //插件最小化
   Minimize = 'minimize',
-
+  //聊天对话框开启状态变更
+  ChatDialogVisibleChanged = 'chat-dialog-visible-changed',
   // Widget创建成功
   WidgetCreated = 'widget-created',
   // Widget销毁成功

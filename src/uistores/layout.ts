@@ -6,7 +6,8 @@ import { Log } from 'agora-common-libs/lib/annotation';
 import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
 import { AgoraViewportBoundaries } from 'agora-common-libs/lib/widget';
 import { ClassDialogProps } from '@components/dialog/class-dialog';
-import { ClassroomState } from 'agora-edu-core';
+import { AgoraEduClassroomEvent, ClassroomState } from 'agora-edu-core';
+import { AgoraExtensionRoomEvent } from '@onlineclass/extension/events';
 
 @Log.attach({ proxyMethods: false })
 export class LayoutUIStore extends EduUIStoreBase {
@@ -241,6 +242,18 @@ export class LayoutUIStore extends EduUIStoreBase {
           ) {
             this.setLayout(Layout.ListOnTop);
           }
+        },
+      ),
+    );
+
+    this._disposers.push(
+      reaction(
+        () => this.layout,
+        (layout) => {
+          this.classroomStore.widgetStore.widgetController?.broadcast(
+            AgoraExtensionRoomEvent.LayoutChanged,
+            layout,
+          );
         },
       ),
     );
