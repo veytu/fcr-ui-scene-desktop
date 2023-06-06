@@ -38,7 +38,7 @@ const colors = themeVal('colors');
 export const Participants = observer(() => {
   const {
     participantsUIStore: {
-      participantList,
+      participantTableList,
       participantStudentList,
       searchKey,
       setSearchKey,
@@ -142,7 +142,7 @@ export const Participants = observer(() => {
             y: 400,
           }}
           columns={tableColumns as any}
-          data={participantList}
+          data={participantTableList}
           rowKey={(record) => record.user.userUuid}></Table>
 
         {isHost && (

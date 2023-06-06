@@ -49,7 +49,9 @@ export class ParticipantsUIStore extends EduUIStoreBase {
   get participantList() {
     const { list } = iterateMap(this.classroomStore.userStore.users, {
       onFilter: (_, item) => {
-        return item.userName.includes(this.searchKey);
+        return (
+          item.userRole === EduRoleTypeEnum.teacher || item.userRole === EduRoleTypeEnum.student
+        );
       },
       onMap: (_, item) => {
         const stream = this.getters.userCameraStreamByUserUuid(item.userUuid);
@@ -60,68 +62,76 @@ export class ParticipantsUIStore extends EduUIStoreBase {
         };
       },
     });
-    return list.sort((prev, next) => {
-      if (this.isHostByUserRole(prev.user.userRole)) {
-        return -1;
-      } else if (this.isHostByUserRole(next.user.userRole)) {
-        return 1;
-      }
-      if (this.orderKey === ParticipantsTableSortKeysEnum.Auth) {
-        if (
-          this.getters.boardApi.grantedUsers.has(prev.user.userUuid) &&
-          !this.getters.boardApi.grantedUsers.has(next.user.userUuid)
-        ) {
-          return this.orderDirection === 'asc' ? -1 : 1;
-        } else if (
-          this.getters.boardApi.grantedUsers.has(next.user.userUuid) &&
-          !this.getters.boardApi.grantedUsers.has(prev.user.userUuid)
-        ) {
-          return this.orderDirection === 'asc' ? 1 : -1;
+    return list;
+  }
+  @computed
+  get participantTableList() {
+    return this.participantList
+      .filter((item) => {
+        return item.user.userName.includes(this.searchKey);
+      })
+      .sort((prev, next) => {
+        if (this.isHostByUserRole(prev.user.userRole)) {
+          return -1;
+        } else if (this.isHostByUserRole(next.user.userRole)) {
+          return 1;
+        }
+        if (this.orderKey === ParticipantsTableSortKeysEnum.Auth) {
+          if (
+            this.getters.boardApi.grantedUsers.has(prev.user.userUuid) &&
+            !this.getters.boardApi.grantedUsers.has(next.user.userUuid)
+          ) {
+            return this.orderDirection === 'asc' ? -1 : 1;
+          } else if (
+            this.getters.boardApi.grantedUsers.has(next.user.userUuid) &&
+            !this.getters.boardApi.grantedUsers.has(prev.user.userUuid)
+          ) {
+            return this.orderDirection === 'asc' ? 1 : -1;
+          }
+          return 0;
+        }
+        if (this.orderKey === ParticipantsTableSortKeysEnum.RaiseHand) {
+          const isHandsUpByUserUuid =
+            this.getters.classroomUIStore.actionBarUIStore.isHandsUpByUserUuid;
+          if (isHandsUpByUserUuid(prev.user.userUuid) && !isHandsUpByUserUuid(next.user.userUuid)) {
+            return this.orderDirection === 'asc' ? -1 : 1;
+          } else if (
+            isHandsUpByUserUuid(next.user.userUuid) &&
+            !isHandsUpByUserUuid(prev.user.userUuid)
+          ) {
+            return this.orderDirection === 'asc' ? 1 : -1;
+          }
+          return 0;
+        }
+        if (this.orderKey === ParticipantsTableSortKeysEnum.Camera) {
+          if (prev.stream?.isVideoStreamPublished && !next.stream?.isVideoStreamPublished) {
+            return this.orderDirection === 'asc' ? -1 : 1;
+          } else if (next.stream?.isVideoStreamPublished && !prev.stream?.isVideoStreamPublished) {
+            return this.orderDirection === 'asc' ? 1 : -1;
+          }
+          return 0;
+        }
+        if (this.orderKey === ParticipantsTableSortKeysEnum.Microphone) {
+          if (prev.stream?.isMicStreamPublished && !next.stream?.isMicStreamPublished) {
+            return this.orderDirection === 'asc' ? -1 : 1;
+          } else if (next.stream?.isMicStreamPublished && !prev.stream?.isMicStreamPublished) {
+            return this.orderDirection === 'asc' ? 1 : -1;
+          }
+          return 0;
+        }
+        if (this.orderKey === ParticipantsTableSortKeysEnum.Reward) {
+          const getRewardCount = (userUuid: string) => {
+            return this.classroomStore.userStore.rewards.get(userUuid) || 0;
+          };
+          if (getRewardCount(prev.user.userUuid) > getRewardCount(next.user.userUuid)) {
+            return this.orderDirection === 'asc' ? -1 : 1;
+          } else if (getRewardCount(next.user.userUuid) > getRewardCount(prev.user.userUuid)) {
+            return this.orderDirection === 'asc' ? 1 : -1;
+          }
+          return 0;
         }
         return 0;
-      }
-      if (this.orderKey === ParticipantsTableSortKeysEnum.RaiseHand) {
-        const isHandsUpByUserUuid =
-          this.getters.classroomUIStore.actionBarUIStore.isHandsUpByUserUuid;
-        if (isHandsUpByUserUuid(prev.user.userUuid) && !isHandsUpByUserUuid(next.user.userUuid)) {
-          return this.orderDirection === 'asc' ? -1 : 1;
-        } else if (
-          isHandsUpByUserUuid(next.user.userUuid) &&
-          !isHandsUpByUserUuid(prev.user.userUuid)
-        ) {
-          return this.orderDirection === 'asc' ? 1 : -1;
-        }
-        return 0;
-      }
-      if (this.orderKey === ParticipantsTableSortKeysEnum.Camera) {
-        if (prev.stream?.isVideoStreamPublished && !next.stream?.isVideoStreamPublished) {
-          return this.orderDirection === 'asc' ? -1 : 1;
-        } else if (next.stream?.isVideoStreamPublished && !prev.stream?.isVideoStreamPublished) {
-          return this.orderDirection === 'asc' ? 1 : -1;
-        }
-        return 0;
-      }
-      if (this.orderKey === ParticipantsTableSortKeysEnum.Microphone) {
-        if (prev.stream?.isMicStreamPublished && !next.stream?.isMicStreamPublished) {
-          return this.orderDirection === 'asc' ? -1 : 1;
-        } else if (next.stream?.isMicStreamPublished && !prev.stream?.isMicStreamPublished) {
-          return this.orderDirection === 'asc' ? 1 : -1;
-        }
-        return 0;
-      }
-      if (this.orderKey === ParticipantsTableSortKeysEnum.Reward) {
-        const getRewardCount = (userUuid: string) => {
-          return this.classroomStore.userStore.rewards.get(userUuid) || 0;
-        };
-        if (getRewardCount(prev.user.userUuid) > getRewardCount(next.user.userUuid)) {
-          return this.orderDirection === 'asc' ? -1 : 1;
-        } else if (getRewardCount(next.user.userUuid) > getRewardCount(prev.user.userUuid)) {
-          return this.orderDirection === 'asc' ? 1 : -1;
-        }
-        return 0;
-      }
-      return 0;
-    });
+      });
   }
 
   @computed get participantStudentList() {

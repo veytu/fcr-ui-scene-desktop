@@ -12,6 +12,7 @@ export const Participants = observer(() => {
   const {
     actionBarUIStore: { handsUpMap },
     participantsUIStore: {
+      participantList,
       participantsDialogVisible,
       toggleParticipantsDialogVisible,
       setParticipantsDialogVisible,
@@ -25,7 +26,7 @@ export const Participants = observer(() => {
       setDialogTooltipVisible(false);
     }
   }, [handsUpMap.size, participantsDialogVisible]);
-
+  const userCount = participantList.length > 999 ? '999+' : participantList.length;
   return (
     <ToolTip
       visible={tooltipVisible}
@@ -51,10 +52,13 @@ export const Participants = observer(() => {
           </span>
         }
         visible={dialogTooltipVisible}>
-        <ActionBarItem
-          onClick={toggleParticipantsDialogVisible}
-          icon={SvgIconEnum.FCR_PEOPLE}
-          text={'Participants'}></ActionBarItem>
+        <div className="fcr-action-bar-participants-wrapper">
+          <div className="fcr-action-bar-participants-user-count">{userCount}</div>
+          <ActionBarItem
+            onClick={toggleParticipantsDialogVisible}
+            icon={SvgIconEnum.FCR_PEOPLE}
+            text={'Participants'}></ActionBarItem>
+        </div>
       </DialogToolTip>
     </ToolTip>
   );
