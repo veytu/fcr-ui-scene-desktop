@@ -582,6 +582,8 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
               this.getters.classroomUIStore.layoutUIStore.isDialogIdExist(dialogId);
             if (!hasUnmuteDialog && !this._audioRecordingDeviceEnabled) {
               this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+                id: dialogId,
+
                 title: 'Request to unmute',
                 content: 'Teacher requests to unmute',
                 onOk: () => {
