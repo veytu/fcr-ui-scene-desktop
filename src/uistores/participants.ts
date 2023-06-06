@@ -4,6 +4,7 @@ import { bound } from 'agora-rte-sdk';
 import { action, computed, observable } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { computedFn } from 'mobx-utils';
+import { checkCameraEnabled, checkMicEnabled } from '@onlineclass/utils/hooks/use-device-switch';
 export enum ParticipantsTableSortKeysEnum {
   Auth = 'Auth',
   Camera = 'Camera',
@@ -104,17 +105,17 @@ export class ParticipantsUIStore extends EduUIStoreBase {
           return 0;
         }
         if (this.orderKey === ParticipantsTableSortKeysEnum.Camera) {
-          if (prev.stream?.isVideoStreamPublished && !next.stream?.isVideoStreamPublished) {
+          if (checkCameraEnabled(prev.stream) && !checkCameraEnabled(next.stream)) {
             return this.orderDirection === 'asc' ? -1 : 1;
-          } else if (next.stream?.isVideoStreamPublished && !prev.stream?.isVideoStreamPublished) {
+          } else if (checkCameraEnabled(next.stream) && !checkCameraEnabled(prev.stream)) {
             return this.orderDirection === 'asc' ? 1 : -1;
           }
           return 0;
         }
         if (this.orderKey === ParticipantsTableSortKeysEnum.Microphone) {
-          if (prev.stream?.isMicStreamPublished && !next.stream?.isMicStreamPublished) {
+          if (checkMicEnabled(prev.stream) && !checkMicEnabled(next.stream)) {
             return this.orderDirection === 'asc' ? -1 : 1;
-          } else if (next.stream?.isMicStreamPublished && !prev.stream?.isMicStreamPublished) {
+          } else if (checkMicEnabled(next.stream) && !checkMicEnabled(prev.stream)) {
             return this.orderDirection === 'asc' ? 1 : -1;
           }
           return 0;

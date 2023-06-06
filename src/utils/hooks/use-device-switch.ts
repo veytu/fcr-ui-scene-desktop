@@ -9,6 +9,12 @@ import {
   CustomMessageDeviceType,
 } from '@onlineclass/uistores/type';
 const colors = themeVal('colors');
+export const checkCameraEnabled = (stream?: EduStreamUI) => {
+  return stream?.isVideoDeviceEnabled && stream.isVideoStreamPublished;
+};
+export const checkMicEnabled = (stream?: EduStreamUI) => {
+  return stream?.isMicDeviceEnabled && stream.isMicStreamPublished;
+};
 export const useDeviceSwitch = (userStream?: EduStreamUI) => {
   const {
     layoutUIStore: { addDialog },
@@ -27,13 +33,9 @@ export const useDeviceSwitch = (userStream?: EduStreamUI) => {
   const stream = userStream || localStream;
 
   const isLocal = !userStream || stream?.isLocal;
-  const micEnabled = isLocal
-    ? isAudioRecordingDeviceEnabled
-    : stream?.isMicDeviceEnabled && stream.isMicStreamPublished;
+  const micEnabled = isLocal ? isAudioRecordingDeviceEnabled : checkMicEnabled(stream);
 
-  const cameraEnabled = isLocal
-    ? isCameraDeviceEnabled
-    : stream?.isVideoDeviceEnabled && stream.isVideoStreamPublished;
+  const cameraEnabled = isLocal ? isCameraDeviceEnabled : checkCameraEnabled(stream);
   const toggleLocalCameraDevice = async () => {
     if (isCameraDeviceEnabled) {
       enableCamera(false);
