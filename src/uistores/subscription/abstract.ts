@@ -118,7 +118,10 @@ export abstract class SceneSubscription {
               this.logger.info(
                 `muteRemoteAudio, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteAudio}]`,
               );
-              scene.rtcChannel.muteRemoteAudioStream(stream.streamUuid, muteAudio);
+              const muteRemoteAudio =
+                stream.audioSourceState !== AgoraRteMediaSourceState.started ||
+                stream.audioState !== AgoraRteMediaPublishState.Published;
+              scene.rtcChannel.muteRemoteAudioStream(stream.streamUuid, muteRemoteAudio);
               this.putRegistry(stream.streamUuid, { muteAudio });
             }
           });
@@ -215,17 +218,11 @@ export abstract class SceneSubscription {
   }
 
   protected isMuted(stream: AgoraStream) {
-    const unmuteVideo =
-      stream.videoSourceState === AgoraRteMediaSourceState.started &&
-      stream.videoState === AgoraRteMediaPublishState.Published;
-
-    const unmuteAudio =
-      stream.audioSourceState === AgoraRteMediaSourceState.started &&
-      stream.audioState === AgoraRteMediaPublishState.Published;
-
+    const muteVideo = stream.videoState === AgoraRteMediaPublishState.Unpublished;
+    const muteAudio = stream.audioState === AgoraRteMediaPublishState.Unpublished;
     return {
-      muteVideo: !unmuteVideo,
-      muteAudio: !unmuteAudio,
+      muteVideo,
+      muteAudio,
     };
   }
 
@@ -292,9 +289,11 @@ export abstract class SceneSubscription {
 
   protected muteRemoteStreams(scene: AgoraRteScene, streams: AgoraStream[]) {
     streams.forEach((stream) => {
-      const states = this.isMuted(stream);
+      const muteAudio =
+        stream.audioSourceState !== AgoraRteMediaSourceState.started ||
+        stream.audioState !== AgoraRteMediaPublishState.Published;
 
-      this.muteRemoteStream(scene, stream, states);
+      this.muteRemoteStream(scene, stream, { muteAudio });
     });
   }
 }

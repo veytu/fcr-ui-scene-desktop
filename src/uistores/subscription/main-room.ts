@@ -134,7 +134,7 @@ export class MainRoomSubscription extends SceneSubscription {
 
     // remote stream removed, try mute
     streams.forEach((stream) => {
-      this.muteRemoteStream(this.scene, stream, { muteVideo: true, muteAudio: true });
+      this.muteRemoteStream(this.scene, stream, { muteAudio: true });
       this.removeRegistry(stream.streamUuid);
     });
   }
