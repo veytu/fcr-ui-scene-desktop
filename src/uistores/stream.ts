@@ -1,6 +1,8 @@
 import { AgoraEduClassroomEvent, EduEventCenter, EduStream } from 'agora-edu-core';
 import {
   AgoraRteEventType,
+  AgoraRteMediaPublishState,
+  AgoraRteMediaSourceState,
   AgoraRteVideoSourceType,
   AgoraUser,
   AGRenderMode,
@@ -102,7 +104,11 @@ export class StreamUIStore extends EduUIStoreBase {
       .concat(quitSub);
     // 当前页面视频列表 diff 已订阅 = 需要订阅的流列表
     const toSub = waitingSub.filter((stream) => {
-      return !doneSub.includes(stream);
+      return (
+        !doneSub.includes(stream) &&
+        stream.videoState === AgoraRteMediaPublishState.Published &&
+        stream.videoSourceState === AgoraRteMediaSourceState.started
+      );
     });
 
     const { muteRemoteVideoStreamMass, setupRemoteVideo } = this.classroomStore.streamStore;
@@ -133,16 +139,6 @@ export class StreamUIStore extends EduUIStoreBase {
         return subList.includes(streamUuid);
       });
 
-      // await Promise.all(
-      //   newSub.map(async (stream) => {
-      //     const streamType =
-      //       stream.fromUser.userUuid === this.pinnedUser
-      //         ? AGRemoteVideoStreamType.HIGH_STREAM
-      //         : AGRemoteVideoStreamType.LOW_STREAM;
-      //     // 根据是否被pin设置大小流
-      //     await setRemoteVideoStreamType(stream.streamUuid, streamType);
-      //   }),
-      // );
       // 加入已订阅
       doneSub = doneSub.concat(newSub);
     }
@@ -225,7 +221,7 @@ export class StreamUIStore extends EduUIStoreBase {
   }
   onInstall(): void {
     EduEventCenter.shared.onClassroomEvents(this._handleRewardsChange);
-
+    // todo 定时器优化
     this._subscribeTask = Scheduler.shared.addPollingTask(
       this._handleSubscribe,
       Scheduler.Duration.second(1),

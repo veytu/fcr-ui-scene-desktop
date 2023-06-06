@@ -846,7 +846,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             this.stopCameraPreview();
           }
         }
-        if (newValue.classroomState === ClassroomState.Connected) {
+        if (
+          oldValue?.classroomState === ClassroomState.Connecting &&
+          newValue.classroomState === ClassroomState.Connected
+        ) {
           if (!oldValue?.localCameraStream && newValue.localCameraStream) {
             const stream = newValue.localCameraStream;
             if (stream.videoState === AgoraRteMediaPublishState.Published) {
@@ -871,7 +874,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             this.stopAudioRecordingPreview();
           }
         }
-        if (newValue.classroomState === ClassroomState.Connected) {
+        if (
+          oldValue?.classroomState === ClassroomState.Connecting &&
+          newValue.classroomState === ClassroomState.Connected
+        ) {
           if (!oldValue?.localMicStream && newValue.localMicStream) {
             const stream = newValue.localMicStream;
             if (stream.audioState === AgoraRteMediaPublishState.Published) {

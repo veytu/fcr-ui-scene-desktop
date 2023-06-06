@@ -31,7 +31,7 @@ export const VideoPortal = observer(() => {
       ? {
           status: 'active' as const,
           icon: SvgIconEnum.FCR_CAMERA,
-          tooltip: 'Camera opened',
+          tooltip: 'Stop video',
         }
       : {
           status: 'inactive' as const,
@@ -41,7 +41,7 @@ export const VideoPortal = observer(() => {
               iconSecondary: colors?.['notsb-inverse'],
             },
           },
-          tooltip: 'Camera closed',
+          tooltip: 'Start video',
         };
   }, [
     deviceSettingUIStore.isPreviewCameraDeviceEnabled,
@@ -64,7 +64,7 @@ export const VideoPortal = observer(() => {
       ? {
           status: 'active' as const,
           icon: SvgIconEnum.FCR_MUTE,
-          tooltip: 'Microphone opened',
+          tooltip: 'Mute',
         }
       : {
           status: 'inactive' as const,
@@ -74,7 +74,7 @@ export const VideoPortal = observer(() => {
               iconSecondary: colors?.['notsb-inverse'],
             },
           },
-          tooltip: 'Microphone closed',
+          tooltip: 'Unmute',
         };
   }, [
     deviceSettingUIStore.isPreviewAudioRecordingDeviceEnabled,
@@ -88,12 +88,12 @@ export const VideoPortal = observer(() => {
       ? {
           status: 'active' as const,
           icon: SvgIconEnum.FCR_V2_LOUDER_MIN,
-          tooltip: 'Speaker opened',
+          tooltip: 'Disable speaker',
         }
       : {
           status: 'inactive' as const,
           icon: SvgIconEnum.FCR_V2_QUITE,
-          tooltip: 'Speaker closed',
+          tooltip: 'Enable speaker',
         };
   }, [deviceSettingUIStore.isAudioPlaybackDeviceEnabled]);
   const activeTab = useContext(DeviceTabKeysContext);
