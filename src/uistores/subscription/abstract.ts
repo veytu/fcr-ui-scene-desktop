@@ -107,22 +107,20 @@ export abstract class SceneSubscription {
         () => this.getters.cameraStreams,
         () => {
           this.getters.cameraStreams.forEach((stream) => {
-            const { muteAudio } = this.isMuted(stream);
+            const { muteLocalAudio, muteRemoteAudio } = this.isMuted(stream);
             if (stream.isLocal) {
               this.logger.info(
-                `muteLocalAudio, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteAudio}]`,
+                `muteLocalAudio, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteLocalAudio}]`,
               );
-              scene.rtcChannel.muteLocalAudioStream(muteAudio);
-              this.putRegistry(stream.streamUuid, { muteAudio });
+              scene.rtcChannel.muteLocalAudioStream(muteLocalAudio);
+              this.putRegistry(stream.streamUuid, { muteAudio: muteLocalAudio });
             } else {
               this.logger.info(
-                `muteRemoteAudio, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteAudio}]`,
+                `muteRemoteAudio, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteRemoteAudio}]`,
               );
-              const muteRemoteAudio =
-                stream.audioSourceState !== AgoraRteMediaSourceState.started ||
-                stream.audioState !== AgoraRteMediaPublishState.Published;
+
               scene.rtcChannel.muteRemoteAudioStream(stream.streamUuid, muteRemoteAudio);
-              this.putRegistry(stream.streamUuid, { muteAudio });
+              this.putRegistry(stream.streamUuid, { muteAudio: muteRemoteAudio });
             }
           });
         },
@@ -218,11 +216,15 @@ export abstract class SceneSubscription {
   }
 
   protected isMuted(stream: AgoraStream) {
-    const muteVideo = stream.videoState === AgoraRteMediaPublishState.Unpublished;
-    const muteAudio = stream.audioState === AgoraRteMediaPublishState.Unpublished;
+    const muteLocalVideo = stream.videoState === AgoraRteMediaPublishState.Unpublished;
+    const muteLocalAudio = stream.audioState === AgoraRteMediaPublishState.Unpublished;
+    const muteRemoteAudio =
+      stream.audioState === AgoraRteMediaPublishState.Unpublished ||
+      stream.audioSourceState !== AgoraRteMediaSourceState.started;
     return {
-      muteVideo,
-      muteAudio,
+      muteLocalVideo,
+      muteLocalAudio,
+      muteRemoteAudio,
     };
   }
 
@@ -252,48 +254,47 @@ export abstract class SceneSubscription {
   }
 
   protected muteLocalStream(scene: AgoraRteScene, stream: AgoraStream) {
-    const { muteVideo, muteAudio } = this.isMuted(stream);
+    const { muteLocalAudio, muteLocalVideo } = this.isMuted(stream);
 
     const connType = this.getStreamConnType(stream);
 
     switch (stream.videoSourceType) {
       case AgoraRteVideoSourceType.Camera:
         this.logger.info(
-          `muteLocalVideo, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteVideo}]`,
+          `muteLocalVideo, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteLocalVideo}]`,
         );
-        muteVideo && this.getters.classroomUIStore.deviceSettingUIStore.enableCamera(false);
-        muteAudio && this.getters.classroomUIStore.deviceSettingUIStore.enableAudioRecording(false);
+        muteLocalVideo && this.getters.classroomUIStore.deviceSettingUIStore.enableCamera(false);
+        muteLocalAudio &&
+          this.getters.classroomUIStore.deviceSettingUIStore.enableAudioRecording(false);
 
-        scene.rtcChannel.muteLocalVideoStream(muteVideo, connType);
-        this.putRegistry(stream.streamUuid, { muteVideo });
+        scene.rtcChannel.muteLocalVideoStream(muteLocalVideo, connType);
+        this.putRegistry(stream.streamUuid, { muteVideo: muteLocalVideo });
         break;
       case AgoraRteVideoSourceType.ScreenShare:
         this.logger.info(
-          `muteLocalScreen, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteVideo}]`,
+          `muteLocalScreen, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteLocalVideo}]`,
         );
-        scene.rtcChannel.muteLocalScreenStream(muteVideo, connType);
-        this.putRegistry(stream.streamUuid, { muteVideo });
+        scene.rtcChannel.muteLocalScreenStream(muteLocalVideo, connType);
+        this.putRegistry(stream.streamUuid, { muteVideo: muteLocalVideo });
         break;
     }
 
     switch (stream.audioSourceType) {
       case AgoraRteAudioSourceType.Mic:
         this.logger.info(
-          `muteLocalAudio, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteAudio}]`,
+          `muteLocalAudio, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteLocalAudio}]`,
         );
-        scene.rtcChannel.muteLocalAudioStream(muteAudio, connType);
-        this.putRegistry(stream.streamUuid, { muteAudio });
+        scene.rtcChannel.muteLocalAudioStream(muteLocalAudio, connType);
+        this.putRegistry(stream.streamUuid, { muteAudio: muteLocalAudio });
         break;
     }
   }
 
   protected muteRemoteStreams(scene: AgoraRteScene, streams: AgoraStream[]) {
     streams.forEach((stream) => {
-      const muteAudio =
-        stream.audioSourceState !== AgoraRteMediaSourceState.started ||
-        stream.audioState !== AgoraRteMediaPublishState.Published;
+      const { muteRemoteAudio } = this.isMuted(stream);
 
-      this.muteRemoteStream(scene, stream, { muteAudio });
+      this.muteRemoteStream(scene, stream, { muteAudio: muteRemoteAudio });
     });
   }
 }
