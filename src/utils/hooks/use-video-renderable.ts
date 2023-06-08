@@ -1,4 +1,4 @@
-import { StreamWindowContext } from '@onlineclass/containers/window/context';
+import { StreamWindowContext } from '@onlineclass/containers/stream-window/context';
 import { Layout } from '@onlineclass/uistores/type';
 import { useContext } from 'react';
 import { useStore } from './use-store';

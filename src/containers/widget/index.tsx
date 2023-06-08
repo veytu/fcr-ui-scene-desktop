@@ -4,18 +4,20 @@ import { createPortal } from 'react-dom';
 import './index.css';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { AgoraTrackSyncedWidget, AgoraWidgetBase } from 'agora-common-libs/lib/widget';
-import { ZIndexController } from './z-index-controller';
-const WidgetZIndexContext = React.createContext(new ZIndexController());
+import { ZIndexController } from '../../utils/z-index-controller';
 import { Rnd } from 'react-rnd';
-import { Participants } from '../participants';
+
 import { useMinimize, useVisible } from '@ui-kit-utils/hooks/animations';
+
+import { ParticipantsDialog } from '../participants/dialog';
+import { ZIndexContext, useZIndex } from '@onlineclass/utils/hooks/use-z-index';
 export const WidgetContainer = observer(() => {
   const {
     widgetUIStore: { z0Widgets, z10Widgets },
   } = useStore();
   const zIndexControllerRef = useRef(new ZIndexController());
   return (
-    <WidgetZIndexContext.Provider value={zIndexControllerRef.current}>
+    <ZIndexContext.Provider value={zIndexControllerRef.current}>
       <React.Fragment>
         <div className="fcr-widget-container fcr-z-0">
           <ParticipantsDialog></ParticipantsDialog>
@@ -29,7 +31,7 @@ export const WidgetContainer = observer(() => {
           ))}
         </div>
       </React.Fragment>
-    </WidgetZIndexContext.Provider>
+    </ZIndexContext.Provider>
   );
 });
 
@@ -90,29 +92,7 @@ const WidgetWrapper = observer(({ widget }: { widget: AgoraWidgetBase }) => {
     </>
   );
 });
-const useZIndex = (id: string) => {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const zIndexController = React.useContext(WidgetZIndexContext);
-  const zIndex = zIndexController.zIndexMap.get(id);
-  const updateZIndex = () => {
-    zIndexController.updateZIndex(id);
-  };
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.addEventListener('mousedown', updateZIndex);
-    }
-    return () => {
-      ref.current?.removeEventListener('mousedown', updateZIndex);
-    };
-  }, []);
-  useEffect(() => {
-    if (!zIndex) {
-      zIndexController.updateZIndex(id);
-    }
-  }, [zIndex, zIndexController]);
 
-  return { zIndex, ref, updateZIndex };
-};
 const WidgetDraggableWrapper: FC<PropsWithChildren<{ widget: AgoraWidgetBase }>> = observer(
   (props) => {
     const { children, widget } = props;
@@ -130,7 +110,7 @@ const WidgetDraggableWrapper: FC<PropsWithChildren<{ widget: AgoraWidgetBase }>>
       layoutUIStore: { classroomViewportClassName },
       eduToolApi: { isWidgetMinimized, isWidgetVisible, sendWidgetVisible },
     } = useStore();
-    const zIndexController = React.useContext(WidgetZIndexContext);
+    const zIndexController = React.useContext(ZIndexContext);
 
     const minimize = isWidgetMinimized(widget.widgetId);
     const visible = isWidgetVisible(widget.widgetId);
@@ -192,63 +172,3 @@ const WidgetDraggableWrapper: FC<PropsWithChildren<{ widget: AgoraWidgetBase }>>
     );
   },
 );
-
-const ParticipantsDialog = observer(() => {
-  const { zIndex, ref: zIndexRef, updateZIndex } = useZIndex('participants');
-  const {
-    layoutUIStore: { classroomViewportClassName },
-
-    participantsUIStore: { participantsDialogVisible },
-  } = useStore();
-  const [rndStyle, setRndStyle] = useState<CSSProperties>({});
-
-  const { style } = useVisible({
-    visible: participantsDialogVisible,
-    beforeChange: (visible) => {
-      visible && setRndStyle({ display: 'block' });
-    },
-    afterChange: (visible) => {
-      !visible && setRndStyle({ display: 'none' });
-    },
-  });
-  const { ref: positionRef, position, setPosition } = useDraggablePosition({ centered: true });
-  const refHandle = (ele: HTMLDivElement) => {
-    zIndexRef.current = ele;
-    positionRef.current = ele;
-  };
-  useEffect(() => {
-    if (participantsDialogVisible) updateZIndex();
-  }, [participantsDialogVisible]);
-  return (
-    <Rnd
-      bounds={`.${classroomViewportClassName}`}
-      position={position}
-      onDrag={(_, { x, y }) => setPosition({ x, y })}
-      enableResizing={false}
-      cancel="fcr-participants-header-close"
-      dragHandleClassName="fcr-participants-header"
-      style={{ zIndex, ...rndStyle }}>
-      <div style={{ ...style }} ref={refHandle}>
-        <Participants></Participants>
-      </div>
-    </Rnd>
-  );
-});
-const useDraggablePosition = ({
-  initPosition = { x: 0, y: 0 },
-  centered = false,
-}: {
-  initPosition?: { x: number; y: number };
-  centered?: boolean;
-}) => {
-  const [position, setPosition] = useState(initPosition);
-  const ref = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    centered &&
-      setPosition({
-        x: document.body.getBoundingClientRect().width / 2 - (ref.current?.offsetWidth || 0) / 2,
-        y: document.body.getBoundingClientRect().height / 2 - (ref.current?.offsetHeight || 0) / 2,
-      });
-  }, []);
-  return { position, setPosition, ref };
-};
