@@ -1,5 +1,5 @@
 import { EduRoomTypeEnum } from 'agora-edu-core';
-import { FcrMultiThemes, FcrUIConfig } from 'agora-common-libs/lib/ui';
+import { FcrMultiThemes, FcrUIConfig } from 'agora-common-libs';
 import { roomMidClass } from '../configs/base-ui';
 import { baseTheme } from '../configs/base-theme';
 

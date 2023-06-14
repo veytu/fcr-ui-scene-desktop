@@ -1,5 +1,5 @@
 import { EduClassroomStore } from 'agora-edu-core';
-import { Logger } from 'agora-common-libs/lib/annotation';
+import { Logger } from 'agora-common-libs';
 import { Getters } from './getters';
 
 /**

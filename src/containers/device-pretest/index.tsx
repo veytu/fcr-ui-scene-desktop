@@ -3,7 +3,7 @@ import pretestLogo from '@res/images/pretest-logo.png';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import './index.css';
 import { observer } from 'mobx-react';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 import { FashionTabs } from '@components/tabs';
 import { VirtualBackground } from './virtual-background';
 import { BasicSettings } from './basic-settings';

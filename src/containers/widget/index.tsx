@@ -3,7 +3,7 @@ import React, { CSSProperties, FC, PropsWithChildren, useEffect, useRef, useStat
 import { createPortal } from 'react-dom';
 import './index.css';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
-import { AgoraTrackSyncedWidget, AgoraWidgetBase } from 'agora-common-libs/lib/widget';
+import { AgoraTrackSyncedWidget, AgoraWidgetBase } from 'agora-common-libs';
 import { ZIndexController } from '../../utils/z-index-controller';
 import { Rnd } from 'react-rnd';
 

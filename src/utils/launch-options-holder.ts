@@ -1,4 +1,4 @@
-import { FcrTheme, FcrUIConfig } from 'agora-common-libs/lib/ui';
+import { FcrTheme, FcrUIConfig } from 'agora-common-libs';
 import { LaunchOptions } from '..';
 
 type Config = Partial<

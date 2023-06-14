@@ -20,7 +20,7 @@ import {
   bound,
   Log,
 } from 'agora-rte-sdk';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 import { BeautyFilterOptions, VirtualBackgroundOptions } from '..';
 import { fetchMediaFileByUrl } from '@onlineclass/utils';
 import { getLaunchOptions } from '@onlineclass/utils/launch-options-holder';

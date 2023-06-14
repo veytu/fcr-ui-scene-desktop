@@ -2,7 +2,7 @@ import './preset';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { ConvertMediaOptionsConfig, LaunchMediaOptions, LaunchOptions } from './type';
 import { App } from './app';
-import { Logger } from 'agora-common-libs/lib/annotation';
+import { Logger } from 'agora-common-libs';
 import {
   EduClassroomConfig,
   EduEventCenter,

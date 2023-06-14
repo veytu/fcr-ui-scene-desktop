@@ -2,12 +2,12 @@ import { EduUIStoreBase } from './base';
 import { observable, action, computed, reaction, runInAction } from 'mobx';
 import { CommonDialogType, DialogType, Layout } from './type';
 import { bound, Lodash, Scheduler } from 'agora-rte-sdk';
-import { Log } from 'agora-common-libs/lib/annotation';
+import { Log } from 'agora-common-libs';
 import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
-import { AgoraViewportBoundaries } from 'agora-common-libs/lib/widget';
+import { AgoraViewportBoundaries } from 'agora-common-libs';
 import { ClassDialogProps } from '@components/dialog/class-dialog';
 import { v4 as uuidv4 } from 'uuid';
-import {  ClassroomState } from 'agora-edu-core';
+import { ClassroomState } from 'agora-edu-core';
 import { AgoraExtensionRoomEvent } from '@onlineclass/extension/events';
 
 @Log.attach({ proxyMethods: false })

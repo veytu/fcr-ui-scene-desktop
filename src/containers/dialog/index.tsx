@@ -3,7 +3,7 @@ import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { iterateMap } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { ConfirmDialogWrapper } from './confirm';
-import { Logger } from 'agora-common-libs/lib/annotation';
+import { Logger } from 'agora-common-libs';
 import { DeviceSettingsDialog } from '../device-settings/dialog-wrapper';
 import { ClassDialogProps } from '@components/dialog/class-dialog';
 import { ClassInfoDialog } from './class-info';

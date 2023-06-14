@@ -2,7 +2,7 @@ import { SvgIconEnum } from '@components/svg-img';
 import { ActionBarItem } from '..';
 import './index.css';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
-import { Logger } from 'agora-common-libs/lib/annotation';
+import { Logger } from 'agora-common-libs';
 import { observer } from 'mobx-react';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
 import { ToolTip } from '@components/tooltip';

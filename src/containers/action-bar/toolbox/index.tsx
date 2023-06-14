@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 import { ActionBarItemWithPopover } from '..';
 import { observer } from 'mobx-react';
 import './index.css';
-import { PredefinedWidgetTrack } from 'agora-common-libs/lib/widget/helper';
+import { PredefinedWidgetTrack } from 'agora-common-libs';
 import { ToolTip } from '@components/tooltip';
 export const ToolBox = observer(() => {
   const {

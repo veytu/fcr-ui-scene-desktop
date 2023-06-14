@@ -2,14 +2,16 @@
   "name": "agora-onlineclass-sdk",
   "version": "1.0.0",
   "main": "lib/onlineclass_sdk.bundle.js",
+  "types": "lib/agora-onlineclass-sdk/src/index.d.ts",
   "repository": "ssh://git@git.agoralab.co/aduc/online-class-desktop.git",
   "author": "renyifei <renyifei@agora.io>",
   "license": "MIT",
   "scripts": {
+    "dev": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 webpack --watch --config ./webpack/webpack.dev.js",
     "build:types": "tsc -p tsconfig.json",
     "build:docs": "typedoc",
     "pack:npm": "run-s bundle:npm build:types",
-    "bundle:npm": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 webpack --config ./webpack/webpack.pack.js"
+    "bundle:npm": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 webpack --config ./webpack.config.js"
   },
   "dependencies": {
     "@types/react": "17.0.44",
