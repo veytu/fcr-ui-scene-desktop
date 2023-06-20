@@ -5,6 +5,6 @@ import '@ui-kit-utils/preflight.css';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 
-setTailwindConfig(tailwindConfig as unknown as TailwindConfig);
+setTailwindConfig(tailwindConfig as any);
 
 dayjs.extend(duration);

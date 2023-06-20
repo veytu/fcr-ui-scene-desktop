@@ -6,15 +6,17 @@ import {
   AgoraWidgetBase,
   AgoraWidgetLifecycle,
   AgoraWidgetTrackMode,
+  AgoraWidgetTrackController,
 } from 'agora-common-libs';
 import { WidgetState, AgoraWidgetTrack, AgoraWidgetController } from 'agora-edu-core';
 import { bound, Log } from 'agora-rte-sdk';
 import { action, computed, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from './base';
-import { AgoraWidgetTrackController } from 'agora-common-libs';
 import { getLaunchOptions, getUiConfig, getTheme } from '@onlineclass/utils/launch-options-holder';
 import { ToastApi } from '@components/toast';
 import { AgoraExtensionWidgetEvent } from '@onlineclass/extension/events';
+import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
+import { CommonDialogType } from './type';
 
 @Log.attach({ proxyMethods: false })
 export class WidgetUIStore extends EduUIStoreBase {
@@ -302,7 +304,10 @@ export class WidgetUIStore extends EduUIStoreBase {
         });
       },
       addConfirmDialog: (params: AgoraUiCapableConfirmDialogProps) => {
-        this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', params);
+        this.getters.classroomUIStore.layoutUIStore.addDialog(
+          'confirm',
+          params as unknown as CommonDialogType<ConfirmDialogProps>,
+        );
       },
     };
   }
