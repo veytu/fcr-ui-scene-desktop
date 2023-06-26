@@ -55,7 +55,6 @@ export class LayoutUIStore extends EduUIStoreBase {
     return this.dialogMap.has(id);
   }
   addDialog(type: 'confirm', params: CommonDialogType<ConfirmDialogProps>): void;
-  addDialog(type: 'device-settings'): void;
   addDialog(type: 'participants'): void;
   addDialog(type: 'class-info', params: CommonDialogType<ClassDialogProps>): void;
 
@@ -90,13 +89,6 @@ export class LayoutUIStore extends EduUIStoreBase {
       : 135;
   }
 
-  @computed get deviceSettingOpened() {
-    let opened = false;
-    this.dialogMap.forEach((dialog) => {
-      if (dialog.type === 'device-settings') opened = true;
-    });
-    return opened;
-  }
   @computed get gridLayoutDisabled() {
     return this.getters.isScreenSharing && !this.getters.isLocalScreenSharing;
   }

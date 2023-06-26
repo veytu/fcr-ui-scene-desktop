@@ -1,6 +1,11 @@
 import './preset';
 import { render, unmountComponentAtNode } from 'react-dom';
-import { ConvertMediaOptionsConfig, LaunchMediaOptions, LaunchOptions } from './type';
+import {
+  ConvertMediaOptionsConfig,
+  CoursewareList,
+  LaunchMediaOptions,
+  LaunchOptions,
+} from './type';
 import { App } from './app';
 import { Logger } from 'agora-common-libs';
 import {
@@ -18,6 +23,7 @@ import { ApiBase } from 'agora-rte-sdk';
  * Online class SDK
  */
 export class AgoraOnlineclassSDK {
+  static coursewareList: CoursewareList = [];
   /**
    * 启动入口
    * @param dom
@@ -49,8 +55,9 @@ export class AgoraOnlineclassSDK {
       startTime,
       duration,
       listener,
+      coursewareList,
     } = launchOptions;
-
+    if (coursewareList) this.coursewareList = coursewareList;
     Logger.info('[AgoraOnlineclassSDK]launched with options:', launchOptions);
 
     setLaunchOptions(launchOptions);

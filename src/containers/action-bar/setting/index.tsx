@@ -5,14 +5,14 @@ import './index.css';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 
 export const Setting = () => {
-  const { layoutUIStore } = useStore();
+  const {
+    deviceSettingUIStore: { setDeviceSettingDialogVisible },
+  } = useStore();
   const actionClickHandler = (action: 'settings') => {
     return () => {
       switch (action) {
         case 'settings':
-          if (!layoutUIStore.hasDialogOf('device-settings')) {
-            layoutUIStore.addDialog('device-settings');
-          }
+          setDeviceSettingDialogVisible(true);
           break;
       }
     };

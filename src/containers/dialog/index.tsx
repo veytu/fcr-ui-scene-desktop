@@ -4,7 +4,6 @@ import { iterateMap } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { ConfirmDialogWrapper } from './confirm';
 import { Logger } from 'agora-common-libs';
-import { DeviceSettingsDialog } from '../device-settings/dialog-wrapper';
 import { ClassDialogProps } from '@components/dialog/class-dialog';
 import { ClassInfoDialog } from './class-info';
 
@@ -34,8 +33,6 @@ export const ClassRoomDialogContainer = observer(() => {
                   confirmDialog.onClose?.();
                 }}></ConfirmDialogWrapper>
             );
-          case 'device-settings':
-            return <DeviceSettingsDialog key={id} id={id} />;
 
           case 'class-info':
             const classDialog = props as ClassDialogProps;

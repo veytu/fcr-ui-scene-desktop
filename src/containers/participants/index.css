@@ -179,9 +179,7 @@
 }
 .fcr-participants-table-cell-wrap-disabled {
 }
-.fcr-participants-container .fcr-table .fcr-table-row:hover {
-  @apply fcr-bg-brand-6;
-}
+
 .fcr-participants-table-remove-options-divider {
   @apply fcr-border-1;
   height: 0;

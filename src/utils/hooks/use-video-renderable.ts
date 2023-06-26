@@ -7,11 +7,12 @@ export const useVideoRenderable = () => {
   const streamWindowContext = useContext(StreamWindowContext);
   const stream = streamWindowContext?.stream;
   const {
-    layoutUIStore: { deviceSettingOpened, layout },
+    layoutUIStore: { layout },
+    deviceSettingUIStore: { deviceSettingDialogVisible },
     presentationUIStore: { mainViewStream },
   } = useStore();
   const checkVideoVisible = () => {
-    if (stream?.isLocal && deviceSettingOpened) return false;
+    if (stream?.isLocal && deviceSettingDialogVisible) return false;
     if (layout === Layout.Grid) return true;
     if (streamWindowContext?.renderAtMainView) {
       return mainViewStream?.stream.streamUuid === stream?.stream.streamUuid;

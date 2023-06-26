@@ -26,6 +26,7 @@ import { SubscriptionUIStore } from './subscription';
 import { ParticipantsUIStore } from './participants';
 import { NotiticationUIStore } from './notification';
 import { EduTool } from '@onlineclass/extension/edu-tool';
+import { CloudUIStore } from './cloud';
 
 export class OnlineclassUIStore {
   @observable
@@ -45,6 +46,7 @@ export class OnlineclassUIStore {
   readonly subscriptionUIStore: SubscriptionUIStore;
   readonly participantsUIStore: ParticipantsUIStore;
   readonly notiticationUIStore: NotiticationUIStore;
+  readonly cloudUIStore: CloudUIStore;
 
   readonly boardApi = new Board();
   readonly eduToolApi = new EduTool();
@@ -63,6 +65,7 @@ export class OnlineclassUIStore {
     this.subscriptionUIStore = new SubscriptionUIStore(this.classroomStore, this.getters);
     this.participantsUIStore = new ParticipantsUIStore(this.classroomStore, this.getters);
     this.notiticationUIStore = new NotiticationUIStore(this.classroomStore, this.getters);
+    this.cloudUIStore = new CloudUIStore(this.classroomStore, this.getters);
   }
 
   get initialized() {

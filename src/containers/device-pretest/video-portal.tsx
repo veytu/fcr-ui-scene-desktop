@@ -102,12 +102,16 @@ export const VideoPortal = observer(() => {
     deviceSettingUIStore.isBeautyFilterEnabled &&
     deviceSettingUIStore.activeBeautyType &&
     activeTab === 'beauty-filter';
+
   useEffect(() => {
     deviceSettingUIStore.startCameraPreview();
+    deviceSettingUIStore.startRecordingDeviceTest();
+
     return () => {
       deviceSettingUIStore.setPretestCameraEnabled(pretestDeviceStateRef.current.cameraEnable);
       deviceSettingUIStore.setPretestMicEnabled(pretestDeviceStateRef.current.micEnable);
       deviceSettingUIStore.stopCameraPreview();
+      deviceSettingUIStore.stopRecordingDeviceTest();
     };
   }, []);
   useEffect(() => {

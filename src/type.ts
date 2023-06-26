@@ -86,7 +86,7 @@ export type LaunchOptions = {
   /** @en
    *
    */
-  // courseWareList: CoursewareList;
+  coursewareList?: CoursewareList;
   /**
    * 用户自定义属性
    */

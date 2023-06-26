@@ -37,12 +37,6 @@ export const DevicePretest = observer(() => {
   const onClose = () => {
     EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.Destroyed, LeaveReason.leave);
   };
-  useEffect(() => {
-    deviceSettingUIStore.startRecordingDeviceTest();
-    return () => {
-      deviceSettingUIStore.stopRecordingDeviceTest();
-    };
-  }, []);
 
   return (
     <div className="fcr-pretest">

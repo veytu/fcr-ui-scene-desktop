@@ -136,6 +136,9 @@ export class ActionBarUIStore extends EduUIStoreBase {
   @computed get showRaiseHands() {
     return this.getters.isStudent;
   }
+  @computed get showCloud() {
+    return this.getters.isHost;
+  }
   @observable showLeaveOption = false;
 
   shareScreenStateKeeperMap: Map<string, ShareStreamStateKeeper> = new Map();

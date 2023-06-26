@@ -62,6 +62,11 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   private _virtualBackgroundProcessorForPreview?: IVirtualBackgroundProcessor;
   private _beautyEffectProcessorForPreview?: IBeautyProcessor;
   private _aiDenoiserProcessorForPreview?: IAIDenoiserProcessor;
+  @observable deviceSettingDialogVisible = false;
+  @action.bound
+  setDeviceSettingDialogVisible(visible: boolean) {
+    this.deviceSettingDialogVisible = visible;
+  }
   @observable
   private _virtualBackgroundOptions?: VirtualBackgroundOptions;
   @observable
@@ -430,7 +435,8 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   @action.bound
   setAudioRecordingDevice(deviceId: string) {
     this._audioRecordingDeviceId = deviceId;
-    this.updateAudioRecordingTrack();
+    const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
+    track.setRecordingDevice(deviceId);
   }
 
   @bound
@@ -981,6 +987,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         ({ localMicTrackState, localCameraTrackState }) => {
           runInAction(() => {
             this._cameraDeviceEnabled = localCameraTrackState === AgoraRteMediaSourceState.started;
+            console.log(localMicTrackState, 'localMicTrackState');
             this._audioRecordingDeviceEnabled =
               localMicTrackState === AgoraRteMediaSourceState.started;
           });

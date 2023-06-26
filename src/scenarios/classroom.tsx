@@ -5,6 +5,8 @@ import { observer } from 'mobx-react';
 import { useEffect } from 'react';
 
 import { ClassroomLayout } from './layout';
+import { DeviceSettingsDialog } from '@onlineclass/containers/device-settings/dialog-wrapper';
+import { CloudDialog } from '@onlineclass/containers/cloud/dialog-wrapper';
 
 export const Classroom = observer(() => {
   const {
@@ -18,6 +20,8 @@ export const Classroom = observer(() => {
     <div className={classroomViewportClassName}>
       <ClassroomLayout></ClassroomLayout>
       <ClassRoomDialogContainer></ClassRoomDialogContainer>
+      <DeviceSettingsDialog></DeviceSettingsDialog>
+      <CloudDialog></CloudDialog>
       <ClassroomLoading></ClassroomLoading>
     </div>
   );

@@ -1,0 +1,73 @@
+.fcr-cloud-personal-tab-content,
+.fcr-cloud-public-tab-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.fcr-cloud-personal-tab-search,
+.fcr-cloud-public-tab-search {
+  padding: 8px 15px 10px;
+  height: 50px;
+}
+.fcr-cloud-personal-tab-table,
+.fcr-cloud-public-tab-table {
+  flex: 1;
+}
+.fcr-cloud-personal-tab-footer,
+.fcr-cloud-public-tab-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+  height: 50px;
+}
+
+.fcr-cloud-personal-tab-footer-upload {
+  padding: 16px 10px 13px;
+}
+.fcr-cloud-personal-tab-footer-upload-title {
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  line-height: 17px;
+  padding-bottom: 23px;
+}
+.fcr-cloud-personal-tab-footer-upload-item-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.fcr-cloud-personal-tab-footer-upload-item > div {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 12px;
+  padding-bottom: 8px;
+}
+.fcr-cloud-personal-tab-footer-upload-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 12px;
+}
+.fcr-cloud-public-tab-table-filename {
+  display: flex;
+  align-items: center;
+}
+.fcr-cloud-public-tab-table-filename span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fcr-cloud-public-tab-table-header-filename {
+  padding-left: 20px;
+}
+.fcr-cloud-public-tab-table-filename {
+  padding-left: 18px;
+  padding-right: 20px;
+  cursor: pointer;
+}
+.fcr-cloud-public-tab-table-header-update-time,
+.fcr-cloud-public-tab-table-update-time {
+  padding-right: 20px;
+}
