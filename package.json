@@ -15,15 +15,13 @@
     "ci:build": "run-s bundle:npm build:types"
   },
   "dependencies": {
-    "@types/react": "17.0.44",
-    "@types/react-dom": "16.9.2",
+    "@types/react": "17.0.0",
+    "@types/react-dom": "17.0.0",
     "@types/react-transition-group": "4.4.1",
     "@types/uuid": "3.4.6",
     "agora-common-libs": "2.8.1",
     "agora-edu-core": "2.8.21",
-    "rc-dialog": "9.1.0",
-    "rc-tooltip": "5.1.1",
-    "rc-slider": "9.7.1",
+    "agora-rte-sdk": "2.8.21",
     "react": "17.0.0",
     "react-copy-to-clipboard": "5.1.0",
     "react-dom": "17.0.0",
@@ -41,9 +39,11 @@
     "agora-extension-virtual-background": "1.1.1",
     "agora-extension-beauty-effect": "1.0.1-beta",
     "agora-extension-ai-denoiser": "1.0.0",
-    "fscreen": "1.2.0"
+    "fscreen": "1.2.0",
+    "clipboard": "2.0.8"
   },
   "devDependencies": {
+    "@types/react-copy-to-clipboard": "5.0.4",
     "@storybook/addon-essentials": "6.5.13",
     "@storybook/addon-links": "6.5.13",
     "@storybook/addon-postcss": "2.0.0",
@@ -57,7 +57,15 @@
     "postcss-loader": "4.0.3",
     "storybook": "6.5.13",
     "tailwindcss": "2.0.3",
-    "tinycolor2": "1.6.0"
+    "tinycolor2": "1.6.0",
+    "npm-run-all": "4.1.5",
+    "cross-env": "7.0.3",
+    "webpack": "5.54.0",
+    "webpack-cli": "5.1.4",
+    "thread-loader": "4.0.2",
+    "core-js": "3.31.0",
+    "url-loader": "4.1.1",
+    "typescript": "4.4.4"
   },
   "peerDependencies": {
     "electron": "12.0.0"
