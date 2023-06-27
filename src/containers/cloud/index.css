@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
 }
 .fcr-cloud-personal-tab-search,
 .fcr-cloud-public-tab-search {
@@ -15,11 +16,14 @@
 }
 .fcr-cloud-personal-tab-footer,
 .fcr-cloud-public-tab-footer {
+  @apply fcr-bg-2;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 15px;
   height: 50px;
+  position: relative;
+  z-index: 2;
 }
 
 .fcr-cloud-personal-tab-footer-upload {
@@ -49,11 +53,14 @@
   gap: 8px;
   padding-top: 12px;
 }
-.fcr-cloud-public-tab-table-filename {
+
+.fcr-cloud-public-tab-table-filename,
+.fcr-cloud-personal-tab-table-filename {
   display: flex;
   align-items: center;
 }
-.fcr-cloud-public-tab-table-filename span {
+.fcr-cloud-public-tab-table-filename span,
+.fcr-cloud-personal-tab-table-filename span {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -62,12 +69,138 @@
 .fcr-cloud-public-tab-table-header-filename {
   padding-left: 20px;
 }
-.fcr-cloud-public-tab-table-filename {
+.fcr-cloud-personal-tab-table-header-filename {
+  padding-left: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.fcr-cloud-public-tab-table-filename,
+.fcr-cloud-personal-tab-table-filename {
   padding-left: 18px;
   padding-right: 20px;
   cursor: pointer;
 }
+.fcr-cloud-personal-tab-table-filename .fcr-checkbox {
+  margin-right: 3px;
+}
+.fcr-cloud-personal-tab-table-filename {
+  padding-left: 15px;
+}
 .fcr-cloud-public-tab-table-header-update-time,
-.fcr-cloud-public-tab-table-update-time {
+.fcr-cloud-public-tab-table-update-time,
+.fcr-cloud-personal-tab-table-header-update-time,
+.fcr-cloud-personal-tab-table-update-time {
   padding-right: 20px;
+}
+
+.fcr-cloud-personal-tab-float-btn {
+  @apply fcr-rounded-full fcr-bg-2 fcr-shadow-line-1-.5;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  cursor: pointer;
+}
+.fcr-cloud-personal-tab-float-btn:hover {
+  @apply fcr-bg-brand-6;
+}
+.fcr-cloud-personal-tab-refresh {
+  right: 17px;
+  bottom: 66px;
+}
+.fcr-cloud-personal-tab-open-upload {
+  right: 17px;
+  bottom: 113px;
+}
+.fcr-cloud-personal-tab-upload-list {
+  position: absolute;
+  bottom: -220px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  height: 270px;
+  flex-direction: column;
+  z-index: 1;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+}
+.fcr-cloud-personal-tab-upload-list-header {
+  @apply fcr-bg-brand-3 fcr-text-1 fcr-rounded-12;
+  height: 36px;
+  backdrop-filter: blur(25px);
+  line-height: 36px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  position: relative;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.fcr-cloud-personal-tab-upload-list-header-collapsed {
+  @apply fcr-rounded-full;
+  background: #d9d9d9;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fcr-cloud-personal-tab-upload-list-content {
+  @apply fcr-bg-2;
+  flex: 1;
+}
+.fcr-cloud-personal-tab-upload-list-item {
+  display: flex;
+  height: 36px;
+  align-items: center;
+  padding: 0 16px;
+}
+.fcr-cloud-personal-tab-upload-list-item-filename {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.fcr-cloud-personal-tab-upload-list-item-filename span {
+  @apply fcr-text-1;
+  font-size: 12px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fcr-cloud-personal-tab-upload-list-item-size {
+  @apply fcr-text-1;
+  width: 60px;
+  font-size: 12px;
+  font-weight: 300;
+}
+.fcr-cloud-personal-tab-upload-list-item-status {
+  width: 150px;
+}
+.fcr-cloud-personal-tab-upload-list-transition-enter {
+  transform: translate3d(0, 0, 0);
+}
+.fcr-cloud-personal-tab-upload-list-transition-enter-active {
+  transform: translate3d(0, -223px, 0);
+  transition: all 0.5s;
+}
+.fcr-cloud-personal-tab-upload-list-transition-enter-done {
+  transform: translate3d(0, -223px, 0);
+}
+.fcr-cloud-personal-tab-upload-list-transition-exit {
+  transform: translate3d(0, -223px, 0);
+}
+.fcr-cloud-personal-tab-upload-list-transition-exit-active {
+  transform: translate3d(0, 0, 0);
+  transition: all 0.5s;
+}
+.fcr-cloud-personal-tab-upload-list-transition-exit-done {
+  transform: translate3d(0, 0, 0);
 }

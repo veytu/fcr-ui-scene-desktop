@@ -9,6 +9,10 @@ import './index.css';
 import { useStore } from '@onlineclass/utils/hooks/use-store';
 import { CoursewareItem } from '@onlineclass/type';
 import dayjs from 'dayjs';
+import { supportedTypes } from '@onlineclass/uistores/cloud/helper';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { Checkbox } from '@components/checkbox';
 export const PublicResource = observer(() => {
   const {
     cloudUIStore: { publicResources, fileNameToType, formatFileSize },
@@ -71,6 +75,38 @@ export const PublicResource = observer(() => {
   );
 });
 export const PersonalResource = observer(() => {
+  const [uploadListVisible, setUploadListVisible] = useState(false);
+  const {
+    cloudUIStore: {
+      uploadPersonalResource,
+      fileNameToType,
+      formatFileSize,
+      validateFiles,
+      personalResourcesList,
+      fetchPersonalResources,
+      currentPersonalResPage,
+      pageSize,
+      personalResourcesTotalNum,
+      personalResourcesTotalPage,
+      setCurrentPersonalResPage,
+      reloadPersonalResources,
+      uploadingProgresses,
+    },
+  } = useStore();
+  useEffect(() => {
+    fetchPersonalResources({
+      pageNo: currentPersonalResPage,
+      pageSize,
+    });
+  }, []);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const handleUpload = async (evt: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(evt.target.files || []);
+    if (validateFiles(files)) {
+      const filesArr = Array.from(files);
+      uploadPersonalResource(filesArr);
+    }
+  };
   return (
     <div className="fcr-cloud-personal-tab-content">
       <div className="fcr-cloud-personal-tab-search">
@@ -78,26 +114,86 @@ export const PersonalResource = observer(() => {
       </div>
       <div className="fcr-cloud-personal-tab-table">
         <Table
+          rowKey={(record) => record.resource.resourceUuid}
           scroll={{ y: 335 }}
+          data={personalResourcesList}
           columns={[
             {
               key: 'file-name',
-              title: 'File Name',
+              title: (
+                <div className="fcr-cloud-personal-tab-table-header-filename">
+                  <Checkbox size="small"></Checkbox>
+                  <span> File Name ({personalResourcesTotalNum})</span>
+                </div>
+              ),
+              align: 'left',
+
+              render: (_, record) => {
+                const {
+                  resource: { resourceName },
+                } = record;
+                return (
+                  <div className="fcr-cloud-personal-tab-table-filename">
+                    <Checkbox size="small"></Checkbox>
+                    <SvgImg size={24} type={fileNameToType(resourceName)}></SvgImg>
+                    <span title={resourceName}>{resourceName}</span>
+                  </div>
+                );
+              },
             },
             {
               key: 'size',
               title: 'Size',
+              dataIndex: 'resource.size',
+              width: 65,
+              align: 'left',
+              render: (_, record) => {
+                const {
+                  resource: { size },
+                } = record;
+                return formatFileSize(size);
+              },
             },
             {
               key: 'update-time',
-              title: 'Updated at',
+              title: (
+                <div className="fcr-cloud-personal-tab-table-header-update-time">Updated at</div>
+              ),
+              dataIndex: 'resource.updateTime',
+              width: 130,
+              align: 'right',
+              render: (_, record) => {
+                const {
+                  resource: { updateTime },
+                } = record;
+                return (
+                  <div className="fcr-cloud-personal-tab-table-update-time">
+                    {dayjs(updateTime).format('YYYY-MM-DD HH:mm')}
+                  </div>
+                );
+              },
             },
           ]}></Table>
       </div>
 
       <div className="fcr-cloud-personal-tab-footer">
-        <Pagination current={1} total={6}></Pagination>
+        <Pagination
+          onChange={setCurrentPersonalResPage}
+          current={currentPersonalResPage}
+          total={personalResourcesTotalPage}></Pagination>
+        <input
+          ref={fileRef}
+          id="upload-image"
+          accept={supportedTypes.map((item) => '.' + item).join(',')}
+          onChange={handleUpload}
+          multiple
+          type="file"
+          style={{ display: 'none' }}
+        />
         <Button
+          onClick={() => {
+            fileRef.current?.click();
+          }}
           size="XS"
           preIcon={SvgIconEnum.FCR_FILE}
           extra={{
@@ -108,6 +204,58 @@ export const PersonalResource = observer(() => {
           Upload
         </Button>
       </div>
+      <div
+        className="fcr-cloud-personal-tab-float-btn fcr-cloud-personal-tab-open-upload"
+        onClick={() => {
+          setUploadListVisible(true);
+        }}>
+        <SvgImg type={SvgIconEnum.FCR_UPLOADLIST} size={32}></SvgImg>
+      </div>
+      <div
+        className="fcr-cloud-personal-tab-float-btn fcr-cloud-personal-tab-refresh"
+        onClick={reloadPersonalResources}>
+        <SvgImg type={SvgIconEnum.FCR_RESET} size={32}></SvgImg>
+      </div>
+      <TransitionGroup>
+        {uploadListVisible && (
+          <CSSTransition
+            timeout={500}
+            classNames="fcr-cloud-personal-tab-upload-list-transition"
+            unmountOnExit>
+            <div className="fcr-cloud-personal-tab-upload-list">
+              <div className="fcr-cloud-personal-tab-upload-list-header">
+                （1/3）网页刷新后，上传任务会被清空；上传过程中请勿关闭网面。
+                <div
+                  className="fcr-cloud-personal-tab-upload-list-header-collapsed"
+                  onClick={() => {
+                    setUploadListVisible(false);
+                  }}>
+                  <SvgImg type={SvgIconEnum.FCR_DOWN} size={16}></SvgImg>
+                </div>
+              </div>
+
+              <div className="fcr-cloud-personal-tab-upload-list-content">
+                {uploadingProgresses.map((progress) => {
+                  return (
+                    <div
+                      key={progress.resourceUuid}
+                      className="fcr-cloud-personal-tab-upload-list-item">
+                      <div className="fcr-cloud-personal-tab-upload-list-item-filename">
+                        <SvgImg size={24} type={fileNameToType(progress.fileName || '')}></SvgImg>
+                        <span>{progress.fileName}</span>
+                      </div>
+                      <div className="fcr-cloud-personal-tab-upload-list-item-size">
+                        {formatFileSize(progress.fileSize ? Number(progress.fileSize) : 0)}
+                      </div>
+                      <div className="fcr-cloud-personal-tab-upload-list-item-status"></div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </CSSTransition>
+        )}
+      </TransitionGroup>
     </div>
   );
 });

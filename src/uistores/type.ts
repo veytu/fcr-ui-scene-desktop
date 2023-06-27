@@ -1,3 +1,5 @@
+import { CloudDriveResourceUploadStatus } from 'agora-edu-core';
+
 export enum Layout {
   ListOnTop = 'list-on-top',
   ListOnRight = 'list-on-right',
@@ -48,8 +50,8 @@ export enum DeviceSwitchDialogId {
   Unmute = 'unmute',
 }
 export enum CloudTabsType {
-  Public = 'public',
-  Personal = 'personal',
+  Public = 'Public',
+  Personal = 'Personal',
 }
 //cloud
 export const h5Type = 'ah5';
@@ -68,3 +70,11 @@ export const supportedTypes = [
   ...mediaVideoTypes,
   ...convertableTypes,
 ];
+export interface UploadItem {
+  resourceUuid: string;
+  iconType?: string;
+  fileName?: string;
+  fileSize?: string;
+  currentProgress?: number;
+  status: CloudDriveResourceUploadStatus;
+}
