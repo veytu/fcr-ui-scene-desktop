@@ -19,6 +19,10 @@ lib_branches=(
     feature/online-class-sdk
 )
 
+repos=(
+    ../agora-scenario-ui-kit-desktop
+)
+
 . ../apaas-cicd-web/utilities/tools.sh
 . ../apaas-cicd-web/build/$ci_script_version/dependency.sh
 . ../apaas-cicd-web/build/$ci_script_version/build.sh
@@ -32,7 +36,7 @@ fi
 
 download_packages $source_root $build_branch "${lib_dependencies[*]}" "${lib_versions[*]}" "${lib_branches[*]}"
 
-make_monorepo $source_root
+make_monorepo $source_root "${repos[*]}"
 
 install_packages $source_root
 
