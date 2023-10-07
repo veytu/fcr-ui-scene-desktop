@@ -77,6 +77,14 @@ export enum AgoraExtensionRoomEvent {
   VisibleChanged = 'visible-changed',
   // 布局变化
   LayoutChanged = 'layout-changed',
+  // webview/streamMedia 插件刷新
+  Refresh = 'refresh',
+  // 私聊
+  PrivateChat = 'PrivateChat',
+  // widget弹框边界尺寸变化
+  WidgetDialogBoundariesChanged = 'widget-dialog-boundaries-changed',
+  //插件全屏
+  SetFullscreen = 'set-fullscreen',
 }
 
 /**
@@ -107,6 +115,8 @@ export enum AgoraExtensionWidgetEvent {
   BoardDragOver = 'board-drag-over',
   // 白板文件放入事件
   BoardDrop = 'board-drop',
+  // 白板中打开的课件列表变更
+  BoardOpenedCoursewareListChanged = 'board-opened-courseware-list-changed',
   // Widget 即将打开
   WidgetBecomeActive = 'widget-become-active',
   // Widget 即将关闭
@@ -127,10 +137,11 @@ export enum AgoraExtensionWidgetEvent {
   PollActiveStateChanged = 'poll-active-state-changed',
   //请求当前横屏清屏状态
   RequestMobileLandscapeToolBarVisible = 'request-mobile-landscape-tool-bar-visible',
-  //插件最小化
-  Minimize = 'minimize',
+
   //聊天对话框开启状态变更
   ChatDialogVisibleChanged = 'chat-dialog-visible-changed',
+  //聊天未读消息变更
+  ChatUnreadMessageUpdate = 'chat-unread-message-update',
   // Widget创建成功
   WidgetCreated = 'widget-created',
   // Widget销毁成功
@@ -139,4 +150,12 @@ export enum AgoraExtensionWidgetEvent {
   SetVisible = 'set-visible',
   //设置插件最小化
   SetMinimize = 'set-minimize',
+  //设置插件全屏
+  SetFullscreen = 'set-fullscreen',
+  //设置插件尺寸
+  UpdateSize = 'update-size',
+  //设置插件位置
+  UpdatePosition = 'update-position',
+  //更新倒计时状态
+  CountdownTimerStateChanged = 'countdown-timer-state-changed',
 }

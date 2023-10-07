@@ -1,5 +1,5 @@
-import { ActionBar } from '@onlineclass/containers/action-bar';
-import { StatusBar } from '@onlineclass/containers/status-bar';
+import { ActionBar } from '@ui-scene/containers/action-bar';
+import { StatusBar } from '@ui-scene/containers/status-bar';
 
 export const CoverView = () => {
   return (
@@ -13,11 +13,9 @@ export const CoverView = () => {
         position: 'absolute',
         top: 0,
         left: 0,
-        zIndex: 100,
         pointerEvents: 'none',
       }}>
       <StatusBar></StatusBar>
-
       <ActionBar></ActionBar>
     </div>
   );

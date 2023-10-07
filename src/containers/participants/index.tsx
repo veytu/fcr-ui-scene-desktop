@@ -5,28 +5,29 @@ import { Table } from '@components/table';
 import './index.css';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { observer } from 'mobx-react-lite';
-import { useStore } from '@onlineclass/utils/hooks/use-store';
+import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { ToolTip } from '@components/tooltip';
-import { EduStreamUI } from '@onlineclass/utils/stream/struct';
+import { EduStreamUI } from '@ui-scene/utils/stream/struct';
 import { DialogToolTip } from '@components/tooltip/dialog';
 import { Button } from '@components/button';
 import { Radio, RadioGroup } from '@components/radio';
-import { EduClassroomConfig, EduRoleTypeEnum, EduUserStruct } from 'agora-edu-core';
+import { EduRoleTypeEnum, EduUserStruct } from 'agora-edu-core';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
 import classnames from 'classnames';
 import { ToastApiFactory } from '@components/toast';
-import { useDeviceSwitch } from '@onlineclass/utils/hooks/use-device-switch';
-import { AgoraRteMediaPublishState } from 'agora-rte-sdk';
+import { useDeviceSwitch } from '@ui-scene/utils/hooks/use-device-switch';
+import { AgoraRteMediaPublishState, Logger } from 'agora-rte-sdk';
 import {
   ParticipantsOrderDirection,
   ParticipantsTableSortKeysEnum,
-} from '@onlineclass/uistores/participants';
-import { useAuthorization } from '@onlineclass/utils/hooks/use-authorization';
+} from '@ui-scene/uistores/participants';
+import { useAuthorization } from '@ui-scene/utils/hooks/use-authorization';
 import {
   CustomMessageCommandType,
   CustomMessageDeviceState,
   CustomMessageDeviceType,
-} from '@onlineclass/uistores/type';
+} from '@ui-scene/uistores/type';
+import { transI18n, useI18n } from 'agora-common-libs';
 
 interface ParticipantsContext {
   toastApi: ToastApiFactory | null;
@@ -36,6 +37,7 @@ const ParticipantsContext = createContext<ParticipantsContext | null>(null);
 const colors = themeVal('colors');
 
 export const Participants = observer(() => {
+  const transI18n = useI18n();
   const {
     participantsUIStore: {
       participantTableList,
@@ -71,7 +73,7 @@ export const Participants = observer(() => {
     }
   }, []);
   const handleMuteAll = async () => {
-    await updateRemotePublishStateBatch(
+    updateRemotePublishStateBatch(
       participantStudentList.map(({ user, stream }) => {
         return {
           userUuid: user.userUuid,
@@ -79,7 +81,16 @@ export const Participants = observer(() => {
           audioState: AgoraRteMediaPublishState.Unpublished,
         };
       }),
-    );
+    ).catch((e) => {
+      Logger.error('[Participants] muteAll failed', e);
+      toastApiRef.current?.open({
+        toastProps: {
+          type: 'error',
+          content: transI18n('fcr_participants_tips_mute_all_error'),
+          size: 'small',
+        },
+      });
+    });
     sendCustomChannelMessage({
       cmd: CustomMessageCommandType.deviceSwitchBatch,
       data: {
@@ -88,11 +99,15 @@ export const Participants = observer(() => {
       },
     });
     toastApiRef.current?.open({
-      toastProps: { type: 'normal', content: 'Mute All', size: 'small' },
+      toastProps: {
+        type: 'normal',
+        content: transI18n('fcr_participants_tips_mute_all'),
+        size: 'small',
+      },
     });
   };
   const handleUnMuteAll = async () => {
-    await updateRemotePublishStateBatch(
+    updateRemotePublishStateBatch(
       participantStudentList.map(({ user, stream }) => {
         return {
           userUuid: user.userUuid,
@@ -100,7 +115,17 @@ export const Participants = observer(() => {
           audioState: AgoraRteMediaPublishState.Published,
         };
       }),
-    );
+    ).catch((e) => {
+      Logger.error('[Participants] unMuteAll failed', e);
+      toastApiRef.current?.open({
+        toastProps: {
+          type: 'error',
+          content: transI18n('fcr_participants_tips_unmute_all_error'),
+          size: 'small',
+        },
+      });
+    });
+
     sendCustomChannelMessage({
       cmd: CustomMessageCommandType.deviceSwitchBatch,
       data: {
@@ -109,7 +134,11 @@ export const Participants = observer(() => {
       },
     });
     toastApiRef.current?.open({
-      toastProps: { type: 'normal', content: 'Request to unmute all', size: 'small' },
+      toastProps: {
+        type: 'normal',
+        content: transI18n('fcr_participants_tips_unmute_all'),
+        size: 'small',
+      },
     });
   };
 
@@ -120,15 +149,19 @@ export const Participants = observer(() => {
         style={{ width: tableWidth }}
         className="fcr-participants-container">
         <div className="fcr-participants-header">
-          <div className="fcr-participants-title">Participants</div>
-          <div className="fcr-participants-count">(Student {participantStudentList.length})</div>
+          <div className="fcr-participants-title">
+            {transI18n('fcr_participants_label_participants')}
+          </div>
+          <div className="fcr-participants-count">
+            ({transI18n('fcr_role_student')} {participantStudentList.length})
+          </div>
           <div className="fcr-participants-search">
             <Input
               size="small"
               value={searchKey}
               onChange={setSearchKey}
               iconPrefix={SvgIconEnum.FCR_V2_SEARCH}
-              placeholder="Search"
+              placeholder={transI18n('fcr_participants_label_search')}
             />
           </div>
           <div
@@ -147,34 +180,34 @@ export const Participants = observer(() => {
 
         {isHost && (
           <div className="fcr-participants-footer">
-            <ToolTip placement="top" content="Lower All Hands">
+            <ToolTip placement="top" content={transI18n('fcr_participants_tips_lower_all_hand')}>
               <Button
                 disabled={participantStudentList.length <= 0}
                 onClick={lowerAllHands}
                 preIcon={SvgIconEnum.FCR_LOWER_HAND}
                 size="XS"
                 type="secondary">
-                Lower All Hands
+                {transI18n('fcr_participants_tips_lower_all_hand')}
               </Button>
             </ToolTip>
-            <ToolTip placement="top" content="Mute All">
+            <ToolTip placement="top" content={transI18n('fcr_participants_tips_mute_all')}>
               <Button
                 disabled={participantStudentList.length <= 0}
                 onClick={handleMuteAll}
                 preIcon={SvgIconEnum.FCR_ALL_MUTE}
                 size="XS"
                 type="secondary">
-                Mute All
+                {transI18n('fcr_participants_tips_mute_all')}
               </Button>
             </ToolTip>
-            <ToolTip placement="top" content="Unmute all">
+            <ToolTip placement="top" content={transI18n('fcr_participants_tips_unmute_all')}>
               <Button
                 disabled={participantStudentList.length <= 0}
                 onClick={handleUnMuteAll}
                 preIcon={SvgIconEnum.FCR_ALL_UNMUTE}
                 size="XS"
                 type="secondary">
-                Request to unmute all
+                {transI18n('fcr_participants_tips_unmute_all')}
               </Button>
             </ToolTip>
           </div>
@@ -191,45 +224,64 @@ const TableName = ({ name }: { name: string }) => {
     </div>
   );
 };
-const TableAuth = observer(({ userUuid, role }: { userUuid: string; role: EduRoleTypeEnum }) => {
-  const {
-    participantsUIStore: { isHostByUserRole, tableIconSize },
-    presentationUIStore: { isBoardWidgetActive },
-  } = useStore();
-  const { tooltip, toggleAuthorization, granted } = useAuthorization(userUuid);
-  const isHostLocal = EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
-  const isHost = isHostByUserRole(role);
-  const tooltipContent = isHost ? 'host' : tooltip;
-  const disabled = !isHostLocal || !isBoardWidgetActive;
+const TableAuth = observer(
+  ({
+    userUuid,
+    role,
+    notAllowed,
+  }: {
+    userUuid: string;
+    role: EduRoleTypeEnum;
+    notAllowed: boolean;
+  }) => {
+    const transI18n = useI18n();
+    const {
+      participantsUIStore: { isHostByUserRole, tableIconSize, isHost: isHostLocal },
+      presentationUIStore: { isBoardWidgetActive },
+    } = useStore();
+    const { tooltip, toggleAuthorization, granted } = useAuthorization(userUuid);
+    const isHost = isHostByUserRole(role);
+    const tooltipContent = isHost
+      ? transI18n('fcr_role_teacher')
+      : !isBoardWidgetActive
+      ? transI18n('fcr_room_tips_authorize_open_whiteboard')
+      : notAllowed
+      ? transI18n('fcr_participants_tips_student_in_breakoutroom')
+      : tooltip;
+    const disabled = notAllowed || !isHostLocal || !isBoardWidgetActive;
 
-  return (
-    <div className="fcr-participants-table-auth">
-      {isHost ? (
-        'Host'
-      ) : isHostLocal || granted ? (
-        <TableIconWrapper
-          tooltip={tooltipContent}
-          disabled={disabled}
-          onClick={toggleAuthorization}>
-          <SvgImg
-            onClick={() => disabled && toggleAuthorization()}
-            type={SvgIconEnum.FCR_HOST}
-            colors={{ iconPrimary: granted ? colors['yellow'] : colors['icon-1'] }}
-            size={tableIconSize}></SvgImg>
-        </TableIconWrapper>
-      ) : (
-        '-'
-      )}
-    </div>
-  );
-});
+    return (
+      <div className="fcr-participants-table-auth">
+        {isHost ? (
+          transI18n('fcr_role_teacher')
+        ) : isHostLocal || granted ? (
+          <TableIconWrapper
+            tooltip={tooltipContent}
+            disabled={disabled}
+            onClick={toggleAuthorization}>
+            <SvgImg
+              type={SvgIconEnum.FCR_HOST}
+              colors={{ iconPrimary: granted ? colors['yellow'] : colors['icon-1'] }}
+              size={tableIconSize}></SvgImg>
+          </TableIconWrapper>
+        ) : (
+          '-'
+        )}
+      </div>
+    );
+  },
+);
 const TableIconWrapper: FC<
-  PropsWithChildren<{ onClick?: () => void; disabled?: boolean; tooltip?: string }>
+  PropsWithChildren<{
+    onClick?: () => void;
+    disabled?: boolean;
+    tooltip?: string;
+  }>
 > = (props) => {
   const { children, disabled = false, tooltip, ...others } = props;
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const handleVisibleChanged = (visible: boolean) => {
-    if (!tooltip || disabled) {
+    if (!tooltip) {
       return setTooltipVisible(false);
     }
     setTooltipVisible(visible);
@@ -257,127 +309,185 @@ const TableIconWrapper: FC<
   );
 };
 
-const TableRaiseHand = observer(({ stream }: { stream?: EduStreamUI }) => {
-  const {
-    actionBarUIStore: { handsUpMap, lowerHand },
-    statusBarUIStore: { isHost },
-    participantsUIStore: { tableIconSize },
-  } = useStore();
-  const userUuid = stream?.fromUser.userUuid || '';
-  const isHandsUp = handsUpMap.has(userUuid);
+const TableRaiseHand = observer(
+  ({ stream, notAllowed }: { stream?: EduStreamUI; notAllowed: boolean }) => {
+    const transI18n = useI18n();
+    const {
+      actionBarUIStore: { handsUpMap, lowerHand },
+      statusBarUIStore: { isHost },
+      participantsUIStore: { tableIconSize },
+    } = useStore();
+    const userUuid = stream?.fromUser.userUuid || '';
+    const isHandsUp = handsUpMap.has(userUuid);
 
-  return isHandsUp ? (
-    <TableIconWrapper tooltip={'Lower Hand'} disabled={!isHost} onClick={() => lowerHand(userUuid)}>
-      <SvgImg type={SvgIconEnum.FCR_STUDENT_RASIEHAND} size={tableIconSize}></SvgImg>
-    </TableIconWrapper>
-  ) : (
-    <>{'-'}</>
-  );
-});
-const TableCamera = observer(({ stream }: { stream?: EduStreamUI }) => {
-  const {
-    statusBarUIStore: { isHost },
-    classroomStore: {
-      userStore: { localUser },
-    },
-    participantsUIStore: { tableIconSize },
-  } = useStore();
-  const isSelf = stream?.fromUser.userUuid === localUser?.userUuid;
-  const actionDisabled = !isHost && !isSelf;
-  const {
-    cameraTooltip,
-    handleCameraClick,
-    cameraIcon: icon,
-    cameraIconColor: iconColor,
-  } = useDeviceSwitch(stream);
-
-  return (
-    <TableIconWrapper tooltip={cameraTooltip} disabled={actionDisabled} onClick={handleCameraClick}>
-      <SvgImg colors={iconColor} type={icon} size={tableIconSize}></SvgImg>
-    </TableIconWrapper>
-  );
-});
-const TableMicrophone = observer(({ stream }: { stream?: EduStreamUI }) => {
-  const {
-    micTooltip,
-    handleMicrophoneClick,
-    micIcon: icon,
-    micIconColor: iconColor,
-  } = useDeviceSwitch(stream);
-  const {
-    statusBarUIStore: { isHost },
-    classroomStore: {
-      userStore: { localUser },
-    },
-    participantsUIStore: { tableIconSize },
-  } = useStore();
-  const isSelf = stream?.fromUser.userUuid === localUser?.userUuid;
-  const actionDisabled = !isHost && !isSelf;
-
-  return (
-    <TableIconWrapper
-      tooltip={micTooltip}
-      disabled={actionDisabled}
-      onClick={handleMicrophoneClick}>
-      <SvgImg colors={iconColor} type={icon} size={tableIconSize}></SvgImg>
-    </TableIconWrapper>
-  );
-});
-const TableReward = observer(({ userUuid, role }: { userUuid: string; role: EduRoleTypeEnum }) => {
-  const {
-    participantsUIStore: { sendReward, rewardsByUserUuid, isHostByUserRole, tableIconSize },
-  } = useStore();
-  const rewards = rewardsByUserUuid(userUuid);
-  const {
-    statusBarUIStore: { isHost },
-  } = useStore();
-  const actionDisabled = !isHost;
-  const isStreamFromHost = isHostByUserRole(role);
-
-  return isStreamFromHost ? (
-    <>{'-'}</>
-  ) : (
-    <TableIconWrapper
-      tooltip={'Reward'}
-      disabled={actionDisabled}
-      onClick={() => sendReward(userUuid)}>
-      <>
-        {rewards > 0 && <div className="fcr-participants-table-rewards">{rewards}</div>}
-        <SvgImg type={SvgIconEnum.FCR_REWARD} size={tableIconSize}></SvgImg>
-      </>
-    </TableIconWrapper>
-  );
-});
-const TableRemove = observer(({ userUuid, role }: { userUuid: string; role: EduRoleTypeEnum }) => {
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const {
-    participantsUIStore: { isHostByUserRole, tableIconSize },
-  } = useStore();
-  const isStreamFromHost = isHostByUserRole(role);
-
-  return isStreamFromHost ? (
-    <>{'-'}</>
-  ) : (
-    <DialogToolTip
-      overlayOffset={0}
-      visible={dialogVisible}
-      onVisibleChange={setDialogVisible}
-      onClose={() => setDialogVisible(false)}
-      content={
-        <RemoveDialogContent
-          userUuid={userUuid}
-          onClose={() => setDialogVisible(false)}></RemoveDialogContent>
-      }
-      trigger="click"
-      placement="right">
-      <TableIconWrapper tooltip="Remove">
-        <SvgImg type={SvgIconEnum.FCR_ONELEAVE} size={tableIconSize}></SvgImg>
+    return isHandsUp ? (
+      <TableIconWrapper
+        tooltip={
+          notAllowed
+            ? transI18n('fcr_participants_tips_student_in_breakoutroom')
+            : transI18n('fcr_participants_tips_lower_hand')
+        }
+        disabled={notAllowed || !isHost}
+        onClick={() => lowerHand(userUuid)}>
+        <SvgImg type={SvgIconEnum.FCR_STUDENT_RASIEHAND} size={tableIconSize}></SvgImg>
       </TableIconWrapper>
-    </DialogToolTip>
-  );
-});
+    ) : (
+      <>{'-'}</>
+    );
+  },
+);
+const TableCamera = observer(
+  ({ stream, notAllowed }: { stream?: EduStreamUI; notAllowed: boolean }) => {
+    const {
+      statusBarUIStore: { isHost },
+      classroomStore: {
+        userStore: { localUser },
+      },
+      participantsUIStore: { tableIconSize },
+    } = useStore();
+    const isSelf = stream?.fromUser.userUuid === localUser?.userUuid;
+    const isLocal = !!stream?.isLocal;
+    const actionDisabled =
+      (!isHost && !isSelf) || (stream?.role === EduRoleTypeEnum.teacher && !isLocal);
+    const {
+      cameraTooltip,
+      handleCameraClick,
+      cameraIcon: icon,
+      cameraIconColor: iconColor,
+    } = useDeviceSwitch({ stream, isLocal });
+
+    return (
+      <TableIconWrapper
+        tooltip={
+          notAllowed ? transI18n('fcr_participants_tips_student_in_breakoutroom') : cameraTooltip
+        }
+        disabled={notAllowed || actionDisabled}
+        onClick={handleCameraClick}>
+        <SvgImg colors={iconColor} type={icon} size={tableIconSize}></SvgImg>
+      </TableIconWrapper>
+    );
+  },
+);
+const TableMicrophone = observer(
+  ({ stream, notAllowed }: { stream?: EduStreamUI; notAllowed: boolean }) => {
+    const {
+      statusBarUIStore: { isHost },
+      classroomStore: {
+        userStore: { localUser },
+      },
+      participantsUIStore: { tableIconSize },
+    } = useStore();
+    const isSelf = stream?.fromUser.userUuid === localUser?.userUuid;
+    const isLocal = !!stream?.isLocal;
+    const actionDisabled =
+      (!isHost && !isSelf) || (stream?.role === EduRoleTypeEnum.teacher && !isLocal);
+    const {
+      micTooltip,
+      handleMicrophoneClick,
+      micIcon: icon,
+      micIconColor: iconColor,
+    } = useDeviceSwitch({ stream, isLocal });
+    return (
+      <TableIconWrapper
+        tooltip={
+          notAllowed ? transI18n('fcr_participants_tips_student_in_breakoutroom') : micTooltip
+        }
+        disabled={notAllowed || actionDisabled}
+        onClick={handleMicrophoneClick}>
+        <SvgImg colors={iconColor} type={icon} size={tableIconSize}></SvgImg>
+      </TableIconWrapper>
+    );
+  },
+);
+const TableReward = observer(
+  ({
+    userUuid,
+    role,
+    notAllowed,
+  }: {
+    userUuid: string;
+    role: EduRoleTypeEnum;
+    notAllowed: boolean;
+  }) => {
+    const transI18n = useI18n();
+    const {
+      participantsUIStore: { sendReward, rewardsByUserUuid, isHostByUserRole, tableIconSize },
+    } = useStore();
+    const rewards = rewardsByUserUuid(userUuid);
+    const {
+      statusBarUIStore: { isHost },
+    } = useStore();
+    const actionDisabled = !isHost;
+    const isStreamFromHost = isHostByUserRole(role);
+
+    return isStreamFromHost ? (
+      <>{'-'}</>
+    ) : (
+      <TableIconWrapper
+        tooltip={
+          notAllowed
+            ? transI18n('fcr_participants_tips_student_in_breakoutroom')
+            : transI18n('fcr_participants_tips_reward')
+        }
+        disabled={notAllowed || actionDisabled}
+        onClick={() => sendReward(userUuid)}>
+        <>
+          {rewards > 0 && <div className="fcr-participants-table-rewards">{rewards}</div>}
+          <SvgImg type={SvgIconEnum.FCR_REWARD} size={tableIconSize}></SvgImg>
+        </>
+      </TableIconWrapper>
+    );
+  },
+);
+const TableRemove = observer(
+  ({
+    userUuid,
+    role,
+    notAllowed,
+  }: {
+    userUuid: string;
+    role: EduRoleTypeEnum;
+    notAllowed: boolean;
+  }) => {
+    const transI18n = useI18n();
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const {
+      participantsUIStore: { isHostByUserRole, tableIconSize },
+    } = useStore();
+    const isStreamFromHost = isHostByUserRole(role);
+
+    return isStreamFromHost ? (
+      <>{'-'}</>
+    ) : (
+      <DialogToolTip
+        overlayOffset={0}
+        visible={dialogVisible}
+        onVisibleChange={setDialogVisible}
+        onClose={() => setDialogVisible(false)}
+        content={
+          <RemoveDialogContent
+            userUuid={userUuid}
+            onClose={() => setDialogVisible(false)}></RemoveDialogContent>
+        }
+        trigger="click"
+        placement="right">
+        <TableIconWrapper
+          tooltip={
+            notAllowed
+              ? transI18n('fcr_participants_tips_student_in_breakoutroom')
+              : transI18n('fcr_participants_tips_Remove')
+          }
+          disabled={notAllowed}>
+          <SvgImg type={SvgIconEnum.FCR_ONELEAVE} size={tableIconSize}></SvgImg>
+        </TableIconWrapper>
+      </DialogToolTip>
+    );
+  },
+);
 const RemoveDialogContent = observer(
   ({ onClose, userUuid }: { onClose?: () => void; userUuid: string }) => {
+    const transI18n = useI18n();
+
     const {
       classroomStore: {
         userStore: { kickOutOnceOrBan },
@@ -389,19 +499,21 @@ const RemoveDialogContent = observer(
     };
     return (
       <div className="fcr-participants-table-remove-dialog">
-        <div className="fcr-participants-table-remove-title">Remove students </div>
+        <div className="fcr-participants-table-remove-title">
+          {transI18n('fcr_user_tips_kick_out')}{' '}
+        </div>
         <div className="fcr-participants-table-remove-options">
           <RadioGroup<'once' | 'ban'>
             value={kickOutType}
             onChange={(value) => value && setKickOutType(value)}>
-            <Radio value="once" label="Remove the student from the classroom"></Radio>
+            <Radio value="once" label={transI18n('fcr_user_tips_kick_out_once')}></Radio>
             <div className="fcr-participants-table-remove-options-divider"></div>
-            <Radio value="ban" label="Ban the student from re-entering the classroom"></Radio>
+            <Radio value="ban" label={transI18n('fcr_user_tips_kick_out_forever')}></Radio>
           </RadioGroup>
         </div>
-        <div className="fcr-participants-table-remove-btns">
-          <Button onClick={onClose} shape="rounded" size="XS" styleType="gray">
-            Cancel
+        <div className="fcr-participants-table-remove-btns" style={{ gap: 8 }}>
+          <Button onClick={onClose} shape="rounded" size="XS" styleType="gray" block>
+            {transI18n('fcr_user_tips_button_cancel')}
           </Button>
           <Button
             onClick={() => {
@@ -409,8 +521,10 @@ const RemoveDialogContent = observer(
               onClose?.();
             }}
             shape="rounded"
-            size="XS">
-            Remove
+            size="XS"
+            block
+            styleType="danger">
+            {transI18n('fcr_participants_label_Remove')}
           </Button>
         </div>
       </div>
@@ -421,8 +535,9 @@ const RemoveDialogContent = observer(
 type UserTableItem = {
   stream: EduStreamUI;
   user: EduUserStruct;
+  notAllowed: boolean;
 };
-const SortedColumnsHeader = observer(({ sortKey }: { sortKey: string }) => {
+const SortedColumnsHeader = observer(({ sortKey, label }: { sortKey: string; label: string }) => {
   const {
     participantsUIStore: { orderKey, orderDirection, setOrderDirection, setOrderKey },
   } = useStore();
@@ -443,7 +558,7 @@ const SortedColumnsHeader = observer(({ sortKey }: { sortKey: string }) => {
       onMouseLeave={() => setHover(false)}
       className="fcr-participants-table-sorted-header"
       onClick={handleSortClick}>
-      {sortKey}
+      {label}
       <SvgImg
         className={classnames('fcr-participants-table-sorted-header-icon', {
           'fcr-participants-table-sorted-header-icon-desc': direction === 'desc',
@@ -456,9 +571,14 @@ const SortedColumnsHeader = observer(({ sortKey }: { sortKey: string }) => {
   );
 });
 const useParticipantsColumn = () => {
+  const transI18n = useI18n();
   const hostColumns = [
     {
-      title: <div className="fcr-participants-table-name-label">Name</div>,
+      title: (
+        <div className="fcr-participants-table-name-label">
+          {transI18n('fcr_participants_label_name')}
+        </div>
+      ),
       render: (_: unknown, item: UserTableItem) => {
         return <TableName name={item.user.userName}></TableName>;
       },
@@ -466,51 +586,97 @@ const useParticipantsColumn = () => {
       align: 'left',
     },
     {
-      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Auth} />,
+      title: (
+        <SortedColumnsHeader
+          label={transI18n('fcr_participants_label_auth')}
+          sortKey={ParticipantsTableSortKeysEnum.Auth}
+        />
+      ),
       width: 50,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableAuth role={item.user.userRole} userUuid={item.user.userUuid}></TableAuth>;
+        return (
+          <TableAuth
+            role={item.user.userRole}
+            userUuid={item.user.userUuid}
+            notAllowed={item.notAllowed}></TableAuth>
+        );
       },
     },
     {
-      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.RaiseHand} />,
+      title: (
+        <SortedColumnsHeader
+          label={transI18n('fcr_participants_label_raise_hand')}
+          sortKey={ParticipantsTableSortKeysEnum.RaiseHand}
+        />
+      ),
       width: 88,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableRaiseHand stream={item.stream}></TableRaiseHand>;
+        return <TableRaiseHand stream={item.stream} notAllowed={item.notAllowed}></TableRaiseHand>;
       },
     },
     {
-      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Camera} />,
+      title: (
+        <SortedColumnsHeader
+          label={transI18n('fcr_participants_label_camera')}
+          sortKey={ParticipantsTableSortKeysEnum.Camera}
+        />
+      ),
       width: 68,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableCamera stream={item.stream}></TableCamera>;
+        return <TableCamera stream={item.stream} notAllowed={item.notAllowed}></TableCamera>;
       },
     },
     {
-      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Microphone} />,
+      title: (
+        <SortedColumnsHeader
+          label={transI18n('fcr_participants_label_microphne')}
+          sortKey={ParticipantsTableSortKeysEnum.Microphone}
+        />
+      ),
       width: 92,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableMicrophone stream={item.stream}></TableMicrophone>;
+        return (
+          <TableMicrophone stream={item.stream} notAllowed={item.notAllowed}></TableMicrophone>
+        );
       },
     },
     {
-      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Reward} />,
+      title: (
+        <SortedColumnsHeader
+          label={transI18n('fcr_participants_label_reward')}
+          sortKey={ParticipantsTableSortKeysEnum.Reward}
+        />
+      ),
       width: 66,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableReward role={item.user.userRole} userUuid={item.user.userUuid}></TableReward>;
+        return (
+          <TableReward
+            role={item.user.userRole}
+            userUuid={item.user.userUuid}
+            notAllowed={item.notAllowed}></TableReward>
+        );
       },
     },
     {
-      title: 'Remove',
+      title: transI18n('fcr_participants_label_Remove'),
       width: 67,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableRemove role={item.user.userRole} userUuid={item.user.userUuid}></TableRemove>;
+        return (
+          <TableRemove
+            role={item.user.userRole}
+            userUuid={item.user.userUuid}
+            notAllowed={item.notAllowed}></TableRemove>
+        );
       },
     },
   ];
   const studentColumns = [
     {
-      title: <div className="fcr-participants-table-name-label">Name</div>,
+      title: (
+        <div className="fcr-participants-table-name-label">
+          {transI18n('fcr_participants_label_name')}
+        </div>
+      ),
       render: (_: unknown, item: UserTableItem) => {
         return <TableName name={item.user.userName}></TableName>;
       },
@@ -518,38 +684,75 @@ const useParticipantsColumn = () => {
       width: 85,
     },
     {
-      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Auth} />,
+      title: (
+        <SortedColumnsHeader
+          label={transI18n('fcr_participants_label_auth')}
+          sortKey={ParticipantsTableSortKeysEnum.Auth}
+        />
+      ),
       width: 50,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableAuth role={item.user.userRole} userUuid={item.user.userUuid}></TableAuth>;
+        return (
+          <TableAuth
+            role={item.user.userRole}
+            userUuid={item.user.userUuid}
+            notAllowed={item.notAllowed}></TableAuth>
+        );
       },
     },
     {
-      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.RaiseHand} />,
+      title: (
+        <SortedColumnsHeader
+          label={transI18n('fcr_participants_label_raise_hand')}
+          sortKey={ParticipantsTableSortKeysEnum.RaiseHand}
+        />
+      ),
       width: 88,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableRaiseHand stream={item.stream}></TableRaiseHand>;
+        return <TableRaiseHand stream={item.stream} notAllowed={item.notAllowed}></TableRaiseHand>;
       },
     },
     {
-      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Camera} />,
+      title: (
+        <SortedColumnsHeader
+          label={transI18n('fcr_participants_label_camera')}
+          sortKey={ParticipantsTableSortKeysEnum.Camera}
+        />
+      ),
       width: 68,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableCamera stream={item.stream}></TableCamera>;
+        return <TableCamera stream={item.stream} notAllowed={item.notAllowed}></TableCamera>;
       },
     },
     {
-      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Microphone} />,
+      title: (
+        <SortedColumnsHeader
+          label={transI18n('fcr_participants_label_microphne')}
+          sortKey={ParticipantsTableSortKeysEnum.Microphone}
+        />
+      ),
       width: 92,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableMicrophone stream={item.stream}></TableMicrophone>;
+        return (
+          <TableMicrophone stream={item.stream} notAllowed={item.notAllowed}></TableMicrophone>
+        );
       },
     },
     {
-      title: <SortedColumnsHeader sortKey={ParticipantsTableSortKeysEnum.Reward} />,
+      title: (
+        <SortedColumnsHeader
+          label={transI18n('fcr_participants_label_reward')}
+          sortKey={ParticipantsTableSortKeysEnum.Reward}
+        />
+      ),
       width: 78,
       render: (_: unknown, item: UserTableItem) => {
-        return <TableReward role={item.user.userRole} userUuid={item.user.userUuid}></TableReward>;
+        return (
+          <TableReward
+            role={item.user.userRole}
+            userUuid={item.user.userUuid}
+            notAllowed={item.notAllowed}></TableReward>
+        );
       },
     },
   ];

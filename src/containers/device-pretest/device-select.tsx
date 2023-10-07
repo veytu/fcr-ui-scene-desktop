@@ -1,16 +1,18 @@
 import { Button } from '@components/button';
 import { Dropdown } from '@components/dropdown';
 import { SvgIconEnum } from '@components/svg-img';
-import { getAssetURL } from '@onlineclass/utils/asset';
-import { isElectron } from '@onlineclass/utils/check';
-import { useStore } from '@onlineclass/utils/hooks/use-store';
+import { getAssetURL } from '@ui-scene/utils/asset';
+import { isElectron } from '@ui-scene/utils/check';
+import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { observer } from 'mobx-react';
 import { useMemo, useRef, useEffect } from 'react';
 import pretestAudio from '@res/pretest-audio.mp3';
 import { Scheduler } from 'agora-rte-sdk';
+import { useI18n } from 'agora-common-libs';
 
 export const CameraSelect = observer(() => {
   const { deviceSettingUIStore } = useStore();
+  const transI18n = useI18n();
   const { cameraDevicesList, setCameraDevice, cameraDeviceId } = deviceSettingUIStore;
 
   return (
@@ -18,7 +20,7 @@ export const CameraSelect = observer(() => {
       options={cameraDevicesList}
       onChange={setCameraDevice}
       value={cameraDeviceId}
-      placeholder={'No device'}
+      placeholder={transI18n('fcr_device_tips_no_device')}
       disabled={cameraDevicesList.length === 0}
     />
   );
@@ -26,6 +28,7 @@ export const CameraSelect = observer(() => {
 
 export const MicrophoneSelect = observer(() => {
   const { deviceSettingUIStore } = useStore();
+  const transI18n = useI18n();
   const { recordingDevicesList, setAudioRecordingDevice, audioRecordingDeviceId } =
     deviceSettingUIStore;
 
@@ -34,13 +37,14 @@ export const MicrophoneSelect = observer(() => {
       options={recordingDevicesList}
       onChange={setAudioRecordingDevice}
       value={audioRecordingDeviceId}
-      placeholder={'No device'}
+      placeholder={transI18n('fcr_device_tips_no_device')}
       disabled={recordingDevicesList.length === 0}
     />
   );
 });
 
 export const SpeakerSelect = observer(() => {
+  const transI18n = useI18n();
   const { deviceSettingUIStore } = useStore();
   const {
     playbackDevicesList,
@@ -90,7 +94,7 @@ export const SpeakerSelect = observer(() => {
         options={playbackDevicesList}
         onChange={setAudioPlaybackDevice}
         value={audioPlaybackDeviceId}
-        placeholder={'No device'}
+        placeholder={transI18n('fcr_device_tips_no_device')}
         disabled={playbackDevicesList.length === 0}
       />
       <Button
@@ -99,7 +103,7 @@ export const SpeakerSelect = observer(() => {
         size="S"
         shape="rounded"
         onClick={handleTest}>
-        Test
+        {transI18n('fcr_device_button_test')}
       </Button>
     </div>
   );

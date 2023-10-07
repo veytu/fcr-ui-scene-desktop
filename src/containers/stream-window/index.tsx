@@ -1,4 +1,4 @@
-import { useStore } from '@onlineclass/utils/hooks/use-store';
+import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { observer } from 'mobx-react';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { AudioRecordinDeviceIcon } from '../action-bar/device';
@@ -9,19 +9,20 @@ import { Popover } from '@components/popover';
 import { StreamWindowContext, StreamWindowMouseContext } from './context';
 import { InteractLabelGroup } from '../common/interact-labels';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
-import { useDeviceSwitch } from '@onlineclass/utils/hooks/use-device-switch';
-import { useVideoRenderable } from '@onlineclass/utils/hooks/use-video-renderable';
+import { useDeviceSwitch } from '@ui-scene/utils/hooks/use-device-switch';
+import { useVideoRenderable } from '@ui-scene/utils/hooks/use-video-renderable';
 import { EduRoleTypeEnum } from 'agora-edu-core';
-import { usePinStream } from '@onlineclass/utils/hooks/use-pin-stream';
+import { usePinStream } from '@ui-scene/utils/hooks/use-pin-stream';
 import { Avatar } from '@components/avatar';
-import { Layout } from '@onlineclass/uistores/type';
+import { Layout } from '@ui-scene/uistores/type';
 
 import { SvgaPlayer } from '@components/svga-player';
 import { SoundPlayer } from '@components/sound-player';
 import RewardSVGA from './assets/svga/reward.svga';
 import RewardSound from './assets/audio/reward.mp3';
 import { AGRemoteVideoStreamType, AGRenderMode } from 'agora-rte-sdk';
-import { useAuthorization } from '@onlineclass/utils/hooks/use-authorization';
+import { useAuthorization } from '@ui-scene/utils/hooks/use-authorization';
+import { useI18n } from 'agora-common-libs';
 
 const colors = themeVal('colors');
 export const StreamWindow: FC = observer(() => {
@@ -63,6 +64,7 @@ export const StreamWindow: FC = observer(() => {
 });
 
 const StreamPlaceHolder: FC = observer(() => {
+  const transI18n = useI18n();
   const streamWindowContext = useContext(StreamWindowContext);
   const stream = streamWindowContext?.stream;
   return (
@@ -76,7 +78,7 @@ const StreamPlaceHolder: FC = observer(() => {
       ) : (
         <div className={'fcr-stream-window-placeholder-text'}>
           <span>{stream?.fromUser.userName}</span>
-          {stream?.isLocal && <span>&nbsp;(you)</span>}
+          {stream?.isLocal && <span>&nbsp;({transI18n('fcr_chat_you')})</span>}
         </div>
       )}
     </div>
@@ -118,16 +120,14 @@ const StreamPlayer = observer(() => {
                 ? AGRemoteVideoStreamType.HIGH_STREAM
                 : AGRemoteVideoStreamType.LOW_STREAM,
             );
-          } else {
-            removeVideoDom(stream.stream.streamUuid);
           }
         }
-        return () => {
-          removeVideoDom(stream.stream.streamUuid);
-        };
       }
     }
-  }, [stream, stream?.isLocal, stream?.stream.streamUuid, videoRenderable]);
+    return () => {
+      stream && videoRenderable && removeVideoDom(stream.stream.streamUuid);
+    };
+  }, [stream?.isLocal, stream?.stream.streamUuid, videoRenderable]);
 
   return (
     <div
@@ -179,7 +179,10 @@ const UserInteract = observer(() => {
 const MuteIcon = observer(({ size, visible }: { size: 'large' | 'small'; visible: boolean }) => {
   const streamWindowContext = useContext(StreamWindowContext);
 
-  const { handleMicrophoneClick, micEnabled } = useDeviceSwitch(streamWindowContext?.stream);
+  const { handleMicrophoneClick, micTooltip } = useDeviceSwitch({
+    stream: streamWindowContext?.stream,
+    isLocal: !!streamWindowContext?.stream.isLocal,
+  });
 
   return visible ? (
     <div
@@ -187,7 +190,7 @@ const MuteIcon = observer(({ size, visible }: { size: 'large' | 'small'; visible
       className={classnames(
         `fcr-stream-window-mute-icon fcr-stream-window-mute-icon-${size} fcr-bg-brand-6`,
       )}>
-      <span> {micEnabled ? 'Mute' : 'Unmute'}</span>
+      <span> {micTooltip}</span>
     </div>
   ) : null;
 });
@@ -222,7 +225,10 @@ const StreamActions = observer(() => {
   const streamWindowContext = useContext(StreamWindowContext);
   const streamWindowMouseContext = useContext(StreamWindowMouseContext);
   const size = streamWindowContext?.labelSize;
+  const stream = streamWindowContext?.stream;
+  const transI18n = useI18n();
   const {
+    actionBarUIStore: { openChatDialog, setPrivateChat },
     participantsUIStore: { sendReward },
     streamUIStore: { pinnedStreamUuid, pinDisabled },
     classroomStore: {
@@ -241,7 +247,10 @@ const StreamActions = observer(() => {
     handleMicrophoneClick,
     micEnabled,
     cameraEnabled,
-  } = useDeviceSwitch(streamWindowContext?.stream);
+  } = useDeviceSwitch({
+    stream: streamWindowContext?.stream,
+    isLocal: !!streamWindowContext?.stream.isLocal,
+  });
   const userUuid = streamWindowContext?.stream.fromUser.userUuid || '';
   const streamUuid = streamWindowContext?.stream.stream.streamUuid || '';
 
@@ -291,7 +300,7 @@ const StreamActions = observer(() => {
       key: 'reward',
 
       icon: <SvgImg size={20} type={SvgIconEnum.FCR_REWARD}></SvgImg>,
-      label: 'Reward',
+      label: transI18n('fcr_user_button_reward'),
       onClick: () => {
         if (userUuid) sendReward(userUuid);
       },
@@ -303,11 +312,24 @@ const StreamActions = observer(() => {
       icon: (
         <SvgImg size={20} type={pinned ? SvgIconEnum.FCR_REMOVE_PIN : SvgIconEnum.FCR_PIN}></SvgImg>
       ),
-      label: pinned ? 'Remove Pin' : 'Add Pin',
+      label: pinned
+        ? transI18n('fcr_user_button_remove_pin')
+        : transI18n('fcr_user_button_add_pin'),
       onClick: async () => {
         pinned ? removePin() : addPin(streamUuid);
       },
       visible: !pinDisabled,
+    },
+    {
+      key: 'privateChat',
+
+      icon: <SvgImg size={20} type={SvgIconEnum.FCR_CHAT2}></SvgImg>,
+      label: transI18n('fcr_user_button_private_chat'),
+      onClick: async () => {
+        setPrivateChat(userUuid);
+        openChatDialog();
+      },
+      visible: !stream?.stream.isLocal || false,
     },
     {
       key: 'remove',
@@ -318,7 +340,7 @@ const StreamActions = observer(() => {
           colors={{ iconPrimary: colors['red'][6] }}
           type={SvgIconEnum.FCR_ONELEAVE}></SvgImg>
       ),
-      label: 'Remove',
+      label: transI18n('fcr_user_button_remove'),
       onClick: async () => {
         await kickOutOnceOrBan(userUuid, false);
       },
@@ -412,6 +434,7 @@ const StreamActionPopover = observer(
 );
 
 const StreamWindowUserLabel = observer(() => {
+  const transI18n = useI18n();
   const streamWindowContext = useContext(StreamWindowContext);
   const stream = streamWindowContext?.stream;
   const streamWindowMouseContext = useContext(StreamWindowMouseContext);
@@ -431,7 +454,7 @@ const StreamWindowUserLabel = observer(() => {
                 size={streamWindowContext?.audioIconSize}></AudioRecordinDeviceIcon>
             )}
 
-          <span>Host</span>
+          <span>{transI18n('fcr_role_teacher')}</span>
         </div>
       )}
       {streamWindowContext?.showNameOnBottomLeft && (
@@ -461,7 +484,8 @@ const AudioVolumeEffect = observer(
     const streamWindowContext = useContext(StreamWindowContext);
     const stream = streamWindowContext?.stream;
     const {
-      streamUIStore: { localVolume, remoteStreamVolume },
+      layoutUIStore: { layout },
+      streamUIStore: { localVolume, remoteStreamVolume, cameraUIStreams },
       deviceSettingUIStore: { isAudioRecordingDeviceEnabled },
     } = useStore();
     const [showAudioVolumeEffect, setShowAudioVolumeEffect] = useState(false);
@@ -493,7 +517,10 @@ const AudioVolumeEffect = observer(
       isAudioRecordingDeviceEnabled,
       stream?.isMicStreamPublished,
     ]);
-    return showAudioVolumeEffect && !streamWindowContext?.disableAudioVolumeEffect ? (
+    const disableAudioVolumeEffect =
+      streamWindowContext?.renderAtMainView &&
+      (layout !== Layout.Grid || cameraUIStreams.length <= 1);
+    return showAudioVolumeEffect && !disableAudioVolumeEffect ? (
       <div className={'fcr-audio-volume-effect'}></div>
     ) : null;
   },

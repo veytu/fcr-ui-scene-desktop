@@ -1,14 +1,10 @@
 import './preset';
 import { render, unmountComponentAtNode } from 'react-dom';
-import {
-  ConvertMediaOptionsConfig,
-  CoursewareList,
-  LaunchMediaOptions,
-  LaunchOptions,
-} from './type';
+import { ConvertMediaOptionsConfig, LaunchMediaOptions, LaunchOptions } from './type';
 import { App } from './app';
-import { Logger } from 'agora-common-libs';
+import { Logger, changeLanguage, addResourceBundle } from 'agora-common-libs';
 import {
+  AgoraEduClassroomEvent,
   EduClassroomConfig,
   EduEventCenter,
   EduMediaEncryptionMode,
@@ -18,25 +14,38 @@ import {
 import { initializeBuiltInExtensions } from './utils/rtc-extensions';
 import { setLaunchOptions, setConfig, getConfig } from './utils/launch-options-holder';
 import { ApiBase } from 'agora-rte-sdk';
+import { zhCn } from './resources/translations/zhCn';
+import { enUs } from './resources/translations/enUs';
 
 /**
- * Online class SDK
+ * Scene SDK
  */
-export class AgoraOnlineclassSDK {
-  static coursewareList: CoursewareList = [];
+export class FcrUIScene {
   /**
    * 启动入口
-   * @param dom
-   * @param launchOption
-   * @returns
+   * @param dom 教室挂载节点
+   * @param launchOption 教室启动参数
+   * @param callbackSuccess 教室启动成功回调
+   * @param callbackFailure 教室启动失败回调
+   * @param callbackDestroy 教室销毁回调
+   * @returns 卸载函数
    */
   /** @en
-   * Entry point of AgoraOnlineclassSDK, which is used to create an online classroom app and render at the specified dom.
-   * @param dom
-   * @param launchOption
-   * @returns
+   * Entry point of FcrUIScene, which is used to create an online classroom app and render at the specified dom.
+   * @param dom dom to mount classroom UI
+   * @param launchOption options to launch a classroom
+   * @param callbackSuccess callback fired when joined the room successfully
+   * @param callbackFailure callback fired when failed to join the room
+   * @param callbackDestroy callback fired when quitted the room
+   * @returns unmount function
    */
-  static launch(dom: HTMLElement, launchOptions: LaunchOptions) {
+  static launch(
+    dom: HTMLElement,
+    launchOptions: LaunchOptions,
+    callbackSuccess?: () => void,
+    callbackFailure?: (err: Error) => void,
+    callbackDestroy?: (type: number) => void,
+  ) {
     const {
       appId,
       userUuid,
@@ -54,11 +63,11 @@ export class AgoraOnlineclassSDK {
       roomType,
       startTime,
       duration,
-      listener,
-      coursewareList,
+      language,
+      recordOptions,
     } = launchOptions;
-    if (coursewareList) this.coursewareList = coursewareList;
-    Logger.info('[AgoraOnlineclassSDK]launched with options:', launchOptions);
+
+    Logger.info('[FcrUIScene]launched with options:', launchOptions);
 
     setLaunchOptions(launchOptions);
 
@@ -74,7 +83,11 @@ export class AgoraOnlineclassSDK {
       flexProperties: userFlexProperties,
       token,
     };
-
+    if (recordOptions) {
+      setConfig({
+        recordOptions,
+      });
+    }
     const { virtualBackgroundExtension, beautyEffectExtension, aiDenoiserExtension } =
       initializeBuiltInExtensions();
 
@@ -104,19 +117,46 @@ export class AgoraOnlineclassSDK {
     config.ignoreUrlRegionPrefix = ignoreUrlRegionPrefix;
 
     EduClassroomConfig.setConfig(config);
-    listener && EduEventCenter.shared.onClassroomEvents(listener);
 
-    Logger.info(`[AgoraOnlineclassSDK]classroomConfig`, config);
+    Logger.info(`[FcrUIScene]classroomConfig`, config);
+
+    changeLanguage(language);
+
+    EduEventCenter.shared.onClassroomEvents((evt, ...args: unknown[]) => {
+      if (evt === AgoraEduClassroomEvent.Ready) {
+        FcrUIScene._setRecordReady();
+      }
+
+      if (evt === AgoraEduClassroomEvent.Ready && typeof callbackSuccess === 'function') {
+        callbackSuccess();
+      }
+
+      if (evt === AgoraEduClassroomEvent.FailedToJoin && typeof callbackFailure === 'function') {
+        callbackFailure(args[0] as Error);
+      }
+
+      if (evt === AgoraEduClassroomEvent.Destroyed && typeof callbackDestroy === 'function') {
+        callbackDestroy(args[0] as number);
+      }
+    });
 
     const startTs = Date.now();
+    let isUnmounted = false;
 
-    render(<App skipDevicePretest={!devicePretest} />, dom, () => {
-      Logger.info(`[AgoraOnlineclassSDK]render complete in ${Date.now() - startTs}ms.`);
+    Promise.all([addResourceBundle('zh', zhCn), addResourceBundle('en', enUs)]).then(() => {
+      if (!isUnmounted) {
+        render(<App skipDevicePretest={!devicePretest} />, dom, () => {
+          Logger.info(`[FcrUIScene]render complete in ${Date.now() - startTs}ms.`);
+        });
+      } else {
+        Logger.info('[FcrUIScene]SDK is unmounted before first render.');
+      }
     });
     // return a disposer
     return () => {
+      isUnmounted = true;
       unmountComponentAtNode(dom);
-      Logger.info(`[AgoraOnlineclassSDK]unmounted.`);
+      Logger.info(`[FcrUIScene]unmounted.`);
     };
   }
 
@@ -125,12 +165,13 @@ export class AgoraOnlineclassSDK {
    * @param params
    */
   /** @en
-   *
+   * Sets parameters for SDK
    * @param params
    */
   static setParameters(params: string) {
-    Logger.info(`[AgoraOnlineclassSDK]set parameters`, params);
-    const { host, ignoreUrlRegionPrefix, logo, shareUrl } = JSON.parse(params) || {};
+    Logger.info(`[FcrUIScene]set parameters`, params);
+    const { host, ignoreUrlRegionPrefix, logo, shareUrl, defaultEnableDevice } =
+      JSON.parse(params) || {};
 
     const config = getConfig() || {};
 
@@ -140,7 +181,7 @@ export class AgoraOnlineclassSDK {
     if (shareUrl) {
       config.shareUrl = shareUrl;
     }
-    config.ignoreUrlRegionPrefix = ['dev', 'pre'].some((v) => (config.host as string).includes(v));
+    config.ignoreUrlRegionPrefix = ['dev', 'pre'].some((v) => (host ? host.includes(v) : false));
 
     if (ignoreUrlRegionPrefix) {
       config.ignoreUrlRegionPrefix = ignoreUrlRegionPrefix;
@@ -148,6 +189,10 @@ export class AgoraOnlineclassSDK {
 
     if (logo) {
       config.logo = logo;
+    }
+
+    if (defaultEnableDevice) {
+      config.defaultEnableDevice = defaultEnableDevice;
     }
     setConfig(config);
   }
@@ -207,7 +252,8 @@ export class AgoraOnlineclassSDK {
     }
     return config;
   }
-  static setRecordReady() {
+
+  static _setRecordReady() {
     const {
       rteEngineConfig: { ignoreUrlRegionPrefix, region },
       sessionInfo: { roomUuid },

@@ -1,4 +1,4 @@
-import { ConvertMediaOptionsConfig } from '@onlineclass/type';
+import { ConvertMediaOptionsConfig } from '@ui-scene/type';
 import {
   AGServiceErrorCode,
   EduClassroomConfig,
@@ -8,12 +8,12 @@ import {
   LeaveReason,
   Platform,
 } from 'agora-edu-core';
-import { AGError, bound } from 'agora-rte-sdk';
+import { AGError, AGRtcConnectionType, AgoraRteScene, bound } from 'agora-rte-sdk';
 import { observable, action, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { DeviceSettingUIStore } from './device-setting';
 import { ActionBarUIStore } from './action-bar';
-import { OnlineclassContext } from './context';
+import { FcrUISceneContext } from './context';
 import { Getters } from './getters';
 import { LayoutUIStore } from './layout';
 import { StatusBarUIStore } from './status-bar';
@@ -21,14 +21,16 @@ import { GalleryUIStore } from './gallery-view';
 import { StreamUIStore } from './stream';
 import { Board } from '../extension/board';
 import { WidgetUIStore } from './widget';
-import { PresentationUIStore } from './presentaion-view';
+import { PresentationUIStore } from './presentation-view';
 import { SubscriptionUIStore } from './subscription';
 import { ParticipantsUIStore } from './participants';
 import { NotiticationUIStore } from './notification';
-import { EduTool } from '@onlineclass/extension/edu-tool';
+import { EduTool } from '@ui-scene/extension/edu-tool';
 import { CloudUIStore } from './cloud';
+import { BreakoutUIStore } from './breakout';
+import { transI18n } from 'agora-common-libs';
 
-export class OnlineclassUIStore {
+export class SceneUIStore {
   @observable
   private _installed = false;
   @observable
@@ -47,6 +49,7 @@ export class OnlineclassUIStore {
   readonly participantsUIStore: ParticipantsUIStore;
   readonly notiticationUIStore: NotiticationUIStore;
   readonly cloudUIStore: CloudUIStore;
+  readonly breakoutUIStore: BreakoutUIStore;
 
   readonly boardApi = new Board();
   readonly eduToolApi = new EduTool();
@@ -66,6 +69,7 @@ export class OnlineclassUIStore {
     this.participantsUIStore = new ParticipantsUIStore(this.classroomStore, this.getters);
     this.notiticationUIStore = new NotiticationUIStore(this.classroomStore, this.getters);
     this.cloudUIStore = new CloudUIStore(this.classroomStore, this.getters);
+    this.breakoutUIStore = new BreakoutUIStore(this.classroomStore, this.getters);
   }
 
   get initialized() {
@@ -103,7 +107,36 @@ export class OnlineclassUIStore {
   setDevicePretestFinished() {
     this._devicePretestFinished = true;
   }
+  @bound
+  async enableDualStream(fromScene?: AgoraRteScene) {
+    try {
+      const lowStreamCameraEncoderConfigurations = (
+        EduClassroomConfig.shared.rteEngineConfig.rtcConfigs as ConvertMediaOptionsConfig
+      )?.defaultLowStreamCameraEncoderConfigurations;
 
+      const enableDualStream = EduClassroomConfig.shared.platform !== Platform.H5;
+      await this.classroomStore.mediaStore.enableDualStream(
+        enableDualStream,
+        AGRtcConnectionType.main,
+        fromScene,
+      );
+
+      await this.classroomStore.mediaStore.setLowStreamParameter(
+        lowStreamCameraEncoderConfigurations || EduClassroomConfig.defaultLowStreamParameter(),
+        AGRtcConnectionType.main,
+        fromScene,
+      );
+    } catch (e) {
+      this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+        closable: false,
+        title: transI18n('fcr_unknown_error_occurred'),
+        content: (e as AGError).message,
+        okText: transI18n('fcr_room_button_ok'),
+        okButtonProps: { styleType: 'danger' },
+        cancelButtonVisible: false,
+      });
+    }
+  }
   @bound
   async join() {
     const { joinClassroom, joinRTC } = this.classroomStore.connectionStore;
@@ -113,13 +146,13 @@ export class OnlineclassUIStore {
       if (AGError.isOf(e as AGError, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
         return this.classroomStore.connectionStore.leaveClassroom(
           LeaveReason.kickOut,
-          new Promise((resolve, reject) => {
+          new Promise((resolve) => {
             this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
-              title: 'Leave Classroom',
-              content: 'You have been removed from the classroom.',
+              title: transI18n('fcr_user_tips_kick_out_notice'),
+              content: transI18n('fcr_user_tips_local_kick_out'),
               closable: false,
               onOk: resolve,
-              okText: 'OK',
+              okText: transI18n('fcr_room_button_ok'),
               okButtonProps: { styleType: 'danger' },
               cancelButtonVisible: false,
             });
@@ -132,36 +165,28 @@ export class OnlineclassUIStore {
         new Promise((resolve) => {
           this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
             closable: false,
-            title: 'Join Error',
+            title: transI18n('fcr_room_label_join_error'),
             content: (e as AGError).message,
             onOk: resolve,
-            okText: 'Leave the Room',
+            okText: transI18n('fcr_room_button_join_error_leave'),
             okButtonProps: { styleType: 'danger' },
             cancelButtonVisible: false,
           });
         }),
       );
     }
-
-    try {
-      const lowStreamCameraEncoderConfigurations = (
-        EduClassroomConfig.shared.rteEngineConfig.rtcConfigs as ConvertMediaOptionsConfig
-      )?.defaultLowStreamCameraEncoderConfigurations;
-
-      const enableDualStream = EduClassroomConfig.shared.platform !== Platform.H5;
-      await this.classroomStore.mediaStore.enableDualStream(enableDualStream);
-
-      await this.classroomStore.mediaStore.setLowStreamParameter(
-        lowStreamCameraEncoderConfigurations || EduClassroomConfig.defaultLowStreamParameter(),
-      );
-    } catch (e) {
-      //   this.shareUIStore.addGenericErrorDialog(e as AGError);
-    }
-
+    await this.enableDualStream();
     try {
       await joinRTC();
     } catch (e) {
-      //   this.shareUIStore.addGenericErrorDialog(e as AGError);
+      this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+        closable: false,
+        title: transI18n('fcr_unknown_error_occurred'),
+        content: (e as AGError).message,
+        okText: transI18n('fcr_room_button_ok'),
+        okButtonProps: { styleType: 'danger' },
+        cancelButtonVisible: false,
+      });
     }
   }
 
@@ -177,6 +202,6 @@ export class OnlineclassUIStore {
         }
       }
     });
-    OnlineclassContext.reset();
+    FcrUISceneContext.reset();
   }
 }

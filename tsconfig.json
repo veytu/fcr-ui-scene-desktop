@@ -25,15 +25,13 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@onlineclass/*": ["src/*"],
+      "@ui-scene/*": ["src/*"],
       "@res/*": ["src/resources/*"],
       "@components/*": [
-        "../agora-scenario-ui-kit/src/components/*",
-        "../agora-scenario-ui-kit-desktop/src/components/*"
+        "../fcr-ui-kit/src/components/*",
       ],
       "@ui-kit-utils/*": [
-        "../agora-scenario-ui-kit/src/utils/*",
-        "../agora-scenario-ui-kit-desktop/src/utils/*"
+        "../fcr-ui-kit/src/utils/*",
       ]
     }
   },

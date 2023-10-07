@@ -1,15 +1,13 @@
 const webpackMerge = require('webpack-merge');
 const path = require('path');
 const baseConfig = require('agora-common-libs/presets/webpack.config.base.js');
+const packConfig = require('agora-common-libs/presets/webpack.config.pack.js');
+
 const ROOT_PATH = path.resolve(__dirname, './');
-const alias = {
-  '@components': 'agora-scenario-ui-kit/src/components',
-  '@ui-kit-utils': 'agora-scenario-ui-kit/src/utils',
-};
 
 const config = {
   entry: {
-    onlineclass_sdk: './src/index',
+    scene: './src/index',
   },
   output: {
     path: path.resolve(ROOT_PATH, 'lib'),
@@ -21,11 +19,12 @@ const config = {
   resolve: {
     alias: {
       '@res': path.resolve(ROOT_PATH, './src/resources'),
-      '@onlineclass': path.resolve(ROOT_PATH, './src'),
-      ...alias,
+      '@ui-scene': path.resolve(ROOT_PATH, './src'),
+      '@components': 'fcr-ui-kit/src/components',
+      '@ui-kit-utils': 'fcr-ui-kit/src/utils',
     },
   },
 };
 
-const mergedConfig = webpackMerge.merge(baseConfig, config);
+const mergedConfig = webpackMerge.merge(baseConfig, packConfig, config);
 module.exports = mergedConfig;

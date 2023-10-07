@@ -13,7 +13,7 @@ import {
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { computedFn } from 'mobx-utils';
-import { EduStreamUI } from '@onlineclass/utils/stream/struct';
+import { EduStreamUI } from '@ui-scene/utils/stream/struct';
 import { v4 as uuidv4 } from 'uuid';
 type RenderableVideoDom = {
   dom: HTMLDivElement;
@@ -149,6 +149,7 @@ export class StreamUIStore extends EduUIStoreBase {
       if (renderableVideoDom) {
         const needMirror = stream.videoSourceType !== AgoraRteVideoSourceType.ScreenShare;
         setupRemoteVideo(stream, renderableVideoDom.dom, needMirror, renderableVideoDom.renderMode);
+        this._videoDoms.delete(stream.streamUuid);
       }
     });
     // 更新已订阅列表

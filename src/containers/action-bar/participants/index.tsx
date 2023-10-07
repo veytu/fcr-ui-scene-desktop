@@ -1,12 +1,16 @@
 import { SvgIconEnum } from '@components/svg-img';
 import { ToolTip } from '@components/tooltip';
-import { useStore } from '@onlineclass/utils/hooks/use-store';
+import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { observer } from 'mobx-react-lite';
 import { ActionBarItem } from '..';
 import './index.css';
 import { DialogToolTip } from '@components/tooltip/dialog';
 import { useEffect, useState } from 'react';
+import { useI18n } from 'agora-common-libs';
+import raiseHandsImg from '../raise-hands/assets/raise_hands.png';
+
 export const Participants = observer(() => {
+  const transI18n = useI18n();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [dialogTooltipVisible, setDialogTooltipVisible] = useState(false);
   const {
@@ -17,10 +21,11 @@ export const Participants = observer(() => {
       toggleParticipantsDialogVisible,
       setParticipantsDialogVisible,
       isHost,
+      isAudience,
     },
   } = useStore();
   useEffect(() => {
-    if (handsUpMap.size > 0 && !participantsDialogVisible && isHost) {
+    if (handsUpMap.size > 0 && !participantsDialogVisible && (isHost || isAudience)) {
       setDialogTooltipVisible(true);
     } else {
       setDialogTooltipVisible(false);
@@ -37,8 +42,15 @@ export const Participants = observer(() => {
           setTooltipVisible(visible);
         }
       }}
-      content={participantsDialogVisible ? 'Close participants' : 'Open participants'}>
+      content={
+        participantsDialogVisible
+          ? transI18n('fcr_room_tips_close_participants')
+          : transI18n('fcr_room_tips_open_participants')
+      }>
       <DialogToolTip
+        getTooltipContainer={() =>
+          document.querySelector('.fcr-action-bar-participants-wrapper') as HTMLElement
+        }
         closeable={false}
         overlayClassName="fcr-action-bar-raise-hand-dialog"
         content={
@@ -48,7 +60,8 @@ export const Participants = observer(() => {
               setParticipantsDialogVisible(true);
               setDialogTooltipVisible(false);
             }}>
-            <span>🙋</span> {handsUpMap.size} people raised hand, please click to view.
+            <img src={raiseHandsImg}></img>
+            {handsUpMap.size} {transI18n('fcr_participants_tips_student_rasie_hand')}
           </span>
         }
         visible={dialogTooltipVisible}>
@@ -57,7 +70,7 @@ export const Participants = observer(() => {
           <ActionBarItem
             onClick={toggleParticipantsDialogVisible}
             icon={SvgIconEnum.FCR_PEOPLE}
-            text={'Participants'}></ActionBarItem>
+            text={transI18n('fcr_room_button_participants')}></ActionBarItem>
         </div>
       </DialogToolTip>
     </ToolTip>

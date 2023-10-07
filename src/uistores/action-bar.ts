@@ -1,6 +1,6 @@
 import { EduUIStoreBase } from './base';
 import { observable, computed, reaction, action, runInAction } from 'mobx';
-import { ShareStreamStateKeeper } from '@onlineclass/utils/stream/state-keeper';
+import { ShareStreamStateKeeper } from '@ui-scene/utils/stream/state-keeper';
 import { ClassroomState, EduClassroomConfig, LeaveReason, RecordMode } from 'agora-edu-core';
 import {
   AgoraRteAudioSourceType,
@@ -12,10 +12,9 @@ import {
 } from 'agora-rte-sdk';
 import { computedFn } from 'mobx-utils';
 
-import { isElectron } from '@onlineclass/utils/check';
-import { getConfig } from '@onlineclass/utils/launch-options-holder';
+import { isElectron } from '@ui-scene/utils/check';
 import { ToastApi } from '@components/toast';
-import { getRandomInt } from '@onlineclass/utils';
+import { getRandomInt } from '@ui-scene/utils';
 import {
   CustomMessageCommandType,
   CustomMessageData,
@@ -23,6 +22,8 @@ import {
   CustomMessageHandsUpState,
   CustomMessageHandsUpType,
 } from './type';
+import { chatroomWidgetId } from '@ui-scene/extension/type';
+import { getLanguage } from 'agora-common-libs';
 export class ActionBarUIStore extends EduUIStoreBase {
   // for student hands up
   private _handsUpTask: Scheduler.Task | null = null;
@@ -116,7 +117,9 @@ export class ActionBarUIStore extends EduUIStoreBase {
     this.classroomStore.roomStore.sendCustomChannelMessage(message);
     this.handsUpMap.clear();
   }
-
+  @computed get isHost() {
+    return this.getters.isHost;
+  }
   @computed get showEndClassButton() {
     return this.getters.isHost;
   }
@@ -140,6 +143,7 @@ export class ActionBarUIStore extends EduUIStoreBase {
     return this.getters.isHost;
   }
   @observable showLeaveOption = false;
+  @observable leaveFlag = 1;
 
   shareScreenStateKeeperMap: Map<string, ShareStreamStateKeeper> = new Map();
   @computed
@@ -153,15 +157,20 @@ export class ActionBarUIStore extends EduUIStoreBase {
 
   @bound
   openChatDialog() {
-    this.getters.eduTool.setWidgetVisible('easemobIM', true);
+    this.getters.eduTool.setWidgetVisible(chatroomWidgetId, true);
   }
   @bound
   closeChatDialog() {
-    this.getters.eduTool.setWidgetVisible('easemobIM', false);
+    this.getters.eduTool.setWidgetVisible(chatroomWidgetId, false);
+  }
+  @bound
+  setPrivateChat(userId: string) {
+    this.getters.eduTool.sendWidgetPrivateChat(chatroomWidgetId, userId);
   }
   @action.bound
-  setShowLeaveOption(show: boolean) {
+  setShowLeaveOption(show: boolean, flag: number /* 1 leave clasroom, 2 leave group  */) {
     this.showLeaveOption = show;
+    this.leaveFlag = flag;
   }
   @bound
   startRecording() {
@@ -174,11 +183,9 @@ export class ActionBarUIStore extends EduUIStoreBase {
   get recordArgs() {
     const { recordUrl, recordRetryTimeout } = EduClassroomConfig.shared;
 
-    const { language } = getConfig();
-
     const args = {
       webRecordConfig: {
-        rootUrl: `${recordUrl}?language=${language}`,
+        rootUrl: `${recordUrl}?language=${getLanguage()}`,
         videoBitrate: 3000,
       },
       mode: RecordMode.Web,
@@ -304,6 +311,16 @@ export class ActionBarUIStore extends EduUIStoreBase {
     );
     this._disposers.push(
       reaction(
+        () => this.isScreenSharing,
+        () => {
+          if (this.isScreenSharing && this.getters.isBoardWidgetActive && this.getters.isHost) {
+            this.getters.boardApi.disable();
+          }
+        },
+      ),
+    );
+    this._disposers.push(
+      reaction(
         () => this.screenShareStateAccessor,
         (value) => {
           const { trackState, classroomState } = value;
@@ -365,7 +382,7 @@ export class ActionBarUIStore extends EduUIStoreBase {
                       audioState: audioPublishState,
                       audioSourceState:
                         this.classroomStore.mediaStore.localScreenShareAudioTrackState,
-                      audioSourceType: AgoraRteAudioSourceType.ScreenShare,
+                      audioSourceType: AgoraRteAudioSourceType.Loopback,
                     });
                   this.classroomStore.streamStore.initializeScreenShareStream(
                     newValue,

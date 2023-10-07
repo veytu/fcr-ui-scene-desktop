@@ -1,13 +1,13 @@
-import { extractUserStreams } from '@onlineclass/utils/stream';
-import { EduStreamUI } from '@onlineclass/utils/stream/struct';
+import { extractUserStreams } from '@ui-scene/utils/stream';
+import { EduStreamUI } from '@ui-scene/utils/stream/struct';
 import { EduClassroomConfig, EduRoleTypeEnum, EduStream } from 'agora-edu-core';
 import { AgoraRteMediaSourceState, AgoraRteVideoSourceType } from 'agora-rte-sdk';
 import { computed } from 'mobx';
 import { computedFn } from 'mobx-utils';
-import { OnlineclassUIStore } from '.';
+import { SceneUIStore } from '.';
 
 export class Getters {
-  constructor(private _classroomUIStore: OnlineclassUIStore) {}
+  constructor(private _classroomUIStore: SceneUIStore) {}
 
   get classroomUIStore() {
     return this._classroomUIStore;
@@ -21,8 +21,17 @@ export class Getters {
     return this._classroomUIStore.eduToolApi;
   }
   @computed
+  get layout() {
+    return this.classroomUIStore.layoutUIStore.layout;
+  }
+  @computed
+  get widgetInstanceList() {
+    return this.classroomUIStore.widgetUIStore.widgetInstanceList;
+  }
+
+  @computed
   get isGranted() {
-    return this._classroomUIStore.boardApi.granted;
+    return this._classroomUIStore.boardApi.granted || this.isHost;
   }
 
   get roomName() {
@@ -33,32 +42,25 @@ export class Getters {
   }
 
   get isHost() {
+    return this.isTeacher || this.isAssistant;
+  }
+  get isTeacher() {
     return EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
   }
-
+  get isAssistant() {
+    return EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant;
+  }
   get isStudent() {
     return EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student;
+  }
+  get isAudience() {
+    return EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.invisible;
   }
   @computed
   get localUser() {
     return this._classroomUIStore.classroomStore.userStore.localUser;
   }
-  @computed
-  get videoStreams() {
-    const { streamByUserUuid, streamByStreamUuid } =
-      this._classroomUIStore.classroomStore.streamStore;
-    const videoStreams = extractUserStreams(
-      this._classroomUIStore.classroomStore.userStore.users,
-      streamByUserUuid,
-      streamByStreamUuid,
-      [AgoraRteVideoSourceType.Camera, AgoraRteVideoSourceType.ScreenShare],
-    );
-    return videoStreams;
-  }
-  @computed
-  get videoUIStreams() {
-    return Array.from(this.videoStreams).map((stream) => new EduStreamUI(stream));
-  }
+
   @computed
   get cameraStreams() {
     const { streamByUserUuid, streamByStreamUuid } =
@@ -74,7 +76,18 @@ export class Getters {
 
   @computed
   get cameraUIStreams() {
-    return Array.from(this.cameraStreams).map((stream) => new EduStreamUI(stream));
+    const isIngroupLocal = this._classroomUIStore.classroomStore.groupStore.groupUuidByUserUuid.get(
+      this.localUser?.userUuid || '',
+    );
+    return Array.from(this.cameraStreams)
+      .filter((stream) => {
+        return isIngroupLocal
+          ? true
+          : !this._classroomUIStore.classroomStore.groupStore.groupUuidByUserUuid.get(
+              stream.fromUser.userUuid,
+            );
+      })
+      .map((stream) => new EduStreamUI(stream));
   }
   @computed
   get teacherUIStream() {
@@ -131,12 +144,35 @@ export class Getters {
       return widget.widgetName === 'netlessBoard';
     });
   }
-
+  get isBoardWidgetMinimized() {
+    return this._classroomUIStore.eduToolApi.isWidgetMinimized('netlessBoard');
+  }
+  @computed
   get viewportBoundaries() {
     return this._classroomUIStore.layoutUIStore.viewportBoundaries;
   }
 
   get activeWidgetIds() {
     return this._classroomUIStore.widgetUIStore.widgetInstanceList.map((w) => w.widgetId);
+  }
+
+  get isBreakoutActive() {
+    return (
+      this._classroomUIStore.breakoutUIStore.breakoutDialogVisible ||
+      this.eduTool.isWidgetMinimized('breakout') ||
+      !!this.classroomUIStore.breakoutUIStore.groupState
+    );
+  }
+
+  get isBreakoutStarted() {
+    return !!this.classroomUIStore.breakoutUIStore.groupState;
+  }
+
+  get isBreakoutMinimized() {
+    return this._classroomUIStore.eduToolApi.isWidgetMinimized('breakout');
+  }
+
+  get isJoiningSubRoom() {
+    return this.classroomUIStore.breakoutUIStore.isJoiningSubRoom;
   }
 }

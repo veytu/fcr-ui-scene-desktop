@@ -7,7 +7,9 @@ import {
   CustomMessageCommandType,
   CustomMessageDeviceState,
   CustomMessageDeviceType,
-} from '@onlineclass/uistores/type';
+} from '@ui-scene/uistores/type';
+import { useI18n } from 'agora-common-libs';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 const colors = themeVal('colors');
 export const checkCameraEnabled = (stream?: EduStreamUI) => {
   return stream?.isVideoDeviceEnabled && stream.isVideoStreamPublished;
@@ -15,7 +17,13 @@ export const checkCameraEnabled = (stream?: EduStreamUI) => {
 export const checkMicEnabled = (stream?: EduStreamUI) => {
   return stream?.isMicDeviceEnabled && stream.isMicStreamPublished;
 };
-export const useDeviceSwitch = (userStream?: EduStreamUI) => {
+export const useDeviceSwitch = ({
+  stream,
+  isLocal,
+}: {
+  stream?: EduStreamUI;
+  isLocal: boolean;
+}) => {
   const {
     layoutUIStore: { addDialog },
     deviceSettingUIStore: {
@@ -24,15 +32,12 @@ export const useDeviceSwitch = (userStream?: EduStreamUI) => {
       enableCamera,
       enableAudioRecording,
     },
-    streamUIStore: { localStream },
     classroomStore: {
       streamStore: { updateRemotePublishState },
       roomStore: { sendCustomPeerMessage },
     },
   } = useStore();
-  const stream = userStream || localStream;
-
-  const isLocal = !userStream || stream?.isLocal;
+  const transI18n = useI18n();
   const micEnabled = isLocal ? isAudioRecordingDeviceEnabled : checkMicEnabled(stream);
 
   const cameraEnabled = isLocal ? isCameraDeviceEnabled : checkCameraEnabled(stream);
@@ -43,14 +48,21 @@ export const useDeviceSwitch = (userStream?: EduStreamUI) => {
       if (stream?.isVideoStreamPublished) {
         enableCamera(true);
       } else {
-        addDialog('confirm', {
-          title: 'Notice',
-          content: 'You can raise hand to request the teacher to start video.',
-          cancelButtonVisible: false,
-          okButtonProps: {
-            styleType: 'danger',
-          },
-        });
+        if (isLocal && stream?.role === EduRoleTypeEnum.teacher) {
+          enableCamera(true);
+          updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
+            videoState: AgoraRteMediaPublishState.Published,
+          });
+        } else {
+          addDialog('confirm', {
+            title: transI18n('fcr_user_tips_capture_screen_permission_title'),
+            content: transI18n('fcr_user_tips_banned_video_content'),
+            cancelButtonVisible: false,
+            okButtonProps: {
+              styleType: 'danger',
+            },
+          });
+        }
       }
     }
   };
@@ -61,19 +73,30 @@ export const useDeviceSwitch = (userStream?: EduStreamUI) => {
       if (stream?.isMicStreamPublished) {
         enableAudioRecording(true);
       } else {
-        addDialog('confirm', {
-          title: 'Notice',
-          content: 'You can raise hand to request the teacher to unmute.',
-          cancelButtonVisible: false,
-          okButtonProps: {
-            styleType: 'danger',
-          },
-        });
+        if (isLocal && stream?.role === EduRoleTypeEnum.teacher) {
+          enableAudioRecording(true);
+          updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
+            audioState: AgoraRteMediaPublishState.Published,
+          });
+        } else {
+          addDialog('confirm', {
+            title: transI18n('fcr_user_tips_capture_screen_permission_title'),
+            content: transI18n('fcr_user_tips_muted_content'),
+            cancelButtonVisible: false,
+            okButtonProps: {
+              styleType: 'danger',
+            },
+          });
+        }
       }
     }
   };
-  const localCameraTooltip = cameraEnabled ? 'Stop video' : 'Start video';
-  const remoteCameraTooltip = cameraEnabled ? 'Stop video' : 'Request to start video';
+  const localCameraTooltip = cameraEnabled
+    ? transI18n('fcr_device_tips_stop_video')
+    : transI18n('fcr_device_tips_start_video');
+  const remoteCameraTooltip = cameraEnabled
+    ? transI18n('fcr_device_tips_stop_video')
+    : transI18n('fcr_participants_tips_start_video');
   const cameraTooltip = isLocal ? localCameraTooltip : remoteCameraTooltip;
   const handleCameraClick = () => {
     if (isLocal) {
@@ -102,8 +125,12 @@ export const useDeviceSwitch = (userStream?: EduStreamUI) => {
       }
     }
   };
-  const localMicTooltip = micEnabled ? 'Mute' : 'Unmute';
-  const remoteMicTooltip = micEnabled ? 'Mute' : 'Request to unmute';
+  const localMicTooltip = micEnabled
+    ? transI18n('fcr_device_tips_mute')
+    : transI18n('fcr_device_tips_unmute');
+  const remoteMicTooltip = micEnabled
+    ? transI18n('fcr_participants_tips_mute')
+    : transI18n('fcr_device_tips_unmute');
   const micTooltip = isLocal ? localMicTooltip : remoteMicTooltip;
   const handleMicrophoneClick = () => {
     if (isLocal) {

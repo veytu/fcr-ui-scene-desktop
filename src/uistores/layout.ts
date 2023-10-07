@@ -7,8 +7,8 @@ import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
 import { AgoraViewportBoundaries } from 'agora-common-libs';
 import { ClassDialogProps } from '@components/dialog/class-dialog';
 import { v4 as uuidv4 } from 'uuid';
-import { ClassroomState } from 'agora-edu-core';
-import { AgoraExtensionRoomEvent } from '@onlineclass/extension/events';
+import { ClassroomState, EduRoleTypeEnum } from 'agora-edu-core';
+import { AgoraExtensionRoomEvent } from '@ui-scene/extension/events';
 
 @Log.attach({ proxyMethods: false })
 export class LayoutUIStore extends EduUIStoreBase {
@@ -23,7 +23,14 @@ export class LayoutUIStore extends EduUIStoreBase {
   @observable
   actionBarHeight = 58;
 
-  @observable viewportBoundaries?: AgoraViewportBoundaries;
+  @observable viewportBoundaries: AgoraViewportBoundaries = {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: 0,
+    height: 0,
+  };
   @observable mouseEnterClass = false;
   @observable layoutReady = false;
   @observable showStatusBar = true;
@@ -90,7 +97,10 @@ export class LayoutUIStore extends EduUIStoreBase {
   }
 
   @computed get gridLayoutDisabled() {
-    return this.getters.isScreenSharing && !this.getters.isLocalScreenSharing;
+    return (
+      (this.getters.isScreenSharing && !this.getters.isLocalScreenSharing) ||
+      this.getters.isBoardWidgetActive
+    );
   }
   @computed
   get noAvailabelStream() {
@@ -106,7 +116,9 @@ export class LayoutUIStore extends EduUIStoreBase {
       this._isPointingBar ||
       this._hasPopoverShowed ||
       (this.layout === Layout.Grid && this.getters.cameraUIStreams.length > 1) ||
-      this.noAvailabelStream
+      this.noAvailabelStream ||
+      this.getters.localUser?.userRole === EduRoleTypeEnum.invisible ||
+      (this.getters.isBoardWidgetActive && !this.getters.isBoardWidgetMinimized)
     );
   }
   get classroomViewportClassName() {
@@ -195,7 +207,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   }
 
   @bound
-  @Lodash.debounced(300)
+  @Lodash.debounced(100)
   private _updateViewportBoundaries() {
     const containerEle = document.querySelector(`body`);
 

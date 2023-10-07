@@ -1,12 +1,6 @@
-import { isInvisible, isWeb } from '@onlineclass/utils/check';
-import { builtInExtensions, getProcessorInitializer } from '@onlineclass/utils/rtc-extensions';
-import {
-  AgoraEduClassroomEvent,
-  ClassroomState,
-  DEVICE_DISABLE,
-  EduClassroomConfig,
-  EduEventCenter,
-} from 'agora-edu-core';
+import { isInvisible, isWeb } from '@ui-scene/utils/check';
+import { builtInExtensions, getProcessorInitializer } from '@ui-scene/utils/rtc-extensions';
+import { ClassroomState, DEVICE_DISABLE, EduClassroomConfig } from 'agora-edu-core';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { IAIDenoiserProcessor } from 'agora-extension-ai-denoiser';
 import { IVirtualBackgroundProcessor } from 'agora-extension-virtual-background';
@@ -22,8 +16,8 @@ import {
 } from 'agora-rte-sdk';
 import { transI18n } from 'agora-common-libs';
 import { BeautyFilterOptions, VirtualBackgroundOptions } from '..';
-import { fetchMediaFileByUrl } from '@onlineclass/utils';
-import { getLaunchOptions } from '@onlineclass/utils/launch-options-holder';
+import { fetchMediaFileByUrl } from '@ui-scene/utils';
+import { getConfig, getLaunchOptions } from '@ui-scene/utils/launch-options-holder';
 import concat from 'lodash/concat';
 import map from 'lodash/map';
 import {
@@ -43,8 +37,9 @@ import {
  */
 @Log.attach()
 export class DeviceSettingUIStore extends EduUIStoreBase {
-  private _pretestCameraEnabled = false;
-  private _pretestMicEnabled = false;
+  private _defaultBeautyOptions = { smooth: 0.5, brightening: 0.6, blush: 0.1 };
+  private _pretestCameraEnabled = !!getConfig().defaultEnableDevice;
+  private _pretestMicEnabled = !!getConfig().defaultEnableDevice;
   @bound
   setPretestCameraEnabled(enable: boolean) {
     this._pretestCameraEnabled = enable;
@@ -174,6 +169,18 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     return this._beautyOptions?.blush;
   }
 
+  get pretestCameraEnabled() {
+    return this._pretestCameraEnabled;
+  }
+
+  get pretestMicEnabled() {
+    return this._pretestMicEnabled;
+  }
+
+  get defaultBeautyOptions() {
+    return this._defaultBeautyOptions;
+  }
+
   /**
    * 麦克风测试音量
    * @returns 音量 0 ~ 1
@@ -208,7 +215,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     return this.classroomStore.mediaStore.videoCameraDevices
       .filter(({ deviceid }) => deviceid !== DEVICE_DISABLE)
       .map((item) => ({
-        text: item.deviceid === DEVICE_DISABLE ? transI18n('disabled') : item.devicename,
+        text:
+          item.deviceid === DEVICE_DISABLE
+            ? transI18n('fcr_device_label_disabled')
+            : item.devicename,
         value: item.deviceid,
       }));
   }
@@ -225,7 +235,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     return this.classroomStore.mediaStore.audioRecordingDevices
       .filter(({ deviceid }) => deviceid !== DEVICE_DISABLE)
       .map((item) => ({
-        text: item.deviceid === DEVICE_DISABLE ? transI18n('disabled') : item.devicename,
+        text:
+          item.deviceid === DEVICE_DISABLE
+            ? transI18n('fcr_device_label_disabled')
+            : item.devicename,
         value: item.deviceid,
       }));
   }
@@ -249,7 +262,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       ? playbackDevicesList
       : [
           {
-            text: transI18n(`media.default`),
+            text: transI18n('fcr_device_label_default_speaker'),
             value: 'default',
           },
         ];
@@ -265,6 +278,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   get cameraAccessors() {
     return {
       classroomState: this.classroomStore.connectionStore.classroomState,
+      subRoomState: this.classroomStore.connectionStore.subRoomState,
       cameraDeviceId: this._cameraDeviceId,
       localCameraStream: this.classroomStore.streamStore.streamByStreamUuid.get(
         this.classroomStore.streamStore.localCameraStreamUuid || '',
@@ -282,6 +296,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   get micAccessors() {
     return {
       classroomState: this.classroomStore.connectionStore.classroomState,
+      subRoomState: this.classroomStore.connectionStore.subRoomState,
       recordingDeviceId: this._audioRecordingDeviceId,
       localMicStream: this.classroomStore.streamStore.streamByStreamUuid.get(
         this.classroomStore.streamStore.localMicStreamUuid || '',
@@ -574,8 +589,8 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             if (!hasStartVideoDialog && !this._cameraDeviceEnabled) {
               this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
                 id: dialogId,
-                title: 'Request to start video',
-                content: 'Teacher requests to start video',
+                title: transI18n('fcr_user_tips_teacher_start_video_title'),
+                content: transI18n('fcr_user_tips_teacher_start_video_content'),
                 onOk: () => {
                   this.enableCamera(true);
                 },
@@ -589,9 +604,8 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             if (!hasUnmuteDialog && !this._audioRecordingDeviceEnabled) {
               this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
                 id: dialogId,
-
-                title: 'Request to unmute',
-                content: 'Teacher requests to unmute',
+                title: transI18n('fcr_user_tips_teacher_unmute_title'),
+                content: transI18n('fcr_user_tips_teacher_unmute_content'),
                 onOk: () => {
                   this.enableAudioRecording(true);
                 },
@@ -621,8 +635,8 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             if (!hasStartVideoDialog && !this._cameraDeviceEnabled) {
               this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
                 id: dialogId,
-                title: 'Request to start video',
-                content: 'Teacher requests to start video',
+                title: transI18n('fcr_user_tips_teacher_start_video_title'),
+                content: transI18n('fcr_user_tips_teacher_start_video_content'),
                 onOk: () => {
                   this.enableCamera(true);
                 },
@@ -636,8 +650,8 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             if (!hasUnmuteDialog && !this._audioRecordingDeviceEnabled) {
               this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
                 id: dialogId,
-                title: 'Request to unmute',
-                content: 'Teacher requests to unmute',
+                title: transI18n('fcr_user_tips_teacher_unmute_title'),
+                content: transI18n('fcr_user_tips_teacher_unmute_content'),
                 onOk: () => {
                   this.enableAudioRecording(true);
                 },
@@ -662,7 +676,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         this._virtualBackgroundOptions = this.virtualBackgroundList[0];
       }
       this._beautyType = 'smooth';
-      this._beautyOptions = { smooth: 0.5, brightening: 0.6, blush: 0.1 };
+      this._beautyOptions = { ...this._defaultBeautyOptions };
     });
     this.classroomStore.roomStore.addCustomMessageObserver({
       onReceiveChannelMessage: this._onReceiveChannelMessage,
@@ -750,10 +764,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
           if (inOldList && !inNewList) {
             //change to first device if there's any
             newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
-
-            if (inOldList && !inNewList) {
-              EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.CurrentCamUnplugged);
-            }
           }
         } else {
           if (EduClassroomConfig.shared.openCameraDeviceAfterLaunch) {
@@ -787,9 +797,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         if (inOldList && !inNewList) {
           //change to first device if there's any
           newValue.length > 0 && this.setAudioRecordingDevice(newValue[0].deviceid);
-          if (inOldList && !inNewList) {
-            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.CurrentMicUnplugged);
-          }
         }
       } else {
         if (EduClassroomConfig.shared.openRecordingDeviceAfterLaunch) {
@@ -821,11 +828,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         if (inOldList && !inNewList) {
           //change to first device if there's any
           newValue.length > 0 && this.setAudioPlaybackDevice(newValue[0].deviceid);
-          if (inOldList && !inNewList) {
-            EduEventCenter.shared.emitClasroomEvents(
-              AgoraEduClassroomEvent.CurrentSpeakerUnplugged,
-            );
-          }
         }
       } else {
         let deviceId = null;
@@ -932,10 +934,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 type: type === 'image' ? 'img' : 'video',
                 source: data,
               });
-              console.log(
-                this._virtualBackgroundProcessorForPreview,
-                'this._virtualBackgroundProcessorForPreview',
-              );
             });
 
             this._virtualBackgroundProcessor?.enable();
@@ -958,9 +956,18 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
               smoothnessLevel: options.smooth,
               rednessLevel: options.blush,
             });
+            this._beautyEffectProcessorForPreview?.setOptions({
+              lighteningContrastLevel: 0,
+              sharpnessLevel: 0,
+              lighteningLevel: options.brightening,
+              smoothnessLevel: options.smooth,
+              rednessLevel: options.blush,
+            });
             this._beautyEffectProcessor?.enable();
+            this._beautyEffectProcessorForPreview?.enable();
           } else {
             this._beautyEffectProcessor?.disable();
+            this._beautyEffectProcessorForPreview?.disable();
           }
         },
       ),
@@ -987,7 +994,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         ({ localMicTrackState, localCameraTrackState }) => {
           runInAction(() => {
             this._cameraDeviceEnabled = localCameraTrackState === AgoraRteMediaSourceState.started;
-            console.log(localMicTrackState, 'localMicTrackState');
             this._audioRecordingDeviceEnabled =
               localMicTrackState === AgoraRteMediaSourceState.started;
           });

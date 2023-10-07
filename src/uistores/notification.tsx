@@ -6,11 +6,13 @@ import {
   ClassState,
   EduClassroomConfig,
   EduEventCenter,
+  EduRoleTypeEnum,
   LeaveReason,
 } from 'agora-edu-core';
 import { bound } from 'agora-rte-sdk';
 import { reaction } from 'mobx';
 import { EduUIStoreBase } from './base';
+import { transI18n } from 'agora-common-libs';
 
 export class NotiticationUIStore extends EduUIStoreBase {
   private _prevClassState: ClassState = ClassState.beforeClass;
@@ -27,11 +29,11 @@ export class NotiticationUIStore extends EduUIStoreBase {
           LeaveReason.kickOut,
           new Promise((resolve, reject) => {
             this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
-              title: 'Leave Classroom',
-              content: 'You have been removed from the classroom by the teacher',
+              title: transI18n('fcr_user_tips_kick_out_notice'),
+              content: transI18n('fcr_user_tips_local_kick_out'),
               closable: false,
               onOk: resolve,
-              okText: 'OK',
+              okText: transI18n('fcr_user_tips_local_kick_out_ok'),
               okButtonProps: { styleType: 'danger' },
               cancelButtonVisible: false,
             });
@@ -39,72 +41,50 @@ export class NotiticationUIStore extends EduUIStoreBase {
         );
       }
     }
-
+    if (
+      event === AgoraEduClassroomEvent.RewardReceived ||
+      event === AgoraEduClassroomEvent.BatchRewardReceived
+    ) {
+      const users: { userUuid: string; userName: string }[] = param;
+      const userNames = users.map((user) => user.userName);
+      if (users.length > 3) {
+        ToastApi.open({
+          toastProps: {
+            type: 'info',
+            content: transI18n('fcr_room_tips_reward_congratulation_multiplayer', {
+              reason1: userNames.slice(0, 3).join(', '),
+              reason2: userNames.length,
+            }),
+          },
+        });
+      } else {
+        ToastApi.open({
+          toastProps: {
+            type: 'info',
+            content: transI18n('fcr_room_tips_reward_congratulation_single', {
+              reason: userNames.join(','),
+            }),
+          },
+        });
+      }
+    }
     if (event === AgoraEduClassroomEvent.TeacherTurnOffMyMic) {
       ToastApi.open({
-        toastProps: { type: 'info', content: 'You are muted' },
+        toastProps: { type: 'info', content: transI18n('fcr_user_tips_muted') },
       });
     }
 
     if (event === AgoraEduClassroomEvent.TeacherTurnOffMyCam) {
       ToastApi.open({
-        toastProps: { type: 'info', content: 'The teacher has turned off your camera' },
-      });
-    }
-    if (event === AgoraEduClassroomEvent.TeacherGrantPermission) {
-      ToastApi.open({
-        persist: true,
-        duration: 15000,
-        toastProps: {
-          type: 'warn',
-          icon: SvgIconEnum.FCR_HOST,
-          content: 'The teacher invites you to the whiteboard',
-          closable: true,
-        },
-      });
-    }
-    // teacher revoke permission
-    if (event === AgoraEduClassroomEvent.TeacherRevokePermission) {
-      ToastApi.open({
-        persist: true,
-        duration: 15000,
-
-        toastProps: {
-          icon: SvgIconEnum.FCR_HOST,
-          type: 'warn',
-          content: 'The teacher cancelled your whiteboard permission',
-          closable: true,
-        },
+        toastProps: { type: 'info', content: transI18n('fcr_user_tips_banned_video') },
       });
     }
 
-    // if (
-    //   event === AgoraEduClassroomEvent.RewardReceived ||
-    //   event === AgoraEduClassroomEvent.BatchRewardReceived
-    // ) {
-    //   const users: { userUuid: string; userName: string }[] = param;
-    //   const userNames = users.map((user) => user.userName);
-    //   if (users.length > 3) {
-    //     this.shareUIStore.addToast(
-    //       transI18n('toast2.teacher.reward2', {
-    //         reason1: userNames
-    //           .slice(0, 3)
-
-    //           .join(','),
-    //         reason2: userNames.length,
-    //       }),
-    //     );
-    //   } else {
-    //     this.shareUIStore.addToast(
-    //       transI18n('toast2.teacher.reward', { reason: userNames.join(',') }),
-    //     );
-    //   }
-    // }
     // capture screen permission denied received
     if (event === AgoraEduClassroomEvent.CaptureScreenPermissionDenied) {
       this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
-        title: 'Notice',
-        content: 'Before using screen sharing, please first enable screen recording permissions.',
+        title: transI18n('fcr_user_tips_capture_screen_permission_title'),
+        content: transI18n('fcr_user_tips_capture_screen_permission_content'),
         okButtonProps: {
           styleType: 'danger',
         },
@@ -112,128 +92,160 @@ export class NotiticationUIStore extends EduUIStoreBase {
         icon: <SvgImg type={SvgIconEnum.FCR_BELL} size={50}></SvgImg>,
       });
     }
-    // // user join group
-    // if (event === AgoraEduClassroomEvent.UserJoinGroup) {
-    //   const { role } = EduClassroomConfig.shared.sessionInfo;
-    //   const { groupUuid, users }: { groupUuid: string; users: [] } = param;
-    //   const { teacherList, studentList, assistantList } =
-    //     this.classroomStore.userStore.mainRoomDataStore;
 
-    //   const teachers = this._filterUsers(users, teacherList);
-    //   const students = this._filterUsers(users, studentList);
-    //   const assistants = this._filterUsers(users, assistantList);
+    // user join group
+    if (event === AgoraEduClassroomEvent.UserJoinGroup) {
+      const { role } = EduClassroomConfig.shared.sessionInfo;
+      const { groupUuid, users }: { groupUuid: string; users: [] } = param;
+      const { teacherList, studentList, assistantList } =
+        this.classroomStore.userStore.mainRoomDataStore;
 
-    //   const isCurrentRoom = this.classroomStore.groupStore.currentSubRoom === groupUuid;
+      const teachers = this._filterUsers(users, teacherList);
+      const students = this._filterUsers(users, studentList);
+      const assistants = this._filterUsers(users, assistantList);
 
-    //   if (isCurrentRoom) {
-    //     if (teachers.length) {
-    //       if (role === EduRoleTypeEnum.student) {
-    //         this.shareUIStore.addToast(
-    //           transI18n('fcr_group_enter_group', {
-    //             reason1: transI18n('role.teacher'),
-    //             reason2: teachers.join(','),
-    //           }),
-    //         );
-    //       }
-    //     }
+      const isCurrentRoom = this.classroomStore.groupStore.currentSubRoom === groupUuid;
 
-    //     if (assistants.length) {
-    //       if (role === EduRoleTypeEnum.student) {
-    //         this.shareUIStore.addToast(
-    //           transI18n('fcr_group_enter_group', {
-    //             reason1: transI18n('role.assistant'),
-    //             reason2: assistants.join(','),
-    //           }),
-    //         );
-    //       }
-    //     }
+      if (isCurrentRoom) {
+        if (teachers.length) {
+          if (role === EduRoleTypeEnum.student) {
+            ToastApi.open({
+              toastProps: {
+                type: 'normal',
+                content: transI18n('fcr_group_enter_group', {
+                  reason1: transI18n('fcr_role_teacher'),
+                  reason2: teachers.join(','),
+                }),
+              },
+            });
+          }
+        }
 
-    //     if (students.length) {
-    //       if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
-    //         this.shareUIStore.addToast(
-    //           transI18n('fcr_group_enter_group', {
-    //             reason1: transI18n('role.student'),
-    //             reason2: students.join(','),
-    //           }),
-    //         );
-    //       }
-    //     }
-    //   }
-    // }
-    // // user leave group
-    // if (event === AgoraEduClassroomEvent.UserLeaveGroup) {
-    //   const { role } = EduClassroomConfig.shared.sessionInfo;
-    //   const { groupUuid, users }: { groupUuid: string; users: [] } = param;
-    //   const { teacherList, studentList, assistantList } =
-    //     this.classroomStore.userStore.mainRoomDataStore;
+        if (assistants.length) {
+          if (role === EduRoleTypeEnum.student) {
+            ToastApi.open({
+              toastProps: {
+                type: 'normal',
+                content: transI18n('fcr_group_enter_group', {
+                  reason1: transI18n('fcr_role_assistant'),
+                  reason2: assistants.join(','),
+                }),
+              },
+            });
+          }
+        }
 
-    //   const teachers = this._filterUsers(users, teacherList);
-    //   const students = this._filterUsers(users, studentList);
-    //   const assistants = this._filterUsers(users, assistantList);
+        if (students.length) {
+          if (this.getters.isHost) {
+            ToastApi.open({
+              toastProps: {
+                type: 'normal',
+                content: transI18n('fcr_group_enter_group', {
+                  reason1: transI18n('fcr_role_student'),
+                  reason2: students.join(','),
+                }),
+              },
+            });
+          }
+        }
+      }
+    }
+    // user leave group
+    if (event === AgoraEduClassroomEvent.UserLeaveGroup) {
+      const { role } = EduClassroomConfig.shared.sessionInfo;
+      const { groupUuid, users }: { groupUuid: string; users: [] } = param;
+      const { teacherList, studentList, assistantList } =
+        this.classroomStore.userStore.mainRoomDataStore;
 
-    //   const isCurrentRoom = this.classroomStore.groupStore.currentSubRoom === groupUuid;
+      const teachers = this._filterUsers(users, teacherList);
+      const students = this._filterUsers(users, studentList);
+      const assistants = this._filterUsers(users, assistantList);
 
-    //   if (isCurrentRoom) {
-    //     if (teachers.length) {
-    //       if (role === EduRoleTypeEnum.student) {
-    //         this.shareUIStore.addToast(
-    //           transI18n('fcr_group_exit_group', {
-    //             reason1: transI18n('role.teacher'),
-    //             reason2: teachers.join(','),
-    //           }),
-    //           'warning',
-    //         );
-    //       }
-    //     }
+      const isCurrentRoom = this.classroomStore.groupStore.currentSubRoom === groupUuid;
 
-    //     if (assistants.length) {
-    //       if (role === EduRoleTypeEnum.student) {
-    //         this.shareUIStore.addToast(
-    //           transI18n('fcr_group_exit_group', {
-    //             reason1: transI18n('role.assistant'),
-    //             reason2: assistants.join(','),
-    //           }),
-    //           'warning',
-    //         );
-    //       }
-    //     }
+      if (isCurrentRoom) {
+        if (teachers.length) {
+          if (role === EduRoleTypeEnum.student) {
+            ToastApi.open({
+              toastProps: {
+                type: 'warn',
+                content: transI18n('fcr_group_exit_group', {
+                  reason1: transI18n('fcr_role_teacher'),
+                  reason2: teachers.join(','),
+                }),
+              },
+            });
+          }
+        }
 
-    //     if (students.length) {
-    //       if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
-    //         this.shareUIStore.addToast(
-    //           transI18n('fcr_group_exit_group', {
-    //             reason1: transI18n('role.student'),
-    //             reason2: students.join(','),
-    //           }),
-    //           'warning',
-    //         );
-    //       }
-    //     }
-    //   }
-    // }
+        if (assistants.length) {
+          if (role === EduRoleTypeEnum.student) {
+            ToastApi.open({
+              toastProps: {
+                type: 'warn',
+                content: transI18n('fcr_group_exit_group', {
+                  reason1: transI18n('fcr_role_assistant'),
+                  reason2: assistants.join(','),
+                }),
+              },
+            });
+          }
+        }
 
-    // if (event === AgoraEduClassroomEvent.RejectedToGroup) {
-    //   const { inviting } = param;
-    //   const { role } = EduClassroomConfig.shared.sessionInfo;
-    //   if (role === EduRoleTypeEnum.student && inviting) {
-    //     this.shareUIStore.addConfirmDialog(
-    //       transI18n('fcr_group_help_title'),
-    //       transI18n('fcr_group_help_teacher_busy_msg'),
-    //       {
-    //         actions: ['ok'],
-    //       },
-    //     );
-    //   }
-    // }
+        if (students.length) {
+          if (this.getters.isHost) {
+            ToastApi.open({
+              toastProps: {
+                type: 'warn',
+                content: transI18n('fcr_group_exit_group', {
+                  reason1: transI18n('fcr_role_student'),
+                  reason2: students.join(','),
+                }),
+              },
+            });
+          }
+        }
+      }
+    }
+
+    if (event === AgoraEduClassroomEvent.RejectedToGroup) {
+      const { inviting } = param;
+      const { role } = EduClassroomConfig.shared.sessionInfo;
+      if (role === EduRoleTypeEnum.student && inviting) {
+        this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+          title: transI18n('fcr_group_help_title'),
+          content: transI18n('fcr_group_help_teacher_busy_msg'),
+          cancelButtonVisible: false,
+        });
+      }
+    }
+
+    if (
+      event === AgoraEduClassroomEvent.LeaveSubRoom ||
+      event === AgoraEduClassroomEvent.JoinSubRoom ||
+      event === AgoraEduClassroomEvent.MoveToOtherGroup
+    ) {
+      ToastApi.destroyAll();
+    }
   }
+
+  private _filterUsers(
+    users: string[],
+    userList: Map<string, { userUuid: string; userName: string }>,
+  ) {
+    return users
+      .filter((userUuid: string) => userList.has(userUuid))
+      .map((userUuid: string) => userList.get(userUuid)?.userName || 'unknown');
+  }
+
   private _getStateErrorReason(reason?: string): string {
     switch (reason) {
       case 'REMOTE_LOGIN':
-        return 'Kick out by other client';
+        return transI18n('fcr_user_tips_local_kick_out');
       case 'BANNED_BY_SERVER':
-        return 'Prohibited';
+        return transI18n('fcr_user_tips_local_prohibited');
       default:
-        return reason ?? 'Unknown error occured.';
+        return reason ?? transI18n('fcr_unknown_error_occurred');
     }
   }
   onDestroy(): void {
@@ -252,13 +264,13 @@ export class NotiticationUIStore extends EduUIStoreBase {
               LeaveReason.leave,
               new Promise((resolve) => {
                 this.getters.classroomUIStore.layoutUIStore.addDialog('class-info', {
-                  title: 'The class has ended',
-                  content: 'Please click the button to leave the classroom.',
+                  title: transI18n('fcr_room_label_class_ended_title'),
+                  content: transI18n('fcr_room_label_class_ended_content'),
                   actions: [
                     {
-                      text: 'Leave',
+                      text: transI18n('fcr_room_button_leave'),
                       styleType: 'danger',
-                      onClick: resolve,
+                      onClick: () => resolve(),
                     },
                   ],
                 });
@@ -278,19 +290,36 @@ export class NotiticationUIStore extends EduUIStoreBase {
               LeaveReason.leave,
               new Promise((resolve) => {
                 this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
-                  title: 'Leave Classroom',
+                  title: transI18n('fcr_user_tips_kick_out_notice'),
                   content: this._getStateErrorReason(
                     this.classroomStore.connectionStore.classroomStateErrorReason,
                   ),
                   closable: false,
 
                   onOk: resolve,
-                  okText: 'Leave the Room',
+                  okText: transI18n('fcr_room_button_join_error_leave'),
                   okButtonProps: { styleType: 'danger' },
                   cancelButtonVisible: false,
                 });
               }),
             );
+          }
+        },
+      ),
+    );
+    this._disposers.push(
+      reaction(
+        () => this.getters.isBreakoutStarted,
+        () => {
+          if (!this.getters.isBreakoutStarted) {
+            setTimeout(() => {
+              ToastApi.open({
+                toastProps: {
+                  type: 'normal',
+                  content: transI18n('fcr_group_close_group'),
+                },
+              });
+            }, 100);
           }
         },
       ),

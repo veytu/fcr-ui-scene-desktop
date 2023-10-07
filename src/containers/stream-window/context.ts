@@ -1,5 +1,5 @@
-import { Layout, StreamWindowPlacement } from '@onlineclass/uistores/type';
-import { EduStreamUI } from '@onlineclass/utils/stream/struct';
+import { Layout, StreamWindowPlacement } from '@ui-scene/uistores/type';
+import { EduStreamUI } from '@ui-scene/utils/stream/struct';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { AGRenderMode, AgoraRteVideoSourceType } from 'agora-rte-sdk';
 import { createContext } from 'react';
@@ -37,8 +37,11 @@ export const convertStreamUIStatus = (
   const labelIconSize = labelSize === 'large' ? 30 : 24;
   const audioIconSize = labelSize === 'large' ? 24 : 16;
   const isHostStream = stream.role === EduRoleTypeEnum.teacher;
-  const renderMode = ((renderAtMainView && !isGrid) || stream.stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare) ? AGRenderMode.fit : AGRenderMode.fill;
-  const disableAudioVolumeEffect = renderAtMainView;
+  const renderMode =
+    (renderAtMainView && !isGrid) ||
+    stream.stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare
+      ? AGRenderMode.fit
+      : AGRenderMode.fill;
   return {
     topLabelAnimation,
     bottomLabelAnimation,
@@ -59,6 +62,5 @@ export const convertStreamUIStatus = (
     isHostStream,
     placement,
     videoBackgroundGray,
-    disableAudioVolumeEffect,
   };
 };

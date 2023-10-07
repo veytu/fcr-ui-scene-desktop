@@ -1,10 +1,10 @@
-import { EduStreamUI } from '@onlineclass/utils/stream/struct';
+import { EduStreamUI } from '@ui-scene/utils/stream/struct';
 import { EduRoleTypeEnum, iterateMap } from 'agora-edu-core';
 import { bound } from 'agora-rte-sdk';
 import { action, computed, observable } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { computedFn } from 'mobx-utils';
-import { checkCameraEnabled, checkMicEnabled } from '@onlineclass/utils/hooks/use-device-switch';
+import { checkCameraEnabled, checkMicEnabled } from '@ui-scene/utils/hooks/use-device-switch';
 export enum ParticipantsTableSortKeysEnum {
   Auth = 'Auth',
   Camera = 'Camera',
@@ -30,13 +30,19 @@ export class ParticipantsUIStore extends EduUIStoreBase {
   }
   @observable orderDirection: ParticipantsOrderDirection = 'asc';
   @action.bound
-  setOrderDirection(orderDirection: 'asc' | 'desc') {
+  setOrderDirection(orderDirection: ParticipantsOrderDirection) {
     this.orderDirection = orderDirection;
   }
   participants = [];
   tableIconSize = 28;
+  get isAudience() {
+    return this.getters.isAudience;
+  }
   get isHost() {
     return this.getters.isHost;
+  }
+  get isTeacher() {
+    return this.getters.isTeacher;
   }
   isHostByUserRole = (role: EduRoleTypeEnum) => {
     return role === EduRoleTypeEnum.teacher;
@@ -48,6 +54,7 @@ export class ParticipantsUIStore extends EduUIStoreBase {
   }
   @computed
   get participantList() {
+    const { groupUuidByUserUuid } = this.classroomStore.groupStore;
     const { list } = iterateMap(this.classroomStore.userStore.users, {
       onFilter: (_, item) => {
         return (
@@ -57,9 +64,12 @@ export class ParticipantsUIStore extends EduUIStoreBase {
       onMap: (_, item) => {
         const stream = this.getters.userCameraStreamByUserUuid(item.userUuid);
         const uiStream = stream ? new EduStreamUI(stream) : undefined;
+        const currentRoomId = this.classroomStore.connectionStore?.scene?.sceneId;
+        const userGroupUuid = groupUuidByUserUuid.get(item.userUuid) || currentRoomId;
         return {
           user: item,
           stream: uiStream,
+          notAllowed: currentRoomId !== userGroupUuid,
         };
       },
     });

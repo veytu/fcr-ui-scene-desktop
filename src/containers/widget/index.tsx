@@ -1,174 +1,136 @@
 import { observer } from 'mobx-react';
-import React, { CSSProperties, FC, PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { createRef, forwardRef, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import './index.css';
-import { useStore } from '@onlineclass/utils/hooks/use-store';
-import { AgoraTrackSyncedWidget, AgoraWidgetBase } from 'agora-common-libs';
-import { ZIndexController } from '../../utils/z-index-controller';
-import { Rnd } from 'react-rnd';
-
-import { useMinimize, useVisible } from '@ui-kit-utils/hooks/animations';
-
-import { ParticipantsDialog } from '../participants/dialog';
-import { ZIndexContext, useZIndex } from '@onlineclass/utils/hooks/use-z-index';
+import { useStore } from '@ui-scene/utils/hooks/use-store';
+import { FcrUISceneWidget } from 'agora-common-libs';
+import { useZIndex } from '@ui-scene/utils/hooks/use-z-index';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { WidgetDraggableWrapper } from './draggable-wrapper';
+import { ParticipantsDialogWrapper } from './participants';
+import { BreakoutDialogWrapper } from './break-out-room';
 export const WidgetContainer = observer(() => {
   const {
+    eduToolApi: { isWidgetVisible, isWidgetMinimized },
     widgetUIStore: { z0Widgets, z10Widgets },
   } = useStore();
-  const zIndexControllerRef = useRef(new ZIndexController());
   return (
-    <ZIndexContext.Provider value={zIndexControllerRef.current}>
-      <React.Fragment>
-        <div className="fcr-widget-container fcr-z-0">
-          <ParticipantsDialog></ParticipantsDialog>
-          {z0Widgets.map((w: AgoraWidgetBase) => (
-            <Widget key={w.widgetId} widget={w} />
-          ))}
-        </div>
-        <div className="fcr-widget-container fcr-z-10">
-          {z10Widgets.map((w: AgoraWidgetBase) => (
-            <Widget key={w.widgetId} widget={w} />
-          ))}
-        </div>
-      </React.Fragment>
-    </ZIndexContext.Provider>
+    <React.Fragment>
+      <div className="fcr-widget-container fcr-z-0">
+        <ParticipantsDialogWrapper></ParticipantsDialogWrapper>
+        <BreakoutDialogWrapper></BreakoutDialogWrapper>
+        <TransitionGroup>
+          {z0Widgets
+            .filter((w) => isWidgetVisible(w.widgetId))
+            .map((w: FcrUISceneWidget) => {
+              const ref = createRef<HTMLDivElement>();
+              const animationTime = isWidgetMinimized(w.widgetId) ? 0 : 500;
+              const animationClassname = isWidgetMinimized(w.widgetId)
+                ? ''
+                : 'fcr-widget-dialog-transition';
+              return (
+                <CSSTransition
+                  onEntered={w.onEntered}
+                  onExited={w.onExited}
+                  nodeRef={ref}
+                  key={w.widgetId}
+                  timeout={animationTime}
+                  unmountOnExit
+                  classNames={animationClassname}>
+                  <Widget ref={ref} widget={w} />
+                </CSSTransition>
+              );
+            })}
+        </TransitionGroup>
+      </div>
+      <div className="fcr-widget-container fcr-z-10">
+        <TransitionGroup>
+          {z10Widgets
+            .filter((w) => isWidgetVisible(w.widgetId))
+            .map((w: FcrUISceneWidget) => {
+              const ref = createRef<HTMLDivElement>();
+              const animationTime = isWidgetMinimized(w.widgetId) ? 0 : 500;
+              const animationClassname = isWidgetMinimized(w.widgetId)
+                ? ''
+                : 'fcr-widget-dialog-transition';
+              return (
+                <CSSTransition
+                  onEntered={w.onEntered}
+                  onExited={w.onExited}
+                  nodeRef={ref}
+                  key={w.widgetId}
+                  timeout={animationTime}
+                  unmountOnExit
+                  classNames={animationClassname}>
+                  <Widget ref={ref} widget={w} />
+                </CSSTransition>
+              );
+            })}
+        </TransitionGroup>
+      </div>
+    </React.Fragment>
   );
 });
 
-export const Widget = observer(({ widget }: { widget: AgoraWidgetBase }) => {
-  const containerDom = useRef<HTMLElement>();
+export const Widget = observer(
+  forwardRef<HTMLDivElement, { widget: FcrUISceneWidget }>(function w({ widget }, ref) {
+    const containerDom = useRef<HTMLElement>();
 
-  const [mounted, setMounted] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    const locatedNode = widget.locate();
-
-    if (locatedNode) {
-      containerDom.current = locatedNode;
-    }
-
-    setMounted(true);
-    return () => {
-      setMounted(false);
-    };
-  }, []);
-
-  const renderWidgetInner = () => {
-    return <WidgetWrapper widget={widget}></WidgetWrapper>;
-  };
-
-  if (mounted) {
-    if (containerDom.current) {
-      return createPortal(renderWidgetInner(), containerDom.current);
-    }
-    return renderWidgetInner();
-  }
-
-  return null;
-});
-const WidgetWrapper = observer(({ widget }: { widget: AgoraWidgetBase }) => {
-  const { zIndex, ref } = useZIndex(widget.widgetId);
-  useEffect(() => {
-    if (ref.current) {
-      widget.render(ref.current);
-    }
-    return () => {
-      widget.unload();
-    };
-  }, []);
-  return (
-    <>
-      {widget.widgetId === 'netlessBoard' ? (
-        <div style={{ zIndex }} className="fcr-widget-inner">
-          <div ref={ref}></div>
-        </div>
-      ) : (
-        <div style={{ zIndex }} className="fcr-widget-inner">
-          <WidgetDraggableWrapper widget={widget}>
-            <div ref={ref}></div>
-          </WidgetDraggableWrapper>
-        </div>
-      )}
-    </>
-  );
-});
-
-const WidgetDraggableWrapper: FC<PropsWithChildren<{ widget: AgoraWidgetBase }>> = observer(
-  (props) => {
-    const { children, widget } = props;
-    //@ts-ignore
-    const defaultRect = widget.defaultRect as {
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    };
-    const [rndStyle, setRndStyle] = useState<CSSProperties>({});
-    const [transitionType, setTransitionType] = useState<'minimize' | 'visible'>('visible');
-
-    const {
-      layoutUIStore: { classroomViewportClassName },
-      eduToolApi: { isWidgetMinimized, isWidgetVisible, sendWidgetVisible },
-    } = useStore();
-    const zIndexController = React.useContext(ZIndexContext);
-
-    const minimize = isWidgetMinimized(widget.widgetId);
-    const visible = isWidgetVisible(widget.widgetId);
     useEffect(() => {
-      if (minimize) zIndexController.updateZIndex(widget.widgetId);
-    }, [minimize]);
+      const locatedNode = widget.locate();
+
+      if (locatedNode) {
+        containerDom.current = locatedNode;
+      }
+
+      setMounted(true);
+      return () => {
+        setMounted(false);
+      };
+    }, []);
+    if (widget.locate()) {
+      if (mounted) {
+        if (containerDom.current) {
+          return createPortal(
+            <WidgetWrapper ref={ref} widget={widget}></WidgetWrapper>,
+            containerDom.current,
+          );
+        }
+      } else {
+        return null;
+      }
+    }
+
+    return <WidgetWrapper ref={ref} widget={widget}></WidgetWrapper>;
+  }),
+);
+const WidgetWrapper = observer(
+  forwardRef<HTMLDivElement, { widget: FcrUISceneWidget }>(function w({ widget }, ref) {
+    const { zIndex, ref: zIndexRef } = useZIndex(widget.widgetId);
+    const renderRef = useRef<HTMLDivElement | null>(null);
     useEffect(() => {
-      sendWidgetVisible(widget.widgetId, visible);
-      if (visible) zIndexController.updateZIndex(widget.widgetId);
-    }, [visible]);
-    const { style: minimizeStyle, ref: minimizeRef } = useMinimize({
-      minimize,
-      beforeChange: (minimize) => {
-        if (!minimize) {
-          setRndStyle({ display: 'block' });
-        }
-        setTransitionType('minimize');
-      },
-      afterChange: (minimize) => {
-        if (minimize) {
-          setRndStyle({ display: 'none' });
-        }
-      },
-    });
-    const { style: visibleStyle } = useVisible({
-      visible,
-      beforeChange: (visible) => {
-        if (visible) {
-          setRndStyle({ display: 'block' });
-        }
-        setTransitionType('visible');
-      },
-      afterChange: (visible) => {
-        if (!visible) {
-          setRndStyle({ display: 'none' });
-        }
-      },
-    });
-    const refHandle = (ele: HTMLDivElement) => {
-      minimizeRef.current = ele;
+      if (renderRef.current) {
+        widget.render(renderRef.current);
+      }
+      return () => {
+        widget.unload();
+      };
+    }, []);
+    const handleRef = (ref: HTMLDivElement) => {
+      zIndexRef.current = ref;
+      renderRef.current = ref;
     };
 
     return (
-      <Rnd
-        default={defaultRect}
-        style={rndStyle}
-        bounds={`.${classroomViewportClassName}`}
-        enableResizing={false}
-        dragHandleClassName={
-          (widget as AgoraWidgetBase & AgoraTrackSyncedWidget).dragHandleClassName
-        }
-        cancel={(widget as AgoraWidgetBase & AgoraTrackSyncedWidget).dragCancelClassName}>
-        <div
-          ref={refHandle}
-          style={transitionType === 'minimize' ? { ...minimizeStyle } : { ...visibleStyle }}>
-          {children}
+      <>
+        <div style={{ zIndex }} className="fcr-widget-inner">
+          <WidgetDraggableWrapper ref={ref} widget={widget}>
+            <div ref={handleRef}></div>
+          </WidgetDraggableWrapper>
         </div>
-      </Rnd>
+      </>
     );
-  },
+  }),
 );

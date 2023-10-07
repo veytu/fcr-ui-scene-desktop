@@ -1,6 +1,6 @@
 import { EduUIStoreBase } from './base';
 import { computed } from 'mobx';
-import { number2Percent } from '@onlineclass/utils';
+import { number2Percent } from '@ui-scene/utils';
 import { ClassState, EduClassroomConfig, RecordStatus } from 'agora-edu-core';
 import dayjs from 'dayjs';
 
@@ -113,13 +113,10 @@ export class StatusBarUIStore extends EduUIStoreBase {
     }
 
     if (hasPublishedScreenStream || hasPublishedCameraStream || hasPublishedMicStream) {
-      return Math.min(
-        downlinkNetworkQuality || AGNetworkQuality.unknown,
-        uplinkNetworkQuality || AGNetworkQuality.unknown,
-      ) as AGNetworkQuality;
+      return Math.min(downlinkNetworkQuality, uplinkNetworkQuality) as AGNetworkQuality;
     }
 
-    return downlinkNetworkQuality || AGNetworkQuality.unknown;
+    return downlinkNetworkQuality;
   }
 
   /**

@@ -3,9 +3,9 @@ import { ToolTip } from '@components/tooltip';
 import { ActionBarItem } from '..';
 import { observer } from 'mobx-react';
 import './index.css';
-import { useStore } from '@onlineclass/utils/hooks/use-store';
+import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
-import classnames from 'classnames';
+import { useI18n } from 'agora-common-libs';
 
 export const Record = observer(() => {
   const {
@@ -13,31 +13,36 @@ export const Record = observer(() => {
     layoutUIStore: { addDialog },
     actionBarUIStore: { startRecording, stopRecording },
   } = useStore();
+  const transI18n = useI18n();
   const colors = themeVal('colors');
   const handleRecord = () => {
     if (isRecordStoped) {
       addDialog('confirm', {
-        title: 'Recording Prompt',
-        content: 'Are you sure you want to start recording?',
-        cancelText: 'Cancel',
-        okText: 'Record',
+        title: transI18n('fcr_record_label_recording'),
+        content: transI18n('fcr_record_start'),
+        cancelText: transI18n('fcr_record_button_confirm_cancel'),
+        okText: transI18n('fcr_record_start_confirm_ok'),
         onOk: startRecording,
       });
     } else {
       addDialog('confirm', {
-        title: 'Recording Prompt',
-        content:
-          'Are you sure you want to stop recording？\nThe recording file will be generated after the course ends and displayed on the course details page.',
-        cancelText: 'Cancel',
-        okText: 'Stop',
+        title: transI18n('fcr_record_label_recording'),
+        content: transI18n('fcr_record_stop'),
+        cancelText: transI18n('fcr_record_button_confirm_cancel'),
+        okText: transI18n('fcr_record_stop_confirm_ok'),
+        okButtonProps: { styleType: 'danger' },
         onOk: stopRecording,
       });
     }
   };
   const icon = isRecordStoped ? SvgIconEnum.FCR_RECORDING_ON : SvgIconEnum.FCR_RECORDING_STOP;
   const iconColor = isRecordStoped ? colors['icon-1'] : colors['red']['6'];
-  const tooltip = isRecordStoped ? 'Click to start recording' : 'Click to stop recording';
-  const text = isRecordStoped ? 'Record' : 'Recording';
+  const tooltip = isRecordStoped
+    ? transI18n('fcr_room_tips_start_record')
+    : transI18n('fcr_room_tips_stop_record');
+  const text = isRecordStoped
+    ? transI18n('fcr_room_button_record')
+    : transI18n('fcr_room_button_recording');
 
   return (
     <ToolTip content={tooltip}>

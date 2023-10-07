@@ -6,11 +6,11 @@ type Config = Partial<
     | 'host'
     | 'ignoreUrlRegionPrefix'
     | 'logo'
-    | 'language'
     | 'shareUrl'
     | 'uiConfig'
     | 'theme'
-    | 'logo',
+    | 'recordOptions'
+    | 'defaultEnableDevice',
     unknown
   >
 >;
@@ -33,7 +33,7 @@ export const getLaunchOptions = () => {
 };
 
 export const setConfig = (config: Config) => {
-  _config = config;
+  _config = { ..._config, ...config };
 };
 
 export const getConfig = () => {

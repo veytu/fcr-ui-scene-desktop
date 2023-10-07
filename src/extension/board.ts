@@ -1,16 +1,20 @@
-import {
-  AgoraEduClassroomEvent,
-  AgoraWidgetController,
-  EduClassroomConfig,
-  EduEventCenter,
-  EduRoleTypeEnum,
-} from 'agora-edu-core';
+import { AgoraWidgetController, EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { bound, Log, Logger } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, observable, runInAction, toJS } from 'mobx';
 
 import { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from './events';
-import { BoardConnectionState, BoardMountState, FcrBoardShape, FcrBoardTool } from './type';
-import { getTheme } from '@onlineclass/utils/launch-options-holder';
+import {
+  BoardConnectionState,
+  BoardMountState,
+  FcrBoardMaterialWindowConfig,
+  FcrBoardShape,
+  FcrBoardTool,
+} from './type';
+import { getTheme } from '@ui-scene/utils/launch-options-holder';
+import { BoardH5WindowConfig, BoardMediaWindowConfig } from '@ui-scene/uistores/type';
+import { ToastApi } from '@components/toast';
+import { SvgIconEnum } from '@components/svg-img';
+import { transI18n } from 'agora-common-libs';
 
 @Log.attach({ proxyMethods: false })
 export class Board {
@@ -39,6 +43,8 @@ export class Board {
   selectedTool? = FcrBoardTool.Clicker;
   @observable
   selectedShape?: FcrBoardShape;
+  @observable
+  openedCoursewareIds: string[] = [];
 
   @computed
   get connected() {
@@ -53,6 +59,13 @@ export class Board {
   @computed
   get granted() {
     return this.hasPrivilege();
+  }
+
+  isCoursewareOpened(resourceUuid: string) {
+    return (
+      this.openedCoursewareIds.includes(`/ppt/${resourceUuid}`) ||
+      this.openedCoursewareIds.includes(`/${resourceUuid}`)
+    );
   }
 
   enable() {
@@ -85,6 +98,19 @@ export class Board {
   @bound
   clean() {
     this._sendBoardCommandMessage(AgoraExtensionRoomEvent.BoardClean);
+  }
+  openMaterialResourceWindow(resource: FcrBoardMaterialWindowConfig) {
+    this._sendBoardCommandMessage(AgoraExtensionRoomEvent.BoardOpenMaterialResourceWindow, [
+      resource,
+    ]);
+  }
+
+  openMediaResourceWindow(resource: BoardMediaWindowConfig) {
+    this._sendBoardCommandMessage(AgoraExtensionRoomEvent.BoardOpenMediaResourceWindow, [resource]);
+  }
+
+  openH5ResourceWindow(resource: BoardH5WindowConfig) {
+    this._sendBoardCommandMessage(AgoraExtensionRoomEvent.BoardOpenH5ResourceWindow, [resource]);
   }
   @bound
   putImageResource(url: string, pos?: { x: number; y: number; width: number; height: number }) {
@@ -146,12 +172,9 @@ export class Board {
   }
   @bound
   hasPrivilege() {
-    const { userUuid, role } = EduClassroomConfig.shared.sessionInfo;
+    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
 
-    return (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role) ||
-      this.grantedUsers.has(userUuid)
-    );
+    return this.grantedUsers.has(userUuid);
   }
 
   install(controller: AgoraWidgetController) {
@@ -184,10 +207,15 @@ export class Board {
       messageType: AgoraExtensionWidgetEvent.BoardUndoStepsChanged,
       onMessage: this._handleUndoStepsChanged,
     });
-    this._controller?.addBroadcastListener({
+    controller.addBroadcastListener({
       messageType: AgoraExtensionWidgetEvent.RequestGrantedList,
       onMessage: this._handleRequestGrantedList,
     });
+    controller.addBroadcastListener({
+      messageType: AgoraExtensionWidgetEvent.BoardOpenedCoursewareListChanged,
+      onMessage: this._handleOpenedCoursewareListChanged,
+    });
+
     const { role } = EduClassroomConfig.shared.sessionInfo;
     if (role === EduRoleTypeEnum.student) {
       this._disposers.push(
@@ -197,12 +225,28 @@ export class Board {
           const { userUuid } = EduClassroomConfig.shared.sessionInfo;
 
           if (newGranted.has(userUuid) && !oldGranted?.has(userUuid)) {
-            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.TeacherGrantPermission);
+            ToastApi.open({
+              persist: true,
+              duration: 15000,
+              toastProps: {
+                type: 'warn',
+                icon: SvgIconEnum.FCR_HOST,
+                content: transI18n('fcr_board_granted'),
+                closable: true,
+              },
+            });
           }
           if (!newGranted.has(userUuid) && oldGranted?.has(userUuid)) {
-            EduEventCenter.shared.emitClasroomEvents(
-              AgoraEduClassroomEvent.TeacherRevokePermission,
-            );
+            ToastApi.open({
+              persist: true,
+              duration: 15000,
+              toastProps: {
+                icon: SvgIconEnum.FCR_HOST,
+                type: 'warn',
+                content: transI18n('fcr_board_ungranted'),
+                closable: true,
+              },
+            });
           }
         }),
       );
@@ -242,6 +286,11 @@ export class Board {
       messageType: AgoraExtensionWidgetEvent.RequestGrantedList,
       onMessage: this._handleRequestGrantedList,
     });
+    this._controller?.removeBroadcastListener({
+      messageType: AgoraExtensionWidgetEvent.BoardOpenedCoursewareListChanged,
+      onMessage: this._handleOpenedCoursewareListChanged,
+    });
+
     runInAction(() => {
       this.connState = BoardConnectionState.Disconnected;
       this.mountState = BoardMountState.NotMounted;
@@ -249,6 +298,14 @@ export class Board {
 
     this._disposers.forEach((d) => d());
     this._disposers = [];
+    runInAction(() => {
+      this.grantedUsers = new Set();
+    });
+  }
+
+  @action.bound
+  private _handleOpenedCoursewareListChanged(list: string[]) {
+    this.openedCoursewareIds = list;
   }
 
   @bound

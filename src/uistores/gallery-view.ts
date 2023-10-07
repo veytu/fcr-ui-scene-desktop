@@ -1,6 +1,7 @@
 import { action, computed, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from './base';
-import { EduStreamUI } from '@onlineclass/utils/stream/struct';
+import { EduStreamUI } from '@ui-scene/utils/stream/struct';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 export class GalleryUIStore extends EduUIStoreBase {
   @observable mainViewStreamUuid: string | null = null;
   pageSize = 20;
@@ -25,25 +26,53 @@ export class GalleryUIStore extends EduUIStoreBase {
     const needFill =
       this.cameraUIStreamsSortByPin.length > this.pageSize &&
       start + currentPageStreams.length >= this.cameraUIStreamsSortByPin.length;
+    let list = [];
     if (needFill) {
-      return this.cameraUIStreamsSortByPin.slice(
+      list = this.cameraUIStreamsSortByPin.slice(
         this.cameraUIStreamsSortByPin.length - this.pageSize,
         this.cameraUIStreamsSortByPin.length,
       );
     } else {
-      return currentPageStreams;
+      list = currentPageStreams;
     }
+    return list;
   }
   @computed get cameraUIStreamsSortByPin() {
-    return this.getters.cameraUIStreams.sort((a, b) => {
-      if (a.stream.streamUuid === this.getters.pinnedUIStream?.stream.streamUuid) {
-        return -1;
+    const { pinnedUIStream } = this.getters;
+
+    let pinnedStream: EduStreamUI | null = null;
+    let teacherStream: EduStreamUI | null = null;
+    let localStream: EduStreamUI | null = null;
+
+    const otherStreams = this.getters.cameraUIStreams.filter((uiStream) => {
+      const { stream, role } = uiStream;
+      // pick up pin stream
+      if (stream.streamUuid === pinnedUIStream?.stream.streamUuid) {
+        pinnedStream = uiStream;
+        return false;
       }
-      if (b.stream.streamUuid === this.getters.pinnedUIStream?.stream.streamUuid) {
-        return 1;
+      // pick up teacher stream
+      if (role === EduRoleTypeEnum.teacher) {
+        teacherStream = uiStream;
+        return false;
       }
-      return 0;
+      // pick local stream
+      if (stream.isLocal) {
+        localStream = uiStream;
+        return false;
+      }
+
+      return true;
     });
+    const topStreams: EduStreamUI[] = [];
+
+    pinnedStream && topStreams.push(pinnedStream);
+
+    teacherStream && topStreams.push(teacherStream);
+
+    localStream && topStreams.push(localStream);
+
+    return topStreams.concat(otherStreams);
   }
   @action.bound
   setCurrentPage(page: number) {
@@ -64,6 +93,14 @@ export class GalleryUIStore extends EduUIStoreBase {
     this._disposers = [];
   }
   onInstall(): void {
+    this._disposers.push(
+      reaction(
+        () => this.totalPage,
+        (totalPage) => {
+          if (this.currentPage > totalPage) this.setCurrentPage(totalPage <= 0 ? 1 : totalPage);
+        },
+      ),
+    );
     this._disposers.push(
       reaction(() => {
         return this.getters.cameraUIStreams;

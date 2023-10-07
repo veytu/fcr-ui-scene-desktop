@@ -1,15 +1,17 @@
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
-import { useStore } from '@onlineclass/utils/hooks/use-store';
+import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { FC, useState } from 'react';
 import { ActionBarItemWithPopover } from '..';
 import { observer } from 'mobx-react';
 import './index.css';
-import { PredefinedWidgetTrack } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs';
 import { ToolTip } from '@components/tooltip';
+import { useZIndex } from '@ui-scene/utils/hooks/use-z-index';
 export const ToolBox = observer(() => {
   const {
     layoutUIStore: { setHasPopoverShowed },
   } = useStore();
+  const transI18n = useI18n();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [popoverVisible, setPopoverVisible] = useState(false);
 
@@ -24,7 +26,7 @@ export const ToolBox = observer(() => {
           }
           setTooltipVisible(visible);
         }}
-        content="ToolBox">
+        content={transI18n('fcr_room_button_toolbox')}>
         <div>
           <ActionBarItemWithPopover
             popoverProps={{
@@ -46,28 +48,34 @@ export const ToolBox = observer(() => {
               ),
             }}
             icon={SvgIconEnum.FCR_WHITEBOARD_TOOLBOX}
-            text={'ToolBox'}></ActionBarItemWithPopover>
+            text={transI18n('fcr_room_button_toolbox')}></ActionBarItemWithPopover>
         </div>
       </ToolTip>
     </>
   );
 });
 const ToolBoxPopoverContent = observer(({ onClick }: { onClick: () => void }) => {
-  const { getters } = useStore();
-  const isWidgetActive = (widgetId: string) => getters.activeWidgetIds.includes(widgetId);
+  const {
+    getters,
+    eduToolApi: { registeredCabinetToolItems },
+  } = useStore();
+  const transI18n = useI18n();
+  const isWidgetActive = (widgetId: string) => {
+    if (widgetId === 'breakout') {
+      return getters.isBreakoutActive;
+    }
+    return getters.activeWidgetIds.includes(widgetId);
+  };
   return (
     <div className="fcr-toolbox-popover-content">
-      <div className="fcr-toolbox-popover-title">ToolBox</div>
+      <div className="fcr-toolbox-popover-title">{transI18n('fcr_room_button_toolbox')}</div>
       <div className="fcr-toolbox-popover-item-wrapper">
-        {[
-          // { label: 'Timer', id: 'timer', icon: SvgIconEnum.FCR_V2_TIMER },
-          { label: 'Poll', id: 'poll', icon: SvgIconEnum.FCR_V2_VOTE },
-        ].map(({ id, icon, label }) => (
+        {registeredCabinetToolItems.map(({ id, iconType, name }) => (
           <ToolBoxItem
             key={id}
             id={id}
-            icon={icon}
-            label={label}
+            icon={iconType}
+            label={name}
             onClick={onClick}
             active={isWidgetActive(id)}
           />
@@ -85,16 +93,29 @@ interface ToolBoxItemProps {
 }
 const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
   const { icon, label, active, id, onClick } = props;
-  const { widgetUIStore, eduToolApi } = useStore();
+  const { widgetUIStore, eduToolApi, breakoutUIStore } = useStore();
+  const { updateZIndex } = useZIndex(id);
 
   const handleClick = () => {
     if (eduToolApi.isWidgetMinimized(id)) {
-      eduToolApi.setWidgetMinimized(false, id);
-    } else {
-      widgetUIStore.createWidget(id, {
-        trackProperties: PredefinedWidgetTrack.TrackCentered,
+      eduToolApi.setMinimizedState({
+        minimized: false,
+        widgetId: id,
+        minimizedProperties: {
+          minimizedCollapsed:
+            widgetUIStore.widgetInstanceList.find((w) => w.widgetId === id)?.minimizedProperties
+              ?.minimizedCollapsed || false,
+        },
       });
+    } else {
+      updateZIndex();
+      if (id === 'breakout') {
+        breakoutUIStore.setDialogVisible(true);
+      } else {
+        widgetUIStore.createWidget(id);
+      }
     }
+
     onClick();
   };
 
