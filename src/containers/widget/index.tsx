@@ -12,8 +12,20 @@ import { BreakoutDialogWrapper } from './break-out-room';
 export const WidgetContainer = observer(() => {
   const {
     eduToolApi: { isWidgetVisible, isWidgetMinimized },
-    widgetUIStore: { z0Widgets, z10Widgets },
+    widgetUIStore: { z0Widgets, z10Widgets, setLayoutReady, widgetInstanceRenderKeys },
+    breakoutUIStore: { isJoiningSubRoom },
+    classroomStore: {
+      connectionStore: { scene },
+      widgetStore: { widgetController },
+    },
   } = useStore();
+  useEffect(() => {
+    if (isJoiningSubRoom) {
+      setLayoutReady(false);
+    } else {
+      setLayoutReady(!!widgetController);
+    }
+  }, [widgetController, isJoiningSubRoom]);
   return (
     <React.Fragment>
       <div className="fcr-widget-container fcr-z-0">
@@ -23,6 +35,7 @@ export const WidgetContainer = observer(() => {
           {z0Widgets
             .filter((w) => isWidgetVisible(w.widgetId))
             .map((w: FcrUISceneWidget) => {
+              const renderKeys = widgetInstanceRenderKeys[w.widgetId];
               const ref = createRef<HTMLDivElement>();
               const animationTime = isWidgetMinimized(w.widgetId) ? 0 : 500;
               const animationClassname = isWidgetMinimized(w.widgetId)
@@ -33,7 +46,7 @@ export const WidgetContainer = observer(() => {
                   onEntered={w.onEntered}
                   onExited={w.onExited}
                   nodeRef={ref}
-                  key={w.widgetId}
+                  key={renderKeys || `${w.widgetId}-${scene?.sceneId}`}
                   timeout={animationTime}
                   unmountOnExit
                   classNames={animationClassname}>
@@ -48,6 +61,7 @@ export const WidgetContainer = observer(() => {
           {z10Widgets
             .filter((w) => isWidgetVisible(w.widgetId))
             .map((w: FcrUISceneWidget) => {
+              const renderKeys = widgetInstanceRenderKeys[w.widgetId];
               const ref = createRef<HTMLDivElement>();
               const animationTime = isWidgetMinimized(w.widgetId) ? 0 : 500;
               const animationClassname = isWidgetMinimized(w.widgetId)
@@ -58,7 +72,7 @@ export const WidgetContainer = observer(() => {
                   onEntered={w.onEntered}
                   onExited={w.onExited}
                   nodeRef={ref}
-                  key={w.widgetId}
+                  key={renderKeys || `${w.widgetId}-${scene?.sceneId}`}
                   timeout={animationTime}
                   unmountOnExit
                   classNames={animationClassname}>

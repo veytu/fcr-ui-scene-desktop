@@ -403,7 +403,7 @@ export const zhCn = {
   fcr_group_button_cancel: '取消',
   fcr_group_stop_discussion: '停止讨论',
   fcr_group_button_stop: '停止',
-  fcr_group_ungrouped: '重新分组',
+  fcr_group_ungrouped: '未分组',
   fcr_group_grouped: '已分组',
   fcr_group_button_add_room: '添加分组',
   fcr_group_delete_room_title: '删除分组',
@@ -465,7 +465,8 @@ export const zhCn = {
 
   //xxx文件格式
   fcr_cloud_unsupported_file_type: '不支持文件格式{reason1}',
-  fcr_cloud_fail_to_convert: '转换失败',
+  fcr_cloud_fail_to_convert: '课件转换失败，请删除后重新上传',
+  fcr_cloud_fail_to_convert_label: '转换失败',
 
   //****************** 工具箱Tool Box ******************
   fcr_tool_box_breakout_room: '分组讨论',

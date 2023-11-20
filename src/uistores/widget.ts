@@ -13,11 +13,17 @@ import { ToastApi } from '@components/toast';
 import { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from '@ui-scene/extension/events';
 import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
 import { CommonDialogType } from './type';
-
+import { v4 as uuidv4 } from 'uuid';
 @Log.attach({ proxyMethods: false })
 export class WidgetUIStore extends EduUIStoreBase {
+  @observable layoutReady = false;
+  @action.bound
+  setLayoutReady(ready: boolean) {
+    this.layoutReady = ready;
+  }
   private _defaultActiveWidgetIds = ['easemobIM'];
   private _registeredWidgets: Record<string, typeof FcrUISceneWidget> = {};
+  private _widgetInstanceRenderKeys: Record<string, string> = {};
   @observable
   private _widgetInstances: Record<string, FcrUISceneWidget> = {};
   private _stateListener = {
@@ -41,6 +47,10 @@ export class WidgetUIStore extends EduUIStoreBase {
   @computed
   get widgetInstanceList() {
     return Object.values(this._widgetInstances);
+  }
+
+  get widgetInstanceRenderKeys() {
+    return this._widgetInstanceRenderKeys;
   }
 
   @computed
@@ -104,6 +114,7 @@ export class WidgetUIStore extends EduUIStoreBase {
       );
 
       this._widgetInstances[widgetId] = widget;
+      this._widgetInstanceRenderKeys[widgetId] = uuidv4();
       this.logger.info('Current created widgets:', Object.keys(this._widgetInstances));
     } else {
       this.logger.info('Widget controller not ready for creating widget');
@@ -117,6 +128,7 @@ export class WidgetUIStore extends EduUIStoreBase {
       this.logger.info(`Widget [${widgetId}] is going to be destroyed`);
       this._callWidgetDestroy(widget);
       delete this._widgetInstances[widgetId];
+      delete this._widgetInstanceRenderKeys[widgetId];
       this.logger.info(`Widget [${widgetId}] is destroyed`);
     }
   }
@@ -253,7 +265,7 @@ export class WidgetUIStore extends EduUIStoreBase {
     return {
       addToast: (
         message: string,
-        type: 'error' | 'success' | 'warning',
+        type?: 'error' | 'success' | 'warning',
         options?: { persist?: boolean; duration?: number },
       ) => {
         const { persist, duration } = options || {};
@@ -266,7 +278,7 @@ export class WidgetUIStore extends EduUIStoreBase {
         ToastApi.open({
           persist,
           duration,
-          toastProps: { type: toastTypeMap[type], content: message },
+          toastProps: { type: type ? toastTypeMap[type] : 'info', content: message },
         });
       },
       addConfirmDialog: (params: AgoraUiCapableConfirmDialogProps) => {
@@ -276,18 +288,6 @@ export class WidgetUIStore extends EduUIStoreBase {
         );
       },
     };
-  }
-
-  @bound
-  private _handlePollActiveStateChanged(state: boolean) {
-    if (this.getters.isStudent && !state) {
-      ToastApi.open({
-        toastProps: {
-          type: 'info',
-          content: transI18n('fcr_room_tips_end_poll'),
-        },
-      });
-    }
   }
 
   onInstall() {
@@ -318,10 +318,6 @@ export class WidgetUIStore extends EduUIStoreBase {
             messageType: AgoraExtensionWidgetEvent.WidgetBecomeInactive,
             onMessage: this._handleBecomeInactive,
           });
-          oldController.removeBroadcastListener({
-            messageType: AgoraExtensionWidgetEvent.PollActiveStateChanged,
-            onMessage: this._handlePollActiveStateChanged,
-          });
         }
         // install widgets
         if (controller) {
@@ -338,10 +334,6 @@ export class WidgetUIStore extends EduUIStoreBase {
             messageType: AgoraExtensionWidgetEvent.WidgetBecomeInactive,
             onMessage: this._handleBecomeInactive,
           });
-          controller.addBroadcastListener({
-            messageType: AgoraExtensionWidgetEvent.PollActiveStateChanged,
-            onMessage: this._handlePollActiveStateChanged,
-          });
           controller.broadcast(
             AgoraExtensionRoomEvent.BoardSetAnimationOptions,
             getConfig().recordOptions,
@@ -350,18 +342,16 @@ export class WidgetUIStore extends EduUIStoreBase {
       }),
       reaction(
         () => ({
-          widgetIds: this.classroomStore.widgetStore.widgetController?.widgetIds,
-          isJoingingSubRoom: this.getters.isJoiningSubRoom,
           controller: this.classroomStore.widgetStore.widgetController,
+          layoutReady: this.layoutReady,
+          widgetIds: this.classroomStore.widgetStore.widgetController?.widgetIds,
         }),
-        ({ controller, isJoingingSubRoom, widgetIds }) => {
+        ({ controller, layoutReady, widgetIds }) => {
           // install widgets
-          if (controller && !isJoingingSubRoom && widgetIds) {
+          if (controller && layoutReady && widgetIds) {
             // recovery widget state
-
-            controller.widgetIds.forEach((widgetId) => {
+            widgetIds.forEach((widgetId) => {
               const state = controller.getWidgetState(widgetId);
-
               if (state === WidgetState.Active || this._defaultActiveWidgetIds.includes(widgetId)) {
                 this._handleWidgetActive(widgetId);
               }
