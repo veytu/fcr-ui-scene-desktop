@@ -931,7 +931,6 @@ export class BreakoutUIStore extends EduUIStoreBase {
     await this._waitUntilJoined();
     this._setConnectionState(true);
     try {
-      const { fastMode } = getConfig();
       await this.classroomStore.connectionStore.leaveSubRoom();
 
       await when(() => this.classroomStore.connectionStore.rtcState === AGRtcState.Idle);
@@ -941,7 +940,8 @@ export class BreakoutUIStore extends EduUIStoreBase {
       await this.classroomStore.connectionStore.checkIn(
         EduClassroomConfig.shared.sessionInfo,
         SceneType.Main,
-        fastMode ? 'check-in' : 'entry'
+        // always use entry mode when leave sub room
+        'entry',
       );
     } catch (e) {
       //   this.shareUIStore.addGenericErrorDialog(e as AGError);

@@ -17,6 +17,7 @@ import { ApiBase } from 'agora-rte-sdk';
 import { zhCn } from './resources/translations/zhCn';
 import { enUs } from './resources/translations/enUs';
 import { isLocked, lock, unlock } from './lock';
+import { RoomTemplate } from './configs/room-template';
 
 /**
  * Scene SDK
@@ -92,6 +93,7 @@ export class FcrUIScene {
       duration,
       flexProperties: userFlexProperties,
       token,
+      roomTemplate: RoomTemplate.FINITY_CLOUD_CLASS,
     };
     if (recordOptions) {
       setConfig({
