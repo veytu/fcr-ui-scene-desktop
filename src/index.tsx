@@ -117,6 +117,8 @@ export class FcrUIScene {
       region: rteRegion,
       rtcConfigs,
       rtcSDKExtensions: [virtualBackgroundExtension, beautyEffectExtension, aiDenoiserExtension],
+      rtcCloudProxyType: launchOptions.rtcCloudProxyType,
+      rtmCloudProxyEnabled: launchOptions.rtmCloudProxyEnabled,
     });
 
     const host = getConfig().host as string;

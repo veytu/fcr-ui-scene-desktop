@@ -341,11 +341,11 @@ export const enUs = {
   fcr_group_enter_welcome: 'welcome to {reason1}',
 
   //xxx为角色，yyy为名字
-  fcr_group_enter_group: '{reason1}{reason2} has joined the group.',
+  fcr_group_enter_group: '{reason1} {reason2} has joined the group.',
 
   //xxx为角色，yyy为名字
-  fcr_group_exit_group: '{reason1}{reason2} has left the group.',
-  fcr_group_close_group: 'The teacher has closed all rooms.',
+  fcr_group_exit_group: '{reason1} {reason2} has left the group.',
+  fcr_group_close_group: 'The teacher has closed all groups.',
   fcr_group_invite_back_main_room: 'The teacher is inviting you to return to main room.',
   fcr_group_back_main_room: 'Returning to main session...',
 

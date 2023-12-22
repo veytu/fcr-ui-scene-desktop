@@ -28,6 +28,7 @@ import {
   CustomMessageDeviceType,
   DeviceSwitchDialogId,
 } from './type';
+import { matchVirtualSoundCardPattern } from '@ui-scene/utils/vsd-pattern';
 
 /**
  * 设备设置
@@ -38,16 +39,6 @@ import {
 @Log.attach()
 export class DeviceSettingUIStore extends EduUIStoreBase {
   private _defaultBeautyOptions = { smooth: 0.5, brightening: 0.6, blush: 0.1 };
-  private _pretestCameraEnabled = !!getConfig().defaultEnableDevice;
-  private _pretestMicEnabled = !!getConfig().defaultEnableDevice;
-  @bound
-  setPretestCameraEnabled(enable: boolean) {
-    this._pretestCameraEnabled = enable;
-  }
-  @bound
-  setPretestMicEnabled(enable: boolean) {
-    this._pretestMicEnabled = enable;
-  }
   // for publish tracks
   private _virtualBackgroundProcessor?: IVirtualBackgroundProcessor;
   private _beautyEffectProcessor?: IBeautyProcessor;
@@ -172,14 +163,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     return this._beautyOptions?.blush;
   }
 
-  get pretestCameraEnabled() {
-    return this._pretestCameraEnabled;
-  }
-
-  get pretestMicEnabled() {
-    return this._pretestMicEnabled;
-  }
-
   get defaultBeautyOptions() {
     return this._defaultBeautyOptions;
   }
@@ -237,6 +220,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   get recordingDevicesList() {
     return this.classroomStore.mediaStore.audioRecordingDevices
       .filter(({ deviceid }) => deviceid !== DEVICE_DISABLE)
+      .filter(({ devicename }) => !matchVirtualSoundCardPattern(devicename))
       .slice()
       .sort(({ isDefault }) => {
         if (isDefault) {
@@ -264,6 +248,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   get playbackDevicesList() {
     const playbackDevicesList = this.classroomStore.mediaStore.audioPlaybackDevices
       .filter(({ deviceid }) => deviceid !== DEVICE_DISABLE)
+      .filter(({ devicename }) => !matchVirtualSoundCardPattern(devicename))
       .slice()
       .sort(({ isDefault }) => {
         if (isDefault) {
@@ -811,8 +796,11 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       () => this.classroomStore.mediaStore.audioRecordingDevices,
     ).observe(({ newValue, oldValue }) => {
       const { recordingDeviceId } = this.classroomStore.mediaStore;
-      const newDefaultDevice = newValue?.find((v) => v.isDefault);
-
+      const nonVsdDeviceList = newValue.filter((v) => !matchVirtualSoundCardPattern(v.devicename));
+      let newDefaultDevice = nonVsdDeviceList.find((v) => v.isDefault);
+      if (!newDefaultDevice && nonVsdDeviceList.length > 0) {
+        newDefaultDevice = nonVsdDeviceList[0];
+      }
       if (newDefaultDevice) {
         if (newDefaultDevice.deviceid !== recordingDeviceId) {
           this.setAudioRecordingDevice(newDefaultDevice.deviceid);
@@ -834,7 +822,11 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       () => this.classroomStore.mediaStore.audioPlaybackDevices,
     ).observe(({ newValue, oldValue }) => {
       const { playbackDeviceId } = this.classroomStore.mediaStore;
-      const newDefaultDevice = newValue?.find((v) => v.isDefault);
+      const nonVsdDeviceList = newValue.filter((v) => !matchVirtualSoundCardPattern(v.devicename));
+      let newDefaultDevice = nonVsdDeviceList.find((v) => v.isDefault);
+      if (!newDefaultDevice && nonVsdDeviceList.length > 0) {
+        newDefaultDevice = nonVsdDeviceList[0];
+      }
       if (newDefaultDevice) {
         if (newDefaultDevice.deviceid !== playbackDeviceId) {
           this.setAudioPlaybackDevice(newDefaultDevice.deviceid);
@@ -870,9 +862,9 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
           if (!oldValue?.localCameraStream && newValue.localCameraStream) {
             const stream = newValue.localCameraStream;
             if (stream.videoState === AgoraRteMediaPublishState.Published) {
-              if (this._pretestCameraEnabled) {
+              const enableDefault = !!(getConfig().defaultEnableDevice ?? true);
+              if (enableDefault) {
                 this.enableCamera(true);
-                this._pretestCameraEnabled = false;
               }
             }
           }
@@ -898,9 +890,9 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
           if (!oldValue?.localMicStream && newValue.localMicStream) {
             const stream = newValue.localMicStream;
             if (stream.audioState === AgoraRteMediaPublishState.Published) {
-              if (this._pretestMicEnabled) {
+              const enableDefault = !!(getConfig().defaultEnableDevice ?? true);
+              if (enableDefault) {
                 this.enableAudioRecording(true);
-                this._pretestMicEnabled = false;
               }
             }
           }

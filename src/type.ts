@@ -212,14 +212,20 @@ export type LaunchOptions = {
    * BoardRecordOptions
    */
   recordOptions?: BoardWindowAnimationOptions;
-
   /**
-   * 云代理类型
+   * RTC 云代理类型
    */
   /** @en
    * Cloud proxy type
    */
-  cloudProxy?: AgoraCloudProxyType;
+  rtcCloudProxyType?: AgoraCloudProxyType;
+  /**
+   * 是否开启 RTM 云代理
+   */
+  /** @en
+   * Whether to enable RTM cloud proxy
+   */
+  rtmCloudProxyEnabled?: boolean; //
 };
 
 /**

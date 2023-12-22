@@ -29,7 +29,7 @@ import { EduTool } from '@ui-scene/extension/edu-tool';
 import { CloudUIStore } from './cloud';
 import { BreakoutUIStore } from './breakout';
 import { transI18n } from 'agora-common-libs';
-import { getConfig, getLaunchOptions } from '@ui-scene/utils/launch-options-holder';
+import { getConfig } from '@ui-scene/utils/launch-options-holder';
 
 export class SceneUIStore {
   @observable
@@ -140,7 +140,7 @@ export class SceneUIStore {
   }
   @bound
   async join() {
-    const { joinClassroom, joinRTC, setCloudProxy } = this.classroomStore.connectionStore;
+    const { joinClassroom, joinRTC } = this.classroomStore.connectionStore;
     const { fastMode } = getConfig();
     try {
       await joinClassroom({ mode: fastMode ? 'check-in' : 'entry' });
@@ -179,10 +179,6 @@ export class SceneUIStore {
     }
     await this.enableDualStream();
     try {
-      const { cloudProxy } = getLaunchOptions();
-      if (cloudProxy) {
-        setCloudProxy(cloudProxy);
-      }
       await joinRTC();
     } catch (e) {
       this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {

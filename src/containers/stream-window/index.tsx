@@ -19,7 +19,7 @@ import { Layout } from '@ui-scene/uistores/type';
 import { SvgaPlayer } from '@components/svga-player';
 import { SoundPlayer } from '@components/sound-player';
 import RewardSVGA from './assets/svga/reward.svga';
-import RewardSound from './assets/audio/reward.mp3';
+import RewardSound from '@res/reward.mp3';
 import { AGRemoteVideoStreamType, AGRenderMode } from 'agora-rte-sdk';
 import { useAuthorization } from '@ui-scene/utils/hooks/use-authorization';
 import { useI18n } from 'agora-common-libs';

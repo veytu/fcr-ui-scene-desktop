@@ -6,7 +6,7 @@ import { isElectron } from '@ui-scene/utils/check';
 import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { observer } from 'mobx-react';
 import { useMemo, useRef, useEffect } from 'react';
-import pretestAudio from '@res/pretest-audio.mp3';
+import pretestAudio from '@res/pretest.mp3';
 import { Scheduler } from 'agora-rte-sdk';
 import { useI18n } from 'agora-common-libs';
 
@@ -57,7 +57,7 @@ export const SpeakerSelect = observer(() => {
 
   const testAudioUrl = useMemo(() => {
     if (isElectron()) {
-      return getAssetURL('pretest-audio.mp3');
+      return getAssetURL('pretest.mp3');
     }
 
     return pretestAudio;

@@ -111,8 +111,6 @@ export const VideoPortal = observer(() => {
     deviceSettingUIStore.startRecordingDeviceTest();
 
     return () => {
-      deviceSettingUIStore.setPretestCameraEnabled(pretestDeviceStateRef.current.cameraEnable);
-      deviceSettingUIStore.setPretestMicEnabled(pretestDeviceStateRef.current.micEnable);
       deviceSettingUIStore.stopCameraPreview();
       deviceSettingUIStore.stopRecordingDeviceTest();
     };

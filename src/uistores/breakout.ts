@@ -18,7 +18,7 @@ import findLast from 'lodash/findLast';
 import { v4 as uuidv4 } from 'uuid';
 import { AGRtcConnectionType, AGRtcState, Scheduler } from 'agora-rte-sdk';
 import { isTeacher } from '@ui-scene/utils/check';
-import { getConfig } from '@ui-scene/utils/launch-options-holder';
+
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 enum GroupMethod {
@@ -868,12 +868,6 @@ export class BreakoutUIStore extends EduUIStoreBase {
 
     let joinSuccess = false;
     try {
-      const {
-        isCameraDeviceEnabled,
-        isAudioRecordingDeviceEnabled,
-        pretestCameraEnabled,
-        pretestMicEnabled,
-      } = this.getters.classroomUIStore.deviceSettingUIStore;
       if (isTeacher()) {
         this.logger.info("remove teacher's stream");
         await this.classroomStore.connectionStore.scene?.localUser?.deleteLocalMediaStream();
@@ -892,10 +886,6 @@ export class BreakoutUIStore extends EduUIStoreBase {
       await this._waitUntilLeft();
       while (true) {
         try {
-          const { setPretestCameraEnabled, setPretestMicEnabled } =
-            this.getters.classroomUIStore.deviceSettingUIStore;
-          setPretestCameraEnabled(pretestCameraEnabled || isCameraDeviceEnabled);
-          setPretestMicEnabled(pretestMicEnabled || isAudioRecordingDeviceEnabled);
           await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
           await this.getters.classroomUIStore.enableDualStream(
             this.classroomStore.connectionStore.scene,
@@ -966,12 +956,6 @@ export class BreakoutUIStore extends EduUIStoreBase {
 
     let joinSuccess = false;
     try {
-      const {
-        isCameraDeviceEnabled,
-        isAudioRecordingDeviceEnabled,
-        pretestCameraEnabled,
-        pretestMicEnabled,
-      } = this.getters.classroomUIStore.deviceSettingUIStore;
       if (isTeacher()) {
         this.logger.info("remove teacher's stream");
         await this.classroomStore.connectionStore.scene?.localUser?.deleteLocalMediaStream();
@@ -984,10 +968,6 @@ export class BreakoutUIStore extends EduUIStoreBase {
 
       while (true) {
         try {
-          const { setPretestCameraEnabled, setPretestMicEnabled } =
-            this.getters.classroomUIStore.deviceSettingUIStore;
-          setPretestCameraEnabled(pretestCameraEnabled || isCameraDeviceEnabled);
-          setPretestMicEnabled(pretestMicEnabled || isAudioRecordingDeviceEnabled);
           await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
 
           await this.classroomStore.connectionStore.joinRTC();
