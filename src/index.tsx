@@ -223,14 +223,14 @@ export class FcrUIScene {
     switch (region.toUpperCase()) {
       case 'CN':
         return EduRegion.CN;
-      case 'AS':
+      case 'AP':
         return EduRegion.AP;
       case 'EU':
         return EduRegion.EU;
       case 'NA':
         return EduRegion.NA;
     }
-    return region as EduRegion;
+    return region.toUpperCase() as EduRegion;
   }
 
   private static _convertMediaOptions(opts?: LaunchMediaOptions): ConvertMediaOptionsConfig {
