@@ -802,7 +802,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
           if (unpluggedDevice) {
             if (cameraDeviceId === unpluggedDevice.deviceid) {
               this.enableCamera(false);
-              this.stopCameraPreview();
             }
           }
         }
