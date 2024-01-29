@@ -92,6 +92,9 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   @observable
   private _aiDenoiserEnabled = false;
 
+  private _userHasEnabledCamera = true;
+  private _userHasEnabledAudioRecording = true;
+
   @computed
   get isAiDenoiserEnabled() {
     return this._aiDenoiserEnabled;
@@ -434,6 +437,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   }
   @bound
   toggleCameraPreview() {
+    this._userHasEnabledCamera = !this._userHasEnabledCamera;
     if (this.isPreviewCameraDeviceEnabled) {
       this.stopCameraPreview();
     } else {
@@ -503,6 +507,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   }
   @bound
   toggleAudioRecordingPreview() {
+    this._userHasEnabledAudioRecording = !this._userHasEnabledAudioRecording;
     if (this.isPreviewAudioRecordingDeviceEnabled) {
       this.stopAudioRecordingPreview();
     } else {
@@ -942,7 +947,9 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             const stream = newValue.localCameraStream;
             if (stream.videoState === AgoraRteMediaPublishState.Published) {
               const enableDefault = !!(getConfig().defaultEnableDevice ?? true);
-              if (enableDefault) {
+              const userHasEnabledCamera = this._userHasEnabledCamera;
+
+              if (enableDefault && userHasEnabledCamera) {
                 this.enableCamera(true);
               }
             }
@@ -970,7 +977,9 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             const stream = newValue.localMicStream;
             if (stream.audioState === AgoraRteMediaPublishState.Published) {
               const enableDefault = !!(getConfig().defaultEnableDevice ?? true);
-              if (enableDefault) {
+              const userHasEnabledAudioRecording = this._userHasEnabledAudioRecording;
+
+              if (enableDefault && userHasEnabledAudioRecording) {
                 this.enableAudioRecording(true);
               }
             }
