@@ -1106,6 +1106,23 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
           });
         },
       ),
+      // reaction(
+      //   () => ({
+      //     classroomState: this.classroomStore.connectionStore.classroomState,
+      //     audioPlaybackDeviceEnabled: this._audioPlaybackDeviceEnabled,
+      //     streamUuids: Array.from(this.classroomStore.streamStore.streamByStreamUuid.keys()),
+      //   }),
+      //   ({ classroomState, audioPlaybackDeviceEnabled, streamUuids }) => {
+      //     if (classroomState === ClassroomState.Connected) {
+      //       streamUuids.forEach((streamUuid) => {
+      //         this.classroomStore.connectionStore.scene?.setRemoteTrackVolume(
+      //           streamUuid,
+      //           audioPlaybackDeviceEnabled ? 100 : 0,
+      //         );
+      //       });
+      //     }
+      //   },
+      // ),
     );
   }
 
