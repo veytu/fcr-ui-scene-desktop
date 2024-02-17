@@ -11,7 +11,7 @@ import { EduStreamUI } from '@ui-scene/utils/stream/struct';
 import { DialogToolTip } from '@components/tooltip/dialog';
 import { Button } from '@components/button';
 import { Radio, RadioGroup } from '@components/radio';
-import { EduRoleTypeEnum, EduUserStruct } from 'agora-edu-core';
+import { EduRoleTypeEnum, EduUserStruct, Platform } from 'agora-edu-core';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
 import classnames from 'classnames';
 import { ToastApiFactory } from '@components/toast';
@@ -53,6 +53,9 @@ export const Participants = observer(() => {
       roomStore: { sendCustomChannelMessage },
     },
   } = useStore();
+  participantTableList.forEach((participant) => {
+    console.log(participant.user.userProperties.get('flexProps')?.device.platform, '===userProperties')
+  })
   const { hostColumns, studentColumns } = useParticipantsColumn();
 
   const tableColumns = isHost ? hostColumns : studentColumns;
@@ -141,7 +144,6 @@ export const Participants = observer(() => {
       },
     });
   };
-
   return (
     <ParticipantsContext.Provider value={{ toastApi: toastApiRef.current }}>
       <div
@@ -216,20 +218,86 @@ export const Participants = observer(() => {
     </ParticipantsContext.Provider>
   );
 });
-const TableName = ({ name }: { name: string }) => {
+const isH5 = (user: EduUserStruct) => {
+  const platform = user.userProperties.get('flexProps')?.device.platform;
+  if (platform === Platform.H5) {
+    return true
+  }
+  return false
+}
+const PlatformAuth = observer(
+  ({
+    role,
+    user
+  }: {
+    role: EduRoleTypeEnum;
+    user: EduUserStruct
+  }) => {
+    const transI18n = useI18n();
+    const {
+      participantsUIStore: { isHostByUserRole, tableIconSize },
+    } = useStore();
+    const isHost = isHostByUserRole(role);
+    const ish5 = isH5(user);
+    const tooltipContent = isHost
+      ? '电脑设备'
+      : ish5
+        ? '该学生在使用的设备/版本，不支持授权'
+        : '电脑设备'
+    const disabled = false;
+
+    return (
+      <div className="fcr-participants-table-plateform-auth">
+        <TableIconWrapper
+          tooltip={tooltipContent}
+          disabled={disabled}
+          noHover={true}
+        >
+          <div className='fcr-participants-table-plateform-icon-wrapper'>
+            <SvgImg
+              type={ish5 ? SvgIconEnum.FCR_H5_DEVICE : SvgIconEnum.FCR_COMPUTER_DEVICE}
+              // className= 'fcr-participants-table-plateform-icon'
+              className={classnames('fcr-participants-table-plateform-icon', {
+                'fcr-participants-table-device-h5-icon': ish5,
+                'fcr-participants-table-device-computer-icon': !ish5
+              })}
+              // colors={{ iconPrimary: granted ? colors['yellow'] : colors['icon-1'] }}
+              size={24}></SvgImg>
+          </div>
+
+        </TableIconWrapper>
+
+      </div>
+    );
+  },
+);
+const TableName = ({
+  role,
+  user,
+  name
+}: {
+  role: EduRoleTypeEnum;
+  user: EduUserStruct, name: string
+}) => {
   return (
     <div className="fcr-participants-table-name">
-      {/* <Avatar size={30} textSize={14} nickName={name}></Avatar> */}
+      {/* <Avatar size={30} textSiz e={14} nickName={name}></Avatar> */}
+      <PlatformAuth
+        role={role}
+        user={user}>
+      </PlatformAuth>
       <div className="fcr-participants-table-name-text">{name}</div>
     </div>
   );
 };
 const TableAuth = observer(
   ({
+    user,
     userUuid,
     role,
     notAllowed,
   }: {
+    user: EduUserStruct
     userUuid: string;
     role: EduRoleTypeEnum;
     notAllowed: boolean;
@@ -244,11 +312,12 @@ const TableAuth = observer(
     const tooltipContent = isHost
       ? transI18n('fcr_role_teacher')
       : !isBoardWidgetActive
-      ? transI18n('fcr_room_tips_authorize_open_whiteboard')
-      : notAllowed
-      ? transI18n('fcr_participants_tips_student_in_breakoutroom')
-      : tooltip;
-    const disabled = notAllowed || !isHostLocal || !isBoardWidgetActive;
+        ? transI18n('fcr_room_tips_authorize_open_whiteboard') : isH5(user)
+          ? '该学生在使用的设备/版本，不支持授权'
+          : notAllowed
+            ? transI18n('fcr_participants_tips_student_in_breakoutroom')
+            : tooltip;
+    const disabled = notAllowed || !isHostLocal || !isBoardWidgetActive || isH5(user);
 
     return (
       <div className="fcr-participants-table-auth">
@@ -276,9 +345,10 @@ const TableIconWrapper: FC<
     onClick?: () => void;
     disabled?: boolean;
     tooltip?: string;
+    noHover?: boolean;
   }>
 > = (props) => {
-  const { children, disabled = false, tooltip, ...others } = props;
+  const { children, disabled = false, tooltip, noHover, ...others } = props;
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const handleVisibleChanged = (visible: boolean) => {
     if (!tooltip) {
@@ -301,6 +371,7 @@ const TableIconWrapper: FC<
           onClick={() => !disabled && props.onClick?.()}
           className={classnames('fcr-participants-table-icon-wrap', {
             'fcr-participants-table-icon-wrap-disable': disabled,
+            'fcr-participants-table-cell-wrap-no-hover': noHover,
           })}>
           <div>{children}</div>
         </div>
@@ -580,9 +651,11 @@ const useParticipantsColumn = () => {
         </div>
       ),
       render: (_: unknown, item: UserTableItem) => {
-        return <TableName name={item.user.userName}></TableName>;
+        return (
+          <TableName role={item.user.userRole}
+            user={item.user} name={item.user.userName}></TableName>)
       },
-      width: 85,
+      width: 153,
       align: 'left',
     },
     {
@@ -596,6 +669,7 @@ const useParticipantsColumn = () => {
       render: (_: unknown, item: UserTableItem) => {
         return (
           <TableAuth
+            user={item.user}
             role={item.user.userRole}
             userUuid={item.user.userUuid}
             notAllowed={item.notAllowed}></TableAuth>
@@ -678,10 +752,11 @@ const useParticipantsColumn = () => {
         </div>
       ),
       render: (_: unknown, item: UserTableItem) => {
-        return <TableName name={item.user.userName}></TableName>;
+        return <TableName name={item.user.userName} role={item.user.userRole}
+          user={item.user}></TableName>;
       },
       align: 'left',
-      width: 85,
+      width: 153,
     },
     {
       title: (
@@ -694,6 +769,7 @@ const useParticipantsColumn = () => {
       render: (_: unknown, item: UserTableItem) => {
         return (
           <TableAuth
+            user={item.user}
             role={item.user.userRole}
             userUuid={item.user.userUuid}
             notAllowed={item.notAllowed}></TableAuth>

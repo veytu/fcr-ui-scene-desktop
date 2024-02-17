@@ -82,7 +82,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-left: 15px;
+  padding-left: 12px;
   display: flex;
   overflow: hidden;
   white-space: nowrap;
@@ -122,6 +122,9 @@
 }
 .fcr-participants-table-icon-wrap:not(.fcr-participants-table-icon-wrap-disable):hover {
   @apply fcr-bg-brand-4;
+}
+.fcr-participants-table-icon-wrap.fcr-participants-table-cell-wrap-no-hover:hover {
+  background: none;
 }
 .fcr-participants-table-icon-wrap-disable {
   cursor: not-allowed;
@@ -207,4 +210,34 @@
 }
 .fcr-participants-table-sorted-header:hover {
   @apply fcr-text-brand-6;
+}
+
+.fcr-participants-table-plateform-auth {
+  margin-right: 6px;
+}
+.fcr-participants-table-plateform-icon{
+  border-radius: 6.86px;
+  box-sizing: content-box;
+}
+.fcr-participants-table-device-computer-icon{
+  background: rgba(111, 207, 162, 1);
+}
+.fcr-participants-table-device-h5-icon{
+  background: rgba(172, 168, 133, 1);
+}
+
+.fcr-participants-table-plateform-icon-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+}
+
+.fcr-participants-table-plateform-icon:hover{
+  border: 1px solid rgba(44, 44, 49, 1);
+}
+.fcr-participants-table-plateform-icon-wrapper:hover{
+  border: 2px solid rgba(22, 209, 164, 1);
+  width: 30px;
+  height:30px;
 }
