@@ -85,6 +85,9 @@ export const zhCn = {
   fcr_room_button_leave: '离开',
   fcr_room_button_join_error_leave: '离开房间',
   fcr_room_button_ok: '确定',
+  fcr_participants_tips_device_mobile_web: '移动端网页',
+  fcr_participants_tips_device_PC: '电脑设备',
+  fcr_participants_tips_device_mobile_web_not_support: '移动端网页不支持此功能',
 
   //reason为获得奖励的学生名字
   fcr_room_tips_reward_congratulation_single: '祝贺{reason}获得奖励。',

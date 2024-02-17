@@ -5,11 +5,14 @@ import { App } from './app';
 import { Logger, changeLanguage, addResourceBundle } from 'agora-common-libs';
 import {
   AgoraEduClassroomEvent,
+  DevicePlatform,
   EduClassroomConfig,
   EduEventCenter,
   EduMediaEncryptionMode,
   EduRegion,
   EduRoleTypeEnum,
+  Platform,
+  getPlatform,
 } from 'agora-edu-core';
 import { initializeBuiltInExtensions } from './utils/rtc-extensions';
 import { setLaunchOptions, setConfig, getConfig } from './utils/launch-options-holder';
@@ -48,6 +51,9 @@ export class FcrUIScene {
     callbackFailure?: (err: Error) => void,
     callbackDestroy?: (type: number) => void,
   ) {
+    const defaultPlatform = getPlatform() === DevicePlatform.H5 ? Platform.H5 : Platform.PC;
+    const flexProperties = Object.assign(launchOptions.userFlexProperties || {}, { device: { platform: defaultPlatform } })
+    launchOptions.userFlexProperties = flexProperties
     const {
       appId,
       userUuid,
@@ -79,9 +85,7 @@ export class FcrUIScene {
     }
 
     Logger.info('[FcrUIScene]launched with options:', launchOptions);
-
     setLaunchOptions(launchOptions);
-
     const sessionInfo = {
       userUuid,
       userName,
@@ -289,9 +293,8 @@ export class FcrUIScene {
       sessionInfo: { roomUuid },
       appId,
     } = EduClassroomConfig.shared;
-    const pathPrefix = `${
-      ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
-    }/edu/apps/${appId}`;
+    const pathPrefix = `${ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
+      }/edu/apps/${appId}`;
     new ApiBase().fetch({
       path: `/v2/rooms/${roomUuid}/records/ready`,
       method: 'PUT',

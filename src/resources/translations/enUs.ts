@@ -88,6 +88,9 @@ export const enUs = {
   fcr_room_button_leave: 'Leave',
   fcr_room_button_join_error_leave: 'Leave the room',
   fcr_room_button_ok: 'OK',
+  fcr_participants_tips_device_mobile_web: 'Mobile web',
+  fcr_participants_tips_device_PC: 'PC',
+  fcr_participants_tips_device_mobile_web_not_support: 'Mobile web does not support this feature.',
 
   //reason为获得奖励的学生名字
   fcr_room_tips_reward_congratulation_single:
