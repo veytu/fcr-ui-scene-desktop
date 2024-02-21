@@ -238,9 +238,8 @@ export abstract class SceneSubscription {
         this.logger.info(
           `muteLocalVideo, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteLocalVideo}]`,
         );
-        muteLocalVideo && this.getters.classroomUIStore.deviceSettingUIStore.enableCamera(false);
-        muteLocalAudio &&
-          this.getters.classroomUIStore.deviceSettingUIStore.enableAudioRecording(false);
+        stream.videoState === AgoraRteMediaPublishState.Unpublished &&
+          this.getters.classroomUIStore.deviceSettingUIStore.enableCamera(false);
 
         scene.rtcChannel.muteLocalVideoStream(muteLocalVideo, connType);
         this.putRegistry(stream.streamUuid, { muteVideo: muteLocalVideo });
@@ -259,6 +258,9 @@ export abstract class SceneSubscription {
         this.logger.info(
           `muteLocalAudio, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteLocalAudio}]`,
         );
+        stream.audioState === AgoraRteMediaPublishState.Unpublished &&
+          this.getters.classroomUIStore.deviceSettingUIStore.enableAudioRecording(false);
+
         scene.rtcChannel.muteLocalAudioStream(muteLocalAudio, connType);
         this.putRegistry(stream.streamUuid, { muteAudio: muteLocalAudio });
         break;
