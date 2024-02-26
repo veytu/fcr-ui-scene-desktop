@@ -267,7 +267,7 @@ export const enUs = {
   fcr_chat_label_no_announcement: 'No announcement',
   fcr_chat_you_are_muted_by_teacher: 'You are muted by teacher',
   fcr_chat_enter_message_placehoder: 'Enter a message...',
-
+  fcr_chat_tips_message_image: 'Image Message',
   //****************** 屏幕共享 share ******************
   fcr_share_button_stop: 'Stop sharing',
   fcr_share_label_sharing: 'Screen Sharing',

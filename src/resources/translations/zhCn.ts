@@ -261,7 +261,7 @@ export const zhCn = {
   fcr_chat_label_no_announcement: '没有公告',
   fcr_chat_you_are_muted_by_teacher: '你被老师禁言了',
   fcr_chat_enter_message_placehoder: '请输入消息',
-
+  fcr_chat_tips_message_image: '图片消息',
   //****************** 屏幕共享 share ******************
   fcr_share_button_stop: '停止共享',
   fcr_share_label_sharing: '正在分享屏幕',
