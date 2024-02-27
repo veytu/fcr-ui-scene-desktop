@@ -53,6 +53,9 @@ export const Participants = observer(() => {
       roomStore: { sendCustomChannelMessage },
     },
   } = useStore();
+  participantTableList.forEach((participant) => {
+    console.log(participant.user.userProperties.get('flexProps')?.device.platform, '===userProperties')
+  })
   const { hostColumns, studentColumns } = useParticipantsColumn();
 
   const tableColumns = isHost ? hostColumns : studentColumns;
