@@ -53,9 +53,7 @@ export const Participants = observer(() => {
       roomStore: { sendCustomChannelMessage },
     },
   } = useStore();
-  participantTableList.forEach((participant) => {
-    console.log(participant.user.userProperties.get('flexProps')?.device.platform, '===userProperties')
-  })
+
   const { hostColumns, studentColumns } = useParticipantsColumn();
 
   const tableColumns = isHost ? hostColumns : studentColumns;
@@ -218,7 +216,7 @@ export const Participants = observer(() => {
     </ParticipantsContext.Provider>
   );
 });
-const isH5 = (user: EduUserStruct) => {
+export const isH5 = (user: EduUserStruct) => {
   const platform = user.userProperties.get('flexProps')?.device.platform;
   if (platform === Platform.H5) {
     return true
