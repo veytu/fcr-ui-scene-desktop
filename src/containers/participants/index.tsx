@@ -216,7 +216,7 @@ export const Participants = observer(() => {
     </ParticipantsContext.Provider>
   );
 });
-const isH5 = (user: EduUserStruct) => {
+export const isH5 = (user: EduUserStruct) => {
   const platform = user.userProperties.get('device')?.platform;
   if (platform === DevicePlatform.H5) {
     return true;
