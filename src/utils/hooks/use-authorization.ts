@@ -8,8 +8,8 @@ export const useAuthorization = (userUuid: string) => {
     presentationUIStore: { isBoardWidgetActive },
     boardApi: { grantedUsers, grantPrivilege },
     statusBarUIStore: { isHost },
-    participantsUIStore: {
-      participantTableList
+    classroomStore: {
+      userStore: { users },
     },
   } = useStore();
   const transI18n = useI18n();
@@ -29,10 +29,8 @@ export const useAuthorization = (userUuid: string) => {
             content: transI18n('fcr_room_tips_authorize_open_whiteboard'),
           },
         });
-      const user = participantTableList.filter((participant) => {
-        return participant.user.userUuid === userUuid
-      })
-      if (isH5(user[0]?.user))
+      const user = users.get(userUuid);
+      if (user && isH5(user))
         return ToastApi.open({
           persist: true,
           duration: 15000,
