@@ -89,7 +89,7 @@ const FcrChatroomTooltipContent = ({
   const transI18n = useI18n();
   const msg =
     message?.type === AgoraIMMessageType.Image
-      ? '[Image Message]'
+      ? `[${transI18n('fcr_chat_tips_message_image')}]`
       : (message as AgoraIMTextMessage)?.msg;
   const isPrivateMessage = message?.ext?.receiverList && message?.ext?.receiverList.length > 0;
   return (

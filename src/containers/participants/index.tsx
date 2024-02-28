@@ -1,7 +1,7 @@
 import { createContext, FC, PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react';
 import { Input } from '@components/input';
 import { Table } from '@components/table';
-
+import { toJS } from 'mobx';
 import './index.css';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { observer } from 'mobx-react-lite';
@@ -11,7 +11,7 @@ import { EduStreamUI } from '@ui-scene/utils/stream/struct';
 import { DialogToolTip } from '@components/tooltip/dialog';
 import { Button } from '@components/button';
 import { Radio, RadioGroup } from '@components/radio';
-import { EduRoleTypeEnum, EduUserStruct, Platform } from 'agora-edu-core';
+import { DevicePlatform, EduRoleTypeEnum, EduUserStruct, Platform } from 'agora-edu-core';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
 import classnames from 'classnames';
 import { ToastApiFactory } from '@components/toast';
@@ -216,72 +216,53 @@ export const Participants = observer(() => {
     </ParticipantsContext.Provider>
   );
 });
-export const isH5 = (user: EduUserStruct) => {
-  const platform = user.userProperties.get('flexProps')?.device.platform;
-  if (platform === Platform.H5) {
-    return true
+const isH5 = (user: EduUserStruct) => {
+  const platform = user.userProperties.get('device')?.platform;
+  if (platform === DevicePlatform.H5) {
+    return true;
   }
-  return false
-}
-const PlatformAuth = observer(
-  ({
-    role,
-    user
-  }: {
-    role: EduRoleTypeEnum;
-    user: EduUserStruct
-  }) => {
-    const transI18n = useI18n();
-    const {
-      participantsUIStore: { isHostByUserRole, tableIconSize },
-    } = useStore();
-    const isHost = isHostByUserRole(role);
-    const ish5 = isH5(user);
-    const tooltipContent = ish5
-      ? transI18n('fcr_participants_tips_device_mobile_web')
-      : transI18n('fcr_participants_tips_device_PC')
-    const disabled = false;
+  return false;
+};
+const PlatformAuth = observer(({ role, user }: { role: EduRoleTypeEnum; user: EduUserStruct }) => {
+  const transI18n = useI18n();
 
-    return (
-      <div className="fcr-participants-table-plateform-auth">
-        <TableIconWrapper
-          tooltip={tooltipContent}
-          disabled={disabled}
-          noHover={true}
-        >
-          <div className='fcr-participants-table-plateform-icon-wrapper'>
-            <SvgImg
-              type={ish5 ? SvgIconEnum.FCR_H5_DEVICE : SvgIconEnum.FCR_COMPUTER_DEVICE}
-              // className= 'fcr-participants-table-plateform-icon'
-              className={classnames('fcr-participants-table-plateform-icon', {
-                'fcr-participants-table-device-h5-icon': ish5,
-                'fcr-participants-table-device-computer-icon': !ish5
-              })}
-              // colors={{ iconPrimary: granted ? colors['yellow'] : colors['icon-1'] }}
-              size={24}></SvgImg>
-          </div>
+  const ish5 = isH5(user);
+  const tooltipContent = ish5
+    ? transI18n('fcr_participants_tips_device_mobile_web')
+    : transI18n('fcr_participants_tips_device_PC');
+  const disabled = false;
 
-        </TableIconWrapper>
-
-      </div>
-    );
-  },
-);
+  return (
+    <div className="fcr-participants-table-plateform-auth">
+      <TableIconWrapper tooltip={tooltipContent} disabled={disabled} noHover={true}>
+        <div className="fcr-participants-table-plateform-icon-wrapper">
+          <SvgImg
+            type={ish5 ? SvgIconEnum.FCR_H5_DEVICE : SvgIconEnum.FCR_COMPUTER_DEVICE}
+            // className= 'fcr-participants-table-plateform-icon'
+            className={classnames('fcr-participants-table-plateform-icon', {
+              'fcr-participants-table-device-h5-icon': ish5,
+              'fcr-participants-table-device-computer-icon': !ish5,
+            })}
+            // colors={{ iconPrimary: granted ? colors['yellow'] : colors['icon-1'] }}
+            size={24}></SvgImg>
+        </div>
+      </TableIconWrapper>
+    </div>
+  );
+});
 const TableName = ({
   role,
   user,
-  name
+  name,
 }: {
   role: EduRoleTypeEnum;
-  user: EduUserStruct, name: string
+  user: EduUserStruct;
+  name: string;
 }) => {
   return (
     <div className="fcr-participants-table-name">
       {/* <Avatar size={30} textSiz e={14} nickName={name}></Avatar> */}
-      <PlatformAuth
-        role={role}
-        user={user}>
-      </PlatformAuth>
+      <PlatformAuth role={role} user={user}></PlatformAuth>
       <div className="fcr-participants-table-name-text">{name}</div>
     </div>
   );
@@ -293,7 +274,7 @@ const TableAuth = observer(
     role,
     notAllowed,
   }: {
-    user: EduUserStruct
+    user: EduUserStruct;
     userUuid: string;
     role: EduRoleTypeEnum;
     notAllowed: boolean;
@@ -308,7 +289,8 @@ const TableAuth = observer(
     const tooltipContent = isHost
       ? transI18n('fcr_role_teacher')
       : !isBoardWidgetActive
-        ? transI18n('fcr_room_tips_authorize_open_whiteboard') : isH5(user)
+        ? transI18n('fcr_room_tips_authorize_open_whiteboard')
+        : isH5(user)
           ? transI18n('fcr_participants_tips_device_mobile_web_not_support')
           : notAllowed
             ? transI18n('fcr_participants_tips_student_in_breakoutroom')
@@ -648,8 +630,11 @@ const useParticipantsColumn = () => {
       ),
       render: (_: unknown, item: UserTableItem) => {
         return (
-          <TableName role={item.user.userRole}
-            user={item.user} name={item.user.userName}></TableName>)
+          <TableName
+            role={item.user.userRole}
+            user={item.user}
+            name={item.user.userName}></TableName>
+        );
       },
       width: 153,
       align: 'left',
@@ -748,8 +733,12 @@ const useParticipantsColumn = () => {
         </div>
       ),
       render: (_: unknown, item: UserTableItem) => {
-        return <TableName name={item.user.userName} role={item.user.userRole}
-          user={item.user}></TableName>;
+        return (
+          <TableName
+            name={item.user.userName}
+            role={item.user.userRole}
+            user={item.user}></TableName>
+        );
       },
       align: 'left',
       width: 153,

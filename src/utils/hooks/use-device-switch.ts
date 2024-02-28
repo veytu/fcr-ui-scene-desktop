@@ -48,19 +48,10 @@ export const useDeviceSwitch = ({
       if (stream?.isVideoStreamPublished) {
         enableCamera(true);
       } else {
-        if (isLocal && stream?.role === EduRoleTypeEnum.teacher) {
+        if (isLocal && stream) {
           enableCamera(true);
           updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
             videoState: AgoraRteMediaPublishState.Published,
-          });
-        } else {
-          addDialog('confirm', {
-            title: transI18n('fcr_user_tips_capture_screen_permission_title'),
-            content: transI18n('fcr_user_tips_banned_video_content'),
-            cancelButtonVisible: false,
-            okButtonProps: {
-              styleType: 'danger',
-            },
           });
         }
       }
@@ -73,19 +64,10 @@ export const useDeviceSwitch = ({
       if (stream?.isMicStreamPublished) {
         enableAudioRecording(true);
       } else {
-        if (isLocal && stream?.role === EduRoleTypeEnum.teacher) {
+        if (isLocal && stream) {
           enableAudioRecording(true);
           updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
             audioState: AgoraRteMediaPublishState.Published,
-          });
-        } else {
-          addDialog('confirm', {
-            title: transI18n('fcr_user_tips_capture_screen_permission_title'),
-            content: transI18n('fcr_user_tips_muted_content'),
-            cancelButtonVisible: false,
-            okButtonProps: {
-              styleType: 'danger',
-            },
           });
         }
       }
