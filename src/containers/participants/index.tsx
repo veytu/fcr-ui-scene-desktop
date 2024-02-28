@@ -216,7 +216,7 @@ export const Participants = observer(() => {
     </ParticipantsContext.Provider>
   );
 });
-export const isH5 = (user: EduUserStruct) => {
+export const isMobileWebUser = (user: EduUserStruct) => {
   const platform = user.userProperties.get('device')?.platform;
   if (platform === DevicePlatform.H5) {
     return true;
@@ -226,8 +226,8 @@ export const isH5 = (user: EduUserStruct) => {
 const PlatformAuth = observer(({ role, user }: { role: EduRoleTypeEnum; user: EduUserStruct }) => {
   const transI18n = useI18n();
 
-  const ish5 = isH5(user);
-  const tooltipContent = ish5
+  const isMobileWebUse = isMobileWebUser(user);
+  const tooltipContent = isMobileWebUse
     ? transI18n('fcr_participants_tips_device_mobile_web')
     : transI18n('fcr_participants_tips_device_PC');
   const disabled = false;
@@ -237,11 +237,11 @@ const PlatformAuth = observer(({ role, user }: { role: EduRoleTypeEnum; user: Ed
       <TableIconWrapper tooltip={tooltipContent} disabled={disabled} noHover={true}>
         <div className="fcr-participants-table-plateform-icon-wrapper">
           <SvgImg
-            type={ish5 ? SvgIconEnum.FCR_H5_DEVICE : SvgIconEnum.FCR_COMPUTER_DEVICE}
+            type={isMobileWebUse ? SvgIconEnum.FCR_H5_DEVICE : SvgIconEnum.FCR_COMPUTER_DEVICE}
             // className= 'fcr-participants-table-plateform-icon'
             className={classnames('fcr-participants-table-plateform-icon', {
-              'fcr-participants-table-device-h5-icon': ish5,
-              'fcr-participants-table-device-computer-icon': !ish5,
+              'fcr-participants-table-device-h5-icon': isMobileWebUse,
+              'fcr-participants-table-device-computer-icon': !isMobileWebUse,
             })}
             // colors={{ iconPrimary: granted ? colors['yellow'] : colors['icon-1'] }}
             size={24}></SvgImg>
@@ -289,13 +289,13 @@ const TableAuth = observer(
     const tooltipContent = isHost
       ? transI18n('fcr_role_teacher')
       : !isBoardWidgetActive
-        ? transI18n('fcr_room_tips_authorize_open_whiteboard')
-        : isH5(user)
-          ? transI18n('fcr_participants_tips_device_mobile_web_not_support')
-          : notAllowed
-            ? transI18n('fcr_participants_tips_student_in_breakoutroom')
-            : tooltip;
-    const disabled = notAllowed || !isHostLocal || !isBoardWidgetActive || isH5(user);
+      ? transI18n('fcr_room_tips_authorize_open_whiteboard')
+      : isMobileWebUser(user)
+      ? transI18n('fcr_participants_tips_device_mobile_web_not_support')
+      : notAllowed
+      ? transI18n('fcr_participants_tips_student_in_breakoutroom')
+      : tooltip;
+    const disabled = notAllowed || !isHostLocal || !isBoardWidgetActive || isMobileWebUser(user);
 
     return (
       <div className="fcr-participants-table-auth">

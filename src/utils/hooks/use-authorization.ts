@@ -1,7 +1,7 @@
 import { ToastApi } from '@components/toast';
 import { useStore } from './use-store';
 import { useI18n } from 'agora-common-libs';
-import { isH5 } from '@ui-scene/containers/participants';
+import { isMobileWebUser } from '@ui-scene/containers/participants';
 
 export const useAuthorization = (userUuid: string) => {
   const {
@@ -13,7 +13,10 @@ export const useAuthorization = (userUuid: string) => {
     },
   } = useStore();
   const transI18n = useI18n();
-  const granted = grantedUsers.has(userUuid);
+  const user = users.get(userUuid);
+
+  const granted = user && !isMobileWebUser(user) && grantedUsers.has(userUuid);
+
   const tooltip = granted
     ? transI18n('fcr_user_button_unauthorization')
     : transI18n('fcr_user_button_authorization');
@@ -29,8 +32,7 @@ export const useAuthorization = (userUuid: string) => {
             content: transI18n('fcr_room_tips_authorize_open_whiteboard'),
           },
         });
-      const user = users.get(userUuid);
-      if (user && isH5(user))
+      if (user && isMobileWebUser(user))
         return ToastApi.open({
           toastProps: {
             type: 'error',
