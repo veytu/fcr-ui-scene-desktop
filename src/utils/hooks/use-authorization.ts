@@ -32,10 +32,7 @@ export const useAuthorization = (userUuid: string) => {
       const user = users.get(userUuid);
       if (user && isH5(user))
         return ToastApi.open({
-          persist: true,
-          duration: 15000,
           toastProps: {
-            closable: true,
             type: 'error',
             content: transI18n('fcr_participants_tips_device_mobile_web_not_support'),
           },
