@@ -18,6 +18,7 @@ import findLast from 'lodash/findLast';
 import { v4 as uuidv4 } from 'uuid';
 import { AGRtcConnectionType, AGRtcState, Scheduler } from 'agora-rte-sdk';
 import { isTeacher } from '@ui-scene/utils/check';
+import { RejectToGroupArgs } from './type';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -1037,18 +1038,23 @@ export class BreakoutUIStore extends EduUIStoreBase {
     }
 
     if (type === AgoraEduClassroomEvent.RejectedToGroup) {
-      const { groupUuid } = args;
+      const { groupUuid, removeProgress } = args as RejectToGroupArgs;
+      const isLocal = removeProgress.some(
+        (item) => item.userUuid === EduClassroomConfig.shared.sessionInfo.userUuid,
+      );
       const isTeacher = this.getters.isHost;
       const dialogId = this._dialogsMap.get(groupUuid);
-      if (dialogId) {
-        this.getters.classroomUIStore.layoutUIStore.deleteDialog(dialogId);
-      }
-      if (isTeacher) {
-        runInAction(() => {
-          this._helpRequestList = this._helpRequestList.filter(
-            (item) => groupUuid !== item.groupUuid,
-          );
-        });
+      if (isLocal) {
+        if (dialogId) {
+          this.getters.classroomUIStore.layoutUIStore.deleteDialog(dialogId);
+        }
+        if (isTeacher) {
+          runInAction(() => {
+            this._helpRequestList = this._helpRequestList.filter(
+              (item) => groupUuid !== item.groupUuid,
+            );
+          });
+        }
       }
     }
 

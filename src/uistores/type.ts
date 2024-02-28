@@ -120,3 +120,14 @@ export type StreamMediaPlayerOpenParams = {
   url: string;
   title: string;
 };
+export type RejectToGroupArgs = {
+  groupUuid: string;
+  inviting: string;
+  removeProgress: {
+    fromUserUuid: string;
+    payload: { groupName: string; groupUuid: string };
+    role: string;
+    userName: string;
+    userUuid: string;
+  }[];
+};
