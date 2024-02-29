@@ -7,6 +7,7 @@ import { EduRoleTypeEnum } from 'agora-edu-core';
 import { usePinStream } from '@ui-scene/utils/hooks/use-pin-stream';
 import { ToolTip } from '@components/tooltip';
 import { useI18n } from 'agora-common-libs';
+import { useAuthorization } from '@ui-scene/utils/hooks/use-authorization';
 const interactLabelGroupSizeMap = {
   'status-bar': 'normal',
   'list-view': 'small',
@@ -24,13 +25,14 @@ export const InteractLabelGroup = observer(
       classroomStore: {
         userStore: { rewards, users },
       },
-      streamUIStore: { isUserGranted, pinnedStream, pinDisabled },
+      streamUIStore: { pinnedStream, pinDisabled },
       actionBarUIStore: { isHandsUpByUserUuid },
     } = useStore();
+    const { granted } = useAuthorization(userUuid);
     const transI18n = useI18n();
     const currentUser = users.get(userUuid);
     const reward = rewards.get(userUuid);
-    const isGranted = isUserGranted(userUuid);
+    const isGranted = granted;
     const showReward = currentUser?.userRole === EduRoleTypeEnum.student;
     const showPinned =
       pinnedStream?.fromUser.userUuid === userUuid && placement === 'main-view' && !pinDisabled;

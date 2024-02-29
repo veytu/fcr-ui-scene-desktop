@@ -160,9 +160,6 @@ export class StreamUIStore extends EduUIStoreBase {
       this.doneSub = doneSub;
     });
   }
-  isUserGranted = computedFn((userUuid: string) => {
-    return this.getters.boardApi.grantedUsers.has(userUuid);
-  });
 
   remoteStreamVolume = computedFn((stream?: EduStreamUI) => {
     if (stream) {
