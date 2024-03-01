@@ -19,6 +19,7 @@ export enum CustomMessageCommandType {
   handsUpAll = 'handsUpAll',
 }
 export type CustomMessageDeviceSwitchType = {
+  roomId?: string;
   deviceState: CustomMessageDeviceState;
   deviceType: CustomMessageDeviceType;
 };
@@ -40,6 +41,7 @@ export enum CustomMessageHandsUpState {
   raiseHand = 1,
 }
 export type CustomMessageHandsUpAllType = {
+  roomId?: string;
   operation: CustomMessageHandsUpState;
 };
 export type CommonDialogType<T = unknown> = {

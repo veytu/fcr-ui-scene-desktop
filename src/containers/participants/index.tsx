@@ -51,6 +51,7 @@ export const Participants = observer(() => {
     classroomStore: {
       streamStore: { updateRemotePublishStateBatch },
       roomStore: { sendCustomChannelMessage },
+      connectionStore: { sceneId },
     },
   } = useStore();
 
@@ -95,6 +96,7 @@ export const Participants = observer(() => {
     sendCustomChannelMessage({
       cmd: CustomMessageCommandType.deviceSwitchBatch,
       data: {
+        roomId: sceneId,
         deviceType: CustomMessageDeviceType.mic,
         deviceState: CustomMessageDeviceState.close, // 0.close, 1.open
       },
@@ -130,8 +132,9 @@ export const Participants = observer(() => {
     sendCustomChannelMessage({
       cmd: CustomMessageCommandType.deviceSwitchBatch,
       data: {
+        roomId: sceneId,
         deviceType: CustomMessageDeviceType.mic,
-        deviceState: CustomMessageDeviceState.open, //
+        deviceState: CustomMessageDeviceState.open,
       },
     });
     toastApiRef.current?.open({

@@ -606,6 +606,11 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     switch (cmd) {
       case CustomMessageCommandType.deviceSwitchBatch: {
         const deviceSwitchData = data.data;
+        if (
+          deviceSwitchData.roomId &&
+          deviceSwitchData.roomId !== this.classroomStore.connectionStore.sceneId
+        )
+          return;
         if (deviceSwitchData.deviceState === CustomMessageDeviceState.open) {
           if (message.fromUser.userUuid === this.classroomStore.userStore.localUser?.userUuid)
             return;

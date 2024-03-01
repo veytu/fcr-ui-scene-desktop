@@ -111,6 +111,7 @@ export class ActionBarUIStore extends EduUIStoreBase {
     const message: CustomMessageData<CustomMessageHandsUpAllType> = {
       cmd: CustomMessageCommandType.handsUpAll,
       data: {
+        roomId: this.classroomStore.connectionStore.sceneId,
         operation: CustomMessageHandsUpState.lowerHand,
       },
     };
@@ -263,6 +264,7 @@ export class ActionBarUIStore extends EduUIStoreBase {
         case CustomMessageCommandType.handsUpAll: {
           if (this.getters.isStudent) {
             const data = message.payload.data as CustomMessageHandsUpAllType;
+            if (data.roomId && data.roomId !== this.classroomStore.connectionStore.sceneId) return;
             const { operation } = data;
             if (operation === CustomMessageHandsUpState.lowerHand) {
               this.lowerHand();
