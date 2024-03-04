@@ -285,6 +285,7 @@ export class ActionBarUIStore extends EduUIStoreBase {
   onDestroy(): void {
     this._disposers.forEach((d) => d());
     this._disposers = [];
+    this._handsUpTask?.stop();
     this.classroomStore.roomStore.removeCustomMessageObserver({
       onReceiveChannelMessage: this._onReceiveChannelMessage,
       onReceivePeerMessage: this._onReceivePeerMessage,
@@ -297,6 +298,14 @@ export class ActionBarUIStore extends EduUIStoreBase {
       onReceiveChannelMessage: this._onReceiveChannelMessage,
       onReceivePeerMessage: this._onReceivePeerMessage,
     });
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.connectionStore.scene,
+        () => {
+          this.lowerHand();
+        },
+      ),
+    );
     this._disposers.push(
       computed(() => this.classroomStore.mediaStore.localScreenShareTrackState).observe(
         ({ oldValue, newValue }) => {
