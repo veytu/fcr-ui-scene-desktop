@@ -22,6 +22,13 @@ export const useAuthorization = (userUuid: string) => {
     : transI18n('fcr_user_button_authorization');
   const toggleAuthorization = () => {
     if (isHost) {
+      if (user && isMobileWebUser(user))
+        return ToastApi.open({
+          toastProps: {
+            type: 'error',
+            content: transI18n('fcr_participants_tips_device_mobile_web_not_support'),
+          },
+        });
       if (!isBoardWidgetActive)
         return ToastApi.open({
           persist: true,
@@ -32,13 +39,7 @@ export const useAuthorization = (userUuid: string) => {
             content: transI18n('fcr_room_tips_authorize_open_whiteboard'),
           },
         });
-      if (user && isMobileWebUser(user))
-        return ToastApi.open({
-          toastProps: {
-            type: 'error',
-            content: transI18n('fcr_participants_tips_device_mobile_web_not_support'),
-          },
-        });
+
       grantPrivilege(userUuid, !granted);
     }
   };
