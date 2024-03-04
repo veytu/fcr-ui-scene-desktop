@@ -69,15 +69,21 @@ export class NotiticationUIStore extends EduUIStoreBase {
       }
     }
     if (event === AgoraEduClassroomEvent.TeacherTurnOffMyMic) {
-      ToastApi.open({
-        toastProps: { type: 'info', content: transI18n('fcr_user_tips_muted') },
-      });
+      const sceneId = param;
+      if (sceneId === this.classroomStore.connectionStore.sceneId) {
+        ToastApi.open({
+          toastProps: { type: 'info', content: transI18n('fcr_user_tips_muted') },
+        });
+      }
     }
 
     if (event === AgoraEduClassroomEvent.TeacherTurnOffMyCam) {
-      ToastApi.open({
-        toastProps: { type: 'info', content: transI18n('fcr_user_tips_banned_video') },
-      });
+      const sceneId = param;
+      if (sceneId === this.classroomStore.connectionStore.sceneId) {
+        ToastApi.open({
+          toastProps: { type: 'info', content: transI18n('fcr_user_tips_banned_video') },
+        });
+      }
     }
 
     // capture screen permission denied received
