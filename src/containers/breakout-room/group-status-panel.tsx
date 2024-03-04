@@ -37,6 +37,7 @@ export const GroupStatusPanel = observer(() => {
 
   return isTeacher() && groupState ? (
     <Rnd
+      cancel=".fcr-breakout-room__broadcast__overlay"
       default={{ x: 15, y: 38, width: 'auto', height: 'auto' }}
       enableResizing={false}
       style={{ zIndex: 1020 }}>
