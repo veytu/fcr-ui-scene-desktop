@@ -8,6 +8,7 @@ import { useI18n } from 'agora-common-libs';
 import { AGServiceErrorCode, EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { AGError } from 'agora-rte-sdk';
 import { observer } from 'mobx-react';
+import { useEffect, useRef } from 'react';
 import { Rnd } from 'react-rnd';
 
 export const GroupInfoPanel = observer(() => {
@@ -17,6 +18,10 @@ export const GroupInfoPanel = observer(() => {
     classroomStore,
   } = useStore();
   const transI18n = useI18n();
+  const teacherGroupUuidRef = useRef<string | undefined>(teacherGroupUuid);
+  useEffect(() => {
+    teacherGroupUuidRef.current = teacherGroupUuid;
+  }, [teacherGroupUuid]);
 
   const handleHelp = () => {
     const { updateGroupUsers, currentSubRoom } = classroomStore.groupStore;
@@ -31,7 +36,7 @@ export const GroupInfoPanel = observer(() => {
       });
       return;
     }
-    if (teacherGroupUuid === currentSubRoom) {
+    if (teacherGroupUuidRef.current === currentSubRoom) {
       ToastApi.open({
         toastProps: {
           content: transI18n('fcr_group_teacher_exist_hint'),
@@ -48,6 +53,15 @@ export const GroupInfoPanel = observer(() => {
       title: transI18n('fcr_group_help_title'),
       content: transI18n('fcr_group_help_content'),
       onOk: () => {
+        if (teacherGroupUuidRef.current === currentSubRoom) {
+          ToastApi.open({
+            toastProps: {
+              content: transI18n('fcr_group_teacher_exist_hint'),
+              type: 'normal',
+            },
+          });
+          return;
+        }
         updateGroupUsers(
           [
             {
