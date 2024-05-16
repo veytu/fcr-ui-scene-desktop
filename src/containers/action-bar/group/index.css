@@ -1,0 +1,15 @@
+.fcr-action-bar-item-wrapper.group {
+    position: relative;
+}
+.fcr-group-bar-item-count {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    color: #F5655C;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 14.222px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 21.333px; /* 150% */
+}

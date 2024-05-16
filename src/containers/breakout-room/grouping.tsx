@@ -227,7 +227,7 @@ export const GroupedList = observer(
             {haveRequest && (
               <ToolTip content={transI18n('fcr_group_tips_ask_help')}>
                 <Button size="XXS" shape="rounded" type="secondary">
-                  <SvgImg type={SvgIconEnum.FCR_STUDENT_RASIEHAND} />
+                  <SvgImg type={SvgIconEnum.FCR_STUDENT_HELPHAND} />
                 </Button>
               </ToolTip>
             )}

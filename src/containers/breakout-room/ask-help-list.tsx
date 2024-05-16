@@ -1,9 +1,11 @@
 import { Button } from '@components/button';
 import { SvgImg, SvgIconEnum } from '@components/svg-img';
 import { useStore } from '@ui-scene/utils/hooks/use-store';
-import { useI18n } from 'agora-common-libs';
+import { transI18n, useI18n } from 'agora-common-libs';
 import { observer } from 'mobx-react';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { notification } from 'antd';
+import { ToastApi } from '@components/toast';
 
 type AskHelpRequest = {
   groupUuid: string;
@@ -12,15 +14,66 @@ type AskHelpRequest = {
 
 export const AskHelpList = observer(() => {
   const {
-    breakoutUIStore: { helpRequestList },
+    breakoutUIStore: { acceptInvite, helpRequestList, rejectInvite },
   } = useStore();
-
+  const [api, contextHolder] = notification.useNotification({
+    top: 72,
+  });
+  const handleOk = (item: AskHelpRequest) => {
+    acceptInvite(item.groupUuid);
+    api.destroy();
+  };
+  const handleCancel = (item: AskHelpRequest) => {
+    rejectInvite(item.groupUuid);
+    ToastApi.open({
+      toastProps: {
+        type: 'normal',
+        content: transI18n('fcr_group_reject_help', {
+          reason1: item.groupName
+        }),
+      },
+    });
+    api.destroy();
+  };
+  const openNotification = (list: AskHelpRequest) => {
+    api.open({
+      key: list.groupUuid,
+      message: <div className="fcr-breakout-room__ask-for-help__list-item-label">{list.groupName} {transI18n('fcr_group_ask_for_help')}</div>,
+      duration: null,
+      description: '',
+      placement: 'topLeft',
+      closeIcon: <div className="fcr-breakout-room__ask-for-help__list-item-close">
+          <SvgImg type={SvgIconEnum.FCR_CLOSE} size={9.6} />
+        </div>,
+      icon: <div className='fcr-breakout-room__ask-for-help__list-item-icon'>
+          <SvgImg type={SvgIconEnum.FCR_INVITE} size={40} />
+        </div>,
+      btn:  <div className="fcr-breakout-room__askhelp-buttons">
+        <span className='fcr-breakout-room__create-panel-button' onClick={() => handleCancel(list)}>
+          {transI18n('fcr_group_not_now')}
+        </span>
+        <span className='fcr-breakout-room__create-panel-button active' onClick={() => handleOk(list)}>
+          {transI18n('fcr_group_go_to')}
+        </span>
+      </div>,
+      className: 'fcr-breakout-room__ask-for-help__list-item',
+    });
+  };
+  useEffect(() => {
+    if (helpRequestList.length) {
+      openNotification(helpRequestList[helpRequestList.length - 1]);
+    }
+   
+  }, [helpRequestList.length])
   return (
-    <div className="fcr-breakout-room__ask-for-help fcr-breakout-room--scroll">
-      {helpRequestList.map((item, index) => (
-        <AskForHelpListItem key={index.toString()} item={item} />
-      ))}
-    </div>
+    <>
+    {contextHolder}
+  </>
+    // <div className="fcr-breakout-room__ask-for-help fcr-breakout-room--scroll">
+    //   {helpRequestList.map((item, index) => (
+    //     <AskForHelpListItem key={index.toString()} item={item} />
+    //   ))}
+    // </div>
   );
 });
 
@@ -35,6 +88,7 @@ export const AskForHelpListItem: FC<{ item: AskHelpRequest }> = ({ item }) => {
   };
   const handleCancel = () => {
     rejectInvite(item.groupUuid);
+   
   };
 
   return (

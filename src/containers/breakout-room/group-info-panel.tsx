@@ -94,12 +94,12 @@ export const GroupInfoPanel = observer(() => {
         className="fcr-breakout-room__status-panel fcr-breakout-room__ask-for-help-panel"
         style={{ opacity: showStatusBar ? 1 : 0 }}>
         <span style={{ marginLeft: 9 }}>{currentSubRoomInfo.groupName}</span>
-        <div className="fcr-divider" style={{ marginRight: 1 }} />
+        {/* <div className="fcr-divider" style={{ marginRight: 1 }} />
         <ToolTip content={transI18n('fcr_group_help_title')}>
           <Button onClick={handleHelp}>
             <SvgImg type={SvgIconEnum.FCR_QUESTION} size={24} />
           </Button>
-        </ToolTip>
+        </ToolTip> */}
       </div>
     </Rnd>
   ) : null;
