@@ -36,7 +36,7 @@ export const ActionBar = observer(() => {
   } = useStore();
   return (
     <div
-      className={classnames('fcr-action-bar')}
+      className={classnames('fcr-action-bar', { 'fcr-action-bar-hide': !showActiobBar })}
       onMouseEnter={() => {
         setIsPointingBar(true);
       }}
