@@ -4,7 +4,6 @@ import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { transI18n, useI18n } from 'agora-common-libs';
 import { observer } from 'mobx-react';
 import { FC, useEffect } from 'react';
-import { ToastApi } from '@components/toast';
 import { notification } from 'antd';
 
 type AskHelpRequest = {
@@ -14,10 +13,10 @@ type AskHelpRequest = {
 
 export const AskHelpList = observer(() => {
   const {
-    breakoutUIStore: { currentActionGroup, acceptInvite, helpRequestList, rejectInvite },
+    breakoutUIStore: { currentActionGroup, acceptInvite, helpRequestList, rejectInvite, addToast },
   } = useStore();
   const [api, contextHolder] = notification.useNotification({
-    top: 72,
+    top: 80,
   });
   const handleOk = (item: AskHelpRequest) => {
     acceptInvite(item.groupUuid);
@@ -25,14 +24,9 @@ export const AskHelpList = observer(() => {
   };
   const handleCancel = (item: AskHelpRequest) => {
     rejectInvite(item.groupUuid);
-    ToastApi.open({
-      toastProps: {
-        type: 'normal',
-        content: transI18n('fcr_group_reject_help', {
-          reason1: item.groupName
-        }),
-      },
-    });
+    addToast({ text: transI18n('fcr_group_reject_help', {
+      reason1: item.groupName
+    })})
     api.destroy(item.groupUuid);
   };
   const openNotification = (list: AskHelpRequest) => {

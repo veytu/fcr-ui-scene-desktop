@@ -787,17 +787,22 @@ export class BreakoutUIStore extends EduUIStoreBase {
       // this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
   }
-
+  @action.bound
+  setCurrentActionGroup(group: { groupName: string; groupUuid: string } | undefined) {
+    this._currentActionGroup = group;
+  }
   @action.bound
   acceptInvite(groupUuid: string) {
-    this._currentActionGroup = this._helpRequestList.find((item) => item.groupUuid === groupUuid);
+    const currentGroup = this._helpRequestList.find((item) => item.groupUuid === groupUuid);
+    this.setCurrentActionGroup(currentGroup)
     this._helpRequestList = this._helpRequestList.filter((item) => item.groupUuid !== groupUuid);
     this.classroomStore.groupStore.acceptGroupInvite(groupUuid);
   }
 
   @action.bound
   rejectInvite(groupUuid: string) {
-    this._currentActionGroup = this._helpRequestList.find((item) => item.groupUuid === groupUuid);
+    const currentGroup = this._helpRequestList.find((item) => item.groupUuid === groupUuid);
+    this.setCurrentActionGroup(currentGroup)
     this._helpRequestList = this._helpRequestList.filter((item) => item.groupUuid !== groupUuid);
     this.classroomStore.groupStore.rejectGroupInvite(groupUuid);
   }
@@ -1058,6 +1063,10 @@ export class BreakoutUIStore extends EduUIStoreBase {
         }
         if (isTeacher) {
           runInAction(() => {
+            const group = this._helpRequestList.find(
+              (item) => groupUuid === item.groupUuid,
+            );
+            this.setCurrentActionGroup(group)
             this._helpRequestList = this._helpRequestList.filter(
               (item) => groupUuid !== item.groupUuid,
             );

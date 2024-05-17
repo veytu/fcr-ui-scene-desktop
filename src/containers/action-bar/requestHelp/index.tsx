@@ -5,7 +5,6 @@ import { useI18n } from 'agora-common-libs';
 import { observer } from "mobx-react";
 import './index.css'
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ToastApi } from "@components/toast";
 import { AGServiceErrorCode } from "agora-edu-core";
 import { AGError } from "agora-rte-sdk";
 import classNames from "classnames";
@@ -14,8 +13,8 @@ export const RequestHelp = observer(() => {
     const transI18n = useI18n();
     const [isHasRequest, setIsHasRequest] = useState(false)
     const {
-        layoutUIStore: { addDialog, showStatusBar },
-        breakoutUIStore: { teacherGroupUuid },
+        layoutUIStore: { addDialog },
+        breakoutUIStore: { teacherGroupUuid, addToast, rejectInvite },
         classroomStore,
       } = useStore();
       const teacherGroupUuidRef = useRef<string | undefined>(teacherGroupUuid);
@@ -25,14 +24,8 @@ export const RequestHelp = observer(() => {
       const { currentSubRoom } = classroomStore.groupStore;
       const isTeacherIn = useMemo(() => teacherGroupUuid === currentSubRoom, [teacherGroupUuid, currentSubRoom]);
       const handleClick = () => {
-        console.log(teacherGroupUuid, isTeacherIn)
         if (teacherGroupUuid && isTeacherIn) {
-            ToastApi.open({
-              toastProps: {
-                content: transI18n('fcr_group_teacher_exist_hint'),
-                type: 'info',
-              },
-            });
+            addToast({text: transI18n('fcr_group_teacher_exist_hint')})
             return;
           }
         if (!isHasRequest) {
@@ -49,12 +42,7 @@ export const RequestHelp = observer(() => {
               return;
             }
             if (teacherGroupUuidRef.current === currentSubRoom) {
-              ToastApi.open({
-                toastProps: {
-                  content: transI18n('fcr_group_teacher_exist_hint'),
-                  type: 'normal',
-                },
-              });
+              addToast({text: transI18n('fcr_group_teacher_exist_hint')})
               return;
             }
         
@@ -66,12 +54,7 @@ export const RequestHelp = observer(() => {
               content: transI18n('fcr_group_help_content'),
               onOk: () => {
                 if (teacherGroupUuidRef.current === currentSubRoom) {
-                  ToastApi.open({
-                    toastProps: {
-                      content: transI18n('fcr_group_teacher_exist_hint'),
-                      type: 'normal',
-                    },
-                  });
+                  addToast({text: transI18n('fcr_group_teacher_exist_hint')})
                   return;
                 }
                 updateGroupUsers(
@@ -82,7 +65,9 @@ export const RequestHelp = observer(() => {
                     },
                   ],
                   true,
-                ).catch((e) => {
+                ).then(() => {
+                  setIsHasRequest(!isHasRequest)
+                }).catch((e) => {
                   if (AGError.isOf(e, AGServiceErrorCode.SERV_USER_BEING_INVITED)) {
                     addDialog('confirm', {
                       title: transI18n('fcr_group_help_title'),
@@ -91,20 +76,16 @@ export const RequestHelp = observer(() => {
                     });
                   }
                 });
-                setIsHasRequest(!isHasRequest)
+             
               },
               okText: transI18n('fcr_group_button_invite'),
               cancelText: transI18n('fcr_group_button_cancel'),
             });
         } else {
-            // TODO: cancel request
-            ToastApi.open({
-              toastProps: {
-                content: transI18n('fcr_group_help_cancel'),
-                type: 'info',
-              },
-            });
-            setIsHasRequest(false);
+          rejectInvite(currentSubRoom as string)
+          addToast({text: transI18n('fcr_group_help_cancel')})
+          setIsHasRequest(false);
+            
         }
         
       };
