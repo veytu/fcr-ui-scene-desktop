@@ -19,7 +19,7 @@ export const BreakoutDialog = observer(
       eduToolApi: { isWidgetMinimized },
       layoutUIStore: { classroomViewportClassName },
     } = useStore();
-
+   
     const {
       ref: positionRef,
       position,

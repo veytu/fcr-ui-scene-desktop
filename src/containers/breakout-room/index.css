@@ -831,7 +831,24 @@
 }
 
 .fcr-breakout-room__ask-for-help-panel {
-  @apply fcr-bg-brand fcr-rounded-12 fcr-text-1 fcr-border-brand;
+  /* @apply fcr-bg-brand fcr-rounded-12 fcr-text-1 fcr-border-brand; */
+  height: auto;
+  overflow: hidden;
+    border: none;
+}
+.fcr-breakout-room__ask-for-help-panel-val{
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: #4262FF;
+  /* fcr_ui_scene_shadow_normal */
+  box-shadow: 0px 0px 6px 0px rgba(43, 43, 43, 0.20);
+  max-width: 310px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .fcr-breakout-room__ask-for-help-panel .fcr-button {

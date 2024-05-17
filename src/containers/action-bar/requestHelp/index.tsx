@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ToastApi } from "@components/toast";
 import { AGServiceErrorCode } from "agora-edu-core";
 import { AGError } from "agora-rte-sdk";
+import classNames from "classnames";
 
 export const RequestHelp = observer(() => {
     const transI18n = useI18n();
@@ -24,8 +25,14 @@ export const RequestHelp = observer(() => {
       const { currentSubRoom } = classroomStore.groupStore;
       const isTeacherIn = useMemo(() => teacherGroupUuid === currentSubRoom, [teacherGroupUuid, currentSubRoom]);
       const handleClick = () => {
+        console.log(teacherGroupUuid, isTeacherIn)
         if (teacherGroupUuid && isTeacherIn) {
-            addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
+            ToastApi.open({
+              toastProps: {
+                content: transI18n('fcr_group_teacher_exist_hint'),
+                type: 'info',
+              },
+            });
             return;
           }
         if (!isHasRequest) {
@@ -91,7 +98,12 @@ export const RequestHelp = observer(() => {
             });
         } else {
             // TODO: cancel request
-            addToast(transI18n('fcr_group_help_cancel'), 'info');  
+            ToastApi.open({
+              toastProps: {
+                content: transI18n('fcr_group_help_cancel'),
+                type: 'info',
+              },
+            });
             setIsHasRequest(false);
         }
         
@@ -105,19 +117,15 @@ export const RequestHelp = observer(() => {
                 fontWeight: 400,
             }}
         >
-            <div className="fcr-action-bar-item-wrapper group" onClick={handleClick}>
-                <div className="fcr-action-bar-item">
+            <div className='fcr-action-bar-item-wrapper group' onClick={handleClick}>
+                <div className={classNames("fcr-action-bar-item",  isTeacherIn && 'disabled')}>
                     <div className="fcr-action-bar-item-icon">
                         <SvgImg type={SvgIconEnum.FCR_GROUP_HELP} size={32} ></SvgImg>
                     </div>
-                    <div className="fcr-action-bar-item-text">{isHasRequest ? transI18n('fcr_group_label_group_cancel_help') : transI18n('fcr_group_label_group_help')}</div>
+                    <div className="fcr-action-bar-item-text">{!isTeacherIn && isHasRequest ? transI18n('fcr_group_label_group_cancel_help') : transI18n('fcr_group_label_group_help')}</div>
                 </div>
             </div>
         </ToolTip>
         
     )
 })
-
-function addToast(arg0: string, arg1: string) {
-    throw new Error("Function not implemented.");
-}

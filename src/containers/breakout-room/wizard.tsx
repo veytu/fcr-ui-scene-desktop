@@ -42,7 +42,7 @@ export const WizardGrouping: FC = observer(() => {
     layoutUIStore: { addDialog },
     breakoutUIStore: { setDialogVisible, acceptInvite, rejectInvite, helpRequestList, groups, groupState, startGroup, toasts, stopGroup },
   } = useStore();
-   
+ 
   const helpRequestLists: HelpRequestListProps[] = useMemo(() => {
     const arr = []
     for (let i = 0; i < groups.length; i++) {
@@ -109,11 +109,12 @@ export const WizardGrouping: FC = observer(() => {
   const groupStateLabel = groupState
     ? transI18n('fcr_group_in_progress')
     : transI18n('fcr_group_not_status');
-  const handleReject = (id: string) => {
-    rejectInvite(id)
+  const handleReject = (item: HelpRequestListProps) => {
+    console.log('handleReject', item)
+    rejectInvite(item.id)
   }
-  const handleJoin = (id: string) => {
-    acceptInvite(id);
+  const handleJoin = (item: HelpRequestListProps) => {
+    acceptInvite(item.id);
     breakoutUIStore.setDialogVisible(false);
   }
   return (
@@ -149,7 +150,7 @@ export const WizardGrouping: FC = observer(() => {
       <BreakoutRoomGrouping />
       {/* bottom actions */}
       <div className="fcr-breakout-room-dialog__foot-actions active">
-        <div className='fcr-breakout-room-dialog__foot-actions-right'>
+       {groupState === GroupState.OPEN && <div className='fcr-breakout-room-dialog__foot-actions-right'>
           <Button size="XS" type="secondary" onClick={() => setHelpListVisible(true)}>
             {transI18n('fcr_group_label_help_list')}
             <SvgImg
@@ -160,7 +161,7 @@ export const WizardGrouping: FC = observer(() => {
               }}
             />
           </Button>
-        </div>
+        </div>}
         <div className='fcr-breakout-room-dialog__foot-actions-left'>
           {groupState === GroupState.OPEN ? (
             <React.Fragment>
@@ -258,8 +259,8 @@ export const WizardGrouping: FC = observer(() => {
                         <div className='fcr-group-list-transition-list-content-item-title'>
                           <span>{item.text}</span>
                           <div className='fcr-group-list-transition-list-content-item-btns'>
-                            <span className='fcr-group-list-transition-list-content-item-btn' onClick={() => handleReject(item.id)}>{transI18n('fcr_group_dialog_reject')}</span>
-                            <span className='fcr-group-list-transition-list-content-item-btn active' onClick={() => handleJoin(item.id)}>{transI18n('fcr_group_dialog_join')}</span>
+                            <span className='fcr-group-list-transition-list-content-item-btn' onClick={() => handleReject(item)}>{transI18n('fcr_group_dialog_reject')}</span>
+                            <span className='fcr-group-list-transition-list-content-item-btn active' onClick={() => handleJoin(item)}>{transI18n('fcr_group_dialog_join')}</span>
                           </div>
                         </div>
                         <div className='fcr-group-list-transition-list-content-item-students'>

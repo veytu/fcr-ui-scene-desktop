@@ -19,7 +19,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { AGRtcConnectionType, AGRtcState, Scheduler } from 'agora-rte-sdk';
 import { isTeacher } from '@ui-scene/utils/check';
 import { RejectToGroupArgs } from './type';
-
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 enum GroupMethod {
@@ -61,6 +60,9 @@ export class BreakoutUIStore extends EduUIStoreBase {
    */
   @observable
   private _helpRequestList: { groupName: string; groupUuid: string }[] = [];
+
+  @observable
+  private _currentActionGroup: { groupName: string; groupUuid: string } | undefined = undefined;
   /**
    * 分组窗口是否打开
    */
@@ -90,6 +92,10 @@ export class BreakoutUIStore extends EduUIStoreBase {
   @computed
   get isJoiningSubRoom() {
     return this._isJoiningSubRoom;
+  }
+  @computed
+  get currentActionGroup() {
+    return this._currentActionGroup;
   }
   /**
    * 请求列表
@@ -784,12 +790,14 @@ export class BreakoutUIStore extends EduUIStoreBase {
 
   @action.bound
   acceptInvite(groupUuid: string) {
+    this._currentActionGroup = this._helpRequestList.find((item) => item.groupUuid === groupUuid);
     this._helpRequestList = this._helpRequestList.filter((item) => item.groupUuid !== groupUuid);
     this.classroomStore.groupStore.acceptGroupInvite(groupUuid);
   }
 
   @action.bound
   rejectInvite(groupUuid: string) {
+    this._currentActionGroup = this._helpRequestList.find((item) => item.groupUuid === groupUuid);
     this._helpRequestList = this._helpRequestList.filter((item) => item.groupUuid !== groupUuid);
     this.classroomStore.groupStore.rejectGroupInvite(groupUuid);
   }
