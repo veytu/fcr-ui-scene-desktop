@@ -13,11 +13,12 @@ type AskHelpRequest = {
 
 export const AskHelpList = observer(() => {
   const {
-    breakoutUIStore: { currentActionGroup, acceptInvite, helpRequestList, rejectInvite, addToast },
+    breakoutUIStore: { studentInvites, acceptInvite, rejectInvite, addToast, cancelGroupUuid },
   } = useStore();
   const [api, contextHolder] = notification.useNotification({
     top: 80,
   });
+  console.log('studentInvites', studentInvites)
   const handleOk = (item: AskHelpRequest) => {
     acceptInvite(item.groupUuid);
     api.destroy(item.groupUuid);
@@ -44,26 +45,27 @@ export const AskHelpList = observer(() => {
         </div>,
       btn:  <div className="fcr-breakout-room__askhelp-buttons">
         <span className='fcr-breakout-room__create-panel-button' onClick={() => handleCancel(list)}>
-          {transI18n('fcr_group_not_now')}
+          {transI18n('fcr_group_dialog_reject')}
         </span>
         <span className='fcr-breakout-room__create-panel-button active' onClick={() => handleOk(list)}>
-          {transI18n('fcr_group_go_to')}
+          {transI18n('fcr_group_dialog_join')}
         </span>
       </div>,
       className: 'fcr-breakout-room__ask-for-help__list-item',
     });
-  };
+  }
   useEffect(() => {
-    if (helpRequestList.length) {
-      openNotification(helpRequestList[helpRequestList.length - 1]);
+    api.destroy(cancelGroupUuid)
+  }, [cancelGroupUuid])
+  useEffect(() => {
+    if (studentInvites.length) {
+      const lists = studentInvites.filter((item: { isInvite: boolean; }) => item.isInvite);
+      if (lists.length) {
+        openNotification(lists[lists.length - 1]);
+      }
     }
    
-  }, [helpRequestList.length])
-  useEffect(() => {
-    if (currentActionGroup) {
-      api.destroy(currentActionGroup.groupUuid)
-    }
-  }, [currentActionGroup])
+  }, [studentInvites.length])
   return (
     <>
     {contextHolder}

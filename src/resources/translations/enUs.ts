@@ -328,10 +328,12 @@ export const enUs = {
   fcr_group_help_content: 'You can invite the teacher to this group for assistance.',
   fcr_group_help_teacher_busy_msg:
     'The teacher is currently helping others. Please try again later.',
+    fcr_group_teacher_join: 'Teacher has joined the group',
   fcr_group_teacher_is_helping_others_msg:
     'The teacher is helping other groups. Please try again later.',
   fcr_group_teacher_exist_hint: 'The teacher is already in this group.',
   fcr_group_button_invite: 'Invite',
+  fcr_group_help_send: 'Invitation was sent',
   fcr_group_help_cancel: 'Request for help canceled',
   //xxx为分组名
   fcr_group_invitation: 'Teacher is inviting you to join {reason1}。',

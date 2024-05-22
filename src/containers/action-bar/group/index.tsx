@@ -8,17 +8,18 @@ import './index.css'
 export const GroupDiscuss = observer(() => {
     const transI18n = useI18n();
     const {
-        breakoutUIStore: { helpRequestList },
+        breakoutUIStore: { studentInvites },
       } = useStore();
     const {  breakoutUIStore } = useStore();
     const handleClick = () => {
         breakoutUIStore.setDialogVisible(true);
     };
+    const studentInvitesList = studentInvites.filter((v: { isInvite: boolean; }) => v.isInvite)
     return (
         <ToolTip
             trigger="hover" 
-            content={!helpRequestList.length ? transI18n('fcr_group_label_breakout_rooms_open') : transI18n('fcr_group_label_breakout_rooms_open_help', {
-            reason1: helpRequestList.length })}
+            content={!studentInvitesList.length ? transI18n('fcr_group_label_breakout_rooms_open') : transI18n('fcr_group_label_breakout_rooms_open_help', {
+            reason1: studentInvitesList.length })}
             overlayInnerStyle={{
                 fontSize: '14px',
                 fontWeight: 400,
@@ -29,7 +30,7 @@ export const GroupDiscuss = observer(() => {
                     <div className="fcr-action-bar-item-icon">
                         <SvgImg type={SvgIconEnum.FCR_GROUP} size={32}></SvgImg>
                     </div>
-                    {helpRequestList.length > 0 && <span className="fcr-group-bar-item-count">{helpRequestList.length}</span>}
+                    {studentInvitesList.length > 0 && <span className="fcr-group-bar-item-count">{studentInvitesList.length}</span>}
                     <div className="fcr-action-bar-item-text">{transI18n('fcr_group_label_breakout_rooms')}</div>
                 </div>
             </div>

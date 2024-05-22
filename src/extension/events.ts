@@ -85,6 +85,8 @@ export enum AgoraExtensionRoomEvent {
   WidgetDialogBoundariesChanged = 'widget-dialog-boundaries-changed',
   //插件全屏
   SetFullscreen = 'set-fullscreen',
+  // 学生邀请
+  StudentGroupInvites = 'student-group-invites',
 }
 
 /**

@@ -16,6 +16,8 @@ import { useI18n } from 'agora-common-libs';
 import { themeVal } from '@ui-kit-utils/tailwindcss';
 import { CSSTransition } from 'react-transition-group';
 import { Avatar } from '@components/avatar';
+import { CustomMessageInviteType } from '@ui-scene/uistores/type';
+import emptyPng from './no-data.png';
 interface HelpRequestListProps {
   id: string;
   text: string;
@@ -40,21 +42,9 @@ export const WizardGrouping: FC = observer(() => {
     eduToolApi,
     breakoutUIStore,
     layoutUIStore: { addDialog },
-    breakoutUIStore: { setDialogVisible, acceptInvite, rejectInvite, helpRequestList, groups, groupState, startGroup, toasts, stopGroup },
+    breakoutUIStore: { setDialogVisible, acceptInvite, rejectInvite, studentInvites, groups, groupState, startGroup, toasts, stopGroup },
   } = useStore();
  
-  const helpRequestLists: HelpRequestListProps[] = useMemo(() => {
-    const arr = []
-    for (let i = 0; i < groups.length; i++) {
-      const group = groups[i]
-      for (let j = 0; j < helpRequestList.length; j++) {
-        if (helpRequestList[j].groupUuid === group.id) {
-          arr.push(group)
-        }
-      }
-    }
-    return arr
-  }, [helpRequestList, groups])
   const [checked, setChecked] = useState(true);
   const [createVisible, setCreateVisible] = useState(false);
   const [broadcastVisible, setBroadcastVisible] = useState(false);
@@ -109,14 +99,15 @@ export const WizardGrouping: FC = observer(() => {
   const groupStateLabel = groupState
     ? transI18n('fcr_group_in_progress')
     : transI18n('fcr_group_not_status');
-  const handleReject = (item: HelpRequestListProps) => {
-    console.log('handleReject', item)
-    rejectInvite(item.id)
+  const handleReject = (item: CustomMessageInviteType) => {
+    rejectInvite(item.groupUuid)
   }
-  const handleJoin = (item: HelpRequestListProps) => {
-    acceptInvite(item.id);
+  const handleJoin = (item: CustomMessageInviteType) => {
+    acceptInvite(item.groupUuid);
     breakoutUIStore.setDialogVisible(false);
   }
+  const studentInviteLists = useMemo(() => studentInvites.filter((v: { isInvite: boolean; }) => v.isInvite), []) 
+  console.log('studentInviteLists', studentInviteLists)
   return (
     <div className="fcr-breakout-room-dialog">
       {/* header */}
@@ -253,11 +244,11 @@ export const WizardGrouping: FC = observer(() => {
 
             <div className="fcr-group-list-transition-list-content">
               {
-                helpRequestLists.map((item:HelpRequestListProps) => {
+                studentInviteLists.length > 0 ? studentInviteLists.map((item: CustomMessageInviteType) => {
                   return (
-                    <div key={item.id} className="fcr-group-list-transition-list-content-item">
+                    <div key={item.groupUuid} className="fcr-group-list-transition-list-content-item">
                         <div className='fcr-group-list-transition-list-content-item-title'>
-                          <span>{item.text}</span>
+                          <span>{item.groupName}</span>
                           <div className='fcr-group-list-transition-list-content-item-btns'>
                             <span className='fcr-group-list-transition-list-content-item-btn' onClick={() => handleReject(item)}>{transI18n('fcr_group_dialog_reject')}</span>
                             <span className='fcr-group-list-transition-list-content-item-btn active' onClick={() => handleJoin(item)}>{transI18n('fcr_group_dialog_join')}</span>
@@ -268,8 +259,8 @@ export const WizardGrouping: FC = observer(() => {
                             item.children.slice(0, 3).map((itm) => {
                               return (
                                 <div className='fcr-group-list-transition-list-content-item-student' key={itm.id}>
-                                   <Avatar size={24} borderRadius='24px' textSize={12} nickName={itm.text}></Avatar>
-                                   <span className='fcr-group-list-transition-list-content-item-student-name'>{itm.text}</span>
+                                   <Avatar size={24} borderRadius='24px' textSize={12} nickName={itm.name}></Avatar>
+                                   <span className='fcr-group-list-transition-list-content-item-student-name'>{itm.name}</span>
                                 </div>
                               )
                             })
@@ -279,7 +270,10 @@ export const WizardGrouping: FC = observer(() => {
                       
                     </div>
                   );
-              })
+              }) : <div className="fcr-group-list-empty-placeholder">
+                <img className='fcr-group-list-empty-img' src={emptyPng} alt="no_data" />
+                <span>{transI18n('fcr_chat_no_data')}</span>
+            </div>
             }
             </div>
           </div>
