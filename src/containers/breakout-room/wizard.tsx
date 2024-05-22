@@ -107,7 +107,6 @@ export const WizardGrouping: FC = observer(() => {
     breakoutUIStore.setDialogVisible(false);
   }
   const studentInviteLists = useMemo(() => studentInvites.filter((v: { isInvite: boolean; }) => v.isInvite), []) 
-  console.log('studentInviteLists', studentInviteLists)
   return (
     <div className="fcr-breakout-room-dialog">
       {/* header */}
