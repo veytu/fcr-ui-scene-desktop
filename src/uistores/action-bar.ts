@@ -143,6 +143,13 @@ export class ActionBarUIStore extends EduUIStoreBase {
   @computed get showCloud() {
     return this.getters.isHost;
   }
+  @computed get showGroup() {
+    return this.getters.isHost;
+  }
+  @computed get showHelp() {
+    return this.getters.isStudent;
+  }
+  
   @observable showLeaveOption = false;
   @observable leaveFlag = 1;
 

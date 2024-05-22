@@ -328,11 +328,13 @@ export const enUs = {
   fcr_group_help_content: 'You can invite the teacher to this group for assistance.',
   fcr_group_help_teacher_busy_msg:
     'The teacher is currently helping others. Please try again later.',
+    fcr_group_teacher_join: 'Teacher has joined the group',
   fcr_group_teacher_is_helping_others_msg:
     'The teacher is helping other groups. Please try again later.',
   fcr_group_teacher_exist_hint: 'The teacher is already in this group.',
   fcr_group_button_invite: 'Invite',
-
+  fcr_group_help_send: 'Invitation was sent',
+  fcr_group_help_cancel: 'Request for help canceled',
   //xxx为分组名
   fcr_group_invitation: 'Teacher is inviting you to join {reason1}。',
   fcr_group_button_join: 'Join',
@@ -382,6 +384,8 @@ export const enUs = {
   fcr_group_join_error: 'Joining room fail',
   fcr_group_tips_unknown_username: 'The user didn‘t enter the group',
   fcr_group_tips_name_already_exists: 'The group name already exists',
+  fcr_group_dialog_join: "Join",
+  fcr_group_dialog_reject: "Reject",
 
   //分组上限
   fcr_group_tips_group_number_exceeds: 'The number of groups cannot exceed {reason1}',
@@ -399,14 +403,22 @@ export const enUs = {
   fcr_group_confirm_ask_for_help: '{reason1} in Group {reason2} asked for help',
   fcr_group_not_now: 'Not now',
   fcr_group_go_to: 'Go to',
+  fcr_group_reject_help: 'You have refused the {reason1}\'s request for help',
   fcr_group_ask_for_help: 'Ask for Help',
   fcr_group_from: 'From',
+  fcr_group_label_help_list: 'Help list',
   fcr_group_label_broadcast_message: 'Send Message to all',
   fcr_group_label_broadcast_message_placeholder: 'Please input ...',
   fcr_group_label_broadcast_cancel: 'Cancel',
   fcr_group_label_broadcast_submit: 'Send',
   fcr_group_label_create: 'Create',
+  fcr_group_label_group_help: 'Group Help',
+  fcr_group_label_group_cancel_help: 'Cancel Help',
   fcr_group_label_breakout_rooms: 'Breakout Rooms',
+  fcr_group_label_breakout_rooms_open: 'Group is opening...',
+  fcr_group_tip_breakout_rooms_help: 'Initiate a request for help from the teacher',
+  fcr_group_tip_breakout_rooms_cancel_help: 'When seeking help from the teacher, click to cancel the request..',
+  fcr_group_label_breakout_rooms_open_help:'Group is opening，have{reason1}group inviting...',
   fcr_group_assign_automatically: 'Assign automatically',
   fcr_group_assign_manually: 'Assign manually',
   fcr_group_create_group_no: 'No',

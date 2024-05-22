@@ -16,6 +16,8 @@ import { Leave, LeaveCheck } from './leave';
 import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { RaiseHands } from './raise-hands';
 import { Cloud } from './cloud';
+import { GroupDiscuss } from './group';
+import { RequestHelp } from './requestHelp';
 export const ActionBar = observer(() => {
   const {
     layoutUIStore: { showActiobBar, setIsPointingBar },
@@ -27,7 +29,10 @@ export const ActionBar = observer(() => {
       showToolBox,
       showWhiteBoard,
       showCloud,
+      showGroup,
+      showHelp,
     },
+    breakoutUIStore: { groupState, currentSubRoomInfo },
   } = useStore();
   return (
     <div
@@ -54,6 +59,8 @@ export const ActionBar = observer(() => {
             {showToolBox && <ToolBox></ToolBox>}
             {showRaiseHands && <RaiseHands></RaiseHands>}
             {showWhiteBoard && <Whiteboard></Whiteboard>}
+            {!!groupState && showGroup && <GroupDiscuss/>}
+            {showHelp && currentSubRoomInfo && <RequestHelp />}
             {showCloud && <Cloud></Cloud>}
           </div>
           <div className="fcr-action-bar-right">

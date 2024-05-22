@@ -131,7 +131,7 @@ export const GroupedList = observer(
         setGroupUsers,
         groupState,
         joinSubRoom,
-        helpRequestList,
+        studentInvites,
       },
     } = useStore();
     const transI18n = useI18n();
@@ -202,7 +202,7 @@ export const GroupedList = observer(
       joinSubRoom(groupId);
     };
 
-    const haveRequest = helpRequestList.some((request) => {
+    const haveRequest = studentInvites.some((request: { groupUuid: string; }) => {
       return request.groupUuid === groupId;
     });
 
@@ -227,7 +227,7 @@ export const GroupedList = observer(
             {haveRequest && (
               <ToolTip content={transI18n('fcr_group_tips_ask_help')}>
                 <Button size="XXS" shape="rounded" type="secondary">
-                  <SvgImg type={SvgIconEnum.FCR_STUDENT_RASIEHAND} />
+                  <SvgImg type={SvgIconEnum.FCR_STUDENT_HELPHAND} />
                 </Button>
               </ToolTip>
             )}
