@@ -252,8 +252,8 @@ export const enUs = {
   //xxx 为被解除禁言的学生名字
   fcr_chat_tips_unmute_student: '{reason1} was unmute by teacher',
   fcr_chat_label_private: 'Private',
-  fcr_chat_label_i_said_to: 'I said to',
-  fcr_chat_label_said_to_me: 'said to me',
+  fcr_chat_label_i_said_to: 'You to',
+  fcr_chat_label_said_to_me: 'to you',
   fcr_chat_more: 'More',
   fcr_chat_no_data: 'No data',
   fcr_chat_message_from: 'From ',

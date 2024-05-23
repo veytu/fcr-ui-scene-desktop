@@ -247,8 +247,8 @@ export const zhCn = {
   //xxx 为被解除禁言的学生名字
   fcr_chat_tips_unmute_student: '{reason1} 被老师解除禁言',
   fcr_chat_label_private: '私聊',
-  fcr_chat_label_i_said_to: '我发送给',
-  fcr_chat_label_said_to_me: '发送给我',
+  fcr_chat_label_i_said_to: '你发送给',
+  fcr_chat_label_said_to_me: '发送给你',
   fcr_chat_more: '更多',
   fcr_chat_no_data: '没有消息',
   fcr_chat_message_from: '来自',
