@@ -6,7 +6,7 @@ import { SvgImg, SvgIconEnum } from '@components/svg-img';
 import { ToolTip } from '@components/tooltip';
 import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { observer } from 'mobx-react';
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { CreatePanel } from './create-panel';
 import { BreakoutRoomGrouping } from './grouping';
 import { Toast } from '@components/toast';
@@ -106,7 +106,7 @@ export const WizardGrouping: FC = observer(() => {
     acceptInvite(item.groupUuid);
     breakoutUIStore.setDialogVisible(false);
   }
-  const studentInviteLists = useMemo(() => studentInvites.filter((v: { isInvite: boolean; }) => v.isInvite), []) 
+  const studentInviteLists = studentInvites.filter((v: { isInvite: boolean; }) => v.isInvite)
   return (
     <div className="fcr-breakout-room-dialog">
       {/* header */}

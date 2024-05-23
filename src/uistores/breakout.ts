@@ -117,6 +117,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
 
   @computed
   get studentInvites() {
+    console.log('studentInviteLists_studentInvites', this._studentInvites)
     return this._studentInvites
   }
   /**
@@ -904,10 +905,13 @@ export class BreakoutUIStore extends EduUIStoreBase {
 
   @action.bound
   rejectInvite(groupUuid: string) {
+    console.log('rejectInvite_studentInvites', this._studentInvites)
     const index = this._studentInvites.findIndex((item: { groupUuid: string; }) => item.groupUuid === groupUuid);
     if (index > -1) {
       this._cancelGroupUuid = groupUuid;
+      console.log('rejectInvite_studentInvites', this._studentInvites, index)
       this._studentInvites.splice(index, 1)
+      console.log('rejectInvite_studentInvites_after', this._studentInvites)
       const message: CustomMessageData<CustomMessageRejectInviteType> = {
         cmd: CustomMessageCommandType.teacherRejectInvite,
         data: {

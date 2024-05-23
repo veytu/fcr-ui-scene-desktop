@@ -22,7 +22,7 @@ export const RequestHelp = observer(() => {
         teacherGroupUuidRef.current = teacherGroupUuid;
       }, [teacherGroupUuid]);
       const { currentSubRoom } = classroomStore.groupStore;
-      const isTeacherIn = useMemo(() => teacherGroupUuid === currentSubRoom, [teacherGroupUuid, currentSubRoom]);
+      const isTeacherIn = teacherGroupUuid === currentSubRoom;
       const { userUuid, userName } = EduClassroomConfig.shared.sessionInfo;    
       const teachers = classroomStore.userStore.mainRoomDataStore.teacherList;
       const assistants = classroomStore.userStore.mainRoomDataStore.assistantList;
