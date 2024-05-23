@@ -97,6 +97,7 @@ export const zhCn = {
   fcr_room_tips_reward_number: '奖励数量',
   //****************** 邀请Invite ******************
   fcr_invite_label_title: '分享链接和房间号',
+  fcr_invite_student_count: '等{reason}位',
 
   //xxx为房间名
   fcr_invite_label_room_name: '{reason1}',

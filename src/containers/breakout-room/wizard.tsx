@@ -264,7 +264,9 @@ export const WizardGrouping: FC = observer(() => {
                               )
                             })
                           }
-                          {item.children.length > 3 && <div className='fcr-group-list-transition-list-content-item-more'>等{item.children.length}位</div>}
+                          {item.children.length > 3 && <div className='fcr-group-list-transition-list-content-item-more'>{transI18n('fcr_invite_student_count', {
+                            reason: item.children.length
+                          })}</div>}
                         </div>
                       
                     </div>

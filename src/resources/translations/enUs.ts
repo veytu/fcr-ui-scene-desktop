@@ -534,6 +534,7 @@ export const enUs = {
 
   //****************** 邀请Invite ******************
   fcr_invite_button_copy_link: 'Copy Link',
+  fcr_invite_student_count: 'Other {reason} people',
 
   //****************** 房间 Room ******************
   fcr_room_tips_leave_content: 'Are you sure you want to leave your classroom?',
