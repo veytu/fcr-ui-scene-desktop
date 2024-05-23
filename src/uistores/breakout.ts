@@ -1240,7 +1240,6 @@ export class BreakoutUIStore extends EduUIStoreBase {
             this._cancelGroupUuid = ''
           } else {
             this._cancelGroupUuid = message.payload.data.groupUuid
-            console.log('CustomMessageCommandType.cancelInvite', this._cancelGroupUuid)
             const lists = this._studentInvites.filter((v: { groupUuid: string; }) => v.groupUuid !== message.payload.data.groupUuid)
             this._studentInvites = lists || []
           }

@@ -685,6 +685,14 @@
   font-style: normal;
   font-weight: 400;
   line-height: 14px;
+  width: fit-content;
+  max-width: 100%;
+}
+.fcr-breakout-room__ask-for-help__list-item-name{
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .fcr-breakout-room__ask-for-help__list-item-label > p:first-child {
   overflow: hidden;

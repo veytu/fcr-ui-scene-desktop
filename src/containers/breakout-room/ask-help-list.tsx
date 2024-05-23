@@ -34,7 +34,10 @@ export const AskHelpList = observer(() => {
   const openNotification = (list: AskHelpRequest) => {
     api.open({
       key: list.groupUuid,
-      message: <div className="fcr-breakout-room__ask-for-help__list-item-label">{list.groupName} {transI18n('fcr_group_ask_for_help')}</div>,
+      message: <div className="fcr-breakout-room__ask-for-help__list-item-label">
+        <span className='fcr-breakout-room__ask-for-help__list-item-name'>{list.groupName}</span>
+        <span>{transI18n('fcr_group_ask_for_help')}</span>
+      </div>,
       duration: null,
       description: '',
       placement: 'topLeft',
