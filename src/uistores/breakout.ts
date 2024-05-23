@@ -22,6 +22,7 @@ import { CustomMessageAcceptInviteType, CustomMessageCancelInviteType, CustomMes
 import { AgoraExtensionRoomEvent } from '@ui-scene/extension/events';
 import { Children } from 'react';
 import { getRandomInt } from '@ui-scene/utils';
+import { ToastApi } from '@components/toast';
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 enum GroupMethod {
@@ -1232,10 +1233,14 @@ export class BreakoutUIStore extends EduUIStoreBase {
         const item = this._studentInvites.find((v: { groupUuid: string; }) => v.groupUuid === message.payload.data.groupUuid)
         if (item) {
           const stus = item.children.filter((v: { id: string; }) => v.id !== message.payload.data.userUuid)
+          console.log('CustomMessageCommandType.cancelInvite', stus)
           if (stus.length) {
             item.children = [...stus]
+            this._studentInvites = [...this._studentInvites]
+            this._cancelGroupUuid = ''
           } else {
             this._cancelGroupUuid = message.payload.data.groupUuid
+            console.log('CustomMessageCommandType.cancelInvite', this._cancelGroupUuid)
             const lists = this._studentInvites.filter((v: { groupUuid: string; }) => v.groupUuid !== message.payload.data.groupUuid)
             this._studentInvites = lists || []
           }
@@ -1258,7 +1263,12 @@ export class BreakoutUIStore extends EduUIStoreBase {
         const groupUuid = data?.data?.groupUuid || '';
         if (groupUuid === this.classroomStore.groupStore.currentSubRoom) {
           if (this._inviteStudentTasks.has(`${userUuid}`)) {
-            this.addToast({ text: transI18n('fcr_group_help_teacher_busy_msg')});
+            ToastApi.open({
+              toastProps: {
+                type: 'info',
+                content: transI18n('fcr_group_help_teacher_busy_msg'),
+              }
+            })
             this._inviteStudentTasks.get(`${userUuid}`)?.stop()
           }
           this._studentInvite.isInvite = false
@@ -1272,7 +1282,12 @@ export class BreakoutUIStore extends EduUIStoreBase {
             this._inviteStudentTasks.get(`${userUuid}`)?.stop()
           }
           this._studentInvite.isInvite = false
-          this.addToast({ text: transI18n('fcr_group_teacher_join')});
+          ToastApi.open({
+            toastProps: {
+              type: 'info',
+              content: transI18n('fcr_group_teacher_join'),
+            }
+          })
         }
         break;
       }

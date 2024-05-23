@@ -106,7 +106,7 @@ export const WizardGrouping: FC = observer(() => {
     acceptInvite(item.groupUuid);
     breakoutUIStore.setDialogVisible(false);
   }
-  const studentInviteLists = studentInvites.filter((v: { isInvite: boolean; }) => v.isInvite)
+  const studentInviteLists = studentInvites.filter((v: { isInvite: boolean; }) => v.isInvite) || []
   return (
     <div className="fcr-breakout-room-dialog">
       {/* header */}

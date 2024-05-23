@@ -14,7 +14,7 @@ export const GroupDiscuss = observer(() => {
     const handleClick = () => {
         breakoutUIStore.setDialogVisible(true);
     };
-    const studentInvitesList = studentInvites.filter((v: { isInvite: boolean; }) => v.isInvite)
+    const studentInvitesList = studentInvites.filter((v: { isInvite: boolean; }) => v.isInvite) || []
     return (
         <ToolTip
             trigger="hover" 

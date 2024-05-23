@@ -18,17 +18,18 @@ export const AskHelpList = observer(() => {
   const [api, contextHolder] = notification.useNotification({
     top: 80,
   });
-  console.log('studentInvites', studentInvites)
+  if (cancelGroupUuid) {
+    api.destroy(cancelGroupUuid)
+  }
+  
   const handleOk = (item: AskHelpRequest) => {
     acceptInvite(item.groupUuid);
-    api.destroy(item.groupUuid);
   };
   const handleCancel = (item: AskHelpRequest) => {
     rejectInvite(item.groupUuid);
     addToast({ text: transI18n('fcr_group_reject_help', {
       reason1: item.groupName
     })})
-    api.destroy(item.groupUuid);
   };
   const openNotification = (list: AskHelpRequest) => {
     api.open({
@@ -54,9 +55,7 @@ export const AskHelpList = observer(() => {
       className: 'fcr-breakout-room__ask-for-help__list-item',
     });
   }
-  useEffect(() => {
-    api.destroy(cancelGroupUuid)
-  }, [cancelGroupUuid])
+  
   useEffect(() => {
     if (studentInvites.length) {
       const lists = studentInvites.filter((item: { isInvite: boolean; }) => item.isInvite);
