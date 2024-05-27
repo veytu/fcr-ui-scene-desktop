@@ -347,14 +347,15 @@ export class BreakoutUIStore extends EduUIStoreBase {
   }
   @action.bound
   studentInviteTeacher(groupInfo: GroupInfoProps, studentInfo: StudentInfoProps, teacherUuid: string) {
+    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
     const item = this.studentGroupInvites;
     item.groupUuid = this.classroomStore.groupStore.currentSubRoom as string;
     item.groupName = groupInfo.groupName;
     item.isInvite = studentInfo.isInvite
-    const stu = item.children.find((v) => v.id === studentInfo.id);
+    const stu = item.children.find((v) => v.id === userUuid);
     if (stu) {
       stu.isInvite = studentInfo.isInvite;
-      this._inviteStudentTasks.get(`${studentInfo.id}`)?.stop()
+      this._inviteStudentTasks.get(`${userUuid}`)?.stop()
     } else {
       item.children.push(studentInfo)
     }
@@ -362,10 +363,14 @@ export class BreakoutUIStore extends EduUIStoreBase {
       groupUuid: this.classroomStore.groupStore.currentSubRoom as string,
       groupName: groupInfo.groupName,
       isInvite: studentInfo.isInvite,
-      id: studentInfo.id,
+      id: userUuid,
       name: studentInfo.name,
     }
     if (studentInfo.isInvite) {
+      if (this._inviteStudentTasks.has(`${userUuid}`)) {
+        this._inviteStudentTasks.get(`${userUuid}`)?.stop()
+        this._inviteStudentTasks.delete(`${userUuid}`)
+      }
       const intervalInMs = getRandomInt(2000, 4000);
       const inviteTask = Scheduler.shared.addIntervalTask(
         () => {
@@ -378,16 +383,16 @@ export class BreakoutUIStore extends EduUIStoreBase {
         intervalInMs,
         true,
       );
-      this._inviteStudentTasks.set(`${studentInfo.id}`, inviteTask);
+      this._inviteStudentTasks.set(`${userUuid}`, inviteTask);
     } else {
-      this._inviteStudentTasks.get(`${studentInfo.id}`)?.stop()
+      this._inviteStudentTasks.get(`${userUuid}`)?.stop()
       const message: CustomMessageData<CustomMessageCancelInviteType> = {
         cmd: CustomMessageCommandType.cancelInvite,
         data: {
           groupUuid: this.classroomStore.groupStore.currentSubRoom as string,
           groupName: groupInfo.groupName,
           isInvite: false,
-          userUuid: studentInfo.id,
+          userUuid: userUuid,
           userName: studentInfo.name,
         },
       };
@@ -1190,19 +1195,6 @@ export class BreakoutUIStore extends EduUIStoreBase {
 
     if (type === AgoraEduClassroomEvent.MoveToOtherGroup) {
       this._changeSubRoom();
-    }
-  }
-  @action.bound
-  setStudentInvites(studentInvite: { groupUuid: string; isInvite: boolean; }) {
-    const item = this._studentInvites.find((v: { groupUuid: string; }) => v.groupUuid === studentInvite.groupUuid)
-    if (item) {
-      item.isInvite = studentInvite.isInvite
-      item.children.map((v: any) => {
-        return {
-          ...v,
-          isInvite: studentInvite.isInvite
-        }
-      })
     }
   }
   @computed

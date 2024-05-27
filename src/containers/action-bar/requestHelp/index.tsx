@@ -23,7 +23,6 @@ export const RequestHelp = observer(() => {
       }, [teacherGroupUuid]);
       const { currentSubRoom } = classroomStore.groupStore;
       const isTeacherIn = teacherGroupUuid !== undefined && teacherGroupUuid === currentSubRoom;
-      console.log('isTeacherIn', isTeacherIn, teacherGroupUuid)
       const { userUuid, userName } = EduClassroomConfig.shared.sessionInfo;    
       const teachers = classroomStore.userStore.mainRoomDataStore.teacherList;
       const assistants = classroomStore.userStore.mainRoomDataStore.assistantList;
@@ -46,15 +45,6 @@ export const RequestHelp = observer(() => {
                 content: transI18n('fcr_group_teacher_not_in_classroom'),
                 cancelButtonVisible: false,
               });
-              return;
-            }
-            if (teacherGroupUuidRef.current === currentSubRoom) {
-              ToastApi.open({
-                toastProps: {
-                  content: transI18n('fcr_group_teacher_exist_hint'),
-                  type: 'normal',
-                },
-              })
               return;
             }
           
