@@ -22,7 +22,8 @@ export const RequestHelp = observer(() => {
         teacherGroupUuidRef.current = teacherGroupUuid;
       }, [teacherGroupUuid]);
       const { currentSubRoom } = classroomStore.groupStore;
-      const isTeacherIn = teacherGroupUuid === currentSubRoom;
+      const isTeacherIn = teacherGroupUuid !== undefined && teacherGroupUuid === currentSubRoom;
+      console.log('isTeacherIn', isTeacherIn, teacherGroupUuid)
       const { userUuid, userName } = EduClassroomConfig.shared.sessionInfo;    
       const teachers = classroomStore.userStore.mainRoomDataStore.teacherList;
       const assistants = classroomStore.userStore.mainRoomDataStore.assistantList;

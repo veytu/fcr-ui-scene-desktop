@@ -410,7 +410,7 @@ export const zhCn = {
   fcr_group_label_breakout_rooms_open: '分组开在进行中...',
   fcr_group_tip_breakout_rooms_help: '向老师发起求助',
   fcr_group_tip_breakout_rooms_cancel_help: '向老师求助中，点击取消求助..',
-  fcr_group_label_breakout_rooms_open_help:'分组开启中，有{reason1}组人员向你发起求组...',
+  fcr_group_label_breakout_rooms_open_help:'分组开启中，有{reason1}组人员向你发起求助...',
   fcr_group_assign_automatically: '自动分组',
   fcr_group_assign_manually: '手动分组',
   fcr_group_create_group_no: '否',
