@@ -13,7 +13,7 @@ type AskHelpRequest = {
 
 export const AskHelpList = observer(() => {
   const {
-    breakoutUIStore: { studentInvites, groupState, acceptInvite, rejectInvite, addToast, cancelGroupUuid },
+    breakoutUIStore: { studentInvites, setStudentInvitesEmpty, groupState, acceptInvite, rejectInvite, addToast, cancelGroupUuid },
   } = useStore();
   const [api, contextHolder] = notification.useNotification({
     top: 80,
@@ -58,11 +58,14 @@ export const AskHelpList = observer(() => {
       className: 'fcr-breakout-room__ask-for-help__list-item',
     });
   }
-  if (!groupState) {
-    for (let i = 0; i < studentInvites.length; i++) {
-      api.destroy(studentInvites[i].groupUuid)
+  useEffect(() => {
+    if (!groupState && studentInvites.length) {
+      for (let i = 0; i < studentInvites.length; i++) {
+        api.destroy(studentInvites[i].groupUuid)
+      }
+      setStudentInvitesEmpty()
     }
-  }
+  }, [groupState, setStudentInvitesEmpty, studentInvites.length])
   if (studentInvites.length && groupState) {
     const lists = studentInvites.filter((item: { isInvite: boolean; }) => item.isInvite);
     if (lists.length) {

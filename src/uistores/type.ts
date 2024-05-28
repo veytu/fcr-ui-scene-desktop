@@ -33,6 +33,7 @@ export type CustomMessageCancelInviteType = {
 export type CustomMessageRejectInviteType = {
   groupUuid: string;
 };
+export type CustomMessageTeacherCloseGroupType = boolean;
 export type CustomMessageAcceptInviteType = {
   groupUuid: string;
 };
@@ -45,6 +46,7 @@ export enum CustomMessageCommandType {
   cancelInvite = 'cancelInvite',
   teacherRejectInvite = 'teacherRejectInvite',
   teacherAcceptInvite = 'teacherAcceptInvite',
+  teacherCloseGroup = 'teacherCloseGroup'
 }
 export type CustomMessageDeviceSwitchType = {
   roomId?: string;
