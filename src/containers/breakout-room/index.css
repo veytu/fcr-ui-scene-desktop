@@ -516,11 +516,15 @@
   align-items: center;
   float: right;
 }
+.fcr-breakout-room__askhelp-buttons{
+  display: flex;
+  align-items: center;
+}
 .fcr-breakout-room__create-panel-button + .fcr-breakout-room__create-panel-button {
   margin-left: 8px;
 }
 .fcr-breakout-room__create-panel-button {
-  padding: 4px 10px;
+  padding: 2px 10px;
   border-radius: 6px;
   background: #F5655C;
   color: #fff;
@@ -640,14 +644,17 @@
 .fcr-breakout-room__status-panel-label {
   margin-left: 12px;
 }
-:where(.css-dev-only-do-not-override-1r287do).ant-notification.ant-notification-topLeft {
+.ant-notification.ant-notification-topLeft {
   left:  -10px !important;
 
 }
-:where(.css-dev-only-do-not-override-1r287do).ant-notification .ant-notification-notice-wrapper {
+.ant-notification .ant-notification-notice-wrapper {
   background: transparent;
 }
-:where(.css-dev-only-do-not-override-1r287do).ant-notification .ant-notification-notice-wrapper .ant-notification-notice.fcr-breakout-room__ask-for-help__list-item {
+.ant-notification .ant-notification-notice-wrapper {
+  box-shadow: none !important;
+}
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice.fcr-breakout-room__ask-for-help__list-item {
   width: 300px;
   height: 93px;
   border-radius: 10px;
@@ -657,11 +664,11 @@
   backdrop-filter: blur(7.5px);
   padding: 22px 17px 12px 20px;
 }
-:where(.css-dev-only-do-not-override-1r287do).ant-notification .ant-notification-notice-wrapper .fcr-breakout-room__ask-for-help__list-item  .ant-notification-notice-close{
+.ant-notification .ant-notification-notice-wrapper .fcr-breakout-room__ask-for-help__list-item  .ant-notification-notice-close{
   top: 3px;
   right: 3px;
 }
-:where(.css-dev-only-do-not-override-1r287do).ant-notification .ant-notification-notice-wrapper .fcr-breakout-room__ask-for-help__list-item .ant-notification-notice-with-icon .ant-notification-notice-message {
+.ant-notification .ant-notification-notice-wrapper .fcr-breakout-room__ask-for-help__list-item .ant-notification-notice-with-icon .ant-notification-notice-message {
   margin-inline-start: 63px;
 }
 .fcr-breakout-room__ask-for-help__list-item-icon {

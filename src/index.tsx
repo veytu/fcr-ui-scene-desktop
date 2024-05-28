@@ -21,7 +21,6 @@ import { zhCn } from './resources/translations/zhCn';
 import { enUs } from './resources/translations/enUs';
 import { isLocked, lock, unlock } from './lock';
 import { RoomTemplate } from './configs/room-template';
-
 /**
  * Scene SDK
  */
