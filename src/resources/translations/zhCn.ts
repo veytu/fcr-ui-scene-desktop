@@ -332,7 +332,7 @@ export const zhCn = {
   fcr_group_invitation: '老师邀请您加入{reason1}。',
   fcr_group_button_join: '加入',
   fcr_group_button_later: '稍后',
-
+  fcr_move_group_tips: '你已被换到{reason}，求助将取消，请重新申请求助',
   //xxx为分组名
   fcr_group_joining: '正在加入{reason1}',
   fcr_group_join: '加入讨论组',

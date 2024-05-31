@@ -339,7 +339,7 @@ export const enUs = {
   fcr_group_invitation: 'Teacher is inviting you to join {reason1}。',
   fcr_group_button_join: 'Join',
   fcr_group_button_later: 'Later',
-
+  fcr_move_group_tips: 'You have been transferred to {reason} and your request for help will be cancelled. Please reapply for help',
   //xxx为分组名
   fcr_group_joining: 'Joining {reason1}',
   fcr_group_join: 'Join group',
