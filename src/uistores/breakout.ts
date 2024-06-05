@@ -81,6 +81,8 @@ export class BreakoutUIStore extends EduUIStoreBase {
   private _studentInvite: any = {}
   @observable
   private _cancelGroupUuid = ''
+  @observable
+  private _studentInviteTasks =new Map()
   /**
    * 分组窗口是否打开
    */
@@ -109,7 +111,9 @@ export class BreakoutUIStore extends EduUIStoreBase {
     groupUuid: '',
     groupName: '',
     isInvite: false,
-    children: []
+    inviteStudentTask: undefined,
+    userName: '',
+    userUuid: '',
   }
   /**
    * 正在加入分组
@@ -315,14 +319,18 @@ export class BreakoutUIStore extends EduUIStoreBase {
   }
   @action.bound
   setStudentInvitesEmpty() {
+    for (let i = 0; i < this.students.length; i++) {
+      const studentInviteTask = this._studentInviteTasks.get(this.students[i].userUuid);
+      if (studentInviteTask) {
+        studentInviteTask.stop();
+      }
+    }
+    this._studentInvites = []
     const message: CustomMessageData<CustomMessageTeacherCloseGroupType> = {
       cmd: CustomMessageCommandType.teacherCloseGroup,
       data: true,
     };
     this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomChannelMessage('flexMsg', message, false);
-    
-   
-    this._studentInvites = []
   }
   /**
    * 当前房间
@@ -364,13 +372,8 @@ export class BreakoutUIStore extends EduUIStoreBase {
     item.groupUuid = this.classroomStore.groupStore.currentSubRoom as string;
     item.groupName = groupInfo.groupName;
     item.isInvite = studentInfo.isInvite
-    const stu = item.children.find((v) => v.id === userUuid);
-    if (stu) {
-      stu.isInvite = studentInfo.isInvite;
-      this._inviteStudentTask?.stop()
-    } else {
-      item.children.push(studentInfo)
-    }
+    item.userName = studentInfo.name;
+    item.userUuid = userUuid;
     this._initGroupInfo = groupInfo
     this._studentInvite = {
       groupUuid: this.classroomStore.groupStore.currentSubRoom as string,
@@ -381,22 +384,18 @@ export class BreakoutUIStore extends EduUIStoreBase {
     }
     if (studentInfo.isInvite) {
       const intervalInMs = getRandomInt(2000, 4000);
-      if (this._inviteStudentTask) {
+      if (!this._inviteStudentTask?.isStopped) {
         this._inviteStudentTask?.stop()
       }
       this._inviteStudentTask = Scheduler.shared.addIntervalTask(
         () => {
+          if (this._inviteStudentTask?.isStopped) return;
           const message: CustomMessageData<CustomMessageInviteType> = {
             cmd: CustomMessageCommandType.inviteTeacher,
-            data: item,
+            data: { ...item, inviteStudentTask: this._inviteStudentTask },
           };
-          if (this._studentInvite.isInvite) {
-            this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomPeerMessage('flexMsg', message, teacherUuid, false);
-          } else {
-            if (this._inviteStudentTask) {
-              this._inviteStudentTask?.stop()
-            }
-          }
+          this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomPeerMessage('flexMsg', message, teacherUuid, false);
+         
         },
         intervalInMs,
         true,
@@ -900,16 +899,22 @@ export class BreakoutUIStore extends EduUIStoreBase {
   }
 
   @action.bound
-  acceptInvite(groupUuid: string) {
+  async acceptInvite(groupUuid: string) {
     const teachers = this.classroomStore.userStore.mainRoomDataStore.teacherList;
     if (teachers.size) {
       const teacherUuid = teachers.keys().next().value;
       const assistants = this.classroomStore.userStore.mainRoomDataStore.assistantList;
       const assistantUuids = Array.from(assistants.keys());
+      const groupStudents = this.students.filter((v) => v.groupUuid === groupUuid);
+      for (let i = 0; i < groupStudents.length; i++) {
+        const studentInviteTask = this._studentInviteTasks.get(groupStudents[i].userUuid);
+        if (studentInviteTask) {
+          studentInviteTask.stop();
+        }
+      }
+      this._cancelGroupUuid = groupUuid;
       const index = this._studentInvites.findIndex((item: { groupUuid: string; }) => item.groupUuid === groupUuid);
       if (index > -1) {
-        // this._handsInviteTask?.stop()
-        this._cancelGroupUuid = groupUuid;
         this._studentInvites.splice(index, 1)
         const message: CustomMessageData<CustomMessageAcceptInviteType> = {
           cmd: CustomMessageCommandType.teacherAcceptInvite,
@@ -938,9 +943,16 @@ export class BreakoutUIStore extends EduUIStoreBase {
 
   @action.bound
   rejectInvite(groupUuid: string) {
+    const groupStudents = this.students.filter((v) => v.groupUuid === groupUuid);
+    for (let i = 0; i < groupStudents.length; i++) {
+      const studentInviteTask = this._studentInviteTasks.get(groupStudents[i].userUuid);
+      if (studentInviteTask) {
+        studentInviteTask.stop();
+      }
+    }
+    this._cancelGroupUuid = groupUuid;
     const index = this._studentInvites.findIndex((item: { groupUuid: string; }) => item.groupUuid === groupUuid);
     if (index > -1) {
-      this._cancelGroupUuid = groupUuid;
       this._studentInvites.splice(index, 1)
       const message: CustomMessageData<CustomMessageRejectInviteType> = {
         cmd: CustomMessageCommandType.teacherRejectInvite,
@@ -948,8 +960,8 @@ export class BreakoutUIStore extends EduUIStoreBase {
           groupUuid: groupUuid,
         },
       };
-      // this._handsInviteTask?.stop()
       this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomChannelMessage('flexMsg', message, false)
+   
     }
     
   }
@@ -964,10 +976,27 @@ export class BreakoutUIStore extends EduUIStoreBase {
     try {
       this._requestLock.add(lockName);
       const currentRoomUuid = this.classroomStore.groupStore.currentSubRoom;
-      const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+      const { userUuid, userName } = EduClassroomConfig.shared.sessionInfo;
       if (currentRoomUuid) {
         await this.classroomStore.groupStore.removeGroupUsers(currentRoomUuid, [userUuid]);
+        if (this._inviteStudentTask) {
+          this._inviteStudentTask?.stop()
+        }
+        const teachers = this.classroomStore.userStore.mainRoomDataStore.teacherList;
+        const teacherUuid = teachers.keys().next().value;
+        const message: CustomMessageData<CustomMessageCancelInviteType> = {
+          cmd: CustomMessageCommandType.cancelInvite,
+          data: {
+            groupUuid: this._initGroupInfo && this._initGroupInfo.groupUuid,
+                groupName: this._initGroupInfo && this._initGroupInfo?.groupName || '',
+                isInvite: false,
+                userUuid: userUuid,
+                userName: userName,
+          },
+        };
+        this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomPeerMessage('flexMsg', message, teacherUuid, false);
       }
+      
     } catch (e) {
     } finally {
       this._requestLock.delete(lockName);
@@ -1263,32 +1292,42 @@ export class BreakoutUIStore extends EduUIStoreBase {
     const cmd = data.cmd; 
     switch (cmd) {
       case CustomMessageCommandType.inviteTeacher: {
-        console.log('CustomMessageCommandType.inviteTeacher', this._cancelGroupUuid, message.payload.data.groupUuid)
+        const { userUuid, inviteStudentTask } = message.payload.data;
+        if (!this._studentInviteTasks.has(userUuid)) {
+          this._studentInviteTasks.set(userUuid, inviteStudentTask)
+        }
         if (this._cancelGroupUuid === message.payload.data.groupUuid) {
           this._cancelGroupUuid = ''
           break
         }
-        const item = this._studentInvites.find((v: { groupUuid: string; }) => v.groupUuid === message.payload.data.groupUuid)
-        if (item) {
-          item.isInvite = message.payload.data.isInvite
-          const stu = item.children.find((v: { id: string; }) => v.id === message.payload.data.children[0]?.id)
+        const studentInvite = this._studentInvites.find((v: { groupUuid: string; }) => v.groupUuid === message.payload.data.groupUuid)
+        if (studentInvite) {
+          const stu = studentInvite.children.find((v: { userUuid: string; }) => v.userUuid === message.payload.data.userUuid)
           if (!stu) {
-            item.children.push(message.payload.data.children[0])
-          } else {
-            stu.isInvite = message.payload.data.children[0].isInvite
+            studentInvite.children.push({
+              userUuid: message.payload.data.userUuid,
+              userName: message.payload.data.userName,
+            })
           }
+          this._studentInvites = [...studentInvite]
         } else {
-          console.log('CustomMessageCommandType.inviteTeacher', message.payload.data)
-          this._studentInvites = [...this._studentInvites??[], message.payload.data]
+          const obj = {
+            groupUuid: message.payload.data.groupUuid,
+            groupName: message.payload.data.groupName,
+            isInvite: message.payload.data.isInvite,
+            children: [{
+              userUuid: message.payload.data.userUuid,
+              userName: message.payload.data.userName,
+            }],
+          }
+          this._studentInvites.push(obj)
         }
         break;
       }
       case CustomMessageCommandType.cancelInvite: {
-        console.log('CustomMessageCommandType.cancelInvite',  message)
         const item = this._studentInvites.find((v: { groupUuid: string; }) => v.groupUuid === message.payload.data.groupUuid)
         if (item) {
-          const stus = item.children.filter((v: { id: string; }) => v.id !== message.payload.data.userUuid)
-          console.log('CustomMessageCommandType.cancelInvite', stus)
+          const stus = item.children.filter((v: { userUuid: string; }) => v.userUuid !== message.payload.data.userUuid)
           if (stus.length) {
             item.children = [...stus]
             this._studentInvites = [...this._studentInvites]
@@ -1296,7 +1335,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
           } else {
             this._cancelGroupUuid = message.payload.data.groupUuid
             const lists = this._studentInvites.filter((v: { groupUuid: string; }) => v.groupUuid !== message.payload.data.groupUuid)
-            this._studentInvites = lists || []
+            this._studentInvites = [...lists] || []
           }
         }
         break;
@@ -1311,7 +1350,6 @@ export class BreakoutUIStore extends EduUIStoreBase {
   private _onReceiveChannelMessage(message: AgoraRteCustomMessage) {
     const data: any = message.payload;
     const cmd = data.cmd;
-    const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid
     switch (cmd) {
       case CustomMessageCommandType.teacherRejectInvite: {
         const groupUuid = data?.data?.groupUuid || '';
@@ -1330,19 +1368,20 @@ export class BreakoutUIStore extends EduUIStoreBase {
       case CustomMessageCommandType.teacherAcceptInvite: {
         const groupUuid = data?.data?.groupUuid || '';
         if (groupUuid === this.classroomStore.groupStore.currentSubRoom) {
-          this._inviteStudentTask?.stop()
-          this._studentInvite.isInvite = false
           ToastApi.open({
             toastProps: {
               type: 'info',
               content: transI18n('fcr_group_teacher_join'),
             }
           })
+          this._inviteStudentTask?.stop()
+          this._studentInvite.isInvite = false
         }
         break;
       }
       case CustomMessageCommandType.teacherCloseGroup: {
         this._inviteStudentTask?.stop()
+        this._studentInvite = undefined
         break;
       }
     }

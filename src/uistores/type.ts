@@ -16,11 +16,9 @@ export type CustomMessageInviteType = {
   groupUuid: string;
   groupName: string;
   isInvite: boolean;
-  children: {
-    id: string;
-    name: string;
-    isInvite: boolean;
-  }[];
+  inviteStudentTask: any;
+  userUuid: string;
+  userName: string;
 
 };
 export type CustomMessageCancelInviteType = {

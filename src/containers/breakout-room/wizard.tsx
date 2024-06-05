@@ -243,7 +243,7 @@ export const WizardGrouping: FC = observer(() => {
 
             <div className="fcr-group-list-transition-list-content">
               {
-                studentInviteLists.length > 0 ? studentInviteLists.map((item: CustomMessageInviteType) => {
+                studentInviteLists.length > 0 ? studentInviteLists.map((item: any) => {
                   return (
                     <div key={item.groupUuid} className="fcr-group-list-transition-list-content-item">
                         <div className='fcr-group-list-transition-list-content-item-title'>
@@ -255,11 +255,11 @@ export const WizardGrouping: FC = observer(() => {
                         </div>
                         <div className='fcr-group-list-transition-list-content-item-students'>
                           {
-                            item.children.slice(0, 3).map((itm) => {
+                            item.children.slice(0, 3).map((itm: any) => {
                               return (
-                                <div className='fcr-group-list-transition-list-content-item-student' key={itm.id}>
-                                   <Avatar size={24} borderRadius='24px' textSize={12} nickName={itm.name}></Avatar>
-                                   <span className='fcr-group-list-transition-list-content-item-student-name'>{itm.name}</span>
+                                <div className='fcr-group-list-transition-list-content-item-student' key={itm.userUuid}>
+                                   <Avatar size={24} borderRadius='24px' textSize={12} nickName={itm.userName}></Avatar>
+                                   <span className='fcr-group-list-transition-list-content-item-student-name'>{itm.userName}</span>
                                 </div>
                               )
                             })
