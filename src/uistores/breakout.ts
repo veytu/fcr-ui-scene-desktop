@@ -323,6 +323,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
       const studentInviteTask = this._studentInviteTasks.get(this.students[i].userUuid);
       if (studentInviteTask) {
         studentInviteTask.stop();
+        this._studentInviteTasks.delete(this.students[i].userUuid);
       }
     }
     this._studentInvites = []
@@ -910,6 +911,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
         const studentInviteTask = this._studentInviteTasks.get(groupStudents[i].userUuid);
         if (studentInviteTask) {
           studentInviteTask.stop();
+          this._studentInviteTasks.delete(groupStudents[i].userUuid);
         }
       }
       this._cancelGroupUuid = groupUuid;
@@ -948,6 +950,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
       const studentInviteTask = this._studentInviteTasks.get(groupStudents[i].userUuid);
       if (studentInviteTask) {
         studentInviteTask.stop();
+        this._studentInviteTasks.delete(groupStudents[i].userUuid);
       }
     }
     this._cancelGroupUuid = groupUuid;
@@ -966,13 +969,17 @@ export class BreakoutUIStore extends EduUIStoreBase {
     
   }
 
-  @bound
+  @action.bound
   async leaveSubRoom() {
     const lockName = 'leave-sub-room';
     if (this._requestLock.has(lockName)) {
       this.addToast({ text: transI18n('fcr_group_tips_leaving') });
       return;
     }
+    if (this._studentInvite) {
+      this._studentInvite.isInvite = false
+    }
+   
     try {
       this._requestLock.add(lockName);
       const currentRoomUuid = this.classroomStore.groupStore.currentSubRoom;
@@ -1327,15 +1334,14 @@ export class BreakoutUIStore extends EduUIStoreBase {
       case CustomMessageCommandType.cancelInvite: {
         const item = this._studentInvites.find((v: { groupUuid: string; }) => v.groupUuid === message.payload.data.groupUuid)
         if (item) {
-          const stus = item.children.filter((v: { userUuid: string; }) => v.userUuid !== message.payload.data.userUuid)
-          if (stus.length) {
-            item.children = [...stus]
-            this._studentInvites = [...this._studentInvites]
-            this._cancelGroupUuid = ''
-          } else {
-            this._cancelGroupUuid = message.payload.data.groupUuid
-            const lists = this._studentInvites.filter((v: { groupUuid: string; }) => v.groupUuid !== message.payload.data.groupUuid)
-            this._studentInvites = [...lists] || []
+          const index = item.children.findIndex((v: { userUuid: string; }) => v.userUuid === message.payload.data.userUuid)
+          if (index > -1) {
+            item.children.splice(index, 1)
+            if (item.children.length === 0) {
+              this._cancelGroupUuid = message.payload.data.groupUuid
+              const lists = this._studentInvites.filter((v: { groupUuid: string; }) => v.groupUuid !== message.payload.data.groupUuid)
+              this._studentInvites = [...lists] || []
+            }
           }
         }
         break;
