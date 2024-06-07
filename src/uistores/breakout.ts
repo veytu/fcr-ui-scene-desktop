@@ -1387,7 +1387,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
       }
       case CustomMessageCommandType.teacherCloseGroup: {
         this._inviteStudentTask?.stop()
-        this._studentInvite = undefined
+        this._studentInvite.isInvite = false
         break;
       }
     }
