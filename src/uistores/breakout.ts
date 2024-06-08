@@ -115,6 +115,8 @@ export class BreakoutUIStore extends EduUIStoreBase {
     userName: '',
     userUuid: '',
   }
+  @observable
+  private _inviteStudents: any = []
   /**
    * 正在加入分组
    */
@@ -125,7 +127,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
 
   @computed
   get studentInvites() {
-    return this._studentInvites
+    return this._studentInvites ? [...this._studentInvites] : []
   }
   /**
    * 请求列表
@@ -949,7 +951,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
     for (let i = 0; i < groupStudents.length; i++) {
       const studentInviteTask = this._studentInviteTasks.get(groupStudents[i].userUuid);
       if (studentInviteTask) {
-        studentInviteTask.stop();
+        studentInviteTask?.stop();
         this._studentInviteTasks.delete(groupStudents[i].userUuid);
       }
     }
@@ -1290,8 +1292,16 @@ export class BreakoutUIStore extends EduUIStoreBase {
     }
   }
   @computed
+  get inviteStudents() {
+    return [...this._inviteStudents]
+  }
+  @computed
   get cancelGroupUuid() {
     return this._cancelGroupUuid
+  }
+  @action.bound
+  setCancelGroupUuid(uuid: string) {
+    this._cancelGroupUuid = uuid
   }
   @action.bound
   private _onReceivePeerMessage(message: AgoraRteCustomMessage) {
@@ -1303,6 +1313,9 @@ export class BreakoutUIStore extends EduUIStoreBase {
         if (!this._studentInviteTasks.has(userUuid)) {
           this._studentInviteTasks.set(userUuid, inviteStudentTask)
         }
+        if (this._studentInviteTasks.has(userUuid) && !this._studentInviteTasks.get(userUuid)?.isRunning) {
+          this._studentInviteTasks.delete(userUuid)
+        }
         if (this._cancelGroupUuid === message.payload.data.groupUuid) {
           this._cancelGroupUuid = ''
           break
@@ -1312,6 +1325,10 @@ export class BreakoutUIStore extends EduUIStoreBase {
           const stu = studentInvite.children.find((v: { userUuid: string; }) => v.userUuid === message.payload.data.userUuid)
           if (!stu) {
             studentInvite.children.push({
+              userUuid: message.payload.data.userUuid,
+              userName: message.payload.data.userName,
+            })
+            this._inviteStudents.push({
               userUuid: message.payload.data.userUuid,
               userName: message.payload.data.userName,
             })
@@ -1328,6 +1345,10 @@ export class BreakoutUIStore extends EduUIStoreBase {
             }],
           }
           this._studentInvites.push(obj)
+          this._inviteStudents = [{
+            userUuid: message.payload.data.userUuid,
+            userName: message.payload.data.userName,
+          }]
         }
         break;
       }
@@ -1337,6 +1358,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
           const index = item.children.findIndex((v: { userUuid: string; }) => v.userUuid === message.payload.data.userUuid)
           if (index > -1) {
             item.children.splice(index, 1)
+            this._inviteStudents.splice(index, 1)
             if (item.children.length === 0) {
               this._cancelGroupUuid = message.payload.data.groupUuid
               const lists = this._studentInvites.filter((v: { groupUuid: string; }) => v.groupUuid !== message.payload.data.groupUuid)

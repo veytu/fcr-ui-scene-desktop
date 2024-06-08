@@ -13,7 +13,7 @@ type AskHelpRequest = {
 
 export const AskHelpList = observer(() => {
   const {
-    breakoutUIStore: { studentInvites, setStudentInvitesEmpty, groupState, acceptInvite, rejectInvite, addToast, cancelGroupUuid },
+    breakoutUIStore: { studentInvites, inviteStudents, setStudentInvitesEmpty, groupState, acceptInvite, rejectInvite, addToast, cancelGroupUuid, setCancelGroupUuid },
   } = useStore();
   const [api, contextHolder] = notification.useNotification({
     top: 80,
@@ -21,7 +21,6 @@ export const AskHelpList = observer(() => {
   if (cancelGroupUuid) {
     api.destroy(cancelGroupUuid)
   }
-  
   const handleOk = (item: AskHelpRequest) => {
     acceptInvite(item.groupUuid);
   };
@@ -41,6 +40,9 @@ export const AskHelpList = observer(() => {
       duration: null,
       description: '',
       placement: 'topLeft',
+      onClose: () => {
+        setCancelGroupUuid(list.groupUuid)
+      },
       closeIcon: <div className="fcr-breakout-room__ask-for-help__list-item-close">
           <SvgImg type={SvgIconEnum.FCR_CLOSE} size={9.6} />
         </div>,
@@ -66,12 +68,15 @@ export const AskHelpList = observer(() => {
       setStudentInvitesEmpty()
     }
   }, [groupState, setStudentInvitesEmpty, studentInvites.length])
-  if (studentInvites.length && groupState) {
-    const lists = studentInvites.filter((item: { isInvite: boolean; }) => item.isInvite);
-    if (lists.length) {
-      openNotification(lists[lists.length - 1]);
+  useEffect(() => {
+    if (studentInvites.length && groupState) {
+      const lists = studentInvites.filter((item: { isInvite: boolean; }) => item.isInvite);
+      if (lists.length) {
+        openNotification(lists[lists.length - 1]);
+      }
     }
-  }
+  }, [studentInvites, groupState, inviteStudents])
+  
   return (
     <>
     {contextHolder}
