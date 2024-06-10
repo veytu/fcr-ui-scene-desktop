@@ -161,6 +161,14 @@ export class BreakoutUIStore extends EduUIStoreBase {
   get toasts() {
     return this._toasts;
   }
+  @action.bound 
+  setTaskStop(tasks: any[], index: number ) {
+    if (tasks[index]?.inviteStudentTask?.__timer) {
+      clearInterval(tasks[index]?.inviteStudentTask.__timer);
+      tasks[index].inviteStudentTask.__running = false
+      tasks.splice(index, 1);
+    }
+  }
   /**
    * 分组列表
    */
@@ -900,7 +908,13 @@ export class BreakoutUIStore extends EduUIStoreBase {
       // this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
   }
-
+  @action.bound
+  reduceStudentInvites (studentInvites: { groupUuid: string; }[], groupUuid: string) {
+    const index = studentInvites.findIndex((item: { groupUuid: string; }) => item.groupUuid === groupUuid);
+    if (index > -1) {
+      studentInvites.splice(index, 1)
+    }
+  }
   @action.bound
   async acceptInvite(groupUuid: string) {
     const teachers = this.classroomStore.userStore.mainRoomDataStore.teacherList;
@@ -908,73 +922,58 @@ export class BreakoutUIStore extends EduUIStoreBase {
       const teacherUuid = teachers.keys().next().value;
       const assistants = this.classroomStore.userStore.mainRoomDataStore.assistantList;
       const assistantUuids = Array.from(assistants.keys());
-      const groupStudents = this.students.filter((v) => v.groupUuid === groupUuid);
-      
-     
-      this._cancelGroupUuid = groupUuid;
-      const idx = this._studentInvites.findIndex((item: { groupUuid: string; }) => item.groupUuid === groupUuid);
-      console.log('acceptInviteacceptInviteacceptInvite', idx)
-      if (idx > -1) {
-        this._studentInvites.splice(idx, 1)
-        console.log('acceptInviteacceptInviteacceptInvite',  this._studentInvites)
-        const message: CustomMessageData<CustomMessageAcceptInviteType> = {
-          cmd: CustomMessageCommandType.teacherAcceptInvite,
-          data: {
-            groupUuid: groupUuid,
-          },
-        };
-        this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomChannelMessage('flexMsg', message, false)
-        if (this.teacherGroupUuid && this.teacherGroupUuid !== groupUuid) {
-          this.classroomStore.groupStore.moveUsersToGroup(this.teacherGroupUuid, groupUuid, [teacherUuid])
-        } else {
-          this.classroomStore.groupStore.updateGroupUsers(       [
-            {
-              groupUuid: groupUuid,
-              addUsers: [teacherUuid].concat(assistantUuids),
-            },
-          ],
-          false)
-        }
-        for (let i = 0; i < groupStudents.length; i++) {
-          const index = this._studentInviteTasks.findIndex((v: any) => v.userUuid === groupStudents[i].userUuid);
-        
-          if (index > -1) {
-            console.log('acceptInviteacceptInviteacceptInvite', this._studentInviteTasks[index], this._studentInviteTasks[index]?.inviteStudentTask)
-            this._studentInviteTasks[index]?.inviteStudentTask?.stop();
-            this._studentInviteTasks.splice(index, 1);
-          }
-        }
-        
-      }
-      
-    }
-  
-  }
-
-  @action.bound
-  rejectInvite(groupUuid: string) {
-    const groupStudents = this.students.filter((v) => v.groupUuid === groupUuid);
-   
-    this._cancelGroupUuid = groupUuid;
-    const index = this._studentInvites.findIndex((item: { groupUuid: string; }) => item.groupUuid === groupUuid);
-    if (index > -1) {
-      this._studentInvites.splice(index, 1)
-      const message: CustomMessageData<CustomMessageRejectInviteType> = {
-        cmd: CustomMessageCommandType.teacherRejectInvite,
+      const message: CustomMessageData<CustomMessageAcceptInviteType> = {
+        cmd: CustomMessageCommandType.teacherAcceptInvite,
         data: {
           groupUuid: groupUuid,
         },
       };
       this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomChannelMessage('flexMsg', message, false)
-   
+      if (this.teacherGroupUuid && this.teacherGroupUuid !== groupUuid) {
+        this.classroomStore.groupStore.moveUsersToGroup(this.teacherGroupUuid, groupUuid, [teacherUuid])
+      } else {
+        this.classroomStore.groupStore.updateGroupUsers(       [
+          {
+            groupUuid: groupUuid,
+            addUsers: [teacherUuid].concat(assistantUuids),
+          },
+        ],
+        false)
+      }
     }
+    await sleep(800)
+    console.log('acceptInviteacceptInviteacceptInviteacceptInviteacceptInvite')
+    const groupStudents = this.students.filter((v) => v.groupUuid === groupUuid);
     for (let i = 0; i < groupStudents.length; i++) {
       const index = this._studentInviteTasks.findIndex((v: any) => v.userUuid === groupStudents[i].userUuid);
       if (index > -1) {
-        this._studentInviteTasks[index]?.inviteStudentTask?.stop();
-        this._studentInviteTasks.splice(index, 1);
+        this.setTaskStop(this._studentInviteTasks, index)
+        
       }
     }
+    this.reduceStudentInvites(this._studentInvites, groupUuid)
+    this.setCancelGroupUuid(groupUuid)
+  }
+
+  @action.bound
+  async rejectInvite(groupUuid: string) {
+    const message: CustomMessageData<CustomMessageRejectInviteType> = {
+      cmd: CustomMessageCommandType.teacherRejectInvite,
+      data: {
+        groupUuid: groupUuid,
+      },
+    };
+    this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomChannelMessage('flexMsg', message, false)
+    await sleep(800)
+    const groupStudents = this.students.filter((v) => v.groupUuid === groupUuid);
+    for (let i = 0; i < groupStudents.length; i++) {
+      const index = this._studentInviteTasks.findIndex((v: any) => v.userUuid === groupStudents[i].userUuid);
+      if (index > -1) {
+        this.setTaskStop(this._studentInviteTasks, index)
+      }
+    }
+    this.reduceStudentInvites(this._studentInvites, groupUuid)
+    this.setCancelGroupUuid(groupUuid)
   }
 
   @action.bound
