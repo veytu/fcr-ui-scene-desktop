@@ -93,6 +93,7 @@ interface ToolBoxItemProps {
 }
 const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
   const { icon, label, active, id, onClick } = props;
+  console.log('ToolBoxItem', id)
   const { widgetUIStore, eduToolApi, breakoutUIStore } = useStore();
   const { updateZIndex } = useZIndex(id);
 
