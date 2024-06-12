@@ -3,7 +3,7 @@ import { SvgImg, SvgIconEnum } from '@components/svg-img';
 import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { transI18n, useI18n } from 'agora-common-libs';
 import { observer } from 'mobx-react';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { notification } from 'antd';
 
 type AskHelpRequest = {
@@ -13,13 +13,14 @@ type AskHelpRequest = {
 
 export const AskHelpList = observer(() => {
   const {
-    breakoutUIStore: { studentInvites, inviteStudents, setStudentInvitesEmpty, groupState, acceptInvite, rejectInvite, addToast, cancelGroupUuid, setCancelGroupUuid },
+    breakoutUIStore: { studentInvites, inviteGroups, changeInviteGroup, changeReduceInviteGroup, inviteStudents, setStudentInvitesEmpty, groupState, acceptInvite, rejectInvite, addToast, cancelGroupUuid, setCancelGroupUuid },
   } = useStore();
   const [api, contextHolder] = notification.useNotification({
     top: 80,
   });
   if (cancelGroupUuid) {
     api.destroy(cancelGroupUuid)
+    setCancelGroupUuid('')
   }
   const handleOk = (item: AskHelpRequest) => {
     acceptInvite(item.groupUuid);
@@ -42,6 +43,8 @@ export const AskHelpList = observer(() => {
       placement: 'topLeft',
       onClose: () => {
         setCancelGroupUuid(list.groupUuid)
+        const index = inviteGroups.findIndex(v => v.groupUuid === list.groupUuid)
+        changeReduceInviteGroup(inviteGroups, true, index)
       },
       closeIcon: <div className="fcr-breakout-room__ask-for-help__list-item-close">
           <SvgImg type={SvgIconEnum.FCR_CLOSE} size={9.6} />
@@ -59,6 +62,7 @@ export const AskHelpList = observer(() => {
       </div>,
       className: 'fcr-breakout-room__ask-for-help__list-item',
     });
+   
   }
   useEffect(() => {
     if (!groupState && studentInvites.length) {
@@ -68,14 +72,19 @@ export const AskHelpList = observer(() => {
       setStudentInvitesEmpty()
     }
   }, [groupState, setStudentInvitesEmpty, studentInvites.length])
+
   useEffect(() => {
-    if (studentInvites.length && groupState) {
+    if (inviteGroups.length && groupState) {
       const lists = studentInvites.filter((item: { isInvite: boolean; }) => item.isInvite);
-      if (lists.length) {
+      const index = inviteGroups.findIndex(v => v.groupUuid === lists[lists.length - 1].groupUuid)
+      console.log('useEffectuseEffect',  inviteGroups, lists)
+      if (lists.length && index > -1 && inviteGroups[index] && !inviteGroups[index].isShow) {
+        console.log('inviteGroups[index]', inviteGroups[index])
         openNotification(lists[lists.length - 1]);
+        changeInviteGroup(inviteGroups, index, true)
       }
     }
-  }, [studentInvites, groupState, inviteStudents])
+  }, [studentInvites, groupState, inviteGroups, changeInviteGroup])
   
   return (
     <>
