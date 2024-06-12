@@ -944,7 +944,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
         false)
       }
     }
-    await sleep(800)
+    // await sleep(800)
     console.log('acceptInviteacceptInviteacceptInviteacceptInviteacceptInvite')
     const groupStudents = this.students.filter((v) => v.groupUuid === groupUuid);
     for (let i = 0; i < groupStudents.length; i++) {
@@ -967,7 +967,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
       },
     };
     this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomChannelMessage('flexMsg', message, false)
-    await sleep(800)
+    // await sleep(800)
     const groupStudents = this.students.filter((v) => v.groupUuid === groupUuid);
     for (let i = 0; i < groupStudents.length; i++) {
       const index = this._studentInviteTasks.findIndex((v: any) => v.userUuid === groupStudents[i].userUuid);
