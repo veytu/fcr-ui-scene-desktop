@@ -404,7 +404,7 @@ export const enUs = {
   fcr_group_not_now: 'Not now',
   fcr_group_go_to: 'Go to',
   fcr_group_reject_help: 'You have refused the {reason1}\'s request for help',
-  fcr_group_ask_for_help: 'Ask for Help',
+  fcr_group_ask_for_help: ' Ask for Help',
   fcr_group_from: 'From',
   fcr_group_label_help_list: 'Help list',
   fcr_group_label_broadcast_message: 'Send Message to all',
