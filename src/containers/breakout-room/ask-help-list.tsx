@@ -13,83 +13,109 @@ type AskHelpRequest = {
 
 export const AskHelpList = observer(() => {
   const {
-    breakoutUIStore: { studentInvites, inviteGroups, changeInviteGroup, changeReduceInviteGroup, inviteStudents, setStudentInvitesEmpty, groupState, acceptInvite, rejectInvite, addToast, cancelGroupUuid, setCancelGroupUuid },
+    breakoutUIStore: {
+      studentInvites,
+      inviteGroups,
+      changeInviteGroup,
+      changeReduceInviteGroup,
+      inviteStudents,
+      setStudentInvitesEmpty,
+      groupState,
+      acceptInvite,
+      rejectInvite,
+      addToast,
+      cancelGroupUuid,
+      setCancelGroupUuid,
+    },
   } = useStore();
   const [api, contextHolder] = notification.useNotification({
     top: 80,
   });
   if (cancelGroupUuid) {
-    api.destroy(cancelGroupUuid)
-    setCancelGroupUuid('')
+    api.destroy(cancelGroupUuid);
+    setCancelGroupUuid('');
   }
   const handleOk = (item: AskHelpRequest) => {
     acceptInvite(item.groupUuid);
   };
   const handleCancel = (item: AskHelpRequest) => {
     rejectInvite(item.groupUuid);
-    addToast({ text: transI18n('fcr_group_reject_help', {
-      reason1: item.groupName
-    })})
+    addToast({
+      text: transI18n('fcr_group_reject_help', {
+        reason1: item.groupName,
+      }),
+    });
   };
   const openNotification = (list: AskHelpRequest) => {
     api.open({
       key: list.groupUuid,
-      message: <div className="fcr-breakout-room__ask-for-help__list-item-label">
-        <span className='fcr-breakout-room__ask-for-help__list-item-name'>{list.groupName}</span>
-        <span>{transI18n('fcr_group_ask_for_help')}</span>
-      </div>,
+      message: (
+        <div className="fcr-breakout-room__ask-for-help__list-item-label">
+          <span className="fcr-breakout-room__ask-for-help__list-item-name">{list.groupName}</span>
+          <span>&nbsp;{transI18n('fcr_group_ask_for_help')}</span>
+        </div>
+      ),
       duration: null,
       description: '',
       placement: 'topLeft',
       onClose: () => {
-        setCancelGroupUuid(list.groupUuid)
-        const index = inviteGroups.findIndex(v => v.groupUuid === list.groupUuid)
-        changeReduceInviteGroup(inviteGroups, true, index)
+        setCancelGroupUuid(list.groupUuid);
+        const index = inviteGroups.findIndex((v) => v.groupUuid === list.groupUuid);
+        changeReduceInviteGroup(inviteGroups, true, index);
       },
-      closeIcon: <div className="fcr-breakout-room__ask-for-help__list-item-close">
+      closeIcon: (
+        <div className="fcr-breakout-room__ask-for-help__list-item-close">
           <SvgImg type={SvgIconEnum.FCR_CLOSE} size={9.6} />
-        </div>,
-      icon: <div className='fcr-breakout-room__ask-for-help__list-item-icon'>
+        </div>
+      ),
+      icon: (
+        <div className="fcr-breakout-room__ask-for-help__list-item-icon">
           <SvgImg type={SvgIconEnum.FCR_INVITE} size={40} />
-        </div>,
-      btn:  <div className="fcr-breakout-room__askhelp-buttons">
-        <span className='fcr-breakout-room__create-panel-button' onClick={() => handleCancel(list)}>
-          {transI18n('fcr_group_dialog_reject')}
-        </span>
-        <span className='fcr-breakout-room__create-panel-button active' onClick={() => handleOk(list)}>
-          {transI18n('fcr_group_dialog_join')}
-        </span>
-      </div>,
+        </div>
+      ),
+      btn: (
+        <div className="fcr-breakout-room__askhelp-buttons">
+          <span
+            className="fcr-breakout-room__create-panel-button"
+            onClick={() => handleCancel(list)}>
+            {transI18n('fcr_group_dialog_reject')}
+          </span>
+          <span
+            className="fcr-breakout-room__create-panel-button active"
+            onClick={() => handleOk(list)}>
+            {transI18n('fcr_group_dialog_join')}
+          </span>
+        </div>
+      ),
       className: 'fcr-breakout-room__ask-for-help__list-item',
     });
-   
-  }
+  };
   useEffect(() => {
     if (!groupState && studentInvites.length) {
       for (let i = 0; i < studentInvites.length; i++) {
-        api.destroy(studentInvites[i].groupUuid)
+        api.destroy(studentInvites[i].groupUuid);
       }
-      setStudentInvitesEmpty()
+      setStudentInvitesEmpty();
     }
-  }, [groupState, setStudentInvitesEmpty, studentInvites.length])
+  }, [groupState, setStudentInvitesEmpty, studentInvites.length]);
 
   useEffect(() => {
     if (inviteGroups.length && groupState) {
-      const lists = studentInvites.filter((item: { isInvite: boolean; }) => item.isInvite);
-      const index = inviteGroups.findIndex(v => v.groupUuid === lists[lists.length - 1].groupUuid)
-      console.log('useEffectuseEffect',  inviteGroups, lists)
+      const lists = studentInvites.filter((item: { isInvite: boolean }) => item.isInvite);
+      const index = inviteGroups.findIndex(
+        (v) => v.groupUuid === lists[lists.length - 1].groupUuid,
+      );
+      console.log('useEffectuseEffect', inviteGroups, lists);
       if (lists.length && index > -1 && inviteGroups[index] && !inviteGroups[index].isShow) {
-        console.log('inviteGroups[index]', inviteGroups[index])
+        console.log('inviteGroups[index]', inviteGroups[index]);
         openNotification(lists[lists.length - 1]);
-        changeInviteGroup(inviteGroups, index, true)
+        changeInviteGroup(inviteGroups, index, true);
       }
     }
-  }, [studentInvites, groupState, inviteGroups, changeInviteGroup])
-  
+  }, [studentInvites, groupState, inviteGroups, changeInviteGroup]);
+
   return (
-    <>
-    {contextHolder}
-  </>
+    <>{contextHolder}</>
     // <div className="fcr-breakout-room__ask-for-help fcr-breakout-room--scroll">
     //   {helpRequestList.map((item, index) => (
     //     <AskForHelpListItem key={index.toString()} item={item} />
@@ -109,7 +135,6 @@ export const AskForHelpListItem: FC<{ item: AskHelpRequest }> = ({ item }) => {
   };
   const handleCancel = () => {
     rejectInvite(item.groupUuid);
-   
   };
 
   return (
