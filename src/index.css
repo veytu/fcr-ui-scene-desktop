@@ -1,3 +1,8 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 :root {
   --fcr-status-bar-height: 36px;
   --fcr-action-bar-height: 58px;
