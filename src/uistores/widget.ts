@@ -365,5 +365,6 @@ export class WidgetUIStore extends EduUIStoreBase {
   onDestroy() {
     this._disposers.forEach((d) => d());
     this._disposers = [];
+    window.imManager.destory()
   }
 }
