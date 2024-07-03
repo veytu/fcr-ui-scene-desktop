@@ -451,6 +451,15 @@ export class CloudUIStore extends EduUIStoreBase {
       pageList: pageList,
       taskUuid: resource.taskUuid,
       resourceHasAnimation: resource.hasAnimation,
+      // convert Record<number, string> to string[]
+      previewList:
+        resource.previewList && Object.keys(resource.previewList).length > 0
+          ? Object.keys(resource.previewList).reduce<string[]>((prev, cur) => {
+              prev[parseInt(cur) - 1] = resource.previewList?.[parseInt(cur)] || '';
+              return prev;
+            }, [])
+          : undefined,
+      resourceList: resource.resources,
     });
   }
   onDestroy(): void {}
