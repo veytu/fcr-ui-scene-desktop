@@ -220,10 +220,10 @@ export const Participants = observer(() => {
   );
 });
 export const isMobileWebUser = (user: EduUserStruct) => {
-  // const platform = user.userProperties.get('device')?.platform;
-  // if (platform === DevicePlatform.H5) {
-  //   return true;
-  // }
+  const platform = user.userProperties.get('device')?.platform;
+  if (platform === DevicePlatform.H5) {
+    return true;
+  }
   return false;
 };
 const PlatformAuth = observer(({ role, user }: { role: EduRoleTypeEnum; user: EduUserStruct }) => {
