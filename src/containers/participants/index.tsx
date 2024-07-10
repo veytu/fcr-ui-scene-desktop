@@ -229,8 +229,14 @@ export const isMobileWebUser = (user: EduUserStruct) => {
 const PlatformAuth = observer(({ role, user }: { role: EduRoleTypeEnum; user: EduUserStruct }) => {
   const transI18n = useI18n();
 
-  const isMobileWebUse = isMobileWebUser(user);
-  const tooltipContent = isMobileWebUse
+  const isMobile = useMemo(() => {
+    const platform = user.userProperties.get('device')?.platform;
+    if (platform === DevicePlatform.H5) {
+      return true;
+    }
+    return false;
+  }, [user])
+  const tooltipContent = isMobile
     ? transI18n('fcr_participants_tips_device_mobile_web')
     : transI18n('fcr_participants_tips_device_PC');
   const disabled = false;
@@ -240,11 +246,11 @@ const PlatformAuth = observer(({ role, user }: { role: EduRoleTypeEnum; user: Ed
       <TableIconWrapper tooltip={tooltipContent} disabled={disabled} noHover={true}>
         <div className="fcr-participants-table-plateform-icon-wrapper">
           <SvgImg
-            type={isMobileWebUse ? SvgIconEnum.FCR_H5_DEVICE : SvgIconEnum.FCR_COMPUTER_DEVICE}
+            type={isMobile ? SvgIconEnum.FCR_H5_DEVICE : SvgIconEnum.FCR_COMPUTER_DEVICE}
             // className= 'fcr-participants-table-plateform-icon'
             className={classnames('fcr-participants-table-plateform-icon', {
-              'fcr-participants-table-device-h5-icon': isMobileWebUse,
-              'fcr-participants-table-device-computer-icon': !isMobileWebUse,
+              'fcr-participants-table-device-h5-icon': isMobile,
+              'fcr-participants-table-device-computer-icon': !isMobile,
             })}
             // colors={{ iconPrimary: granted ? colors['yellow'] : colors['icon-1'] }}
             size={24}></SvgImg>
