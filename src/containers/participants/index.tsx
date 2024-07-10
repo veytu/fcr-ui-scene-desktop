@@ -220,10 +220,10 @@ export const Participants = observer(() => {
   );
 });
 export const isMobileWebUser = (user: EduUserStruct) => {
-  const platform = user.userProperties.get('device')?.platform;
-  if (platform === DevicePlatform.H5) {
-    return true;
-  }
+  // const platform = user.userProperties.get('device')?.platform;
+  // if (platform === DevicePlatform.H5) {
+  //   return true;
+  // }
   return false;
 };
 const PlatformAuth = observer(({ role, user }: { role: EduRoleTypeEnum; user: EduUserStruct }) => {
@@ -235,7 +235,7 @@ const PlatformAuth = observer(({ role, user }: { role: EduRoleTypeEnum; user: Ed
       return true;
     }
     return false;
-  }, [user])
+  }, [user]);
   const tooltipContent = isMobile
     ? transI18n('fcr_participants_tips_device_mobile_web')
     : transI18n('fcr_participants_tips_device_PC');
