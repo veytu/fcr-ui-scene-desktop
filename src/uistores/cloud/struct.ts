@@ -14,7 +14,8 @@ export interface CloudDriveResourceConvertProgress {
     };
   }[];
   currentStep: string;
-  previews: Record<number, string>;
+  previews?: Record<number, string>;
+  resources?: string[];
   images: Record<
     number,
     {
@@ -107,6 +108,12 @@ export class CloudDriveCourseResource extends CloudDriveResource {
 
   get prefix() {
     return this._taskProgress?.prefix;
+  }
+  get previewList() {
+    return this._taskProgress?.previews;
+  }
+  get resources() {
+    return this._taskProgress?.resources;
   }
 }
 
