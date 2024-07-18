@@ -21,7 +21,7 @@ export class WidgetUIStore extends EduUIStoreBase {
   setLayoutReady(ready: boolean) {
     this.layoutReady = ready;
   }
-  private _defaultActiveWidgetIds = ['easemobIM'];
+  private _defaultActiveWidgetIds = ['easemobIM','rtt'];
   private _registeredWidgets: Record<string, typeof FcrUISceneWidget> = {};
   private _widgetInstanceRenderKeys: Record<string, string> = {};
   @observable
