@@ -3,6 +3,12 @@ export const zhCn = {
   fcr_device_label_device_join: '准备进入教室',
   fcr_device_label_camera: '摄像头',
   fcr_device_label_microphone: '麦克风',
+  fcr_device_label_source_language: '声源语言',
+  fcr_device_label_source_language_detail: '(你自己说的语言)需要进行翻译的目标声源，对全员生效。',
+  fcr_device_label_translate_language: '翻译为',
+  fcr_device_label_translate_language_detail: '(你想要看的语言)对字幕和转写生效，翻译内容仅自己可见。',
+  fcr_device_label_language_allshow: '字幕和转写同时显示双语',
+  fcr_device_label_subtitle_font_size: '字幕文字大小',
   fcr_device_label_speaker: '扬声器',
   fcr_device_label_noise_cancellation: '音频降噪',
   fcr_device_option_basic_setting: '常规设置',
@@ -29,6 +35,7 @@ export const zhCn = {
   fcr_device_label_effect_preview: '预览',
   fcr_device_label_default_speaker: '默认',
   fcr_device_label_disabled: '禁用',
+  fcr_device_option_subtitles:'字幕',
 
   //****************** 房间Room ******************
 

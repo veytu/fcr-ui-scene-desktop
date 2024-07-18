@@ -22,6 +22,7 @@
   position: relative;
   user-select: none;
   cursor: pointer;
+  overflow: hidden;
 }
 .fcr-toolbox-popover-item svg {
   flex-shrink: 0;
@@ -42,4 +43,20 @@
   position: absolute;
   right: 5px;
   top: 5px;
+}
+.fcr-toolbox-popover-item-dropbox{
+  width: 24px;
+  height: 40px;
+  position: absolute;
+  right: 0;
+  bottom: 8;
+}
+
+.fcr-toolbox-popover-item-dropbox:hover{
+  background-color: #354ECC;
+}
+.fcr-toolbox-popover-item-dropbox .fcr_dropup{
+  position: absolute;
+  right: -15px;
+  top: 18%;
 }

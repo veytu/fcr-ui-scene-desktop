@@ -224,14 +224,14 @@ export const WizardCreate = observer(() => {
   };
 
   const handleMinimize = () => {
-    eduToolApi.setMinimizedState({
-      minimized: true,
-      widgetId: 'breakout',
-      minimizedProperties: {
-        minimizedIcon: SvgIconEnum.FCR_V2_BREAKROOM,
-        minimizedTooltip: transI18n('fcr_group_breakout_room'),
-      },
-    });
+    // eduToolApi.setMinimizedState({
+    //   minimized: true,
+    //   widgetId: 'breakout',
+    //   minimizedProperties: {
+    //     minimizedIcon: SvgIconEnum.FCR_V2_BREAKROOM,
+    //     minimizedTooltip: transI18n('fcr_group_breakout_room'),
+    //   },
+    // });
   };
 
   const handleClose = () => {

@@ -32,6 +32,17 @@ export const enUs = {
   fcr_device_label_default_speaker: 'Default',
   fcr_device_label_disabled: 'Dsiabled',
 
+  fcr_device_option_subtitles:'',
+
+
+  fcr_device_label_source_language:'',
+  fcr_device_label_source_language_detail:'',
+  fcr_device_label_translate_language_detail:'',
+  fcr_device_label_translate_language:'',
+  fcr_device_label_language_allshow:'',
+  fcr_device_label_subtitle_font_size:'',
+  
+
   //****************** 房间Room ******************
 
   //xxx为房间ID

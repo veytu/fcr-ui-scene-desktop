@@ -197,9 +197,18 @@ export class EduTool {
   setWidgetVisible(widgetId: string, visible: boolean) {
     this._handleVisibleStateChange({ widgetId, visible });
   }
+
   @bound
   sendWidgetVisible(widgetId: string, visible: boolean) {
     this._sendMessage(AgoraExtensionRoomEvent.VisibleChanged, { widgetId, visible });
+  }
+  @bound
+  sendWidgetVisibleIsShowTool(widgetId: string, visible: boolean) {
+    this._sendMessage(AgoraExtensionRoomEvent.ToolboxChanged, { widgetId, visible });
+  }
+  @bound
+  sendWidgetVisibleIsShowRtt(widgetId: string, visible: boolean) {
+    this._sendMessage(AgoraExtensionRoomEvent.RttboxChanged, { widgetId, visible });
   }
   @bound
   sendWidgetPrivateChat(widgetId: string, userId: string) {
@@ -268,6 +277,7 @@ export class EduTool {
       messageType: AgoraExtensionWidgetEvent.SetVisible,
       onMessage: this._handleVisibleStateChange,
     });
+
     controller.addWidgetStateListener(this._stateListener);
   }
 

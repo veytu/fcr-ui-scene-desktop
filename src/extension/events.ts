@@ -75,6 +75,10 @@ export enum AgoraExtensionRoomEvent {
   SetMinimize = 'set-minimize',
   // 插件可见性变化
   VisibleChanged = 'visible-changed',
+  // 插件可见性变化
+  ToolboxChanged = 'toolbox-changed',
+ // rtt盒子可见性变化
+ RttboxChanged = 'rttbox-changed',
   // 布局变化
   LayoutChanged = 'layout-changed',
   // webview/streamMedia 插件刷新
