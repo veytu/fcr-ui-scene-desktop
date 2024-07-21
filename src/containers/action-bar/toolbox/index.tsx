@@ -12,6 +12,7 @@ export const ToolBox = observer(() => {
   const {
     actionBarUIStore: { openChatDialog, setPrivateChat },
     layoutUIStore: { setHasPopoverShowed },
+    widgetUIStore
   } = useStore();
   const transI18n = useI18n();
   const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -59,7 +60,7 @@ export const ToolBox = observer(() => {
 });
 const ToolBoxPopoverContent = observer(({ onClick }: { onClick: () => void }) => {
   const {
-    getters,
+    getters,widgetUIStore,
     eduToolApi: { registeredCabinetToolItems },
   } = useStore();
   const transI18n = useI18n();
@@ -67,12 +68,18 @@ const ToolBoxPopoverContent = observer(({ onClick }: { onClick: () => void }) =>
   const handleWidgetIdChange = (id: string) => {
     setActiveWidgetId(id); // 更新状态
   };
+  useEffect(()=>{
+    widgetUIStore.w
+  },[])
   const isWidgetActive = (widgetId: string) => {
     if (widgetId === 'breakout') {
       return getters.isBreakoutActive;
     }
     if (widgetId === 'rtt') {
-      return activeWidgetId === widgetId
+      return Boolean(localStorage.getItem(`${getters.roomUuid}_subtitle`))
+    }
+    if (widgetId === 'rttbox') {
+      return Boolean(localStorage.getItem(`${getters.roomUuid}_transcribe`))
     }
     return getters.activeWidgetIds.includes(widgetId);
   };

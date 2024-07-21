@@ -167,18 +167,18 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
 
   @bound
-  private _handlePropertiesUpdate(widgetId: string, props: unknown) {
+  private _handlePropertiesUpdate(widgetId: string, props: unknown,operator:unknown) {
     const widget = this._widgetInstances[widgetId];
     if (widget) {
-      this._callWidgetPropertiesUpdate(widget, props);
+      this._callWidgetPropertiesUpdate(widget, props,operator);
     }
   }
 
   @bound
-  private _handleUserPropertiesUpdate(widgetId: string, userProps: unknown) {
+  private _handleUserPropertiesUpdate(widgetId: string, userProps: unknown,operator:unknown) {
     const widget = this._widgetInstances[widgetId];
     if (widget) {
-      this._callWidgetUserPropertiesUpdate(widget, userProps);
+      this._callWidgetUserPropertiesUpdate(widget, userProps,operator);
     }
   }
 
@@ -194,14 +194,14 @@ export class WidgetUIStore extends EduUIStoreBase {
     }
   }
 
-  private _callWidgetPropertiesUpdate(widget: FcrUISceneWidget, props: unknown) {
+  private _callWidgetPropertiesUpdate(widget: FcrUISceneWidget, props: unknown,operator:unknown) {
     if (widget.onPropertiesUpdate) {
-      widget.onPropertiesUpdate(props);
+      widget.onPropertiesUpdate(props,operator);
     }
   }
-  private _callWidgetUserPropertiesUpdate(widget: FcrUISceneWidget, userProps: unknown) {
+  private _callWidgetUserPropertiesUpdate(widget: FcrUISceneWidget, userProps: unknown,operator:unknown) {
     if (widget.onUserPropertiesUpdate) {
-      widget.onUserPropertiesUpdate(userProps);
+      widget.onUserPropertiesUpdate(userProps,operator);
     }
   }
 
