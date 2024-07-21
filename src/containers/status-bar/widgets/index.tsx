@@ -228,7 +228,6 @@ const RttMinimize = observer(() => {
   const { current, state, tooltip, icon } = countdownTimerState;
   // const timeFormat = formatTime(current || 0);
   return countdownTimer ? (
-    <ToolTip content={tooltip}>
       <div
         className={classnames('fcr-minimized-widget-icon', 'fcr-minimized-widget-countdown', {
           'fcr-minimized-widget-countdown-danger':
@@ -239,6 +238,5 @@ const RttMinimize = observer(() => {
         {transI18n('fcr_device_option_rtt')}
         {/* 转写中... */}
       </div>
-    </ToolTip>
   ) : null;
 });
