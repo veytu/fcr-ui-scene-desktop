@@ -207,6 +207,11 @@ export class EduTool {
     this._sendMessage(AgoraExtensionRoomEvent.ToolboxChanged, { widgetId, visible });
   }
   @bound
+  sendWidgetRttboxShow(widgetId: string, visible: boolean) {
+    this._sendMessage(AgoraExtensionRoomEvent.RttboxShow, { widgetId, visible });
+  }
+  
+  @bound
   sendWidgetVisibleIsShowRtt(widgetId: string, visible: boolean) {
     this._sendMessage(AgoraExtensionRoomEvent.RttboxChanged, { widgetId, visible });
   }

@@ -77,6 +77,8 @@ export enum AgoraExtensionRoomEvent {
   VisibleChanged = 'visible-changed',
   // 插件可见性变化
   ToolboxChanged = 'toolbox-changed',
+  // 实时转写显示
+  RttboxShow = 'rttbox-show',
  // rtt盒子可见性变化
  RttboxChanged = 'rttbox-changed',
   // 布局变化
