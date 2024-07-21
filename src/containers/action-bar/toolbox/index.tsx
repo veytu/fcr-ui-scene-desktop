@@ -135,9 +135,11 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
       } else if (id == 'rtt') {
         eduToolApi.setWidgetVisible('rtt', true);
         eduToolApi.sendWidgetVisibleIsShowRtt(id, true);
+        eduToolApi.changeSubtitleOpenState()
       } else {
         if(id=="rttbox"){
           eduToolApi.sendWidgetRttboxShow(id, true); 
+          eduToolApi.changeConversionOpenState()
         }
         widgetUIStore.createWidget(id);
       }

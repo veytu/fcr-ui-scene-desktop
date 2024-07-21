@@ -91,6 +91,10 @@ export enum AgoraExtensionRoomEvent {
   WidgetDialogBoundariesChanged = 'widget-dialog-boundaries-changed',
   //插件全屏
   SetFullscreen = 'set-fullscreen',
+  //修改字幕开启状态
+  RttChangeToSubtitleOpenState = "RttChangeToSubtitleOpenState",
+  //修改转写开启状态
+  RttChangeToConversionOpenState = "RttChangeToConversionOpenState",
 }
 
 /**
