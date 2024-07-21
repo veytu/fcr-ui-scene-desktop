@@ -10,14 +10,11 @@ import { useZIndex } from '@ui-scene/utils/hooks/use-z-index';
 // import 
 export const ToolBox = observer(() => {
   const {
-    actionBarUIStore: { openChatDialog, setPrivateChat },
-    layoutUIStore: { setHasPopoverShowed },
-    widgetUIStore
-  } = useStore();
+    layoutUIStore: { setHasPopoverShowed }  } = useStore();
   const transI18n = useI18n();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [popoverVisible, setPopoverVisible] = useState(false);
-  const {  eduToolApi } = useStore();
+  useStore();
   
   return (
     <>
@@ -60,26 +57,20 @@ export const ToolBox = observer(() => {
 });
 const ToolBoxPopoverContent = observer(({ onClick }: { onClick: () => void }) => {
   const {
-    getters,widgetUIStore,
+    getters,
     eduToolApi: { registeredCabinetToolItems },
   } = useStore();
   const transI18n = useI18n();
-  const [activeWidgetId, setActiveWidgetId] = useState<string | null>(null);
-  const handleWidgetIdChange = (id: string) => {
-    setActiveWidgetId(id); // 更新状态
-  };
-  useEffect(()=>{
-    widgetUIStore.w
-  },[])
+  const [, setActiveWidgetId] = useState<string | null>(null);
   const isWidgetActive = (widgetId: string) => {
     if (widgetId === 'breakout') {
       return getters.isBreakoutActive;
     }
     if (widgetId === 'rtt') {
-      return Boolean(localStorage.getItem(`${getters.roomUuid}_subtitle`))
+      return "true" === localStorage.getItem(`${getters.roomUuid}_subtitle`)
     }
     if (widgetId === 'rttbox') {
-      return Boolean(localStorage.getItem(`${getters.roomUuid}_transcribe`))
+      return "true" === localStorage.getItem(`${getters.roomUuid}_transcribe`)
     }
     return getters.activeWidgetIds.includes(widgetId);
   };
@@ -118,7 +109,6 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
   const { icon, label, active, dropupActive, id, onClick, onWidgetIdChange } = props;
   const { widgetUIStore, eduToolApi, breakoutUIStore } = useStore();
   const { updateZIndex } = useZIndex(id);
-  const [activeWidgetId, setActiveWidgetId] = useState(null);
   useEffect(() => {
     if (id == 'rtt') {
       widgetUIStore.createWidget(id);
