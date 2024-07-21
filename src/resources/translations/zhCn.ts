@@ -36,6 +36,7 @@ export const zhCn = {
   fcr_device_label_default_speaker: '默认',
   fcr_device_label_disabled: '禁用',
   fcr_device_option_subtitles:'字幕',
+  fcr_device_option_rtt:'转写中..',
 
   //****************** 房间Room ******************
 

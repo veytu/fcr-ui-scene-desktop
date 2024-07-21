@@ -33,6 +33,7 @@ export const enUs = {
   fcr_device_label_disabled: 'Dsiabled',
 
   fcr_device_option_subtitles:'',
+  fcr_device_option_rtt:'',
 
 
   fcr_device_label_source_language:'',
