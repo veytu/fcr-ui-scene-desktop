@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { VolumeIndicator } from '@components/volume';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { Checkbox } from '@components/checkbox';
 import { HorizontalSlider } from '@components/slider';
-import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { useI18n } from 'agora-common-libs';
 import { Avatar } from '@components/avatar';
 import { Dropdown } from '@components/dropdown';
 import { Switch } from '@components/switch';
-import { AgoraExtensionRoomEvent } from '@ui-scene/extension/events';
 import {AgoraWidgetController} from 'agora-edu-core';
 
 // import { AgoraExtensionWidgetEvent } from '../events';
@@ -21,17 +18,15 @@ export const SubtitlesSettings = observer(() => {
   const [sourceLanguageId, setSourceLanguageId] = useState(localStorage.getItem(getters.roomUuid+'_sourceLan') || 'zh-CN');
   const [translateLanguageId, setTranslateLanguageId] = useState(localStorage.getItem(getters.roomUuid+'_targetLan') || 'zh-CN');
   const [horizontalValue, setHorizontalValue] = useState<number>(Number(localStorage.getItem(getters.roomUuid+'_textSize')) || 14);
-  const[isAiDenoiserEnabled,setIsAiDenoiserEnabled] = useState(localStorage.getItem(getters.roomUuid+'_showDoubleLan') || false)
+  const[isAiDenoiserEnabled,setIsAiDenoiserEnabled] = useState("true" === localStorage.getItem(getters.roomUuid+'_showDoubleLan') || false)
   const { eduToolApi } = useStore();
   const {
-    localRecordingTestVolume,
-    localPlaybackTestVolume,
     startAudioRecordingPreview,
     stopAudioRecordingPreview,
   } = deviceSettingUIStore;
   // fcr_device_label_language_allshow
   // 
-  const toggleAiDenoiser = (controller:AgoraWidgetController)=>{
+  const toggleAiDenoiser = ()=>{
     // eduToolApi.ChangeRttShowDoubleLan(!isAiDenoiserEnabled);
     setIsAiDenoiserEnabled(!isAiDenoiserEnabled)
     eduToolApi.sendWidgetChangeRttShowDoubleLan('rttbox',true)
