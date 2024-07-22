@@ -926,13 +926,17 @@ export class BreakoutUIStore extends EduUIStoreBase {
       await when(() => this.classroomStore.connectionStore.rtcState === AGRtcState.Idle);
 
       await this.classroomStore.connectionStore.joinRTC();
-
-      await this.classroomStore.connectionStore.checkIn(
+      //@ts-ignore
+      await this.classroomStore.connectionStore._entry(
         EduClassroomConfig.shared.sessionInfo,
         SceneType.Main,
-        // always use entry mode when leave sub room
-        'entry',
       );
+      // await this.classroomStore.connectionStore.checkIn(
+      //   EduClassroomConfig.shared.sessionInfo,
+      //   SceneType.Main,
+      //   // always use entry mode when leave sub room
+      //   'entry',
+      // );
     } catch (e) {
       //   this.shareUIStore.addGenericErrorDialog(e as AGError);
     } finally {
