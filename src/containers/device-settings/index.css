@@ -178,6 +178,9 @@ li.fcr-device-settings__nav-list-item--active {
   @apply fcr-text-1 fcr-font-title fcr-rounded-8;
   padding: 0 10px 20px;
 }
+.fcr-device-settings__microphone, .fcr-device-settings__microphone-subtitle{
+padding-bottom: 10px !important
+}
 
 .fcr-device-settings__microphone {
   @apply fcr-bg-4;
@@ -252,6 +255,7 @@ li.fcr-device-settings__nav-list-item--active {
 }
 .fcr-slider-container .fcr-rtt-widget-text{
   background-color: rgba(0, 0, 0 , 0.6) !important;
+  margin-bottom: 0 !important;
 }
 .fcr-slider-container .rc-slider-rail::after{
   background-color: rgba(255, 255, 255, 0.5);

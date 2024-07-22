@@ -79,7 +79,7 @@ export const SubtitlesSettings = observer(() => {
 
   return (
     <div className="fcr-device-settings__audio fcr-device-settings-subtitle__audio">
-      <div className="fcr-device-settings__microphone fcr-device-settings-sutitle__microphone">
+      <div className="fcr-device-settings__microphone fcr-device-settings-sutitle__microphone fcr-device-settings__microphone-subtitle">
         <div className="fcr-device-settings__label fcr-device-settings-subtitle__label">
           <span>{transI18n('fcr_device_label_source_language')}</span>
         </div>
@@ -91,7 +91,7 @@ export const SubtitlesSettings = observer(() => {
           disabled={sourceLanguageList.length === 0}
         />
       </div>
-      <div className="fcr-device-settings__microphone fcr-device-settings-subtitle__microphone">
+      <div className="fcr-device-settings__microphone fcr-device-settings-subtitle__microphone fcr-device-settings__microphone-subtitle">
         <div className="fcr-device-settings__label fcr-device-settings-subtitle__label">
           <span>{transI18n('fcr_device_label_translate_language')}</span>
           {/*  onChange={handleAllMute} value={allMuted} */}
@@ -112,7 +112,7 @@ export const SubtitlesSettings = observer(() => {
           onChange={toggleAiDenoiser}
         />
       </div>
-      <div className="fcr-device-settings__microphone">
+      <div className="fcr-device-settings__microphone fcr-device-settings__microphone-subtitle">
         <div className="fcr-device-settings__label">
           <span>{transI18n('fcr_device_label_subtitle_font_size')}</span>
         </div>
