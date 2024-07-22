@@ -116,7 +116,7 @@ export const SubtitlesSettings = observer(() => {
         <div className="fcr-device-settings__label">
           <span>{transI18n('fcr_device_label_subtitle_font_size')}</span>
         </div>
-        <div className="slider-container">
+        <div className={horizontalValue==14?"fcr-slider-container fcr-slider-container-border-radius":"fcr-slider-container"}>
           <HorizontalSlider
             min={14}
             max={20}
@@ -124,6 +124,7 @@ export const SubtitlesSettings = observer(() => {
             value={horizontalValue}
             onChange={handleHorizontalChange}
           />
+          
           <div className="fcr-rtt-widget-text">
             <Avatar textSize={14} size={30} nickName="T"></Avatar>
             <div>         
