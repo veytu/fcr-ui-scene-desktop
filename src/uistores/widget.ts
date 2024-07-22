@@ -196,7 +196,7 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   private _callWidgetPropertiesUpdate(widget: FcrUISceneWidget, props: unknown,operator:any) {
     if (widget.onPropertiesUpdate) {
-      widget.onPropertiesUpdate(props);
+      widget.onPropertiesUpdate(props,operator);
     }
   }
   private _callWidgetUserPropertiesUpdate(widget: FcrUISceneWidget, userProps: unknown,operator:unknown) {
