@@ -99,8 +99,8 @@ export const SubtitlesSettings = observer(() => {
           disabled={sourceLanguageList.length === 0}
         />
       </div>
-      <div className="fcr-device-settings__microphone">
-        <div className="fcr-device-settings__label">
+      <div className="fcr-device-settings__microphone fcr-device-settings__microphone" style={{padding:'14px 20px'}}>
+        <div className="fcr-device-settings__label fcr-device-settings-subtitle__label" style={{lineHeight:'normal',paddingLeft:'0'}}>
           <span>{transI18n('fcr_device_label_translate_language')}</span>
           {/*  onChange={handleAllMute} value={allMuted} */}
           <Switch></Switch>
