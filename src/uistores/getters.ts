@@ -7,6 +7,9 @@ import { computedFn } from 'mobx-utils';
 import { SceneUIStore } from '.';
 
 export class Getters {
+  addBroadcastListener(arg0: { messageType: any; onMessage: (message: { config: unknown; value: FcrRttLanguageData; }) => void; }) {
+    throw new Error('Method not implemented.');
+  }
   constructor(private _classroomUIStore: SceneUIStore) {}
 
   get classroomUIStore() {

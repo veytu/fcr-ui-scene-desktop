@@ -10,6 +10,7 @@ import { AgoraIMMessageBase, CabinetToolItem } from './type';
 
 @Log.attach({ proxyMethods: false })
 export class EduTool {
+  [x: string]: any;
   logger!: Logger;
   private _controller?: AgoraWidgetController;
   private _disposers: IReactionDisposer[] = [];
@@ -218,6 +219,22 @@ export class EduTool {
   @bound
   sendWidgetPrivateChat(widgetId: string, userId: string) {
     this._sendMessage(AgoraExtensionRoomEvent.PrivateChat, { widgetId, userId });
+  }
+  @bound
+  sendWidgetChangeRttSourceLant(widgetId: string,notify: boolean) {
+    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttSourceLan, { widgetId });
+  }
+  @bound
+  sendWidgetChangeRttTargetLan(widgetId: string,notify: boolean) {
+    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttTargetLan, { widgetId });
+  }
+  @bound
+  sendWidgetChangeRttTextSize(widgetId: string,notify: boolean) {
+    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttTextSize, { widgetId });
+  }
+  @bound
+  sendWidgetChangeRttShowDoubleLan(widgetId: string,notify: boolean) {
+    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttShowDoubleLan, { widgetId });
   }
   @bound
   refreshWidget(widgetId: string) {

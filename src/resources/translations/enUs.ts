@@ -1,5 +1,9 @@
 export const enUs = {
   //****************** 设备检测 Device ******************
+  fcr_subtitles_option_translation_display_chinese:'',
+  fcr_subtitles_option_translation_display_english:'',
+  fcr_subtitles_option_translation_display_japanese:'',
+  fcr_device_label_no_translate:'',
   fcr_device_label_device_join: 'Are you ready to join？',
   fcr_device_label_camera: 'Camera',
   fcr_device_label_microphone: 'Microphone',

@@ -9,50 +9,80 @@ import { useI18n } from 'agora-common-libs';
 import { Avatar } from '@components/avatar';
 import { Dropdown } from '@components/dropdown';
 import { Switch } from '@components/switch';
+import { AgoraExtensionRoomEvent } from '@ui-scene/extension/events';
+import {AgoraWidgetController} from 'agora-edu-core';
+
+// import { AgoraExtensionWidgetEvent } from '../events';
+
 
 export const SubtitlesSettings = observer(() => {
   const transI18n = useI18n();
-  const { deviceSettingUIStore } = useStore();
-  const [sourceLanguageId, setSourceLanguageId] = useState(localStorage.getItem("sourceLanguageId") || 'zh-CN');
-  const [translateLanguageId, setTranslateLanguageId] = useState(localStorage.getItem("translatelanguageId") || 'zh-CN');
-  const [horizontalValue, setHorizontalValue] = useState<number>(Number(localStorage.getItem("subtitleFontSize")) || 14);
+  const { deviceSettingUIStore,getters } = useStore();
+  const [sourceLanguageId, setSourceLanguageId] = useState(localStorage.getItem(getters.roomUuid+'_sourceLan') || 'zh-CN');
+  const [translateLanguageId, setTranslateLanguageId] = useState(localStorage.getItem(getters.roomUuid+'_targetLan') || 'zh-CN');
+  const [horizontalValue, setHorizontalValue] = useState<number>(Number(localStorage.getItem(getters.roomUuid+'_textSize')) || 14);
+  const[isAiDenoiserEnabled,setIsAiDenoiserEnabled] = useState(localStorage.getItem(getters.roomUuid+'_showDoubleLan') || false)
+  const { eduToolApi } = useStore();
   const {
     localRecordingTestVolume,
     localPlaybackTestVolume,
-    toggleAiDenoiser,
     startAudioRecordingPreview,
     stopAudioRecordingPreview,
-    isAiDenoiserEnabled,
   } = deviceSettingUIStore;
-
+  // fcr_device_label_language_allshow
+  // 
+  const toggleAiDenoiser = (controller:AgoraWidgetController)=>{
+    // eduToolApi.ChangeRttShowDoubleLan(!isAiDenoiserEnabled);
+    setIsAiDenoiserEnabled(!isAiDenoiserEnabled)
+    eduToolApi.sendWidgetChangeRttShowDoubleLan('rttbox',true)
+    eduToolApi.sendWidgetChangeRttShowDoubleLan('rtt',true)
+    
+  }
+  // 修改字号
   const handleHorizontalChange = (value: number) => {
     setHorizontalValue(value);
-    localStorage.setItem("subtitleFontSize", value.toString());
+    localStorage.setItem(getters.roomUuid+'_sourceLan', value.toString());
+    eduToolApi.sendWidgetChangeRttTextSize('rttbox',true)
+    eduToolApi.sendWidgetChangeRttTextSize('rtt',true)
     
   };
-
   useEffect(() => {
     startAudioRecordingPreview();
     return stopAudioRecordingPreview;
   }, [startAudioRecordingPreview, stopAudioRecordingPreview]);
 
-  const languageList = [
-    { text: '不翻译', value: '' },
-    { text: '中文(简体)', value: 'zh-CN' }, 
-    { text: '英文', value: 'en-US' },
-    { text: '日语', value: 'ja-JP' },
+  // const languageList = [
+  //   { text: '不翻译', value: '' },
+  //   { text: '中文', value: 'zh-CN' }, 
+  //   { text: '英文', value: 'en-US' },
+  //   { text: '日语', value: 'ja-JP' },
+  // ];
+  const sourceLanguageList = [
+    { text: transI18n('fcr_subtitles_option_translation_display_chinese'), value: 'zh-CN' }, 
+    { text: transI18n('fcr_subtitles_option_translation_display_english'), value: 'en-US' },
+    { text: transI18n('fcr_subtitles_option_translation_display_japanese'), value: 'ja-JP' },
+  ];
+  const targetLanguageList = [
+    { text: transI18n('fcr_device_label_no_translate'), value: '' },
+    { text: transI18n('fcr_subtitles_option_translation_display_chinese'), value: 'zh-CN' }, 
+    { text: transI18n('fcr_subtitles_option_translation_display_english'), value: 'en-US' },
+    { text: transI18n('fcr_subtitles_option_translation_display_japanese'), value: 'ja-JP' },
   ];
 
   // 设置翻译语言
   const handleTranslateLanguageChange = (languageId: string) => {
     setTranslateLanguageId(languageId);
-    localStorage.setItem("translatelanguageId", languageId);
+    localStorage.setItem(getters.roomUuid+'_targetLan', languageId);
+    eduToolApi.sendWidgetChangeRttTargetLan('rttbox',true)
+    eduToolApi.sendWidgetChangeRttTargetLan('rtt',true)
   };
 
   // 设置声源语言
   const handleSourceLanguageChange = (languageId: string) => {
     setSourceLanguageId(languageId);
-    localStorage.setItem("sourceLanguageId", languageId);
+    localStorage.setItem(getters.roomUuid+'_sourceLan', languageId);
+    eduToolApi.sendWidgetChangeRttSourceLant('rttbox',true)
+    eduToolApi.sendWidgetChangeRttSourceLant('rtt',true)
   };
 
   return (
@@ -63,10 +93,10 @@ export const SubtitlesSettings = observer(() => {
         </div>
         <span className='fcr-device-settings__label-detail'>{transI18n('fcr_device_label_translate_language_detail')}</span>
         <Dropdown
-          options={languageList}
+          options={sourceLanguageList}
           onChange={handleSourceLanguageChange}
           value={sourceLanguageId}
-          disabled={languageList.length === 0}
+          disabled={sourceLanguageList.length === 0}
         />
       </div>
       <div className="fcr-device-settings__microphone">
@@ -78,10 +108,10 @@ export const SubtitlesSettings = observer(() => {
         <span className='fcr-device-settings__label-detail'>{transI18n('fcr_device_label_translate_language_detail')}</span>
         <br></br>
         <Dropdown
-          options={languageList}
+          options={targetLanguageList}
           onChange={handleTranslateLanguageChange}
           value={translateLanguageId}
-          disabled={languageList.length === 0}
+          disabled={targetLanguageList.length === 0}
         />
         <br></br>
         <Checkbox
