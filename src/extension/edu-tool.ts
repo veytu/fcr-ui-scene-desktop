@@ -199,6 +199,13 @@ export class EduTool {
     this._handleVisibleStateChange({ widgetId, visible });
   }
 
+  changeSubtitleOpenState() {
+    this._sendMessage(AgoraExtensionRoomEvent.RttChangeToSubtitleOpenState);
+  }
+
+  changeConversionOpenState() {
+    this._sendMessage(AgoraExtensionRoomEvent.RttChangeToConversionOpenState);
+  }
   @bound
   sendWidgetVisible(widgetId: string, visible: boolean) {
     this._sendMessage(AgoraExtensionRoomEvent.VisibleChanged, { widgetId, visible });
@@ -261,9 +268,14 @@ export class EduTool {
 
   @action.bound
   private _handleRegisterCabinetTool(cabinetToolItem: CabinetToolItem) {
-    const existed = this._registeredCabinetToolItems.some(({ id }) => id === cabinetToolItem.id);
-    if (!existed) {
+    const item = this._registeredCabinetToolItems.find(item=>item.id === cabinetToolItem.id)
+    // const existed = this._registeredCabinetToolItems.some(({ id }) => id === cabinetToolItem.id);
+    if (!item) {
       this._registeredCabinetToolItems.push(cabinetToolItem);
+    }else{
+      item.iconType = cabinetToolItem.iconType
+      item.name = cabinetToolItem.name
+      this._registeredCabinetToolItems
     }
   }
 
