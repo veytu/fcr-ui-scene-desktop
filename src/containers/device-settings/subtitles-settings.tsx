@@ -8,8 +8,6 @@ import { Avatar } from '@components/avatar';
 import { Dropdown } from '@components/dropdown';
 import { Switch } from '@components/switch';
 
-// import { AgoraExtensionWidgetEvent } from '../events';
-
 
 export const SubtitlesSettings = observer(() => {
   const transI18n = useI18n();
