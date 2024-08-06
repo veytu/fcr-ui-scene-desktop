@@ -134,12 +134,12 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
         breakoutUIStore.setDialogVisible(true);
       } else if (id == 'rtt') {
         eduToolApi.setWidgetVisible('rtt', true);
-        eduToolApi.sendWidgetVisibleIsShowRtt(id, true);
-        eduToolApi.changeSubtitleOpenState()
+        // eduToolApi.sendWidgetVisibleIsShowRtt(id, true);
+        eduToolApi.changeToSubtitleState()
       } else {
         if(id=="rttbox"){
           eduToolApi.sendWidgetRttboxShow(id, true); 
-          eduToolApi.changeConversionOpenState()
+          eduToolApi.changeToConversionState()
         }
         widgetUIStore.createWidget(id);
       }
