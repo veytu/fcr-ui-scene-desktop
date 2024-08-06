@@ -199,12 +199,12 @@ export class EduTool {
     this._handleVisibleStateChange({ widgetId, visible });
   }
 
-  changeToSubtitleState() {
-    this._sendMessage(AgoraExtensionRoomEvent.RttChangeToSubtitleState);
+  changeSubtitleOpenState() {
+    this._sendMessage(AgoraExtensionRoomEvent.RttChangeToSubtitleOpenState);
   }
 
-  changeToConversionState() {
-    this._sendMessage(AgoraExtensionRoomEvent.RttChangeToConversionState);
+  changeConversionOpenState() {
+    this._sendMessage(AgoraExtensionRoomEvent.RttChangeToConversionOpenState);
   }
   @bound
   sendWidgetVisible(widgetId: string, visible: boolean) {
@@ -219,10 +219,10 @@ export class EduTool {
     this._sendMessage(AgoraExtensionRoomEvent.RttboxShow, { widgetId, visible });
   }
   
-  // @bound
-  // sendWidgetVisibleIsShowRtt(widgetId: string, visible: boolean) {
-  //   this._sendMessage(AgoraExtensionRoomEvent.RttboxChanged, { widgetId, visible });
-  // }
+  @bound
+  sendWidgetVisibleIsShowRtt(widgetId: string, visible: boolean) {
+    this._sendMessage(AgoraExtensionRoomEvent.RttboxChanged, { widgetId, visible });
+  }
   @bound
   sendWidgetPrivateChat(widgetId: string, userId: string) {
     this._sendMessage(AgoraExtensionRoomEvent.PrivateChat, { widgetId, userId });
