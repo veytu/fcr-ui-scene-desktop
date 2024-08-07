@@ -26,17 +26,14 @@ export const SubtitlesSettings = observer(() => {
   const toggleAiDenoiser = ()=>{
     // eduToolApi.ChangeRttShowDoubleLan(!isAiDenoiserEnabled);
     setIsAiDenoiserEnabled(!isAiDenoiserEnabled)
-    eduToolApi.sendWidgetChangeRttShowDoubleLan('rttbox',true)
-    eduToolApi.sendWidgetChangeRttShowDoubleLan('rtt',true)
+    eduToolApi.sendWidgetChangeRttShowDoubleLan(isAiDenoiserEnabled)
     
   }
   // 修改字号
   const handleHorizontalChange = (value: number) => {
     setHorizontalValue(value);
     localStorage.setItem(getters.roomUuid+'_sourceLan', value.toString());
-    eduToolApi.sendWidgetChangeRttTextSize('rttbox',true)
-    eduToolApi.sendWidgetChangeRttTextSize('rtt',true)
-    
+    eduToolApi.sendWidgetChangeRttTextSize(value)
   };
   useEffect(() => {
     startAudioRecordingPreview();
@@ -65,16 +62,14 @@ export const SubtitlesSettings = observer(() => {
   const handleTranslateLanguageChange = (languageId: string) => {
     setTranslateLanguageId(languageId);
     localStorage.setItem(getters.roomUuid+'_targetLan', languageId);
-    eduToolApi.sendWidgetChangeRttTargetLan('rttbox',true)
-    eduToolApi.sendWidgetChangeRttTargetLan('rtt',true)
+    eduToolApi.sendWidgetChangeRttTargetLan(languageId)
   };
 
   // 设置声源语言
   const handleSourceLanguageChange = (languageId: string) => {
     setSourceLanguageId(languageId);
     localStorage.setItem(getters.roomUuid+'_sourceLan', languageId);
-    eduToolApi.sendWidgetChangeRttSourceLant('rttbox',true)
-    eduToolApi.sendWidgetChangeRttSourceLant('rtt',true)
+    eduToolApi.sendWidgetChangeRttSourceLant(languageId)
   };
 
   return (

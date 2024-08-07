@@ -228,20 +228,20 @@ export class EduTool {
     this._sendMessage(AgoraExtensionRoomEvent.PrivateChat, { widgetId, userId });
   }
   @bound
-  sendWidgetChangeRttSourceLant(widgetId: string,notify: boolean) {
-    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttSourceLan, { widgetId });
+  sendWidgetChangeRttSourceLant(lan:string) {
+    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttSourceLan, lan);
   }
   @bound
-  sendWidgetChangeRttTargetLan(widgetId: string,notify: boolean) {
-    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttTargetLan, { widgetId });
+  sendWidgetChangeRttTargetLan(lan:string) {
+    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttTargetLan, lan);
   }
   @bound
-  sendWidgetChangeRttTextSize(widgetId: string,notify: boolean) {
-    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttTextSize, { widgetId });
+  sendWidgetChangeRttTextSize(textSize:number) {
+    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttTextSize,textSize);
   }
   @bound
-  sendWidgetChangeRttShowDoubleLan(widgetId: string,notify: boolean) {
-    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttShowDoubleLan, { widgetId });
+  sendWidgetChangeRttShowDoubleLan(showDouble:boolean) {
+    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttShowDoubleLan, showDouble);
   }
   @bound
   refreshWidget(widgetId: string) {
