@@ -177,4 +177,6 @@ export enum AgoraExtensionWidgetEvent {
   UpdatePosition = 'update-position',
   //更新倒计时状态
   CountdownTimerStateChanged = 'countdown-timer-state-changed',
+  //显示转写弹窗
+  RttShowConversion = "RttShowConversion",
 }

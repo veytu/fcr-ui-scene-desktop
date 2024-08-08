@@ -9,7 +9,7 @@ import {
   Platform,
 } from 'agora-edu-core';
 import { AGError, AGRtcConnectionType, AgoraRteScene, bound } from 'agora-rte-sdk';
-import { observable, action, runInAction } from 'mobx';
+import { observable, action, runInAction,reaction,IReactionDisposer } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { DeviceSettingUIStore } from './device-setting';
 import { ActionBarUIStore } from './action-bar';
@@ -30,6 +30,7 @@ import { CloudUIStore } from './cloud';
 import { BreakoutUIStore } from './breakout';
 import { transI18n } from 'agora-common-libs';
 import { getConfig } from '@ui-scene/utils/launch-options-holder';
+import {  AgoraExtensionWidgetEvent } from '@ui-scene/extension/events';
 
 export class SceneUIStore {
   @observable
@@ -54,6 +55,8 @@ export class SceneUIStore {
 
   readonly boardApi = new Board();
   readonly eduToolApi = new EduTool();
+  protected _disposers: IReactionDisposer[] = [];
+
 
   constructor() {
     this.classroomStore = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass);
@@ -102,6 +105,24 @@ export class SceneUIStore {
     });
     //@ts-ignore
     window.globalStore = this;
+
+    this._disposers.push(
+      reaction(
+        () => ({controller: this.classroomStore.widgetStore.widgetController,}),
+        ({ controller }) => {
+          if (controller) {
+            controller.removeBroadcastListener({
+              messageType: AgoraExtensionWidgetEvent.RttShowConversion,
+              onMessage: this._handleVisibleRttConversionChange,
+            })
+            controller.addBroadcastListener({
+              messageType: AgoraExtensionWidgetEvent.RttShowConversion,
+              onMessage: this._handleVisibleRttConversionChange,
+            })
+          }
+        },
+      ),
+    );
   }
 
   @action.bound
@@ -193,7 +214,24 @@ export class SceneUIStore {
   }
 
   @bound
+  private _handleVisibleRttConversionChange() {
+    this.widgetUIStore.createWidget("rttbox");
+    if (this.classroomStore.widgetStore.widgetController) {
+      this.classroomStore.widgetStore.widgetController.broadcast(AgoraExtensionWidgetEvent.SetVisible, {
+        widgetId: "rttbox",
+        visible: true,
+      });
+    }
+  }
+
+  @bound
   destroy() {
+    this.classroomStore.widgetStore.widgetController?.removeBroadcastListener({
+      messageType: AgoraExtensionWidgetEvent.RttShowConversion,
+      onMessage: this._handleVisibleRttConversionChange,
+    })
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
     this.classroomStore.destroy();
     Object.getOwnPropertyNames(this).forEach((propertyName) => {
       if (propertyName.endsWith('UIStore')) {
