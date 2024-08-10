@@ -501,6 +501,8 @@ export const enUs = {
   fcr_tool_box_poll: 'Poll',
   fcr_tool_box_count_down: 'Countdown',
   fcr_tool_box_popup_quiz: 'Pop-up Quiz',
+  fcr_board_attend_discussion:'Attend Discussion',
+  fcr_board_join_group:'Join',
 
   //****************** 白板Board ******************
   fcr_board_granted: 'You can now annotate on the whiteboard.',

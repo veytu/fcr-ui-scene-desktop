@@ -48,6 +48,12 @@ interface StudentInfoProps {
   name: string;
   isInvite: boolean;
 }
+
+interface MemberProps {
+  userUuid: string | undefined,
+  [porperty: string]: any
+}
+
 @Log.attach()
 export class BreakoutUIStore extends EduUIStoreBase {
   /**
@@ -127,7 +133,20 @@ export class BreakoutUIStore extends EduUIStoreBase {
     userUuid: '',
   };
   @observable
-  private _inviteStudents: any = [];
+  private _inviteStudents: { userUuid: string }[] = [];
+  /**
+    * 已选中的未分组的成员
+    */
+  @observable selectedUnGroupMember: MemberProps[] = [];
+  /**
+    * 已选中的已分组的成员
+    */
+  @observable selectedGroupMember: MemberProps[] = [];
+  /**
+    * 已选中的分组
+    */
+  @observable selectedGroup: any = {};
+
   /**
    * 正在加入分组
    */
@@ -172,6 +191,49 @@ export class BreakoutUIStore extends EduUIStoreBase {
   get toasts() {
     return this._toasts;
   }
+  /**
+    * 储存已选中的未分组成员
+    */
+  @action.bound
+  setSelectedUnGroupMember(member: MemberProps) {
+    this.selectedUnGroupMember.push(member);
+  }
+
+  /**
+   * 移除已选中的未分组成员
+   */
+  @action.bound
+  removeSelectedUnGroupMember(member: MemberProps) {
+    const newData = this.selectedUnGroupMember.filter((item: { userUuid: string | undefined; }) => item.userUuid !== member.userUuid)
+    this.selectedUnGroupMember = newData;
+  }
+
+
+  /**
+     * 储存已选中的已分组成员
+     */
+  @action.bound
+  setSelectedGroupMember(member: MemberProps) {
+    this.selectedGroupMember.push(member);
+  }
+
+  /**
+    * 移除已选中的已分组成员
+    */
+  @action.bound
+  removeSelectedGroupMember(member: MemberProps) {
+    const newData = this.selectedGroupMember.filter((item: MemberProps) => item.userUuid !== member.userUuid)
+    this.selectedGroupMember = newData;
+  }
+
+  /**
+       * 储存已选中的分组
+       */
+  @action.bound
+  setSelectedGroup(group: any) {
+    this.selectedGroup = group;
+  }
+
   @action.bound
   setTaskStop(tasks: any[], index: number) {
     if (tasks[index]?.inviteStudentTask && tasks[index]?.inviteStudentTask?.__timer) {
@@ -659,57 +721,71 @@ export class BreakoutUIStore extends EduUIStoreBase {
    * @param user
    */
   @action.bound
-  moveUserToGroup(fromGroupUuid: string, toGroupUuid: string, userUuid: string) {
-    const group = this.groupDetails.get(toGroupUuid);
+  async moveUserToGroup(fromGroupUuid: string, toGroupUuid: string, userUuid: string | string[]) {
+    try {
+          debugger
+          const group = this.groupDetails.get(toGroupUuid);
 
-    if (group) {
-      const studentsCount = group.users.reduce((total, { userUuid }) => {
-        if (this.classroomStore.userStore.studentList.get(userUuid)) total += 1;
-        return total;
-      }, 0);
-      // check students number
-      if (studentsCount >= BreakoutUIStore.MAX_USER_COUNT) {
-        this.addToast({
-          text: transI18n('fcr_group_tips_group_is_full', {
-            reason1: BreakoutUIStore.MAX_USER_COUNT,
-          }),
-        });
-        return;
+      if (group) {
+        const studentsCount = group.users.reduce((total, { userUuid }) => {
+          if (this.classroomStore.userStore.studentList.get(userUuid)) total += 1;
+          return total;
+        }, 0);
+        // check students number
+        if (studentsCount >= BreakoutUIStore.MAX_USER_COUNT) {
+          this.addToast({
+            text: transI18n('fcr_group_tips_group_is_full', {
+              reason1: BreakoutUIStore.MAX_USER_COUNT,
+            }),
+          });
+          return;
+        }
       }
-    }
 
-    if (this.groupState === GroupState.OPEN) {
-      if (!toGroupUuid) {
-        return;
-      }
-      if (!fromGroupUuid) {
-        this.classroomStore.groupStore.updateGroupUsers(
-          [
-            {
-              groupUuid: toGroupUuid,
-              addUsers: [userUuid],
-            },
-          ],
-          true,
-        );
+      if (this.groupState === GroupState.OPEN) {
+        if (!toGroupUuid) {
+          return;
+        }
+        //未分组成员移动
+        if (!fromGroupUuid) {
+          await this.classroomStore.groupStore.updateGroupUsers(
+            [
+              {
+                groupUuid: toGroupUuid,
+                addUsers: typeof userUuid === 'string' ? [userUuid] : Array.isArray(userUuid) ? [...userUuid] : [],
+              },
+            ],
+            true,
+          );
+          this.selectedGroupMember?.map(item => this.removeSelectedUnGroupMember(item));
+        } else {
+          //已分组成员移动
+          await this.classroomStore.groupStore.moveUsersToGroup(fromGroupUuid, toGroupUuid, [...userUuid]);
+          this.selectedUnGroupMember?.map(item => this.removeSelectedUnGroupMember(item));
+        }
       } else {
-        this.classroomStore.groupStore.moveUsersToGroup(fromGroupUuid, toGroupUuid, [userUuid]);
-      }
-    } else {
-      const fromGroup = this._localGroups.get(fromGroupUuid);
-      const toGroup = this._localGroups.get(toGroupUuid);
+        const fromGroup = this._localGroups.get(fromGroupUuid);
+        const toGroup = this._localGroups.get(toGroupUuid);
 
-      if (fromGroup) {
-        fromGroup.users = fromGroup.users.filter(({ userUuid: uuid }) => uuid !== userUuid);
-        // toGroup.users = toGroup.users.concat([{ userUuid }]);
-        this._localGroups.set(fromGroupUuid, fromGroup);
-        // this._localGroups.set(toGroupUuid, toGroup);
-      }
+        if (fromGroup) {
+          fromGroup.users = fromGroup.users.filter(({ userUuid: uuid }) => uuid !== userUuid);
+          // toGroup.users = toGroup.users.concat([{ userUuid }]);
+          this._localGroups.set(fromGroupUuid, fromGroup);
+          // this._localGroups.set(toGroupUuid, toGroup);
+        }
 
-      if (toGroup) {
-        toGroup.users = toGroup.users.concat([{ userUuid }]);
-        this._localGroups.set(toGroupUuid, toGroup);
+        if (toGroup) {
+          if (typeof userUuid === 'string') {
+            toGroup.users = toGroup.users.concat([{ userUuid }]);
+          } else if (Array.isArray(userUuid)) {
+            const arr = userUuid?.map(item => ({ userUuid: item }))
+            toGroup.users = toGroup.users.concat(arr);
+          }
+          this._localGroups.set(toGroupUuid, toGroup);
+        }
       }
+    } catch (error) {
+      console.log('error', error);
     }
   }
 

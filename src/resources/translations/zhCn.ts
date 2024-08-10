@@ -491,6 +491,8 @@ export const zhCn = {
   fcr_tool_box_poll: '投票',
   fcr_tool_box_count_down: '倒计时',
   fcr_tool_box_popup_quiz: '答题器',
+  fcr_board_attend_discussion:'旁听讨论',
+  fcr_board_join_group:'加入分组',
 
   //****************** 白板Board ******************
   fcr_board_granted: '你已被老师授权，请使用白板工具互动。',
