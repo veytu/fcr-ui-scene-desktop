@@ -49,6 +49,7 @@ export const BreakoutRoomGrouping = observer(() => {
 
 
   const handleMoveGroup = (type: string) => {
+    debugger
     const getGroupDetails = (groupId: string) => groupDetails.get(groupId);
     //移动选中的所有
     if (type === 'single-to-right') {
@@ -61,7 +62,7 @@ export const BreakoutRoomGrouping = observer(() => {
     } else if (type === 'single-to-left') {
       console.log('selectedGroupMember', JSON.stringify(selectedGroupMember));
       const arr = selectedGroupMember?.map(item => item?.userUuid);
-      moveUserToGroup('', '', arr as string[]);
+      moveUserToGroup(selectedGroup?.groupId, '', arr as string[]);
     } else if (type === 'all-to-right') {
 
     } else if (type === 'all-to-left') {

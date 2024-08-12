@@ -723,8 +723,8 @@ export class BreakoutUIStore extends EduUIStoreBase {
   @action.bound
   async moveUserToGroup(fromGroupUuid: string, toGroupUuid: string, userUuid: string | string[]) {
     try {
-          debugger
-          const group = this.groupDetails.get(toGroupUuid);
+      debugger
+      const group = this.groupDetails.get(toGroupUuid);
 
       if (group) {
         const studentsCount = group.users.reduce((total, { userUuid }) => {
@@ -757,21 +757,23 @@ export class BreakoutUIStore extends EduUIStoreBase {
             ],
             true,
           );
-          this.selectedGroupMember?.map(item => this.removeSelectedUnGroupMember(item));
+          this.selectedUnGroupMember?.map(item => this.removeSelectedUnGroupMember(item));
         } else {
           //已分组成员移动
           await this.classroomStore.groupStore.moveUsersToGroup(fromGroupUuid, toGroupUuid, [...userUuid]);
-          this.selectedUnGroupMember?.map(item => this.removeSelectedUnGroupMember(item));
+          this.selectedGroupMember?.map(item => this.removeSelectedGroupMember(item));
         }
       } else {
         const fromGroup = this._localGroups.get(fromGroupUuid);
         const toGroup = this._localGroups.get(toGroupUuid);
 
+        //已分组成员移动
         if (fromGroup) {
           fromGroup.users = fromGroup.users.filter(({ userUuid: uuid }) => uuid !== userUuid);
           // toGroup.users = toGroup.users.concat([{ userUuid }]);
           this._localGroups.set(fromGroupUuid, fromGroup);
           // this._localGroups.set(toGroupUuid, toGroup);
+          this.selectedGroupMember?.map(item => this.removeSelectedGroupMember(item));
         }
 
         if (toGroup) {
@@ -782,6 +784,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
             toGroup.users = toGroup.users.concat(arr);
           }
           this._localGroups.set(toGroupUuid, toGroup);
+          this.selectedUnGroupMember?.map(item => this.removeSelectedUnGroupMember(item));
         }
       }
     } catch (error) {
