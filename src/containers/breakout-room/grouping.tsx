@@ -12,9 +12,11 @@ import { DndProvider, useDrop, useDrag } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { observer } from 'mobx-react';
 import { useStore } from '@ui-scene/utils/hooks/use-store';
-import { useI18n } from 'agora-common-libs';
+import { useI18n, useUIConfig } from 'agora-common-libs';
 import { message } from 'antd';
 import { isEmpty } from 'lodash';
+import { EduClassroomConfig } from 'agora-edu-core';
+import AgoraRTC from 'agora-rtc-sdk-ng';
 
 type GroupItem = {
   id: string;
@@ -39,34 +41,47 @@ export const BreakoutRoomGrouping = observer(() => {
       groups,
       selectedUnGroupMember,
       selectedGroupMember,
-      selectedGroup
+      selectedGroup,
+      getUserGroupUuid,
+      addToast
     },
   } = useStore();
   const transI18n = useI18n();
+  const isHasGroupedMember = groups?.filter(item => item?.children?.length > 0);
 
   console.log('ungroupedList', ungroupedList, groups);
   console.log('groupDetails', JSON.stringify(groupDetails));
 
-
   const handleMoveGroup = (type: string) => {
-    debugger
-    const getGroupDetails = (groupId: string) => groupDetails.get(groupId);
+    console.log('selectedGroup', JSON.stringify(selectedGroup));
+
     //移动选中的所有
     if (type === 'single-to-right') {
       if (selectedGroup && !isEmpty(selectedGroup)) {
         const arr = selectedUnGroupMember?.map(item => item?.userUuid);
         moveUserToGroup('', selectedGroup?.groupId, arr as string[]);
       } else {
-        message.info('请先选择分组')
+        // message.info('请先选择分组');
+        addToast({ text: transI18n('fcr_group_choose_group') });
       }
     } else if (type === 'single-to-left') {
-      console.log('selectedGroupMember', JSON.stringify(selectedGroupMember));
-      const arr = selectedGroupMember?.map(item => item?.userUuid);
-      moveUserToGroup(selectedGroup?.groupId, '', arr as string[]);
+      selectedGroupMember?.map(item => {
+        moveUserToGroup(item?.groupId, '', item?.userUuid as string);
+      })
     } else if (type === 'all-to-right') {
+      ungroupedList?.map(item => {
+        moveUserToGroup('', selectedGroup?.groupId, item?.id);
+      })
 
     } else if (type === 'all-to-left') {
-
+      groups?.map(item => {
+        if (item?.children?.length > 0) {
+          item?.children?.map(chi => {
+            const groupUuid = getUserGroupUuid(chi?.id);
+            moveUserToGroup(groupUuid as string, '', chi?.id);
+          })
+        }
+      })
     }
   }
 
@@ -87,7 +102,7 @@ export const BreakoutRoomGrouping = observer(() => {
               <div>
                 <Button
                   size="XXS"
-                  preIcon={SvgIconEnum.FCR_RIGHT}
+                  preIcon={SvgIconEnum.FCR_V2_PHONE_MORE1}
                   type={'secondary'}
                   onClick={addGroup}>
                   {transI18n('fcr_group_button_add_room')}
@@ -132,9 +147,9 @@ export const BreakoutRoomGrouping = observer(() => {
                 </Button>
                 <Button
                   size="XXS"
-                  type={groups?.length ? 'primary' : 'secondary'}
+                  type={isHasGroupedMember?.length ? 'primary' : 'secondary'}
                   onClick={() => handleMoveGroup('all-to-left')}
-                  disabled={!groups?.length}
+                  disabled={!isHasGroupedMember?.length}
                 >
                   <SvgImg type={SvgIconEnum.FCR_V2_LOGOUT} />
                 </Button>
@@ -215,7 +230,11 @@ export const GroupedList = observer(
         joinSubRoom,
         studentInvites,
         setSelectedGroup,
-        selectedGroup
+        selectedGroup,
+        attendDiscussion,
+        isStartDiscussion,
+        teacherInCurrentRoom,
+        getUserToken
       },
     } = useStore();
     const transI18n = useI18n();
@@ -226,6 +245,8 @@ export const GroupedList = observer(
     const [inputVal, setInputVal] = useState('');
 
     const [isSelected, setIsSelected] = useState(false);//当前选中的分组
+
+    const [discussionBtn, setDiscussionBtn] = useState(false);//是否开启旁听讨论
 
     const [{ isOver }, drop] = useDrop({
       accept: DraggableTypes.NameCard,
@@ -239,6 +260,8 @@ export const GroupedList = observer(
         return { groupId };
       },
     });
+
+    const isTeacherInRoom: boolean = teacherInCurrentRoom(groupId);
 
     const toggleExpand = () => {
       setExpanded(!expanded);
@@ -260,7 +283,7 @@ export const GroupedList = observer(
     const handleDelete = () => {
       addDialog('confirm', {
         title: transI18n('fcr_group_delete_room_title'),
-        content: transI18n('fcr_group_delete_room_confirm', { reason1: groupName }),
+        content: discussionBtn ? transI18n('fcr_group_delete_room_listening_confirm') : transI18n('fcr_group_delete_room_confirm', { reason1: groupName }),
         onOk: () => {
           removeGroup(groupId);
         },
@@ -285,6 +308,7 @@ export const GroupedList = observer(
     };
 
     const handleJoin = () => {
+      console.log('join', groupId);
       joinSubRoom(groupId);
     };
 
@@ -295,21 +319,75 @@ export const GroupedList = observer(
       console.log('selectedGroup groupId === selectedGroup?.groupId', groupId === selectedGroup?.groupId);
 
       //已选择了一个分组
-      if (selectedGroup && !isEmpty(selectedGroup)) {
+      if (selectedGroup && !isEmpty(selectedGroup) && groupId === selectedGroup?.groupId) {
         //当前点击的是已选中的那个
-        if (groupId === selectedGroup?.groupId) {
-          isSelected ? setSelectedGroup(null) : setSelectedGroup({ groupId, groupName });
-          setIsSelected(!isSelected);
-        } else {
-          message.info('只能选择一个分组')
-        }
+        isSelected ? setSelectedGroup(null) : setSelectedGroup({ groupId, groupName });
+        setIsSelected(!isSelected);
       } else {
-        //还未选择
+        //还未选择 |  取消当前选中，选择另一个
         setIsSelected(!isSelected);
         setSelectedGroup({ groupId, groupName });
       }
     }
 
+    const handleDiscussion = async () => {
+      debugger
+      console.log('旁听讨论');
+      // fcr_group_attend_discussion_join_room_confirm
+      addDialog('confirm', {
+        title: discussionBtn ? transI18n('fcr_board_close_discussion') : transI18n('fcr_board_attend_discussion'),
+        content: discussionBtn ? transI18n('fcr_group_close_discussion_confirm') : transI18n('fcr_group_attend_discussion_confirm', { reason1: groupName }),
+        onOk: async () => {
+          //创建频道
+          let client;
+          if (!client) {
+            client = AgoraRTC.createClient({
+              codec: "vp8",
+              mode: "rtc",
+            });
+          }
+          if (discussionBtn) {
+            //关闭 - 离开频道
+            client && await client.leave();
+          } else {
+            const { appId } = EduClassroomConfig.shared;
+            //streamUuid用户频道号
+            // const data = await getUserToken(groupId as string);
+
+            const { localUser: { streamUuid, userToken, userUuid } } = await getUserToken(groupId as string);
+
+            // { localUser: { streamUuid, userToken, userUuid } } 
+            await client.join(appId, "attend-discussion-room", userToken, userUuid);
+            const subscribe = () => {
+              client.on("user-published", async (user: { audioTrack: any; }, mediaType: string) => {
+                // 发起订阅
+                await client.subscribe(user, mediaType);
+                // 如果订阅的是音频轨道
+                if (mediaType === "audio") {
+                  const audioTrack = user.audioTrack;
+                  // 自动播放音频
+                  audioTrack && audioTrack.play();
+                }
+              });
+            }
+            const unsubscribe = () => {
+              client.removeAllListeners("user-published");
+            }
+            try {
+              subscribe();
+            } catch (e) {
+              console.log('error', e);
+            } finally {
+              unsubscribe();
+            }
+          }
+          setDiscussionBtn(!discussionBtn);
+        },
+        okButtonProps: {
+          styleType: 'danger',
+        },
+      });
+    }
 
     const haveRequest = studentInvites.some((request: { groupUuid: string; }) => {
       return request.groupUuid === groupId;
@@ -323,11 +401,10 @@ export const GroupedList = observer(
       'fcr-breakout-room__grouping--dashed-border': isOver,
     });
 
-
     return (
       <React.Fragment>
         <div ref={drop} className={containerCls}>
-          <div className="fcr-breakout-room__grouping-grouped-title" style={isSelected ? { backgroundColor: 'rgba(201, 207, 224, 0.3)' } : {}} onClick={handleChooseGroup}>
+          <div className="fcr-breakout-room__grouping-grouped-title" style={selectedGroup?.groupId === groupId ? { backgroundColor: 'rgba(201, 207, 224, 0.3)' } : {}} onClick={handleChooseGroup}>
             <SvgImg
               onClick={toggleExpand}
               type={SvgIconEnum.FCR_DROPDOWN}
@@ -349,10 +426,10 @@ export const GroupedList = observer(
                   {groupName} ({list.length})
                 </span>
                 <div className="fcr-breakout-room__grouping-grouped-group-actions">
-                  <Button type='secondary' onClick={handleDelete} size="XXS">
-                    {transI18n('fcr_board_attend_discussion')}
+                  <Button disabled={!isStartDiscussion} type='secondary' onClick={handleDiscussion} size="XXS" styleType={discussionBtn ? "danger" : 'gray'}>
+                    {transI18n(discussionBtn ? 'fcr_board_close_discussion' : 'fcr_board_attend_discussion')}
                   </Button>
-                  <Button onClick={handleDelete} size="XXS">
+                  <Button disabled={!isStartDiscussion || isTeacherInRoom} onClick={handleJoin} size="XXS">
                     {transI18n('fcr_board_join_group')}
                   </Button>
                   {/* 折叠按钮 */}
@@ -366,11 +443,11 @@ export const GroupedList = observer(
                     overlayClassName='fcr-breakout-room_tooltip'
                     content={
                       <div className='fcr-breakout-room_fold-btn-wrapped'>
-                        <div className='fcr-breakout-room_fold-btn-item' style={{ marginBottom: 6 }}>
+                        <div className='fcr-breakout-room_fold-btn-item' style={{ marginBottom: 6 }} onClick={handleDelete}>
                           <SvgImg type={SvgIconEnum.FCR_DELETE3} size={24} />
                           <span>删除该组</span>
                         </div>
-                        <div className='fcr-breakout-room_fold-btn-item' >
+                        <div className='fcr-breakout-room_fold-btn-item' onClick={handleRename} >
                           <SvgImg type={SvgIconEnum.FCR_RENAME} size={24} />
                           <span>重命名</span>
                         </div>
@@ -521,8 +598,8 @@ const DraggableNameCard: FC<{ item: GroupItem; groupId?: string }> = ({ item, gr
 
   const handleSelected = () => {
     setIsSelected(!isSelected);
-    console.log('groupId',groupId);
-    
+    console.log('groupId', groupId);
+
     if (groupId) {
       //已分组
       isSelected ? removeSelectedGroupMember({ groupId, userUuid: item?.id, ...item }) : setSelectedGroupMember({ groupId, userUuid: item?.id, ...item });

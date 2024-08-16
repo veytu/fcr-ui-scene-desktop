@@ -16,7 +16,7 @@ import difference from 'lodash/difference';
 import range from 'lodash/range';
 import findLast from 'lodash/findLast';
 import { v4 as uuidv4 } from 'uuid';
-import { AGRtcConnectionType, AGRtcState, AgoraRteCustomMessage, Scheduler } from 'agora-rte-sdk';
+import { AGRtcConnectionType, AGRtcState, AgoraRteCustomMessage, AgoraRteScene, Scheduler } from 'agora-rte-sdk';
 import { isInvisible, isTeacher } from '@ui-scene/utils/check';
 import {
   CustomMessageAcceptInviteType,
@@ -29,9 +29,12 @@ import {
   RejectToGroupArgs,
 } from './type';
 import { AgoraExtensionRoomEvent } from '@ui-scene/extension/events';
-import { Children } from 'react';
+import { Children, useContext } from 'react';
 import { getRandomInt } from '@ui-scene/utils';
 import { ToastApi } from '@components/toast';
+import AgoraRTC from 'agora-rtc-sdk-ng';
+import { jsonstring } from 'agora-rte-sdk/lib/core/utils/utils';
+
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 enum GroupMethod {
@@ -304,6 +307,14 @@ export class BreakoutUIStore extends EduUIStoreBase {
   }
 
   /**
+ * 是否开启分组讨论
+ */
+  @computed
+  get isStartDiscussion() {
+    return this.classroomStore.groupStore.state === GroupState.OPEN
+  }
+
+  /**
    * 学生列表
    */
   @computed
@@ -458,6 +469,18 @@ export class BreakoutUIStore extends EduUIStoreBase {
     }
     return undefined;
   }
+
+  /**
+* 老师是否在某个房间
+*/
+  @action.bound
+  teacherInCurrentRoom(groupId: string) {
+    return (
+      !!this.teacherGroupUuid &&
+      this.teacherGroupUuid === groupId
+    );
+  }
+
   @action.bound
   studentInviteTeacher(
     groupInfo: GroupInfoProps,
@@ -568,6 +591,28 @@ export class BreakoutUIStore extends EduUIStoreBase {
   @bound
   getGroupUserByUuid(userUuid: string) {
     return this.classroomStore.groupStore.userByUuid.get(userUuid);
+  }
+
+  /**
+   * 获取用户token
+   * @param groupUuid
+   */
+  @bound
+  async getUserToken(groupUuid: string) {
+    //获取本地配置
+    const { userUuid, role, userName } = EduClassroomConfig.shared.sessionInfo;
+    console.log(' userUuid, role, userName', userUuid, role, userName);
+    
+    const data =await this.classroomStore.api.entry({
+      roomUuid: groupUuid,
+      userUuid,
+      role,
+      userName
+    });
+    debugger
+    console.log('getUserToken data',JSON.stringify(data));
+
+    return data
   }
 
   /**
@@ -723,7 +768,6 @@ export class BreakoutUIStore extends EduUIStoreBase {
   @action.bound
   async moveUserToGroup(fromGroupUuid: string, toGroupUuid: string, userUuid: string | string[]) {
     try {
-      debugger
       const group = this.groupDetails.get(toGroupUuid);
 
       if (group) {
@@ -784,7 +828,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
             toGroup.users = toGroup.users.concat(arr);
           }
           this._localGroups.set(toGroupUuid, toGroup);
-          this.selectedUnGroupMember?.map(item => this.removeSelectedUnGroupMember(item));
+          fromGroup ? null : this.selectedUnGroupMember?.map(item => this.removeSelectedUnGroupMember(item));
         }
       }
     } catch (error) {
@@ -836,6 +880,40 @@ export class BreakoutUIStore extends EduUIStoreBase {
       this.classroomStore.groupStore.updateGroupUsers(patches);
     } else {
       this.logger.info('cannot know which group the user is in');
+    }
+  }
+
+  /**
+* 旁听讨论 | 结束旁听
+* @param groupUuid 分组id
+* @param isAttend 是否旁听
+*/
+  @bound
+  async attendDiscussion(groupId: string, isAttend: boolean) {
+    try {
+      const { streamStore, groupStore, connectionStore } = this.classroomStore;
+      console.log('this.classroomStore.streamStore.streamByStreamUuid', JSON.stringify(this.classroomStore.streamStore.streamByStreamUuid));
+      this.getters.classroomUIStore.subscriptionUIStore.setActive('');
+      const currentGroup = this.groupDetails.get(groupId);
+      console.log('currentGroup', JSON.stringify(currentGroup));
+
+
+      // console.log("🚀 ~ BreakoutUIStore ~ attendDiscussion ~ connectionStore:", JSON.stringify(connectionStore.mainRoomScene))
+
+      // Array.from(streamStore.streamByStreamUuid.values()).map(stream => {
+      //   debugger
+      //   const target = currentGroup?.users?.find(user => user?.userUuid == stream?.fromUser?.userUuid);
+      //   if (target) {
+      //     const { currentSubRoom } = groupStore;
+      //     console.log("🚀 ~ BreakoutUIStore ~ attendDiscussion ~ roomUuid:", currentSubRoom)
+      //     const roomScene = connectionStore.subRoomScene;
+      //     console.log('connectionStore.subRoomScene', JSON.stringify(connectionStore.subRoomScene));
+
+      //     streamStore.muteRemoteAudioStream(stream, isAttend, roomScene);
+      //   }
+      // })
+    } catch (error) {
+      console.log('error', error);
     }
   }
 
