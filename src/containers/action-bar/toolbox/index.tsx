@@ -115,6 +115,11 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
       eduToolApi.setWidgetVisible(id, false);
       eduToolApi.sendWidgetVisibleIsShowTool(id, true);
     }
+    if (id == 'rttbox') {
+      widgetUIStore.createWidget(id);
+      eduToolApi.setWidgetVisible(id, false);
+      // eduToolApi.sendWidgetVisibleI/sShowTool(id, false);
+    }
   }, []);
   const handleClick = () => {
     if (eduToolApi.isWidgetMinimized(id)) {
