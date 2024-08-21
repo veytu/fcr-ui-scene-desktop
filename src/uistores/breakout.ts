@@ -17,7 +17,7 @@ import range from 'lodash/range';
 import findLast from 'lodash/findLast';
 import { v4 as uuidv4 } from 'uuid';
 import { AGRtcConnectionType, AGRtcState, AgoraRteCustomMessage, AgoraRteScene, Scheduler } from 'agora-rte-sdk';
-import { isInvisible, isTeacher } from '@ui-scene/utils/check';
+import { isTeacher } from '@ui-scene/utils/check';
 import {
   CustomMessageAcceptInviteType,
   CustomMessageCancelInviteType,
@@ -28,12 +28,9 @@ import {
   CustomMessageTeacherCloseGroupType,
   RejectToGroupArgs,
 } from './type';
-import { AgoraExtensionRoomEvent } from '@ui-scene/extension/events';
-import { Children, useContext } from 'react';
 import { getRandomInt } from '@ui-scene/utils';
 import { ToastApi } from '@components/toast';
 import AgoraRTC from 'agora-rtc-sdk-ng';
-import { jsonstring } from 'agora-rte-sdk/lib/core/utils/utils';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

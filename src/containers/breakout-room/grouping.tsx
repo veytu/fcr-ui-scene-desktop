@@ -7,8 +7,7 @@ import { ToolTip } from '@components/tooltip';
 import classNames from 'classnames';
 import React, { useState, FC, useEffect } from 'react';
 import { GroupPanel } from './group-panel';
-import { SearchPanel } from './search-panel';
-import { DndProvider, useDrop, useDrag } from 'react-dnd';
+import { DndProvider, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { observer } from 'mobx-react';
 import { useStore } from '@ui-scene/utils/hooks/use-store';
@@ -30,7 +29,6 @@ export const BreakoutRoomGrouping = observer(() => {
     breakoutUIStore: {
       addGroup,
       moveUserToGroup,
-      groupDetails,
       ungroupedCount,
       numberToBeAssigned,
       groupState,
@@ -218,7 +216,6 @@ export const GroupedList = observer(
         removeGroup,
         renameGroupName,
         setGroupUsers,
-        groupState,
         joinSubRoom,
         studentInvites,
         setSelectedGroup,
@@ -231,10 +228,6 @@ export const GroupedList = observer(
         isAttendDiscussionConfig,
         addToast,
         currentSubRoomInfo,
-      },
-      subscriptionUIStore: { setActive },
-      classroomStore: {
-        connectionStore: { sceneId },
       },
     } = useStore();
     const transI18n = useI18n();
@@ -367,7 +360,6 @@ export const GroupedList = observer(
 
 
     const handleDiscussion = async () => {
-      // fcr_group_attend_discussion_join_room_confirm
       const content = isTeacherInRoom ?
         transI18n('fcr_group_attend_discussion_join_room_confirm', { reason1: currentSubRoomInfo?.groupName })
         : discussionBtn
@@ -470,47 +462,7 @@ export const GroupedList = observer(
                         type={SvgIconEnum.FCR_V2_FOLD_BTN}
                       />
                     </div>
-                    {/* <Button onClick={handleDelete} size="XXS">
-                      <SvgImg
-                        onClick={toggleExpand}
-                        type={SvgIconEnum.FCR_V2_FOLD_BTN}
-                      />
-                    </Button> */}
                   </ToolTip>
-
-                  {/* 分组 */}
-                  {/* {!groupState ? (
-                    <PopoverWithTooltip
-                      toolTipProps={{
-                        placement: 'top',
-                        content: transI18n('fcr_group_button_move_to'),
-                      }}
-                      popoverProps={{
-                        overlayOffset: 20,
-                        placement: 'rightTop',
-                        content: <SearchPanel groupId={groupId} onChange={handleUsersChange} />,
-                        overlayClassName: 'fcr-breakout-room__search__overlay',
-                      }}>
-                      <Button
-                        size="XXS"
-                        shape="circle"
-                        type="secondary"
-                        preIcon={SvgIconEnum.FCR_MOVETO}>
-                        {transI18n('fcr_group_button_assign')}
-                      </Button>
-                    </PopoverWithTooltip>
-                  ) : (
-                    <Button
-                      size="XXS"
-                      shape="circle"
-                      type="secondary"
-                      preIcon={SvgIconEnum.FCR_MOVETO}
-                      onClick={handleJoin}>
-                      {transI18n('fcr_group_button_join')}
-                    </Button>
-                  )} */}
-
-
                 </div>
               </React.Fragment>
             ) : (
@@ -536,70 +488,11 @@ export const GroupedList = observer(
   },
 );
 
-// const DraggableNameCard: FC<{ item: GroupItem; groupId?: string }> = ({ item, groupId }) => {
-//   const {
-//     breakoutUIStore: { moveUserToGroup, groupDetails },
-//   } = useStore();
-
-//   const [{ isDragging }, drag] = useDrag({
-//     type: DraggableTypes.NameCard,
-//     collect: (monitor) => ({
-//       isDragging: monitor.isDragging(),
-//     }),
-//     item,
-//     end: (item, monitor) => {
-//       const getGroupDetails = (groupId: string) => groupDetails.get(groupId);
-
-//       if (!monitor.didDrop()) {
-//         return;
-//       }
-//       const { groupId: toGroupId } = monitor.getDropResult() as { groupId: string };
-
-//       if (toGroupId === groupId) {
-//         return;
-//       }
-
-//       if (!groupId) {
-//         // move from ungrouped to a group
-//         const groupDetails = getGroupDetails(toGroupId);
-
-//         if (groupDetails) {
-//           // const groupUsers = groupDetails.users
-//           //   .concat([{ userUuid: item.id }])
-//           //   .map(({ userUuid }) => userUuid);
-//           // setGroupUsers(toGroupId, groupUsers);
-//           moveUserToGroup('', toGroupId, item.id);
-//         }
-//       } else if (!toGroupId) {
-//         // remove from current group
-//         const groupDetails = getGroupDetails(groupId);
-
-//         if (groupDetails) {
-//           // const groupUsers = groupDetails.users
-//           //   .filter(({ userUuid }) => userUuid !== item.id)
-//           //   .map(({ userUuid }) => userUuid);
-//           // setGroupUsers(groupId, groupUsers);
-//           moveUserToGroup(groupId, '', item.id);
-//         }
-//       } else {
-//         moveUserToGroup(groupId, toGroupId, item.id);
-//       }
-//     },
-//   });
-
-//   return (
-//     <li ref={drag} style={{ visibility: isDragging ? 'hidden' : 'visible' }}>
-//       <NamePlate nickname={item.name} tag={item.tag} userId={item.id} groupId={groupId} />
-//     </li>
-//   );
-// };
 
 const DraggableNameCard: FC<{ item: GroupItem; groupId?: string }> = ({ item, groupId }) => {
   const {
     breakoutUIStore: {
-      selectedUnGroupMember,
       setSelectedUnGroupMember,
-      selectedGroupMember,
       setSelectedGroupMember,
       removeSelectedGroupMember,
       removeSelectedUnGroupMember,
@@ -647,7 +540,6 @@ const NamePlate: FC<{ nickname: string; tag?: string; userId: string; groupId?: 
   return (
     <div className="fcr-breakout-room__grouping-name-plate">
       {isSelected && <SvgImg type={SvgIconEnum.FCR_CHOOSE_VERTICAL_RECT} />}
-      {/* <SvgImg type={SvgIconEnum.FCR_MOVE} colors={{ iconPrimary: 'currentColor' }} /> */}
       <Avatar style={{ marginLeft: isSelected ? 0 : '24px' }} size={24} textSize={12} nickName={nickname} />
       <div className="fcr-breakout-room__grouping-name-plate-name">
         {tag && <div className="fcr-breakout-room__grouping-name-plate-name-tag">{tag}</div>}
