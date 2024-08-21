@@ -151,6 +151,17 @@ export class BreakoutUIStore extends EduUIStoreBase {
   @observable selectedGroup: any = {};
 
   /**
+    * 旁听RTC频道
+    */
+  @observable client: any;
+  /**
+   * 是否正在旁听RTC频道
+   */
+  @observable isAttendDiscussionConfig: { groupName: string, groupId: string } = {
+    groupName: '',
+    groupId: ''
+  };
+  /**
    * 正在加入分组
    */
   @computed
@@ -193,6 +204,14 @@ export class BreakoutUIStore extends EduUIStoreBase {
   @computed
   get toasts() {
     return this._toasts;
+  }
+
+  /**
+  * 更改旁听状态
+  */
+  @action.bound
+  setIsAttendDiscussionConfig(value: { groupName: string, groupId: string }) {
+    this.isAttendDiscussionConfig = value;
   }
   /**
     * 储存已选中的未分组成员
@@ -245,6 +264,15 @@ export class BreakoutUIStore extends EduUIStoreBase {
     }
     tasks.splice(index, 1);
   }
+
+  /**
+   * 更改RTCclient（旁听）
+   */
+  @action.bound
+  setRTCClient(instance: any) {
+    this.client = instance;
+  }
+
   /**
    * 分组列表
    */
@@ -594,25 +622,22 @@ export class BreakoutUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 获取用户token
+   * 获取本地用户token
    * @param groupUuid
    */
   @bound
   async getUserToken(groupUuid: string) {
     //获取本地配置
     const { userUuid, role, userName } = EduClassroomConfig.shared.sessionInfo;
-    console.log(' userUuid, role, userName', userUuid, role, userName);
-    
-    const data =await this.classroomStore.api.entry({
+
+    const data = await this.classroomStore.api.entry({
       roomUuid: groupUuid,
       userUuid,
       role,
       userName
     });
-    debugger
-    console.log('getUserToken data',JSON.stringify(data));
 
-    return data
+    return data?.data
   }
 
   /**
@@ -884,36 +909,63 @@ export class BreakoutUIStore extends EduUIStoreBase {
   }
 
   /**
-* 旁听讨论 | 结束旁听
-* @param groupUuid 分组id
-* @param isAttend 是否旁听
-*/
+  * 创建旁听rtc频道
+  */
   @bound
-  async attendDiscussion(groupId: string, isAttend: boolean) {
+  async createRtcClient() {
+    if (!this.client) {
+      const client = AgoraRTC.createClient({
+        codec: "vp8",
+        mode: "rtc",
+      });
+      this.setRTCClient(client);
+    }
+  }
+
+  /**
+ * 离开旁听rtc频道
+ */
+  @bound
+  async leaveRtcClient() {
+    if (this.client) {
+      await this.client.leave();
+      this.setRTCClient(null);
+      this.setIsAttendDiscussionConfig({ groupName: '', groupId: '' });
+      //重新订阅之前房间的音频
+      this.getters.classroomUIStore.subscriptionUIStore.setActive(this.classroomStore.connectionStore.sceneId);
+    }
+  }
+
+
+  /** 
+    * 创建并加入RTC频道（旁听）
+   * @param groupId 分组id
+   */
+  @bound
+  async roomMemberJoin(groupId: string, groupName: string) {
+    const lockName = 'attend-discussion';
+    if (this._requestLock.has(lockName)) {
+      this.addToast({ text: transI18n('fcr_group_attend_discussion_initializing') });
+      return;
+    }
+
     try {
-      const { streamStore, groupStore, connectionStore } = this.classroomStore;
-      console.log('this.classroomStore.streamStore.streamByStreamUuid', JSON.stringify(this.classroomStore.streamStore.streamByStreamUuid));
+      //取消订阅之前房间的音频
       this.getters.classroomUIStore.subscriptionUIStore.setActive('');
-      const currentGroup = this.groupDetails.get(groupId);
-      console.log('currentGroup', JSON.stringify(currentGroup));
+      this._requestLock.add(lockName);
+      await this.createRtcClient();
+      const { appId } = EduClassroomConfig.shared;
+      const { localUser: { streamUuid, rtcToken } } = await this.getUserToken(groupId as string);
 
-
-      // console.log("🚀 ~ BreakoutUIStore ~ attendDiscussion ~ connectionStore:", JSON.stringify(connectionStore.mainRoomScene))
-
-      // Array.from(streamStore.streamByStreamUuid.values()).map(stream => {
-      //   debugger
-      //   const target = currentGroup?.users?.find(user => user?.userUuid == stream?.fromUser?.userUuid);
-      //   if (target) {
-      //     const { currentSubRoom } = groupStore;
-      //     console.log("🚀 ~ BreakoutUIStore ~ attendDiscussion ~ roomUuid:", currentSubRoom)
-      //     const roomScene = connectionStore.subRoomScene;
-      //     console.log('connectionStore.subRoomScene', JSON.stringify(connectionStore.subRoomScene));
-
-      //     streamStore.muteRemoteAudioStream(stream, isAttend, roomScene);
-      //   }
-      // })
-    } catch (error) {
-      console.log('error', error);
+      this.client.channelName && await this.client.leave();
+      await this.client.join(appId, groupId, rtcToken, +streamUuid);
+      this.setIsAttendDiscussionConfig({ groupId, groupName });
+    } catch (e) {
+      this.logger.error('attend discussion', e);
+      this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
+      this.getters.classroomUIStore.subscriptionUIStore.setActive(this.classroomStore.connectionStore.sceneId);
+    } finally {
+      this._requestLock.delete(lockName);
     }
   }
 
@@ -972,6 +1024,8 @@ export class BreakoutUIStore extends EduUIStoreBase {
         this._localGroups = new Map();
         this._groupSeq = 0;
         this._wizardState = 0;
+        this.leaveRtcClient();
+        this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
       });
     } catch (e) {
       // this.shareUIStore.addGenericErrorDialog(e as AGError);
@@ -1064,12 +1118,16 @@ export class BreakoutUIStore extends EduUIStoreBase {
             addUsers: [EduClassroomConfig.shared.sessionInfo.userUuid],
           },
         ]);
+        this.client && this.client.channelName && await this.client.leave();
+        this.isAttendDiscussionConfig?.groupId && this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
       } else {
         await this.classroomStore.groupStore.moveUsersToGroup(
           this.classroomStore.groupStore.currentSubRoom,
           groupUuid,
           [EduClassroomConfig.shared.sessionInfo.userUuid],
         );
+        this.client && this.client.channelName && await this.client.leave();
+        this.isAttendDiscussionConfig?.groupId && this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
       }
     } catch (e) {
     } finally {

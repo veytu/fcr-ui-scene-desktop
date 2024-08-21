@@ -12,11 +12,8 @@ import { DndProvider, useDrop, useDrag } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { observer } from 'mobx-react';
 import { useStore } from '@ui-scene/utils/hooks/use-store';
-import { useI18n, useUIConfig } from 'agora-common-libs';
-import { message } from 'antd';
+import { useI18n } from 'agora-common-libs';
 import { isEmpty } from 'lodash';
-import { EduClassroomConfig } from 'agora-edu-core';
-import AgoraRTC from 'agora-rtc-sdk-ng';
 
 type GroupItem = {
   id: string;
@@ -49,12 +46,7 @@ export const BreakoutRoomGrouping = observer(() => {
   const transI18n = useI18n();
   const isHasGroupedMember = groups?.filter(item => item?.children?.length > 0);
 
-  console.log('ungroupedList', ungroupedList, groups);
-  console.log('groupDetails', JSON.stringify(groupDetails));
-
   const handleMoveGroup = (type: string) => {
-    console.log('selectedGroup', JSON.stringify(selectedGroup));
-
     //移动选中的所有
     if (type === 'single-to-right') {
       if (selectedGroup && !isEmpty(selectedGroup)) {
@@ -231,10 +223,18 @@ export const GroupedList = observer(
         studentInvites,
         setSelectedGroup,
         selectedGroup,
-        attendDiscussion,
         isStartDiscussion,
         teacherInCurrentRoom,
-        getUserToken
+        roomMemberJoin,
+        leaveRtcClient,
+        client,
+        isAttendDiscussionConfig,
+        addToast,
+        currentSubRoomInfo,
+      },
+      subscriptionUIStore: { setActive },
+      classroomStore: {
+        connectionStore: { sceneId },
       },
     } = useStore();
     const transI18n = useI18n();
@@ -308,16 +308,23 @@ export const GroupedList = observer(
     };
 
     const handleJoin = () => {
-      console.log('join', groupId);
-      joinSubRoom(groupId);
+      if (isAttendDiscussionConfig?.groupId) {
+        addDialog('confirm', {
+          title: transI18n('fcr_group_join_group_title'),
+          content: transI18n('fcr_group_attend_discussion_join_confirm'),
+          onOk: async () => {
+            await joinSubRoom(groupId);
+          },
+          okButtonProps: {
+            styleType: 'danger',
+          },
+        });
+      } else {
+        joinSubRoom(groupId);
+      }
     };
 
     const handleChooseGroup = () => {
-      console.log('selectedGroup', isSelected);
-      console.log('selectedGroup selectedGroup', JSON.stringify(selectedGroup));
-      console.log('selectedGroup groupId', groupId);
-      console.log('selectedGroup groupId === selectedGroup?.groupId', groupId === selectedGroup?.groupId);
-
       //已选择了一个分组
       if (selectedGroup && !isEmpty(selectedGroup) && groupId === selectedGroup?.groupId) {
         //当前点击的是已选中的那个
@@ -330,61 +337,65 @@ export const GroupedList = observer(
       }
     }
 
+    useEffect(() => {
+      if (!client) return;
+
+      let subscribe;
+      if (!subscribe) {
+        subscribe = client.on("user-published", async (user: {
+          videoTrack: any; audioTrack: any;
+        }, mediaType: string) => {
+          // 发起订阅
+          await client.subscribe(user, mediaType);
+          // 如果订阅的是音频轨道
+          if (mediaType === "audio") {
+            const audioTrack = user.audioTrack;
+            // 自动播放音频
+            audioTrack && audioTrack.play();
+          }
+        });
+      }
+
+      return () => {
+        client && client.removeAllListeners("user-published");
+      }
+    }, [client])
+
+    useEffect(() => {
+      if (!isAttendDiscussionConfig?.groupId) setDiscussionBtn(false);
+    }, [isAttendDiscussionConfig?.groupId])
+
+
     const handleDiscussion = async () => {
-      debugger
-      console.log('旁听讨论');
       // fcr_group_attend_discussion_join_room_confirm
+      const content = isTeacherInRoom ?
+        transI18n('fcr_group_attend_discussion_join_room_confirm', { reason1: currentSubRoomInfo?.groupName })
+        : discussionBtn
+          ? transI18n('fcr_group_close_discussion_confirm')
+          : isAttendDiscussionConfig?.groupId
+            ? transI18n('fcr_group_attend_discussion_again_confirm', { reason1: isAttendDiscussionConfig?.groupName })
+            : transI18n('fcr_group_attend_discussion_confirm', { reason1: groupName });
+
       addDialog('confirm', {
         title: discussionBtn ? transI18n('fcr_board_close_discussion') : transI18n('fcr_board_attend_discussion'),
-        content: discussionBtn ? transI18n('fcr_group_close_discussion_confirm') : transI18n('fcr_group_attend_discussion_confirm', { reason1: groupName }),
+        content,
         onOk: async () => {
-          //创建频道
-          let client;
-          if (!client) {
-            client = AgoraRTC.createClient({
-              codec: "vp8",
-              mode: "rtc",
-            });
-          }
-          if (discussionBtn) {
-            //关闭 - 离开频道
-            client && await client.leave();
+          if (isTeacherInRoom) {
+            return;
           } else {
-            const { appId } = EduClassroomConfig.shared;
-            //streamUuid用户频道号
-            // const data = await getUserToken(groupId as string);
-
-            const { localUser: { streamUuid, userToken, userUuid } } = await getUserToken(groupId as string);
-
-            // { localUser: { streamUuid, userToken, userUuid } } 
-            await client.join(appId, "attend-discussion-room", userToken, userUuid);
-            const subscribe = () => {
-              client.on("user-published", async (user: { audioTrack: any; }, mediaType: string) => {
-                // 发起订阅
-                await client.subscribe(user, mediaType);
-                // 如果订阅的是音频轨道
-                if (mediaType === "audio") {
-                  const audioTrack = user.audioTrack;
-                  // 自动播放音频
-                  audioTrack && audioTrack.play();
-                }
-              });
+            if (discussionBtn) {
+              //关闭 - 离开频道
+              await leaveRtcClient();
+              addToast({ text: transI18n('fcr_group_attend_discussion_end_msg') });
+            } else {
+              await roomMemberJoin(groupId, groupName);
+              addToast({ text: transI18n('fcr_group_attend_discussion_start_msg') });
             }
-            const unsubscribe = () => {
-              client.removeAllListeners("user-published");
-            }
-            try {
-              subscribe();
-            } catch (e) {
-              console.log('error', e);
-            } finally {
-              unsubscribe();
-            }
+            setDiscussionBtn(!discussionBtn);
           }
-          setDiscussionBtn(!discussionBtn);
         },
         okButtonProps: {
-          styleType: 'danger',
+          styleType: !isTeacherInRoom ? 'danger' : 'white',
         },
       });
     }
@@ -426,8 +437,8 @@ export const GroupedList = observer(
                   {groupName} ({list.length})
                 </span>
                 <div className="fcr-breakout-room__grouping-grouped-group-actions">
-                  <Button disabled={!isStartDiscussion} type='secondary' onClick={handleDiscussion} size="XXS" styleType={discussionBtn ? "danger" : 'gray'}>
-                    {transI18n(discussionBtn ? 'fcr_board_close_discussion' : 'fcr_board_attend_discussion')}
+                  <Button disabled={!isStartDiscussion} type='secondary' onClick={handleDiscussion} size="XXS" styleType={discussionBtn && groupId === isAttendDiscussionConfig?.groupId ? "danger" : 'gray'}>
+                    {transI18n((discussionBtn && groupId === isAttendDiscussionConfig?.groupId) ? 'fcr_board_close_discussion' : 'fcr_board_attend_discussion')}
                   </Button>
                   <Button disabled={!isStartDiscussion || isTeacherInRoom} onClick={handleJoin} size="XXS">
                     {transI18n('fcr_board_join_group')}
@@ -445,11 +456,11 @@ export const GroupedList = observer(
                       <div className='fcr-breakout-room_fold-btn-wrapped'>
                         <div className='fcr-breakout-room_fold-btn-item' style={{ marginBottom: 6 }} onClick={handleDelete}>
                           <SvgImg type={SvgIconEnum.FCR_DELETE3} size={24} />
-                          <span>删除该组</span>
+                          <span>{transI18n('fcr_group_delete_room_button')}</span>
                         </div>
                         <div className='fcr-breakout-room_fold-btn-item' onClick={handleRename} >
                           <SvgImg type={SvgIconEnum.FCR_RENAME} size={24} />
-                          <span>重命名</span>
+                          <span>{transI18n('fcr_group_rename_room_button')}</span>
                         </div>
                       </div>
                     }>
@@ -598,7 +609,6 @@ const DraggableNameCard: FC<{ item: GroupItem; groupId?: string }> = ({ item, gr
 
   const handleSelected = () => {
     setIsSelected(!isSelected);
-    console.log('groupId', groupId);
 
     if (groupId) {
       //已分组
@@ -608,10 +618,6 @@ const DraggableNameCard: FC<{ item: GroupItem; groupId?: string }> = ({ item, gr
       isSelected ? removeSelectedUnGroupMember({ groupId: '', userUuid: item?.id, ...item }) : setSelectedUnGroupMember({ groupId: '', userUuid: item?.id, ...item });
     }
   }
-  console.log('selectedUnGroupMember', JSON.stringify(selectedUnGroupMember));
-  console.log('selectedGroupMember', JSON.stringify(selectedGroupMember));
-  console.log('selectedUnGroupMember groupId', groupId);
-
 
   return (
     <li onClick={handleSelected} style={isSelected ? { background: 'rgba(44, 39, 39, 0.8)' } : {}}>
