@@ -829,7 +829,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
           this.selectedUnGroupMember?.map(item => this.removeSelectedUnGroupMember(item));
         } else {
           //已分组成员移动
-          await this.classroomStore.groupStore.moveUsersToGroup(fromGroupUuid, toGroupUuid, [...userUuid]);
+          await this.classroomStore.groupStore.moveUsersToGroup(fromGroupUuid, toGroupUuid, Array.isArray(userUuid) ? [...userUuid] : [userUuid]);
           this.selectedGroupMember?.map(item => this.removeSelectedGroupMember(item));
         }
       } else {
