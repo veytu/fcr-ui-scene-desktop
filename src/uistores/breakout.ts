@@ -776,6 +776,12 @@ export class BreakoutUIStore extends EduUIStoreBase {
   removeGroup(groupUuid: string) {
     if (this.groupState === GroupState.OPEN) {
       this.classroomStore.groupStore.removeGroups([groupUuid]);
+      if (this.isAttendDiscussionConfig?.groupId && this.isAttendDiscussionConfig?.groupId === groupUuid) {
+        //删除当前旁听组
+        this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
+        this.leaveRtcClient();
+        this.getters.classroomUIStore.subscriptionUIStore.setActive(this.classroomStore.connectionStore.sceneId);
+      }
     } else {
       this._localGroups.delete(groupUuid);
     }
@@ -953,7 +959,6 @@ export class BreakoutUIStore extends EduUIStoreBase {
       await this.createRtcClient();
       const { appId } = EduClassroomConfig.shared;
       const { localUser: { streamUuid, rtcToken } } = await this.getUserToken(groupId as string);
-
       this.client.channelName && await this.client.leave();
       await this.client.join(appId, groupId, rtcToken, +streamUuid);
       this.setIsAttendDiscussionConfig({ groupId, groupName });
@@ -1021,7 +1026,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
         this._localGroups = new Map();
         this._groupSeq = 0;
         this._wizardState = 0;
-        this.leaveRtcClient();
+        this.isAttendDiscussionConfig?.groupId && this.leaveRtcClient();
         this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
       });
     } catch (e) {
