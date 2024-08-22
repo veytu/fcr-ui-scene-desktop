@@ -229,6 +229,7 @@ export const GroupedList = observer(
         addToast,
         currentSubRoomInfo,
       },
+      classroomStore: { groupStore: { groupDetails } }
     } = useStore();
     const transI18n = useI18n();
     const [expanded, setExpanded] = useState(true);
@@ -429,7 +430,7 @@ export const GroupedList = observer(
                   {groupName} ({list.length})
                 </span>
                 <div className="fcr-breakout-room__grouping-grouped-group-actions">
-                  <Button disabled={!isStartDiscussion} type='secondary' onClick={handleDiscussion} size="XXS" styleType={discussionBtn && groupId === isAttendDiscussionConfig?.groupId ? "danger" : 'gray'}>
+                  <Button disabled={!isStartDiscussion || (groupDetails.get(groupId) && !groupDetails.get(groupId)?.users.length)} type='secondary' onClick={handleDiscussion} size="XXS" styleType={discussionBtn && groupId === isAttendDiscussionConfig?.groupId ? "danger" : 'gray'}>
                     {transI18n((discussionBtn && groupId === isAttendDiscussionConfig?.groupId) ? 'fcr_board_close_discussion' : 'fcr_board_attend_discussion')}
                   </Button>
                   <Button disabled={!isStartDiscussion || isTeacherInRoom} onClick={handleJoin} size="XXS">
