@@ -3,7 +3,7 @@ export const enUs = {
   fcr_subtitles_option_translation_display_chinese:'',
   fcr_subtitles_option_translation_display_english:'',
   fcr_subtitles_option_translation_display_japanese:'',
-  fcr_device_label_no_translate:'',
+  fcr_device_label_no_translate:'  Do Not Translate',
   fcr_device_label_device_join: 'Are you ready to join？',
   fcr_device_label_camera: 'Camera',
   fcr_device_label_microphone: 'Microphone',
@@ -40,10 +40,10 @@ export const enUs = {
   fcr_device_option_rtt:'',
 
 
-  fcr_device_label_source_language:'',
+  fcr_device_label_source_language:'Original Audio',
   fcr_device_label_source_language_detail:'',
   fcr_device_label_translate_language_detail:'',
-  fcr_device_label_translate_language:'',
+  fcr_device_label_translate_language:'Translation Display',
   fcr_device_label_language_allshow:'',
   fcr_device_label_subtitle_font_size:'',
   
