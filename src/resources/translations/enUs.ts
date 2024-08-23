@@ -1,8 +1,8 @@
 export const enUs = {
   //****************** 设备检测 Device ******************
-  fcr_subtitles_option_translation_display_chinese:'',
-  fcr_subtitles_option_translation_display_english:'',
-  fcr_subtitles_option_translation_display_japanese:'',
+  fcr_subtitles_option_translation_display_chinese:'简体中文',
+  fcr_subtitles_option_translation_display_english:'English',
+  fcr_subtitles_option_translation_display_japanese:'日本語',
   fcr_device_label_no_translate:'  Do Not Translate',
   fcr_device_label_device_join: 'Are you ready to join？',
   fcr_device_label_camera: 'Camera',
@@ -36,16 +36,16 @@ export const enUs = {
   fcr_device_label_default_speaker: 'Default',
   fcr_device_label_disabled: 'Dsiabled',
 
-  fcr_device_option_subtitles:'',
-  fcr_device_option_rtt:'',
+  fcr_device_option_subtitles:'Subtitles',
+  fcr_device_option_rtt:'Transcribing',
 
 
   fcr_device_label_source_language:'Original Audio',
-  fcr_device_label_source_language_detail:'',
-  fcr_device_label_translate_language_detail:'',
+  fcr_device_label_source_language_detail:'(your own language) The target sound source that needs to be translated, available to all.',
+  fcr_device_label_translate_language_detail:'(the language you want to read) works with subtitles and transliterations, and the translated content is visible only to yourself.',
   fcr_device_label_translate_language:'Translation Display',
-  fcr_device_label_language_allshow:'',
-  fcr_device_label_subtitle_font_size:'',
+  fcr_device_label_language_allshow:'Both subtitles and transcriptions are bilingual',
+  fcr_device_label_subtitle_font_size:'Subtitle text size',
   
 
   //****************** 房间Room ******************
