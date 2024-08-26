@@ -334,15 +334,16 @@ export const GroupedList = observer(
     useEffect(() => {
       if (!client) return;
 
-      let subscribe;
-      if (!subscribe) {
-        subscribe = client.on("user-published", async (user: {
+      let userPubSub;
+      let userUnPubSub;
+      if (!userPubSub) {
+        userPubSub = client.on("user-published", async (user: {
           videoTrack: any; audioTrack: any;
         }, mediaType: string) => {
-          // 发起订阅
-          await client.subscribe(user, mediaType);
           // 如果订阅的是音频轨道
           if (mediaType === "audio") {
+            // 发起订阅
+            await client.subscribe(user, mediaType);
             const audioTrack = user.audioTrack;
             // 自动播放音频
             audioTrack && audioTrack.play();
@@ -350,8 +351,21 @@ export const GroupedList = observer(
         });
       }
 
+      if (!userUnPubSub) {
+        userPubSub = client.on("user-unpublished", async (user: {
+          videoTrack: any; audioTrack: any;
+        }, mediaType: string) => {
+          // 如果订阅的是音频轨道
+          if (mediaType === "audio") {
+            // 发起订阅
+            await client.unsubscribe(user, mediaType);
+          }
+        });
+      }
+
       return () => {
         client && client.removeAllListeners("user-published");
+        client && client.removeAllListeners("user-unpublished");
       }
     }, [client])
 
