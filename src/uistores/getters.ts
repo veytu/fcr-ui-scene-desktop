@@ -89,7 +89,7 @@ export class Getters {
       .filter((stream) => {
         return isInMainroom
           ? !groupUuidByUserUuid.get(stream.fromUser.userUuid)
-          : !!groupUuidByUserUuid.get(stream.fromUser.userUuid)
+          : !!groupUuidByUserUuid.get(stream.fromUser.userUuid) && isIngroupLocal === groupUuidByUserUuid.get(stream.fromUser.userUuid)
       })
       .map((stream) => new EduStreamUI(stream));
   }
