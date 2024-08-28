@@ -14,7 +14,6 @@ export const ToolBox = observer(() => {
   const transI18n = useI18n();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [popoverVisible, setPopoverVisible] = useState(false);
-  useStore();
   
   return (
     <>
@@ -89,7 +88,7 @@ const ToolBoxPopoverContent = observer(({ onClick }: { onClick: () => void }) =>
               setActiveWidgetId(id); // 更新状态
             }}
             active={isWidgetActive(id)}
-            dropupActive={id == "rtt" || id == "rttbox"}
+            dropupActive={id === "rtt" || id === "rttbox"}
           />
         ))}
       </div>
@@ -142,7 +141,7 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
         eduToolApi.sendWidgetVisibleIsShowRtt(id, true);
         eduToolApi.changeSubtitleOpenState()
       } else {
-        if(id=="rttbox"){
+        if (id === "rttbox") {
           eduToolApi.sendWidgetRttboxShow(id, true); 
           eduToolApi.changeConversionOpenState()
         }

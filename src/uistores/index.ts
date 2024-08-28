@@ -106,23 +106,6 @@ export class SceneUIStore {
     //@ts-ignore
     window.globalStore = this;
 
-    this._disposers.push(
-      reaction(
-        () => ({controller: this.classroomStore.widgetStore.widgetController,}),
-        ({ controller }) => {
-          if (controller) {
-            controller.removeBroadcastListener({
-              messageType: AgoraExtensionWidgetEvent.RttShowConversion,
-              onMessage: this._handleVisibleRttConversionChange,
-            })
-            controller.addBroadcastListener({
-              messageType: AgoraExtensionWidgetEvent.RttShowConversion,
-              onMessage: this._handleVisibleRttConversionChange,
-            })
-          }
-        },
-      ),
-    );
   }
 
   @action.bound
@@ -213,23 +196,9 @@ export class SceneUIStore {
     }
   }
 
-  @bound
-  private _handleVisibleRttConversionChange() {
-    this.widgetUIStore.createWidget("rttbox");
-    if (this.classroomStore.widgetStore.widgetController) {
-      this.classroomStore.widgetStore.widgetController.broadcast(AgoraExtensionWidgetEvent.SetVisible, {
-        widgetId: "rttbox",
-        visible: true,
-      });
-    }
-  }
 
   @bound
   destroy() {
-    this.classroomStore.widgetStore.widgetController?.removeBroadcastListener({
-      messageType: AgoraExtensionWidgetEvent.RttShowConversion,
-      onMessage: this._handleVisibleRttConversionChange,
-    })
     this._disposers.forEach((d) => d());
     this._disposers = [];
     this.classroomStore.destroy();

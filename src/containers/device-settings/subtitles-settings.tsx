@@ -15,7 +15,7 @@ export const SubtitlesSettings = observer(() => {
   const [sourceLanguageId, setSourceLanguageId] = useState(localStorage.getItem(getters.roomUuid+'_sourceLan') || 'zh-CN');
   const [translateLanguageId, setTranslateLanguageId] = useState(localStorage.getItem(getters.roomUuid+'_targetLan') || 'zh-CN');
   const [horizontalValue, setHorizontalValue] = useState<number>(Number(localStorage.getItem(getters.roomUuid+'_textSize')) || 14);
-  const[isAiDenoiserEnabled,setIsAiDenoiserEnabled] = useState("true" === localStorage.getItem(getters.roomUuid+'_showDoubleLan') || false)
+  const[isShowDoubleLan,setIsShowDoubleLanEnabled] = useState("true" === localStorage.getItem(getters.roomUuid+'_showDoubleLan') || false)
   const { eduToolApi } = useStore();
   const {
     startAudioRecordingPreview,
@@ -23,10 +23,10 @@ export const SubtitlesSettings = observer(() => {
   } = deviceSettingUIStore;
   // fcr_device_label_language_allshow
   // 
-  const toggleAiDenoiser = ()=>{
+  const toggleShowDoubleLan= ()=>{
     // eduToolApi.ChangeRttShowDoubleLan(!isAiDenoiserEnabled);
-    setIsAiDenoiserEnabled(!isAiDenoiserEnabled)
-    eduToolApi.sendWidgetChangeRttShowDoubleLan(isAiDenoiserEnabled)
+    setIsShowDoubleLanEnabled(!isShowDoubleLan)
+    eduToolApi.sendWidgetChangeRttShowDoubleLan(isShowDoubleLan)
     
   }
   // 修改字号
@@ -101,10 +101,10 @@ export const SubtitlesSettings = observer(() => {
         />
         <br></br>
         <Checkbox
-          checked={isAiDenoiserEnabled}
+          checked={isShowDoubleLan}
           size="small"
           label={transI18n('fcr_device_label_language_allshow')}
-          onChange={toggleAiDenoiser}
+          onChange={toggleShowDoubleLan}
         />
       </div>
       <div className="fcr-device-settings__microphone fcr-device-settings__microphone-subtitle">

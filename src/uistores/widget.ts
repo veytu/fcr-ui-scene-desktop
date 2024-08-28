@@ -294,6 +294,23 @@ export class WidgetUIStore extends EduUIStoreBase {
     this._registeredWidgets = this._getEnabledWidgets();
 
     this._disposers.push(
+      reaction(
+        () => ({controller: this.classroomStore.widgetStore.widgetController,}),
+        ({ controller }) => {
+          if (controller) {
+            controller.removeBroadcastListener({
+              messageType: AgoraExtensionWidgetEvent.RttShowConversion,
+              onMessage: this._handleVisibleRttConversionChange,
+            })
+            controller.addBroadcastListener({
+              messageType: AgoraExtensionWidgetEvent.RttShowConversion,
+              onMessage: this._handleVisibleRttConversionChange,
+            })
+          }
+        },
+      ),
+    );
+    this._disposers.push(
       computed(() => ({
         controller: this.classroomStore.widgetStore.widgetController,
       })).observe(({ oldValue, newValue }) => {
@@ -362,7 +379,21 @@ export class WidgetUIStore extends EduUIStoreBase {
     );
   }
 
+  @bound
+  private _handleVisibleRttConversionChange() {
+    this.createWidget("rttbox");
+    if (this.classroomStore.widgetStore.widgetController) {
+      this.classroomStore.widgetStore.widgetController.broadcast(AgoraExtensionWidgetEvent.SetVisible, {
+        widgetId: "rttbox",
+        visible: true,
+      });
+    }
+  }
   onDestroy() {
+    this.classroomStore.widgetStore.widgetController?.removeBroadcastListener({
+      messageType: AgoraExtensionWidgetEvent.RttShowConversion,
+      onMessage: this._handleVisibleRttConversionChange,
+    })
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }
