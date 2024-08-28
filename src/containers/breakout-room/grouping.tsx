@@ -51,7 +51,6 @@ export const BreakoutRoomGrouping = observer(() => {
         const arr = selectedUnGroupMember?.map(item => item?.userUuid);
         moveUserToGroup('', selectedGroup?.groupId, arr as string[]);
       } else {
-        // message.info('请先选择分组');
         addToast({ text: transI18n('fcr_group_choose_group') });
       }
     } else if (type === 'single-to-left') {
@@ -59,9 +58,13 @@ export const BreakoutRoomGrouping = observer(() => {
         moveUserToGroup(item?.groupId, '', item?.userUuid as string);
       })
     } else if (type === 'all-to-right') {
-      ungroupedList?.map(item => {
-        moveUserToGroup('', selectedGroup?.groupId, item?.id);
-      })
+      if (selectedGroup && !isEmpty(selectedGroup)) {
+        ungroupedList?.map(item => {
+          moveUserToGroup('', selectedGroup?.groupId, item?.id);
+        })
+      } else {
+        addToast({ text: transI18n('fcr_group_choose_group') });
+      }
 
     } else if (type === 'all-to-left') {
       groups?.map(item => {
@@ -113,7 +116,7 @@ export const BreakoutRoomGrouping = observer(() => {
               <div className='fcr-breakout-room__grouping-column--operator-panel-button-wrapped'>
                 <Button
                   size="XXS"
-                  type={selectedUnGroupMember?.length ? 'primary' : 'secondary'}
+                  type={(selectedUnGroupMember?.length) ? 'primary' : 'secondary'}
                   shape='circle'
                   disabled={!selectedUnGroupMember?.length}
                   onClick={() => handleMoveGroup('single-to-right')}>
@@ -121,15 +124,15 @@ export const BreakoutRoomGrouping = observer(() => {
                 </Button>
                 <Button
                   size="XXS"
-                  type={selectedGroupMember?.length ? 'primary' : 'secondary'}
+                  type={(selectedGroupMember?.length && !groupState) ? 'primary' : 'secondary'}
                   onClick={() => handleMoveGroup('single-to-left')}
-                  disabled={!selectedGroupMember?.length}
+                  disabled={!selectedGroupMember?.length || !!groupState}
                 >
                   <SvgImg type={SvgIconEnum.FCR_V2_CHEVRON_LEFT} />
                 </Button>
                 <Button
                   size="XXS"
-                  type={ungroupedList?.length ? 'primary' : 'secondary'}
+                  type={(ungroupedList?.length) ? 'primary' : 'secondary'}
                   onClick={() => handleMoveGroup('all-to-right')}
                   disabled={!ungroupedList?.length}
                 >
@@ -137,9 +140,9 @@ export const BreakoutRoomGrouping = observer(() => {
                 </Button>
                 <Button
                   size="XXS"
-                  type={isHasGroupedMember?.length ? 'primary' : 'secondary'}
+                  type={(isHasGroupedMember?.length && !groupState) ? 'primary' : 'secondary'}
                   onClick={() => handleMoveGroup('all-to-left')}
-                  disabled={!isHasGroupedMember?.length}
+                  disabled={!isHasGroupedMember?.length || !!groupState}
                 >
                   <SvgImg type={SvgIconEnum.FCR_V2_LOGOUT} />
                 </Button>
