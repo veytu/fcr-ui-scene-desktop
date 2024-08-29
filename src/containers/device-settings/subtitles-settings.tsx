@@ -21,10 +21,7 @@ export const SubtitlesSettings = observer(() => {
     startAudioRecordingPreview,
     stopAudioRecordingPreview,
   } = deviceSettingUIStore;
-  // fcr_device_label_language_allshow
-  // 
   const toggleShowDoubleLan= ()=>{
-    // eduToolApi.ChangeRttShowDoubleLan(!isAiDenoiserEnabled);
     setIsShowDoubleLanEnabled(!isShowDoubleLan)
     eduToolApi.sendWidgetChangeRttShowDoubleLan(isShowDoubleLan)
     
@@ -40,12 +37,6 @@ export const SubtitlesSettings = observer(() => {
     return stopAudioRecordingPreview;
   }, [startAudioRecordingPreview, stopAudioRecordingPreview]);
 
-  // const languageList = [
-  //   { text: '不翻译', value: '' },
-  //   { text: '中文', value: 'zh-CN' }, 
-  //   { text: '英文', value: 'en-US' },
-  //   { text: '日语', value: 'ja-JP' },
-  // ];
   const sourceLanguageList = [
     { text: transI18n('fcr_subtitles_option_translation_display_chinese'), value: 'zh-CN' }, 
     { text: transI18n('fcr_subtitles_option_translation_display_english'), value: 'en-US' },
@@ -89,7 +80,6 @@ export const SubtitlesSettings = observer(() => {
       <div className="fcr-device-settings__microphone fcr-device-settings-subtitle__microphone fcr-device-settings__microphone-subtitle">
         <div className="fcr-device-settings__label fcr-device-settings-subtitle__label">
           <span>{transI18n('fcr_device_label_translate_language')}</span>
-          {/*  onChange={handleAllMute} value={allMuted} */}
           <Switch></Switch>
         </div>
         <span className='fcr-device-settings__label-detail'>{transI18n('fcr_device_label_translate_language_detail')}</span>

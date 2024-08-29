@@ -36,10 +36,6 @@ export const StatusBar = observer(() => {
       onMouseLeave={() => {
         setIsPointingBar(false);
       }}>
-        {/* <div style={{position:'fixed',top:'200px',background:'#fff'}}>
-          <SearchableList></SearchableList>
-        </div> */}
-        
       <div className="fcr-status-bar-left">
         <>
           {logo && (

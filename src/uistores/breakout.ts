@@ -931,14 +931,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
         EduClassroomConfig.shared.sessionInfo,
         SceneType.Main,
       );
-      // await this.classroomStore.connectionStore.checkIn(
-      //   EduClassroomConfig.shared.sessionInfo,
-      //   SceneType.Main,
-      //   // always use entry mode when leave sub room
-      //   'entry',
-      // );
     } catch (e) {
-      //   this.shareUIStore.addGenericErrorDialog(e as AGError);
     } finally {
       this._setConnectionState(false);
     }

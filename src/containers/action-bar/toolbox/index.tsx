@@ -7,7 +7,6 @@ import './index.css';
 import { useI18n } from 'agora-common-libs';
 import { ToolTip } from '@components/tooltip';
 import { useZIndex } from '@ui-scene/utils/hooks/use-z-index';
-// import 
 export const ToolBox = observer(() => {
   const {
     layoutUIStore: { setHasPopoverShowed }  } = useStore();
@@ -60,7 +59,6 @@ const ToolBoxPopoverContent = observer(({ onClick }: { onClick: () => void }) =>
     eduToolApi: { registeredCabinetToolItems },
   } = useStore();
   const transI18n = useI18n();
-  const [, setActiveWidgetId] = useState<string | null>(null);
   const isWidgetActive = (widgetId: string) => {
     if (widgetId === 'breakout') {
       return getters.isBreakoutActive;
@@ -84,8 +82,7 @@ const ToolBoxPopoverContent = observer(({ onClick }: { onClick: () => void }) =>
             icon={iconType}
             label={name}
             onClick={onClick}
-            onWidgetIdChange={(id: string)=>{
-              setActiveWidgetId(id); // 更新状态
+            onWidgetIdChange={()=>{
             }}
             active={isWidgetActive(id)}
             dropupActive={id === "rtt" || id === "rttbox"}
@@ -109,12 +106,12 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
   const { widgetUIStore, eduToolApi, breakoutUIStore } = useStore();
   const { updateZIndex } = useZIndex(id);
   useEffect(() => {
-    if (id == 'rtt') {
+    if (id === 'rtt') {
       widgetUIStore.createWidget(id);
       eduToolApi.setWidgetVisible(id, false);
       eduToolApi.sendWidgetVisibleIsShowTool(id, true);
     }
-    if (id == 'rttbox') {
+    if (id === 'rttbox') {
       widgetUIStore.createWidget(id);
       eduToolApi.setWidgetVisible(id, false);
       // eduToolApi.sendWidgetVisibleI/sShowTool(id, false);
@@ -136,7 +133,7 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
       onWidgetIdChange(id)
       if (id === 'breakout') {
         breakoutUIStore.setDialogVisible(true);
-      } else if (id == 'rtt') {
+      } else if (id === 'rtt') {
         eduToolApi.setWidgetVisible('rtt', true);
         eduToolApi.sendWidgetVisibleIsShowRtt(id, true);
         eduToolApi.changeSubtitleOpenState()
@@ -159,7 +156,6 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
       <SvgImg type={icon} size={30}></SvgImg>
       <span className="fcr-toolbox-popover-item-label">{label}</span>
      {dropupActive&&<div className='fcr-toolbox-popover-item-dropbox' onClick={()=>handleSettingClick}>
-        {/* <SvgImg className='fcr_dropup' type={SvgIconEnum.FCR_DROPUP5} size={30}></SvgImg> */}
       </div>}
       {active && <div className="fcr-toolbox-popover-item-active"></div>}
     </div>

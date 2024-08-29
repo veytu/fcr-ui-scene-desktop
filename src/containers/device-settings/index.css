@@ -178,8 +178,9 @@ li.fcr-device-settings__nav-list-item--active {
   @apply fcr-text-1 fcr-font-title fcr-rounded-8;
   padding: 0 10px 20px;
 }
-.fcr-device-settings__microphone, .fcr-device-settings__microphone-subtitle{
-padding-bottom: 10px !important
+.fcr-device-settings__microphone,
+.fcr-device-settings__microphone-subtitle {
+  padding-bottom: 10px !important
 }
 
 .fcr-device-settings__microphone {
@@ -220,7 +221,7 @@ padding-bottom: 10px !important
 }
 .fcr-device-settings__microphone .fcr-pretest__settings__volume {
   margin-bottom: 0;
-} 
+}
 .fcr-device-settings__audio {
   padding-top: 15px;
   overflow: hidden;

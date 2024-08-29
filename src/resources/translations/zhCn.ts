@@ -413,7 +413,7 @@ export const zhCn = {
   fcr_group_create_group_yes: '是',
   fcr_group_teacher_not_in_classroom: '老师不在房间内',
   fcr_group_button_cancel: '取消',
-  fcr_group_stop_discussion: '',
+  fcr_group_stop_discussion: '停止讨论',
   fcr_group_button_stop: '停止',
   fcr_group_ungrouped: '未分组',
   fcr_group_grouped: '已分组',
