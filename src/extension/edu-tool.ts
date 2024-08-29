@@ -309,7 +309,6 @@ export class EduTool {
       messageType: AgoraExtensionWidgetEvent.SetVisible,
       onMessage: this._handleVisibleStateChange,
     });
-
     controller.addWidgetStateListener(this._stateListener);
   }
 

@@ -53,6 +53,7 @@ export const StatusBar = observer(() => {
         {isStudent && (
           <InteractLabelGroup userUuid={userUuid} placement={'status-bar'}></InteractLabelGroup>
         )}
+        
         <RecordStatus></RecordStatus>
         <ClassDuration></ClassDuration>
         <LayoutSwitch></LayoutSwitch>

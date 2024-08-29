@@ -114,7 +114,6 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
     if (id === 'rttbox') {
       widgetUIStore.createWidget(id);
       eduToolApi.setWidgetVisible(id, false);
-      // eduToolApi.sendWidgetVisibleI/sShowTool(id, false);
     }
   }, []);
   const handleClick = () => {
@@ -127,7 +126,7 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
             widgetUIStore.widgetInstanceList.find((w) => w.widgetId === id)?.minimizedProperties
               ?.minimizedCollapsed || false,
         },
-      }); 
+      });
     } else {
       updateZIndex();
       onWidgetIdChange(id)

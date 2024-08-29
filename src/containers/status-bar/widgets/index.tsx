@@ -225,8 +225,7 @@ const RttMinimize = observer(() => {
     }
   };
 
-  const { current, state, tooltip, icon } = countdownTimerState;
-  // const timeFormat = formatTime(current || 0);
+  const { current, state, icon } = countdownTimerState;
   return countdownTimer ? (
       <div
         className={classnames('fcr-minimized-widget-icon', 'fcr-minimized-widget-countdown', {

@@ -57,7 +57,6 @@ export class SceneUIStore {
   readonly eduToolApi = new EduTool();
   protected _disposers: IReactionDisposer[] = [];
 
-
   constructor() {
     this.classroomStore = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass);
     this.getters = new Getters(this);
@@ -105,7 +104,6 @@ export class SceneUIStore {
     });
     //@ts-ignore
     window.globalStore = this;
-
   }
 
   @action.bound
@@ -195,7 +193,6 @@ export class SceneUIStore {
       });
     }
   }
-
 
   @bound
   destroy() {
