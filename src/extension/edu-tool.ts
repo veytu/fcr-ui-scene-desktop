@@ -269,7 +269,6 @@ export class EduTool {
   @action.bound
   private _handleRegisterCabinetTool(cabinetToolItem: CabinetToolItem) {
     const item = this._registeredCabinetToolItems.find(item=>item.id === cabinetToolItem.id)
-    // const existed = this._registeredCabinetToolItems.some(({ id }) => id === cabinetToolItem.id);
     if (!item) {
       this._registeredCabinetToolItems.push(cabinetToolItem);
     }else{

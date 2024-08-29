@@ -79,8 +79,8 @@ export enum AgoraExtensionRoomEvent {
   ToolboxChanged = 'toolbox-changed',
   // 实时转写显示
   RttboxShow = 'rttbox-show',
- // rtt盒子可见性变化
- RttboxChanged = 'rttbox-changed',
+  // rtt盒子可见性变化
+  RttboxChanged = 'rttbox-changed',
   // 布局变化
   LayoutChanged = 'layout-changed',
   // webview/streamMedia 插件刷新
