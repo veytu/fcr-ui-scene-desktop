@@ -13,7 +13,7 @@ export const ToolBox = observer(() => {
   const transI18n = useI18n();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [popoverVisible, setPopoverVisible] = useState(false);
-  
+
   return (
     <>
       <ToolTip
