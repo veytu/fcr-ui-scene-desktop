@@ -274,7 +274,6 @@ export class EduTool {
     }else{
       item.iconType = cabinetToolItem.iconType
       item.name = cabinetToolItem.name
-      this._registeredCabinetToolItems
     }
   }
 
