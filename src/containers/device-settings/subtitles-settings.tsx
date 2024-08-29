@@ -11,20 +11,15 @@ import { Switch } from '@components/switch';
 
 export const SubtitlesSettings = observer(() => {
   const transI18n = useI18n();
-  const { deviceSettingUIStore,getters } = useStore();
+  const { getters } = useStore();
   const [sourceLanguageId, setSourceLanguageId] = useState(localStorage.getItem(getters.roomUuid+'_sourceLan') || 'zh-CN');
   const [translateLanguageId, setTranslateLanguageId] = useState(localStorage.getItem(getters.roomUuid+'_targetLan') || 'zh-CN');
   const [horizontalValue, setHorizontalValue] = useState<number>(Number(localStorage.getItem(getters.roomUuid+'_textSize')) || 14);
   const[isShowDoubleLan,setIsShowDoubleLanEnabled] = useState("true" === localStorage.getItem(getters.roomUuid+'_showDoubleLan') || false)
   const { eduToolApi } = useStore();
-  const {
-    startAudioRecordingPreview,
-    stopAudioRecordingPreview,
-  } = deviceSettingUIStore;
   const toggleShowDoubleLan= ()=>{
     setIsShowDoubleLanEnabled(!isShowDoubleLan)
     eduToolApi.sendWidgetChangeRttShowDoubleLan(isShowDoubleLan)
-    
   }
   // 修改字号
   const handleHorizontalChange = (value: number) => {
@@ -32,10 +27,6 @@ export const SubtitlesSettings = observer(() => {
     localStorage.setItem(getters.roomUuid+'_sourceLan', value.toString());
     eduToolApi.sendWidgetChangeRttTextSize(value)
   };
-  useEffect(() => {
-    startAudioRecordingPreview();
-    return stopAudioRecordingPreview;
-  }, [startAudioRecordingPreview, stopAudioRecordingPreview]);
 
   const sourceLanguageList = [
     { text: transI18n('fcr_subtitles_option_translation_display_chinese'), value: 'zh-CN' }, 
