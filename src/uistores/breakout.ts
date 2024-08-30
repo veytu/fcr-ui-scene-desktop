@@ -1611,7 +1611,6 @@ export class BreakoutUIStore extends EduUIStoreBase {
   }
   @action.bound
   changeReduceInviteGroup(arr: any, isOut = false, index = -1) {
-    debugger
     if (isOut) {
       arr.splice(index, 1);
       this._inviteGroups = [...arr];
