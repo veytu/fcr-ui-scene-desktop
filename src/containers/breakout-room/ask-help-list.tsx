@@ -13,9 +13,11 @@ type AskHelpRequest = {
 
 export const AskHelpList = observer(() => {
   const {
+    layoutUIStore: { addDialog },
     breakoutUIStore: {
       studentInvites,
       inviteGroups,
+      isAttendDiscussionConfig,
       changeInviteGroup,
       changeReduceInviteGroup,
       inviteStudents,
@@ -35,8 +37,21 @@ export const AskHelpList = observer(() => {
     api.destroy(cancelGroupUuid);
     setCancelGroupUuid('');
   }
-  const handleOk = (item: AskHelpRequest) => {
-    acceptInvite(item.groupUuid);
+  const handleOk = async (item: AskHelpRequest) => {
+    if (isAttendDiscussionConfig?.groupId) {
+      addDialog('confirm', {
+        title: transI18n('fcr_group_join_group_title'),
+        content: transI18n('fcr_group_attend_discussion_join_confirm'),
+        onOk: async () => {
+          await acceptInvite(item.groupUuid);
+        },
+        okButtonProps: {
+          styleType: 'danger',
+        },
+      });
+    } else {
+      await acceptInvite(item.groupUuid);
+    }
   };
   const handleCancel = (item: AskHelpRequest) => {
     rejectInvite(item.groupUuid);

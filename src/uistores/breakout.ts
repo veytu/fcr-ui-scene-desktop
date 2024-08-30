@@ -202,7 +202,7 @@ export class BreakoutUIStore extends EduUIStoreBase {
   get toasts() {
     return this._toasts;
   }
-
+ 
   /**
   * 更改旁听状态
   */
@@ -1184,11 +1184,13 @@ export class BreakoutUIStore extends EduUIStoreBase {
         false,
       );
       if (this.teacherGroupUuid && this.teacherGroupUuid !== groupUuid) {
-        this.classroomStore.groupStore.moveUsersToGroup(this.teacherGroupUuid, groupUuid, [
+        await this.classroomStore.groupStore.moveUsersToGroup(this.teacherGroupUuid, groupUuid, [
           teacherUuid,
         ]);
+        this.isAttendDiscussionConfig?.groupId && this.leaveRtcClient();
+        this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
       } else {
-        this.classroomStore.groupStore.updateGroupUsers(
+        await this.classroomStore.groupStore.updateGroupUsers(
           [
             {
               groupUuid: groupUuid,
@@ -1197,6 +1199,8 @@ export class BreakoutUIStore extends EduUIStoreBase {
           ],
           false,
         );
+        this.isAttendDiscussionConfig?.groupId && this.leaveRtcClient();
+        this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
       }
     }
     //@ts-ignore
@@ -1510,8 +1514,10 @@ export class BreakoutUIStore extends EduUIStoreBase {
           id: dialogId,
           title,
           content,
-          onOk: () => {
-            this.classroomStore.groupStore.acceptGroupInvite(groupUuid);
+          onOk: async () => {
+            await this.classroomStore.groupStore.acceptGroupInvite(groupUuid);
+            this.isAttendDiscussionConfig?.groupId && this.leaveRtcClient();
+            this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
           },
           onClose: () => {
             this.classroomStore.groupStore.rejectGroupInvite(groupUuid);
