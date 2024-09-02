@@ -75,6 +75,12 @@ export enum AgoraExtensionRoomEvent {
   SetMinimize = 'set-minimize',
   // 插件可见性变化
   VisibleChanged = 'visible-changed',
+  // 插件可见性变化
+  ToolboxChanged = 'toolbox-changed',
+  // 实时转写显示
+  RttboxShow = 'rttbox-show',
+  // rtt盒子可见性变化
+  RttboxChanged = 'rttbox-changed',
   // 布局变化
   LayoutChanged = 'layout-changed',
   // webview/streamMedia 插件刷新
@@ -85,6 +91,19 @@ export enum AgoraExtensionRoomEvent {
   WidgetDialogBoundariesChanged = 'widget-dialog-boundaries-changed',
   //插件全屏
   SetFullscreen = 'set-fullscreen',
+  RttSourceLanChangeFinish = "RttSourceLanChangeFinish",
+  // 设置是否显示双语
+  ChangeRttShowDoubleLan = "ChangeRttShowDoubleLan",
+  //设置声源语言
+  ChangeRttSourceLan = "ChangeRttSourceLan",
+  // 设置翻译语言
+  ChangeRttTargetLan = "ChangeRttTargetLan",
+  // 修改字号
+  ChangeRttTextSize = "ChangeRttTextSize",
+  //修改字幕开启状态
+  RttChangeToSubtitleOpenState = "RttChangeToSubtitleOpenState",
+  //修改转写开启状态
+  RttChangeToConversionOpenState = "RttChangeToConversionOpenState",
 }
 
 /**
@@ -158,4 +177,6 @@ export enum AgoraExtensionWidgetEvent {
   UpdatePosition = 'update-position',
   //更新倒计时状态
   CountdownTimerStateChanged = 'countdown-timer-state-changed',
+  //显示转写弹窗
+  RttShowConversion = "RttShowConversion",
 }

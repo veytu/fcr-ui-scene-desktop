@@ -223,17 +223,6 @@ export const WizardCreate = observer(() => {
     setWizardState(1);
   };
 
-  const handleMinimize = () => {
-    eduToolApi.setMinimizedState({
-      minimized: true,
-      widgetId: 'breakout',
-      minimizedProperties: {
-        minimizedIcon: SvgIconEnum.FCR_V2_BREAKROOM,
-        minimizedTooltip: transI18n('fcr_group_breakout_room'),
-      },
-    });
-  };
-
   const handleClose = () => {
     setDialogVisible(false);
   };
@@ -265,7 +254,6 @@ export const WizardCreate = observer(() => {
                 <SvgImg
                   type={SvgIconEnum.FCR_WINDOWPAGE_SMALLER}
                   size={14}
-                  onClick={handleMinimize}
                 />
               </li>
             </ToolTip>

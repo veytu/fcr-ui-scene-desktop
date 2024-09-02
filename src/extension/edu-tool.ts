@@ -10,6 +10,7 @@ import { AgoraIMMessageBase, CabinetToolItem } from './type';
 
 @Log.attach({ proxyMethods: false })
 export class EduTool {
+  [x: string]: any;
   logger!: Logger;
   private _controller?: AgoraWidgetController;
   private _disposers: IReactionDisposer[] = [];
@@ -197,13 +198,50 @@ export class EduTool {
   setWidgetVisible(widgetId: string, visible: boolean) {
     this._handleVisibleStateChange({ widgetId, visible });
   }
+
+  changeSubtitleOpenState() {
+    this._sendMessage(AgoraExtensionRoomEvent.RttChangeToSubtitleOpenState);
+  }
+
+  changeConversionOpenState() {
+    this._sendMessage(AgoraExtensionRoomEvent.RttChangeToConversionOpenState);
+  }
   @bound
   sendWidgetVisible(widgetId: string, visible: boolean) {
     this._sendMessage(AgoraExtensionRoomEvent.VisibleChanged, { widgetId, visible });
   }
   @bound
+  sendWidgetVisibleIsShowTool(widgetId: string, visible: boolean) {
+    this._sendMessage(AgoraExtensionRoomEvent.ToolboxChanged, { widgetId, visible });
+  }
+  @bound
+  sendWidgetRttboxShow(widgetId: string, visible: boolean) {
+    this._sendMessage(AgoraExtensionRoomEvent.RttboxShow, { widgetId, visible });
+  }
+  
+  @bound
+  sendWidgetVisibleIsShowRtt(widgetId: string, visible: boolean) {
+    this._sendMessage(AgoraExtensionRoomEvent.RttboxChanged, { widgetId, visible });
+  }
+  @bound
   sendWidgetPrivateChat(widgetId: string, userId: string) {
     this._sendMessage(AgoraExtensionRoomEvent.PrivateChat, { widgetId, userId });
+  }
+  @bound
+  sendWidgetChangeRttSourceLant(lan:string) {
+    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttSourceLan, lan);
+  }
+  @bound
+  sendWidgetChangeRttTargetLan(lan:string) {
+    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttTargetLan, lan);
+  }
+  @bound
+  sendWidgetChangeRttTextSize(textSize:number) {
+    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttTextSize,textSize);
+  }
+  @bound
+  sendWidgetChangeRttShowDoubleLan(showDouble:boolean) {
+    this._sendMessage(AgoraExtensionRoomEvent.ChangeRttShowDoubleLan, showDouble);
   }
   @bound
   refreshWidget(widgetId: string) {
@@ -230,9 +268,12 @@ export class EduTool {
 
   @action.bound
   private _handleRegisterCabinetTool(cabinetToolItem: CabinetToolItem) {
-    const existed = this._registeredCabinetToolItems.some(({ id }) => id === cabinetToolItem.id);
-    if (!existed) {
+    const item = this._registeredCabinetToolItems.find(item=>item.id === cabinetToolItem.id)
+    if (!item) {
       this._registeredCabinetToolItems.push(cabinetToolItem);
+    }else{
+      item.iconType = cabinetToolItem.iconType
+      item.name = cabinetToolItem.name
     }
   }
 

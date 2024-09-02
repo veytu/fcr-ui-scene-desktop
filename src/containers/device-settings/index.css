@@ -178,6 +178,10 @@ li.fcr-device-settings__nav-list-item--active {
   @apply fcr-text-1 fcr-font-title fcr-rounded-8;
   padding: 0 10px 20px;
 }
+.fcr-device-settings__microphone,
+.fcr-device-settings__microphone-subtitle {
+  padding-bottom: 10px !important
+}
 
 .fcr-device-settings__microphone {
   @apply fcr-bg-4;
@@ -194,6 +198,19 @@ li.fcr-device-settings__nav-list-item--active {
   padding-left: 12px;
   line-height: 36px;
   font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.fcr-device-settings-subtitle__label{
+  padding-left: 10px;
+}
+.fcr-device-settings__label-detail{
+  display: block;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  padding-left: 10px;
+  padding-bottom: 9px;
 }
 
 .fcr-pretest__settings__volume {
@@ -209,4 +226,70 @@ li.fcr-device-settings__nav-list-item--active {
   padding-top: 15px;
   overflow: hidden;
   width: 100%;
+}
+.fcr-device-settings__video{
+  color: #FFFFFF;
+}
+.slider-eg{
+  padding: 20px;
+}
+.fcr-rtt-widget-text{
+  @apply fcr-rounded-6 fcr-bg-5;
+  margin-top: 10px;
+  padding: 10px;
+}
+.fcr-slider-container .rc-slider-rail{
+  /* overflow: hidden; */
+  height: 14px !important;
+  background-color: #000 !important;
+}
+.fcr-slider-container .rc-slider-rail::before{
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  content: '';
+  height: 10px;
+  width: 10px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  z-index: 5;
+}
+.fcr-slider-container .fcr-rtt-widget-text{
+  background-color: rgba(0, 0, 0 , 0.6) !important;
+  margin-bottom: 0 !important;
+}
+.fcr-slider-container .rc-slider-rail::after{
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  content: '';
+  height: 10px;
+  width: 10px;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 5;
+}
+.fcr-slider-container .rc-slider-track{
+  height: 14px !important;
+  background-color: #4262FF !important;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.fcr-slider-container .rc-slider-handle{
+  width: 14px !important;
+  height: 14px !important;
+  top: 7px;
+  border-radius: none;
+  border-radius:  0 50% 50% 0 !important;
+  background-color: #4262FF !important;
+  border: none !important;
+}
+.fcr-slider-container-border-radius .rc-slider-handle{
+  border-radius: 50% !important;
+}
+.fcr-slider-container .rc-slider-handle::after{
+  background-color: #000000 !important;
+  width: 10px !important;
+  height: 10px !important;
 }

@@ -1,6 +1,6 @@
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import { useStore } from '@ui-scene/utils/hooks/use-store';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { ActionBarItemWithPopover } from '..';
 import { observer } from 'mobx-react';
 import './index.css';
@@ -9,8 +9,7 @@ import { ToolTip } from '@components/tooltip';
 import { useZIndex } from '@ui-scene/utils/hooks/use-z-index';
 export const ToolBox = observer(() => {
   const {
-    layoutUIStore: { setHasPopoverShowed },
-  } = useStore();
+    layoutUIStore: { setHasPopoverShowed }  } = useStore();
   const transI18n = useI18n();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [popoverVisible, setPopoverVisible] = useState(false);
@@ -64,6 +63,12 @@ const ToolBoxPopoverContent = observer(({ onClick }: { onClick: () => void }) =>
     if (widgetId === 'breakout') {
       return getters.isBreakoutActive;
     }
+    if (widgetId === 'rtt') {
+      return "true" === localStorage.getItem(`${getters.roomUuid}_subtitle`)
+    }
+    if (widgetId === 'rttbox') {
+      return "true" === localStorage.getItem(`${getters.roomUuid}_transcribe`)
+    }
     return getters.activeWidgetIds.includes(widgetId);
   };
   return (
@@ -77,7 +82,10 @@ const ToolBoxPopoverContent = observer(({ onClick }: { onClick: () => void }) =>
             icon={iconType}
             label={name}
             onClick={onClick}
+            onWidgetIdChange={()=>{
+            }}
             active={isWidgetActive(id)}
+            dropupActive={id === "rtt" || id === "rttbox"}
           />
         ))}
       </div>
@@ -89,13 +97,25 @@ interface ToolBoxItemProps {
   icon: SvgIconEnum;
   label: string;
   active: boolean;
+  dropupActive: boolean;
   onClick: () => void;
+  onWidgetIdChange: (id: string) => void;
 }
 const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
-  const { icon, label, active, id, onClick } = props;
+  const { icon, label, active, dropupActive, id, onClick, onWidgetIdChange } = props;
   const { widgetUIStore, eduToolApi, breakoutUIStore } = useStore();
   const { updateZIndex } = useZIndex(id);
-
+  useEffect(() => {
+    if (id === 'rtt') {
+      widgetUIStore.createWidget(id);
+      eduToolApi.setWidgetVisible(id, false);
+      eduToolApi.sendWidgetVisibleIsShowTool(id, true);
+    }
+    if (id === 'rttbox') {
+      widgetUIStore.createWidget(id);
+      eduToolApi.setWidgetVisible(id, false);
+    }
+  }, []);
   const handleClick = () => {
     if (eduToolApi.isWidgetMinimized(id)) {
       eduToolApi.setMinimizedState({
@@ -109,20 +129,33 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
       });
     } else {
       updateZIndex();
+      onWidgetIdChange(id)
       if (id === 'breakout') {
         breakoutUIStore.setDialogVisible(true);
+      } else if (id === 'rtt') {
+        eduToolApi.setWidgetVisible('rtt', true);
+        eduToolApi.sendWidgetVisibleIsShowRtt(id, true);
+        eduToolApi.changeSubtitleOpenState()
       } else {
+        if (id === "rttbox") {
+          eduToolApi.sendWidgetRttboxShow(id, true); 
+          eduToolApi.changeConversionOpenState()
+        }
         widgetUIStore.createWidget(id);
       }
     }
-
     onClick();
   };
-
+  // 点击设置小三角
+  const handleSettingClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+  }
   return (
     <div className="fcr-toolbox-popover-item" onClick={handleClick}>
       <SvgImg type={icon} size={30}></SvgImg>
       <span className="fcr-toolbox-popover-item-label">{label}</span>
+     {dropupActive&&<div className='fcr-toolbox-popover-item-dropbox' onClick={()=>handleSettingClick}>
+      </div>}
       {active && <div className="fcr-toolbox-popover-item-active"></div>}
     </div>
   );

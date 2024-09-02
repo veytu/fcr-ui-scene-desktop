@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { AgoraExtensionWidgetEvent } from '@ui-scene/extension/events';
 import { useZIndex } from '@ui-scene/utils/hooks/use-z-index';
+import { useI18n } from 'agora-common-libs';
 
 export const StatusBarWidgetSlot = observer(() => {
   const { eduToolApi } = useStore();
@@ -23,10 +24,11 @@ export const StatusBarWidgetSlot = observer(() => {
   };
   return (
     <>
+    <RttMinimize></RttMinimize>
       <CountdownTimerMinimize></CountdownTimerMinimize>
       <div className="fcr-status-bar-widget-slot">
         {eduToolApi.minimizedWidgetIcons
-          .filter((i) => i instanceof Array || i.widgetId !== 'countdownTimer')
+          .filter((i) => i instanceof Array || (i.widgetId !== 'countdownTimer' && i.widgetId !== 'rttbox'))
           .slice()
           .reverse()
           .map((item, index) => {
@@ -189,3 +191,51 @@ const formatTime = (time: number) => {
     seconds: Math.floor(seconds % 10),
   };
 };
+const RttMinimize = observer(() => {
+  const transI18n = useI18n();
+  const {
+    eduToolApi: { isWidgetMinimized, setMinimizedState },
+    widgetUIStore: {
+      widgetInstanceList,
+      classroomStore: {
+        widgetStore: { widgetController },
+      },
+    },
+  } = useStore();
+  const { updateZIndex } = useZIndex('rttbox');
+  const [countdownTimerState, setCountdownTimerState] = useState<CountdownTimerStates>({
+    current: 0,
+    state: CountdownTimerState.STOPPED,
+    tooltip: '',
+    icon: SvgIconEnum.FCR_V2_RTT,
+  });
+  const countdownTimer = widgetInstanceList.find((w) => w.widgetId === 'rttbox');
+ 
+  const handleClick = () => {
+    if (isWidgetMinimized('rttbox')) {
+      setMinimizedState({
+        minimized: false,
+        widgetId: 'rttbox',
+        minimizedProperties: {
+          minimizedCollapsed: false,
+        },
+      });
+    } else {
+      updateZIndex();
+    }
+  };
+
+  const { current, state, icon } = countdownTimerState;
+  return countdownTimer ? (
+      <div
+        className={classnames('fcr-minimized-widget-icon', 'fcr-minimized-widget-countdown', {
+          'fcr-minimized-widget-countdown-danger':
+            current <= 10 && state !== CountdownTimerState.STOPPED,
+        })}
+        onClick={handleClick}>
+        <SvgImg type={icon} size={20} />
+        {transI18n('fcr_device_option_rtt')}
+        {/* 转写中... */}
+      </div>
+  ) : null;
+});
