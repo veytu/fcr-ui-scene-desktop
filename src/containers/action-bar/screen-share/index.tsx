@@ -74,7 +74,7 @@ const ScreenShareStatusBar = observer(() => {
     actionBarUIStore: { stopLocalScreenShare },
   } = useStore();
   const transI18n = useI18n();
-  const portal = document.querySelector('.fcr-classroom-viewport');
+  const portal = document.querySelector('.');
   return portal
     ? createPortal(
         <Rnd
