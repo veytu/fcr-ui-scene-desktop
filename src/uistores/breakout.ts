@@ -1515,8 +1515,10 @@ export class BreakoutUIStore extends EduUIStoreBase {
           id: dialogId,
           title,
           content,
-          onOk: () => {
-            this.classroomStore.groupStore.acceptGroupInvite(groupUuid);
+          onOk: async () => {
+            await this.classroomStore.groupStore.acceptGroupInvite(groupUuid);
+            this.isAttendDiscussionConfig?.groupId && this.leaveRtcClient();
+            this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
           },
           onClose: () => {
             this.classroomStore.groupStore.rejectGroupInvite(groupUuid);
