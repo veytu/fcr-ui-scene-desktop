@@ -1,15 +1,14 @@
-import { useEffect, useState, forwardRef, useRef, useLayoutEffect, useMemo } from "react";
+import { useEffect, useState, forwardRef, useRef, useLayoutEffect } from "react";
 import { rtcManager, IUserTracks, IRtcUser } from "./manager"
 import { ITextItem } from "./types";
 import { ICameraVideoTrack, IMicrophoneAudioTrack } from "agora-rtc-sdk-ng"
 import { makeStore } from "./store"
-import { addChatItem, setRoomConnected, setVoiceType } from "./store/reducers/global";
+import { addChatItem, setRoomConnected } from "./store/reducers/global";
 import './index.css'
 import { useMultibandTrackVolume } from "./common/hooks";
 import { AudioVisualizer } from "../audio-visualizer";
 import { SvgIconEnum, SvgImg } from "@components/svg-img";
 import { themeVal } from "@ui-kit-utils/tailwindcss";
-import { CameraSelect } from "@ui-scene/containers/device-pretest/device-select";
 import { Popover } from "@components/popover";
 import AgoraRTC from "agora-rtc-sdk-ng"
 
@@ -17,16 +16,16 @@ let hasInit = false
 const colors = themeVal('colors');
 export const SpeakPeopleView = () => {
     const dispatch = makeStore().dispatch
-    const state = makeStore().getState()
     // const options = state.global.options
     // todo 暂时写死demo结果值
     const options = { "channel": "agora_80xtya", "userName": "test", "userId": 138967 }
-    const voiceType = state.global.voiceType
-    const agentConnected = state.global.agentConnected
     const { userId, channel } = options
     const [videoTrack, setVideoTrack] = useState<ICameraVideoTrack>()
     const [audioTrack, setAudioTrack] = useState<IMicrophoneAudioTrack>()
-    const [remoteuser, setRemoteUser] = useState<IRtcUser>()
+    //是否禁用音频
+    const [audioMute, setAudioMute] = useState(false)
+    //是否禁用视频
+    const [videoMute, setVideoMute] = useState(false)
     useEffect(() => {
         if (!options.channel) {
             return
@@ -49,7 +48,6 @@ export const SpeakPeopleView = () => {
         console.log("[test] init")
         rtcManager.on("localTracksChanged", onLocalTracksChanged)
         rtcManager.on("textChanged", onTextChanged)
-        rtcManager.on("remoteUserChanged", onRemoteUserChanged)
         await rtcManager.createTracks()
         await rtcManager.join({
             channel,
@@ -64,16 +62,11 @@ export const SpeakPeopleView = () => {
         console.log("[test] destory")
         rtcManager.off("textChanged", onTextChanged)
         rtcManager.off("localTracksChanged", onLocalTracksChanged)
-        rtcManager.off("remoteUserChanged", onRemoteUserChanged)
         await rtcManager.destroy()
         dispatch(setRoomConnected(false))
         hasInit = false
     }
 
-    const onRemoteUserChanged = (user: IRtcUser) => {
-        console.log("[test] onRemoteUserChanged", user)
-        setRemoteUser(user)
-    }
 
     const onLocalTracksChanged = (tracks: IUserTracks) => {
         console.log("[test] onLocalTracksChanged", tracks)
@@ -99,15 +92,18 @@ export const SpeakPeopleView = () => {
         }
     }
 
-    const onVoiceChange = (value: any) => {
-        dispatch(setVoiceType(value))
-    }
+    useEffect(() => {
+        console.log("xxxxxxxxxx", videoTrack?.muted)
+    }, [videoTrack])
 
     return (
         <div className="stream-people-container">
             <LocalStreamPlayer videoTrack={videoTrack}></LocalStreamPlayer>
+            {(videoMute || !videoTrack) && <div className="name">You</div>}
             {/* 操作区域 */}
-            <MicCameraOptions videoTrack={videoTrack} audioTrack={audioTrack}></MicCameraOptions>
+            <MicCameraOptions videoTrack={videoTrack} audioTrack={audioTrack}
+                videoMute={videoMute} audioMute={audioMute} 
+                setAudioMute={setAudioMute} setVideoMute={setVideoMute}></MicCameraOptions>
         </div>
     );
 };
@@ -120,8 +116,8 @@ const LocalStreamPlayer = forwardRef((props: StreamPlayerProps) => {
     const { videoTrack } = props
     const vidDiv = useRef(null)
     useLayoutEffect(() => {
-        if (!videoTrack?.isPlaying) {
-            videoTrack?.play(vidDiv.current!, { fit: "cover" })
+        if (!videoTrack?.isPlaying && vidDiv.current) {
+            videoTrack?.play(vidDiv.current, { fit: "cover" })
         }
         return () => {
             videoTrack?.stop()
@@ -138,10 +134,10 @@ interface MicSectionProps {
 
 const MicSection = (props: MicSectionProps) => {
     const { audioTrack } = props
-    const [audioMute, setAudioMute] = useState(false)
     const [mediaStreamTrack, setMediaStreamTrack] = useState<MediaStreamTrack>()
 
     useEffect(() => {
+        //@ts-ignore
         audioTrack?.on("track-updated", onAudioTrackupdated)
         if (audioTrack) {
             setMediaStreamTrack(audioTrack.getMediaStreamTrack())
@@ -152,19 +148,11 @@ const MicSection = (props: MicSectionProps) => {
         }
     }, [audioTrack])
 
-    useEffect(() => {
-        audioTrack?.setMuted(audioMute)
-    }, [audioTrack, audioMute])
-
     const subscribedVolumes = useMultibandTrackVolume(mediaStreamTrack, 20);
 
     const onAudioTrackupdated = (track: MediaStreamTrack) => {
         console.log("[test] audio track updated", track)
         setMediaStreamTrack(track)
-    }
-
-    const onClickMute = () => {
-        setAudioMute(!audioMute)
     }
 
     return <AudioVisualizer
@@ -181,16 +169,16 @@ const MicSection = (props: MicSectionProps) => {
 
 interface MicCameraOptionsProps {
     audioTrack?: IMicrophoneAudioTrack
-    videoTrack?: ICameraVideoTrack
+    videoTrack?: ICameraVideoTrack,
+    audioMute:boolean,
+    setAudioMute:any,
+    videoMute:boolean,
+    setVideoMute:any,
 }
 const MicCameraOptions = (props: MicCameraOptionsProps) => {
-    const { audioTrack, videoTrack } = props
-    //是否禁用音频
-    const [audioMute, setAudioMute] = useState(false)
+    const { audioTrack, videoTrack,audioMute,setAudioMute,videoMute,setVideoMute } = props
     //是否展示了音频选择
     const [showAudioSelect, setShowAudioSelect] = useState(false)
-    //是否禁用视频
-    const [videoMute, setVideoMute] = useState(false)
     //是否展示了视频选择
     const [showVideoSelect, setShowVideoSelect] = useState(false)
     //音频属性列表 
@@ -258,10 +246,12 @@ const MicCameraOptions = (props: MicCameraOptionsProps) => {
     //音频禁用点击监听
     const onClickAudioMute = () => {
         setAudioMute(!audioMute)
+        audioTrack?.setMuted(audioMute)
     }
     //视频禁用点击监听
     const onClickVideoMute = () => {
         setVideoMute(!videoMute)
+        videoTrack?.setMuted(videoMute)
     }
 
     return <div className="stream-people-container-options">

@@ -25,6 +25,7 @@ export class RtcManager extends AGEventEmitter<RtcEvents> {
   }
 
   async join({ channel, userId }: { channel: string; userId: number }) {
+    debugger
     if (!this._joined) {
       const res = await apiGenAgoraData({ channel, userId })
       const { code, data } = res
