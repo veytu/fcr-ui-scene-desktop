@@ -1,0 +1,10 @@
+/* 数字人最外层容器 */
+.ai-people-container-content {
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: black;
+    overflow-y: auto;
+    overflow-x: auto;
+}

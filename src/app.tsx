@@ -5,7 +5,7 @@ import { DevicePretest } from './containers/device-pretest';
 import { useStore } from './utils/hooks/use-store';
 import './index.css';
 import { EduClassroomConfig, EduRoomTypeEnum } from 'agora-edu-core';
-import { ClassroomAiPeople } from './scenarios/classroom_ai_people';
+import { ClassroomAiPeople } from './ai-people/scenarios/classroom';
 
 export const App = observer(({ skipDevicePretest }: { skipDevicePretest: boolean }) => {
   const { initialize, destroy, initialized } = useStore();
@@ -26,7 +26,7 @@ export const App = observer(({ skipDevicePretest }: { skipDevicePretest: boolean
   return (
     <React.Fragment>
       {!devicePretestFinished && <DevicePretest />}
-      {devicePretestFinished && (EduRoomTypeEnum.AIPEOPLE !== EduClassroomConfig.shared.sessionInfo.roomType ? <ClassroomAiPeople /> : <Classroom />)}
+      {devicePretestFinished && ("11" !== EduClassroomConfig.shared.sessionInfo.roomType.toString() ? <ClassroomAiPeople /> : <Classroom />)}
     </React.Fragment>
   );
 });

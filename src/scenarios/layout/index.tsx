@@ -1,5 +1,3 @@
-import { CoverView } from '@ui-scene/container-ai-people/layout/cover-view';
-import { SpeakView } from '@ui-scene/container-ai-people/layout/speak-view';
 import { AskHelpList } from '@ui-scene/containers/breakout-room/ask-help-list';
 import { GroupInfoPanel } from '@ui-scene/containers/breakout-room/group-info-panel';
 import { GroupStatusPanel } from '@ui-scene/containers/breakout-room/group-status-panel';
@@ -13,6 +11,7 @@ import { ZIndexController } from '@ui-scene/utils/z-index-controller';
 import { observer } from 'mobx-react';
 import { useEffect, useRef } from 'react';
 import './index.css'
+import { CoverView } from '@ui-scene/containers/layout/cover-view';
 export const ClassroomLayout = observer(() => {
   const {
     layoutUIStore: { layout, setLayoutReady },
@@ -35,23 +34,6 @@ export const ClassroomLayout = observer(() => {
         <GroupStatusPanel />
         <AskHelpList />
       </>
-    </ZIndexContext.Provider>
-  );
-});
-export const ClassroomAiPeopleLayout = observer(() => {
-  const {
-    layoutUIStore: { layout, setLayoutReady },
-  } = useStore();
-  const zIndexControllerRef = useRef(new ZIndexController());
-  useEffect(() => {
-    setLayoutReady(true);
-  }, []);
-  return (
-    <ZIndexContext.Provider value={zIndexControllerRef.current} >
-      <div className='ai-people-container'>
-      <CoverView></CoverView>
-      <SpeakView></SpeakView>
-      </div>
     </ZIndexContext.Provider>
   );
 });
