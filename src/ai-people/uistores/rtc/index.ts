@@ -6,7 +6,7 @@ import AgoraRTC, {
     UID,
 } from "agora-rtc-sdk-ng"
 import { Getters } from "../getters";
-import { IChatItem, IRtcUser, ITextItem, IUserTracks, NetStateInfo, RtcEvents } from "../../types";
+import { IChatItem, IRtcUser, ITextItem, IUserTracks, NetStateInfo, NetStateType, RtcEvents } from "../../types";
 import { apiGenAgoraData } from "../../utils/request";
 import { AGEventEmitter } from "./events";
 import { ICameraVideoTrack } from "agora-rtc-sdk-ng"
@@ -46,7 +46,7 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     @observable
     chatItems: IChatItem[] = []
     @observable
-    netQuality: NetStateInfo = new NetStateInfo("rgba(100, 187, 92, 1)", transI18n('fcr_ai_people_tip_quality_good'), NetworkGoodImg, SvgIconEnum.FCR_V2_SIGNAL_GOOD)
+    netQuality: NetStateInfo = new NetStateInfo("rgba(100, 187, 92, 1)", transI18n('fcr_ai_people_tip_quality_good'), NetworkGoodImg, SvgIconEnum.FCR_V2_SIGNAL_GOOD,NetStateType.GOOD)
 
 
     constructor(store: EduClassroomStore, getters: Getters) {
@@ -59,19 +59,22 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     }
 
     async join({ channel, userId, userName }: { channel: string; userId: number, userName: string }) {
-        if (!this._joined) {
-            const res = await apiGenAgoraData({ channel, userId })
-            const { code, data } = res
-            if (code != 0) {
-                throw new Error("Failed to get Agora token")
+        try {
+            if (!this._joined) {
+                const res = await apiGenAgoraData({ channel, userId })
+                const { code, data } = res
+                if (code != 0) {
+                    throw new Error("Failed to get Agora token")
+                }
+                const { appId, token } = data
+                await this.client?.join(appId, channel, token, userId)
+                this.currentJoinUserId = userId
+                this.currentJoinUserChannel = channel
+                this.currentJoinUserName = userName;
+                this._joined = true
             }
-            const { appId, token } = data
-            await this.client?.join(appId, channel, token, userId)
-            this.currentJoinUserId = userId
-            this.currentJoinUserChannel = channel
-            this.currentJoinUserName = userName;
-            this._joined = true
-        }
+        } finally { }
+        return this._joined;
     }
 
     async createTracks() {
@@ -242,11 +245,11 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
             //获取状态最小值
             const value = Math.min(quality.downlinkNetworkQuality, quality.uplinkNetworkQuality)
             if (value >= 6) {
-                this.netQuality = new NetStateInfo('rgba(172, 172, 172, 1)', transI18n('fcr_ai_people_tip_quality_none'), NetworkDownImg, SvgIconEnum.FCR_V2_SIGNAL_NONE)
+                this.netQuality = new NetStateInfo('rgba(172, 172, 172, 1)', transI18n('fcr_ai_people_tip_quality_none'), NetworkDownImg, SvgIconEnum.FCR_V2_SIGNAL_NONE,NetStateType.NONE)
             } else if (value >= 3) {
-                this.netQuality = new NetStateInfo("var(--fcr_mobile_ui_scene_red6, rgba(245, 101, 92, 1))", transI18n('fcr_ai_people_tip_quality_bad'), NetworkBadImg, SvgIconEnum.FCR_V2_SIGNAL_BAD_FULL)
+                this.netQuality = new NetStateInfo("var(--fcr_mobile_ui_scene_red6, rgba(245, 101, 92, 1))", transI18n('fcr_ai_people_tip_quality_bad'), NetworkBadImg, SvgIconEnum.FCR_V2_SIGNAL_BAD_FULL,NetStateType.BAD)
             } else {
-                this.netQuality = new NetStateInfo("rgba(100, 187, 92, 1)", transI18n('fcr_ai_people_tip_quality_good'), NetworkGoodImg, SvgIconEnum.FCR_V2_SIGNAL_GOOD)
+                this.netQuality = new NetStateInfo("rgba(100, 187, 92, 1)", transI18n('fcr_ai_people_tip_quality_good'), NetworkGoodImg, SvgIconEnum.FCR_V2_SIGNAL_GOOD,NetStateType.GOOD)
             }
         })
     }

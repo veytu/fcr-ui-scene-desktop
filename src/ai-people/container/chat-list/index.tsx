@@ -21,9 +21,13 @@ export const ChatListView = observer(() => {
     }, [chatItems])
     const chatRef = useRef(null)
     useAutoScroll(chatRef)
+
+    //是否有数据
+    const haveList = showItems && showItems.length > 0;
+
     return (
         <div className="chat-list-container">
-            {(!showItems || showItems.length === 0) && <div className="empty">
+            {!haveList && <div className="empty">
                 <div className="icon-container">
                     <SvgImg
                         className="item"
@@ -40,11 +44,11 @@ export const ChatListView = observer(() => {
                 </div>
                 <div>Chat with agent</div>
             </div>}
-            <div className="chat-list-content" ref={chatRef}>
+            {haveList && <div className="chat-list-content" ref={chatRef}>
                 {showItems.map((item, index) => {
                     return <ChatItem data={item} key={index} ></ChatItem>
                 })}
-            </div>
+            </div>}
         </div>
     );
 })

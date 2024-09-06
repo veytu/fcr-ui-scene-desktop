@@ -116,10 +116,18 @@ export class NetStateInfo {
     text: string;
     img: any;
     icon: SvgIconEnum;
-    constructor(color: string, text: string, img: any, icon: SvgIconEnum) {
+    state:NetStateType;
+    constructor(color: string, text: string, img: any, icon: SvgIconEnum,state:NetStateType) {
         this.color = color;
         this.text = text;
         this.img = img;
         this.icon = icon;
+        this.state = state;
     }
+}
+/**
+ * 网络状态类型
+ */
+export enum NetStateType {
+    BAD,NONE,GOOD
 }

@@ -10,29 +10,33 @@ let intervalId: any
  * 服务端管理store
  */
 export class EduConnectionStore extends EduUIStoreBase {
-
     dispatch = AppDispatch
     //链接状态
     private agentConnected = false;
     //是否正在连接
     private loading = false;
+    //当前加入的用户id
+    private currentJoinUserId?: number
+    //当前加入的用户名称
+    private currentJoinUserName?: string
+    //当前加入的渠道名称
+    private currentJoinUserChannel?: string
+
     onInstall(): void {
-        this.agentConnected = AppSelectData.global.agentConnected
-        this._disposers.push(
-            //检测渠道状态
-            reaction(
-                () => AppSelectData.global.options.channel,
-                (channel) => {
-                    if (channel) {
-                        this.checkAgentConnected(channel)
-                    }
-                },
-            ),
-        );
     }
     onDestroy(): void {
+        this.disConnection()
         this._disposers.forEach((d) => d());
         this._disposers = [];
+    }
+
+    //取消链接
+    async disConnection(){
+        if (this.agentConnected && this.currentJoinUserChannel) {
+            await apiStopService(this.currentJoinUserChannel)
+            this.dispatch(setAgentConnected(false))
+            this.stopPing(this.currentJoinUserChannel)
+        }
     }
 
     //开始链接
@@ -40,33 +44,22 @@ export class EduConnectionStore extends EduUIStoreBase {
         if (this.loading) {
             return
         }
+        this.currentJoinUserChannel =channel;
+        this.currentJoinUserId = userId;
         this.loading = true;
-        if (this.agentConnected) {
-            await apiStopService(channel)
-            this.dispatch(setAgentConnected(false))
-            this.stopPing(channel)
-        } else {
-            const res = await apiStartService({
-                channel,
-                userId,
-                graphName,
-                language,
-                voiceType
-            })
+        if(!this.agentConnected){
+            const res = await apiStartService({channel,userId,graphName,language,voiceType})
             const { code, msg } = res || {}
             if (code != 0) {
-                // if (code == "10001") {
-                //     message.error("The number of users experiencing the program simultaneously has exceeded the limit. Please try again later.")
-                // } else {
-                //     message.error(`code:${code},msg:${msg}`)
-                // }
                 this.loading = false;
-                throw new Error(msg)
+                return false
             }
             this.dispatch(setAgentConnected(true))
             this.startPing(channel)
+            return true;
         }
         this.loading = false;
+        return true;
     }
 
     //检测链接

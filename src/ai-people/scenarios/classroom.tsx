@@ -8,6 +8,7 @@ export const ClassroomAiPeople = observer(() => {
     <div className="ai-people-container">
       <ClassroomAiPeopleLayout></ClassroomAiPeopleLayout>
       <ClassroomLoading></ClassroomLoading>
+      <div className="fcr-single-toast-container"></div>
     </div>
   );
 });

@@ -556,4 +556,9 @@ export const enUs = {
     fcr_ai_people_tip_quality_bad:"信号差",
     fcr_ai_people_tip_quality_none:"无信号",
     fcr_ai_people_tip_time:"time",
+    fcr_ai_people_hint_mic_none:"麦克风异常，为保证课程质量，请检查您的设备",
+    fcr_ai_people_net_bad:"您的网络较差，为保证课程质量，请检查您的网络",
+    fcr_ai_people_net_none:"您的网络已断开，请检查您的网络",
+    fcr_ai_people_connect_retry:"当前教室异常，正在重新连接（第{reason1}/{reason2}次尝试）",
+    fcr_ai_people_connect_refresh:"当前教室异常，请刷新页面或退出教室重新加入",
 };
