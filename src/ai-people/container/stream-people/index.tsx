@@ -108,10 +108,10 @@ const MicCameraOptions = (props: MicCameraOptionsProps) => {
     //是否展示了视频选择
     const [showVideoSelect, setShowVideoSelect] = useState(false)
     //音频属性列表 
-    const [audioItems, setAudioItems] = useState<SelectItem[]>([DEFAULT_ITEM]);
+    const [audioItems, setAudioItems] = useState<SelectItem[]>([]);
     const [audioCurrent, setAudioCurrent] = useState<string>();
     //视频属性列表 
-    const [videoItems, setVideoItems] = useState<SelectItem[]>([DEFAULT_ITEM]);
+    const [videoItems, setVideoItems] = useState<SelectItem[]>([]);
     const [videoCurrent, setVideoCurrent] = useState<string>();
 
 
@@ -179,9 +179,11 @@ const MicCameraOptions = (props: MicCameraOptionsProps) => {
         setVideoMute(!videoMute)
         videoTrack?.setMuted(videoMute)
     }
-
-    return <div className="stream-people-container-options">
-        <div className="volume-container">
+    //是否有音视频设备
+    const haveAudio = audioItems.length > 0;
+    const haveVideo = videoItems.length > 0;
+    return <div className="stream-people-container-options" style={{ background: audioMute || !haveAudio ? 'none' : 'rgba(35, 37, 43, 0.2)' }}>
+        <div className="volume-container" style={{ display: audioMute || !haveAudio ? 'none' : 'flex' }}>
             <MicSection audioTrack={audioTrack}></MicSection>
         </div>
         <div style={{ display: "flex", justifyContent: 'center' }}>
@@ -191,11 +193,11 @@ const MicCameraOptions = (props: MicCameraOptionsProps) => {
                         className="icon"
                         size={32}
                         colors={{ iconSecondary: colors['red']['6'] }}
-                        type={audioMute ? SvgIconEnum.FCR_NOMUTE : SvgIconEnum.FCR_MUTE}></SvgImg>
-                    <span className="text">Mic</span>
-                    <span className="line"></span>
+                        type={!haveAudio ? SvgIconEnum.FCR_ICON_MIC_NONE : (audioMute ? SvgIconEnum.FCR_ICON_MIC_DISABLE : SvgIconEnum.FCR_ICON_MIC_ENABLE)}></SvgImg>
+                    <span className="text" style={{color: haveAudio ? 'var(--fcr_ui_scene_white10, rgba(255, 255, 255, 1))': 'rgba(255, 255, 255, 0.8)'}}>Mic</span>
+                    {audioItems.length > 0 && <span className="line"></span>}
                 </div>
-                <Popover
+                {audioItems.length > 0 && <Popover
                     onVisibleChange={(value) => {
                         setShowAudioSelect(value)
                     }}
@@ -209,7 +211,7 @@ const MicCameraOptions = (props: MicCameraOptionsProps) => {
                             colors={{ iconSecondary: colors['red']['6'] }}
                             type={showAudioSelect ? SvgIconEnum.FCR_DOWN : SvgIconEnum.FCR_UP}></SvgImg>
                     </div>
-                </Popover>
+                </Popover>}
             </div>
             <div className="camera-container mic-camera-options-container">
                 <div className="status" onClick={onClickVideoMute}>
@@ -217,11 +219,11 @@ const MicCameraOptions = (props: MicCameraOptionsProps) => {
                         className="icon"
                         size={32}
                         colors={{ iconSecondary: colors['red']['6'] }}
-                        type={videoMute ? SvgIconEnum.FCR_CAMERAOFF : SvgIconEnum.FCR_CAMERA}></SvgImg>
-                    <span className="text">Camera</span>
-                    <span className="line"></span>
+                        type={!haveVideo ? SvgIconEnum.FCR_ICON_CAMERA_NONE : (videoMute ? SvgIconEnum.FCR_ICON_CAMERA_DISABLE : SvgIconEnum.FCR_ICON_CAMERA_ENABLE)}></SvgImg>
+                    <span className="text" style={{color: haveVideo ? 'var(--fcr_ui_scene_white10, rgba(255, 255, 255, 1))': 'rgba(255, 255, 255, 0.8)'}}>Camera</span>
+                    {videoItems.length > 0 && <span className="line"></span>}
                 </div>
-                <Popover
+                {videoItems.length > 0 && <Popover
                     onVisibleChange={(value) => {
                         setShowVideoSelect(value)
                     }}
@@ -235,7 +237,7 @@ const MicCameraOptions = (props: MicCameraOptionsProps) => {
                             colors={{ iconSecondary: colors['red']['6'] }}
                             type={showVideoSelect ? SvgIconEnum.FCR_DOWN : SvgIconEnum.FCR_UP}></SvgImg>
                     </div>
-                </Popover>
+                </Popover>}
             </div>
         </div>
     </div>
@@ -246,12 +248,6 @@ interface SelectItem {
     label: string
     value: string
     deviceId: string
-}
-
-const DEFAULT_ITEM: SelectItem = {
-    label: "Default",
-    value: "default",
-    deviceId: ""
 }
 const Select = ({ items, change, value, title }: { items: SelectItem[], change: any, value: string | undefined, title: string }) => {
     const onChange = async (target: SelectItem) => {

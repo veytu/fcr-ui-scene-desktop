@@ -33,7 +33,6 @@
     width: calc(100% - 20px);
     padding: 10px;
     border-radius: 8px 8px 0px 0px;
-    background: rgba(35, 37, 43, 0.2);
     position: absolute;
     bottom: 0;
     left: 10px;
@@ -41,23 +40,23 @@
 }
 
 .stream-people-container-options .mic-container {
-    width: 114px;
     height: 42px;
     background: rgba(42, 46, 49, 1);
     border-radius: 4px;
     display: flex;
     margin-right: 5px;
     justify-content: center;
+    padding: 0 0px 0 8px;
 }
 
 .stream-people-container-options .camera-container {
-    width: 144px;
     height: 42px;
     background: rgba(42, 46, 49, 1);
     border-radius: 4px;
     display: flex;
     margin-left: 5px;
     justify-content: center;
+    padding: 0 0px 0 8px;
 }
 
 .stream-people-container-options .volume-container {
@@ -84,18 +83,19 @@
 }
 
 .mic-camera-options-container .status .icon {
-    flex-grow: 1;
 }
 
 .mic-camera-options-container .status .text {
     flex-grow: 1;
+    padding-left: 5px;
+    padding-right: 10px;
 }
 
 .mic-camera-options-container .status .line {
     height: 14px;
     width: 1px;
     margin-top: 9px;
-    border: 1px solid var(--fcr_mobile_ui_scene_white3, rgba(255, 255, 255, 0.3))
+    background-color: var(--fcr_mobile_ui_scene_white3, rgba(255, 255, 255, 0.3))
 }
 
 .mic-camera-options-container .more {
