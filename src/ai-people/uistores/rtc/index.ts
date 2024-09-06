@@ -12,7 +12,7 @@ import { AGEventEmitter } from "./events";
 import { ICameraVideoTrack } from "agora-rtc-sdk-ng"
 import { AppDispatch, AppSelectData } from "../store";
 import { addChatItem, paramsChatData } from "../store/reducers/global";
-import { action, observable } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction, toJS } from 'mobx';
 import { bound } from 'agora-rte-sdk';
 
 /**
@@ -22,6 +22,12 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     private _joined
     private client: IAgoraRTCClient
     private localTracks: IUserTracks
+    //当前加入的用户id
+    private currentJoinUserId?:number
+    //当前加入的用户名称
+    private currentJoinUserName?:string
+    //当前加入的渠道名称
+    private currentJoinUserChannel?:string
 
     //本地视频流
     @observable
@@ -46,7 +52,7 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
         this._listenRtcEvents()
     }
 
-    async join({ channel, userId }: { channel: string; userId: number }) {
+    async join({ channel, userId,userName }: { channel: string; userId: number,userName:string }) {
         if (!this._joined) {
             const res = await apiGenAgoraData({ channel, userId })
             const { code, data } = res
@@ -55,6 +61,9 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
             }
             const { appId, token } = data
             await this.client?.join(appId, channel, token, userId)
+            this.currentJoinUserId = userId
+            this.currentJoinUserChannel = channel
+            this.currentJoinUserName = userName;
             this._joined = true
         }
     }
@@ -113,28 +122,21 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
             })
         })
         this.client.on("stream-message", (uid: UID, stream: any) => {
-            this._praseData(stream)
+            const decoder = new TextDecoder('utf-8')
+            const decodedMessage = decoder.decode(stream)
+            const textstream = JSON.parse(decodedMessage)
+            console.log("[test] textstream raw data", JSON.stringify(textstream))
+            const { stream_id, is_final, text, text_ts, data_type } = textstream
+            const textItem: ITextItem = {} as ITextItem
+            textItem.uid = stream_id
+            textItem.time = text_ts
+            textItem.dataType = "transcribe"
+            // textItem.language = culture
+            textItem.text = text
+            textItem.isFinal = is_final
+            this.emit("textChanged", textItem)
         })
     }
-
-    private _praseData(data: any): ITextItem | void {
-        const decoder = new TextDecoder('utf-8')
-        const decodedMessage = decoder.decode(data)
-
-        const textstream = JSON.parse(decodedMessage)
-
-        console.log("[test] textstream raw data", JSON.stringify(textstream))
-        const { stream_id, is_final, text, text_ts, data_type } = textstream
-        const textItem: ITextItem = {} as ITextItem
-        textItem.uid = stream_id
-        textItem.time = text_ts
-        textItem.dataType = "transcribe"
-        // textItem.language = culture
-        textItem.text = text
-        textItem.isFinal = is_final
-        this.emit("textChanged", textItem)
-    }
-
 
     _playAudio(audioTrack: IMicrophoneAudioTrack | IRemoteAudioTrack | undefined) {
         if (audioTrack && !audioTrack.isPlaying) {
@@ -190,16 +192,19 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     private onTextChanged(text: ITextItem) {
         console.log("[test] onTextChanged", text)
         if (text.dataType == "transcribe") {
-            const isAgent = Number(text.uid) != Number(AppSelectData.global.options.userId)
+            const isAgent = Number(text.uid) !== this.currentJoinUserId
             const current:IChatItem = {
                 userId: text.uid,
                 text: text.text,
                 type: isAgent ? "agent" : "user",
                 isFinal: text.isFinal,
-                time: text.time
+                time: text.time,
+                userName:this.currentJoinUserName
             }
-            AppDispatch(addChatItem(current))
-            this.setChatItems(paramsChatData(this.chatItems,current))
+            runInAction(() => {
+                this.chatItems = paramsChatData(this.chatItems,current);
+                // AppDispatch(addChatItem(current))
+              });
         }
     }
     //机器人流信息
@@ -222,10 +227,5 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     @action
     private setAgentRtcUser(user: IRtcUser) {
         this.agentRtcUser = user;
-    }
-
-    @action
-    private setChatItems(items:IChatItem[]){
-        this.chatItems = items;
     }
 }

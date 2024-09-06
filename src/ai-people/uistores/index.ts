@@ -62,7 +62,7 @@ export class SceneUIAiStore {
 
     //加人对话房间
     await this.rtcStore.createTracks()
-    await this.rtcStore.join({ userId: currentUserId, channel:currentChannel })
+    await this.rtcStore.join({ userId: currentUserId, channel:currentChannel,userName:userName })
     await this.rtcStore.publish()
 
     //开启链接
