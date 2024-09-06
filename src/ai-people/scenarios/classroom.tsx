@@ -1,7 +1,7 @@
-import { ClassroomLoading } from "@ui-scene/containers/loading";
 import { ClassroomAiPeopleLayout } from "./layout";
 import { observer } from "mobx-react";
 import './index.css'
+import { ClassroomLoading } from "../container/loading";
 
 export const ClassroomAiPeople = observer(() => {
   return (

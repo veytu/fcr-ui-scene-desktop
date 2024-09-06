@@ -548,4 +548,12 @@ export const enUs = {
     'You cannot switch to grid view when opening the whiteboard.',
   fcr_group_in_group_discussion: 'In Group Discussion',
   fcr_screen_share_switch_white_broad: 'You cannot open the whtie broad when screen sharing.',
+
+
+    //****************** 数字人相关 ******************
+    fcr_ai_people_tip_room_id:"课堂id号",
+    fcr_ai_people_tip_quality_good:"信号好",
+    fcr_ai_people_tip_quality_bad:"信号差",
+    fcr_ai_people_tip_quality_none:"无信号",
+    fcr_ai_people_tip_time:"time",
 };

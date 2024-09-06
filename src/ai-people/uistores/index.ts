@@ -14,6 +14,7 @@ import { getRandomChannel, getRandomUserId } from '../utils/utils';
 import { AiDialogueType } from '../types';
 import { AGError, bound } from 'agora-rte-sdk';
 import { useStore } from '@ui-scene/utils/hooks/use-store';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction, toJS } from 'mobx';
 
 export class SceneUIAiStore {
   readonly getters: Getters;
@@ -30,6 +31,7 @@ export class SceneUIAiStore {
 
   @bound
   async init() {
+    runInAction(() => { this.showLoading = true })
     //先初始化存储配置信息
     //@ts-ignore
     const { sessionInfo: { userUuid, userName, channel }, flexProperties } = window.EduClassroomConfig
@@ -60,15 +62,17 @@ export class SceneUIAiStore {
     //   return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
     // }
 
+
     //加人对话房间
     await this.rtcStore.createTracks()
-    await this.rtcStore.join({ userId: currentUserId, channel:currentChannel,userName:userName })
+    await this.rtcStore.join({ userId: currentUserId, channel: currentChannel, userName: userName })
     await this.rtcStore.publish()
+    this.rtcStore.on("remoteUserChanged", () => { runInAction(() => { this.showLoading = false }) })
 
     //开启链接
     await this.connectionStore.toConnenction(currentChannel, currentUserId, AppSelectData.global.graphName, AppSelectData.global.language, AppSelectData.global.voiceType)
   }
 
-
-
+  @observable
+  showLoading = false
 }

@@ -539,4 +539,11 @@ export const zhCn = {
   fcr_layout_cannot_switch_while_board_openning: '开启白板时，不能切换宫格模式。',
   fcr_group_in_group_discussion: '分组讨论中',
   fcr_screen_share_switch_white_broad: '开启屏幕分享时，无法打开白板',
+
+  //****************** 数字人相关 ******************
+  fcr_ai_people_tip_room_id:"课堂id号",
+  fcr_ai_people_tip_quality_good:"信号好",
+  fcr_ai_people_tip_quality_bad:"信号差",
+  fcr_ai_people_tip_quality_none:"无信号",
+  fcr_ai_people_tip_time:"时间",
 };

@@ -10,7 +10,15 @@ import { useStore } from "@ui-scene/ai-people/utils/hooks/use-store";
 export const ChatListView = observer(() => {
     const { rtcStore: { chatItems } } = useStore();
     const [showItems, setShowItems] = useState<IChatItem[]>([])
-    useEffect(() => { if (chatItems) { setShowItems(chatItems) } }, [chatItems])
+    useEffect(() => {
+        if (chatItems) {
+            setShowItems(chatItems);
+            if (chatItems.length > 0 && chatRef && chatRef.current) {
+                //@ts-ignore
+                chatRef.current.scrollTop = chatRef.current.scrollHeight;
+            }
+        }
+    }, [chatItems])
     const chatRef = useRef(null)
     useAutoScroll(chatRef)
     return (

@@ -6,14 +6,18 @@ import AgoraRTC, {
     UID,
 } from "agora-rtc-sdk-ng"
 import { Getters } from "../getters";
-import { IChatItem, IRtcUser, ITextItem, IUserTracks, RtcEvents } from "../../types";
+import { IChatItem, IRtcUser, ITextItem, IUserTracks, NetStateInfo, RtcEvents } from "../../types";
 import { apiGenAgoraData } from "../../utils/request";
 import { AGEventEmitter } from "./events";
 import { ICameraVideoTrack } from "agora-rtc-sdk-ng"
-import { AppDispatch, AppSelectData } from "../store";
-import { addChatItem, paramsChatData } from "../store/reducers/global";
-import { action, computed, IReactionDisposer, observable, reaction, runInAction, toJS } from 'mobx';
-import { bound } from 'agora-rte-sdk';
+import { paramsChatData } from "../store/reducers/global";
+import { action, observable, runInAction } from 'mobx';
+import { AGNetworkQuality, bound } from 'agora-rte-sdk';
+import { transI18n, useI18n } from "agora-common-libs";
+import NetworkBadImg from '@ui-scene/containers/status-bar/network/assets/network_bad.png';
+import NetworkGoodImg from '@ui-scene/containers/status-bar/network/assets/network_good.png';
+import NetworkDownImg from '@ui-scene/containers/status-bar/network/assets/network_down.png';
+import { SvgIconEnum } from "@components/svg-img";
 
 /**
  * Rtc管理store
@@ -23,11 +27,11 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     private client: IAgoraRTCClient
     private localTracks: IUserTracks
     //当前加入的用户id
-    private currentJoinUserId?:number
+    private currentJoinUserId?: number
     //当前加入的用户名称
-    private currentJoinUserName?:string
+    private currentJoinUserName?: string
     //当前加入的渠道名称
-    private currentJoinUserChannel?:string
+    private currentJoinUserChannel?: string
 
     //本地视频流
     @observable
@@ -40,7 +44,9 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     agentRtcUser?: IRtcUser
     //聊天消息列表
     @observable
-    chatItems:IChatItem[] = []
+    chatItems: IChatItem[] = []
+    @observable
+    netQuality: NetStateInfo = new NetStateInfo("rgba(100, 187, 92, 1)", transI18n('fcr_ai_people_tip_quality_good'), NetworkGoodImg, SvgIconEnum.FCR_V2_SIGNAL_GOOD)
 
 
     constructor(store: EduClassroomStore, getters: Getters) {
@@ -52,7 +58,7 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
         this._listenRtcEvents()
     }
 
-    async join({ channel, userId,userName }: { channel: string; userId: number,userName:string }) {
+    async join({ channel, userId, userName }: { channel: string; userId: number, userName: string }) {
         if (!this._joined) {
             const res = await apiGenAgoraData({ channel, userId })
             const { code, data } = res
@@ -100,6 +106,7 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     // -------------- private methods --------------
     private _listenRtcEvents() {
         this.client.on("network-quality", (quality) => {
+            console.log("[test] network quality data", quality)
             this.emit("networkQuality", quality)
         })
         this.client.on("user-published", async (user, mediaType) => {
@@ -167,12 +174,14 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
         this.on("localTracksChanged", this.onLocalTracksChanged)
         this.on("textChanged", this.onTextChanged)
         this.on("remoteUserChanged", this.onRemoteUserChanged)
+        this.on("networkQuality", this.setNetQuality)
     }
     //移除监听
     private removeListener() {
         this.off("localTracksChanged", this.onLocalTracksChanged)
         this.off("textChanged", this.onTextChanged)
         this.off("remoteUserChanged", this.onRemoteUserChanged)
+        this.off("networkQuality", this.setNetQuality)
     }
 
     //当前用户本地流改变
@@ -193,18 +202,17 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
         console.log("[test] onTextChanged", text)
         if (text.dataType == "transcribe") {
             const isAgent = Number(text.uid) !== this.currentJoinUserId
-            const current:IChatItem = {
+            const current: IChatItem = {
                 userId: text.uid,
                 text: text.text,
                 type: isAgent ? "agent" : "user",
                 isFinal: text.isFinal,
                 time: text.time,
-                userName:this.currentJoinUserName
+                userName: this.currentJoinUserName
             }
             runInAction(() => {
-                this.chatItems = paramsChatData(this.chatItems,current);
-                // AppDispatch(addChatItem(current))
-              });
+                this.chatItems = paramsChatData(this.chatItems, current);
+            });
         }
     }
     //机器人流信息
@@ -227,5 +235,19 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     @action
     private setAgentRtcUser(user: IRtcUser) {
         this.agentRtcUser = user;
+    }
+    @bound
+    private setNetQuality(quality: any) {
+        runInAction(() => {
+            //获取状态最小值
+            const value = Math.min(quality.downlinkNetworkQuality, quality.uplinkNetworkQuality)
+            if (value >= 6) {
+                this.netQuality = new NetStateInfo('rgba(172, 172, 172, 1)', transI18n('fcr_ai_people_tip_quality_none'), NetworkDownImg, SvgIconEnum.FCR_V2_SIGNAL_NONE)
+            } else if (value >= 3) {
+                this.netQuality = new NetStateInfo("var(--fcr_mobile_ui_scene_red6, rgba(245, 101, 92, 1))", transI18n('fcr_ai_people_tip_quality_bad'), NetworkBadImg, SvgIconEnum.FCR_V2_SIGNAL_BAD_FULL)
+            } else {
+                this.netQuality = new NetStateInfo("rgba(100, 187, 92, 1)", transI18n('fcr_ai_people_tip_quality_good'), NetworkGoodImg, SvgIconEnum.FCR_V2_SIGNAL_GOOD)
+            }
+        })
     }
 }

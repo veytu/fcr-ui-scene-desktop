@@ -30,11 +30,3 @@ export const StatusBarInfo: FC = observer(() => {
     </StatusBarItemWrapper>
   );
 });
-export const StatusBarRoomName = () => {
-  const {
-    statusBarUIStore: { roomName },
-  } = useStore();
-  return (
-    <div className={classnames('fcr-status-bar-room-name')}>{roomName}</div>
-  );
-};

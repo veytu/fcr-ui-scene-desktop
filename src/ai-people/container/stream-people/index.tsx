@@ -40,7 +40,7 @@ interface StreamPlayerProps {
     videoTrack?: ICameraVideoTrack
 }
 // eslint-disable-next-line react/display-name
-const LocalStreamPlayer = forwardRef((props: StreamPlayerProps) => {
+const LocalStreamPlayer = observer((props: StreamPlayerProps) => {
     const { videoTrack } = props
     const vidDiv = useRef(null)
     useLayoutEffect(() => {

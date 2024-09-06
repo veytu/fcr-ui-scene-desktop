@@ -16,7 +16,6 @@ const useConnectionStatus = () => {
       img: NetworkGoodImg,
       icon: SvgIconEnum.FCR_V2_SIGNAL_GOOD,
     },
-
     [AGNetworkQuality.bad]: {
       color: colors['yellow'],
       text: `${transI18n('fcr_network_label_network_quality_bad')}`,

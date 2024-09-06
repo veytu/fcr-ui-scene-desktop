@@ -3,6 +3,7 @@
   flex-direction: row;
   align-items: center;
 }
+
 .fcr-status-bar-info-network,
 .fcr-status-bar-info-share {
   height: 32px;
@@ -12,10 +13,12 @@
   justify-content: center;
   cursor: pointer;
 }
+
 .fcr-status-bar-info-network:hover,
 .fcr-status-bar-info-share:hover {
   @apply fcr-bg-brand-6;
 }
+
 .fcr-status-bar-info-id {
   @apply fcr-text-1;
   font-size: 12px;
@@ -23,19 +26,17 @@
   padding-right: 8px;
   font-size: 300;
 }
-.fcr-status-bar-info-id > span:first-child {
+
+.fcr-status-bar-info-id>span:first-child {
   padding-right: 2px;
 }
 
 .fcr-status-bar-room-name {
-  @apply fcr-text-1;
-  padding: 0 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: all 0.2s;
-  font-size: 12px;
-  font-weight: 300;
-  flex-grow: 1;
-  text-align: center;
+  line-height: 36px;
+  width: 100%;
+  font-family: Helvetica Neue;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: left;
+  color: var(--fcr_web_ui_scene_mainicon1, rgba(255, 255, 255, 0.95));
 }

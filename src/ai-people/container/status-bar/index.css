@@ -1,9 +1,6 @@
-.fcr-status-bar {
+.fcr-ai-people-status-bar {
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  display: inline-table;
   padding: 9px 8px;
   transition: all 0.2s;
   pointer-events: all;
@@ -14,22 +11,34 @@
   background: rgba(24, 26, 29, 1);
   margin-bottom: 10px;
   min-width: 861px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.fcr-status-bar-left,
-.fcr-status-bar-right {
+.fcr-ai-people-status-bar .container {
+  width: 100%;
+}
+
+.fcr-ai-people-status-bar .container-left,
+.fcr-ai-people-status-bar .container-right {
   display: flex;
   flex-direction: row;
   gap: 10px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
+
+
 .fcr-status-bar-logo img {
   height: 36px;
   width: 36px;
 }
+
 .fcr-status-bar-item-wrapper {
   background: rgba(42, 46, 49, 0.85);
   border: 0.45px solid var(--fcr_ui_scene_line1, rgba(74, 76, 95, 0.5));
-  height: var(--fcr-status-bar-item-height);
+  height: 36px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -39,41 +48,66 @@
   opacity: 0.9px;
   border-radius: 6px;
 }
-.fcr-status-bar-layout:hover {
-  @apply fcr-bg-brand-6;
-}
 
-.fcr-status-bar-layout {
-  height: var(--fcr-status-bar-item-height);
+.fcr-ai-people-status-bar .container-left .container-info {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0 4px;
+  border: 0.45px solid var(--fcr_ui_scene_line1, rgba(74, 76, 95, 0.5));
+  background: rgba(42, 46, 49, 0.85);
+  border-radius: 6px;
+  height: 36px;
+  padding: 6px;
 }
-.fcr-status-bar-layout > span {
-  @apply fcr-text-1;
-  font-size: 12px;
-  font-weight: 300;
-}
-.fcr-status-bar-collapse-button {
-  @apply fcr-rounded-8 fcr-border-1;
-  width: 77px;
-  height: 24px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-  border-bottom-color: transparent;
-  border-width: 1px;
-  border-style: solid;
+
+.fcr-ai-people-status-bar-net-state {
+  height: 36px;
+  padding: 6px 0;
+  width: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
   cursor: pointer;
 }
-.fcr-status-bar-collapse-button svg {
-  transform: rotate(180deg);
+
+.fcr-ai-people-status-bar-id-info {
+  font-family: Helvetica Neue;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 36px;
+  text-align: left;
+  color: var(--fcr_web_ui_scene_mainicon1, rgba(255, 255, 255, 0.95));
+  padding-left: 10px;
+  padding-right: 8px;
+  margin-left: 6px;
+}
+
+.fcr-ai-people-status-bar-id-info>span:first-child {
+  padding-right: 2px;
+}
+
+.fcr-ai-people-status-bar-full-info {
+  box-shadow: 0px 1.8px 7.19px 4.5px rgba(0, 0, 0, 0.02);
+  background: rgba(42, 46, 49, 0.85);
+  padding: 6px;
+  gap: 10px;
+  border-radius: 6px;
+  opacity: 0px;
+}
+.fcr-ai-people-status-bar-full-info:hover {
+  background: rgba(70, 71, 71, 0.85);
+}
+
+.fcr-leave-room-action:hover{
+  background: var(--fcr_mobile_ui_scene_brand7, rgba(53, 78, 204, 1));
+}
+
+.fcr-ai-people-status-bar-name {
+  flex-grow: 1;
+  line-height: 36px;
+  text-align: center;
+  font-family: Helvetica Neue;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--fcr_web_ui_scene_mainicon1, rgba(255, 255, 255, 0.95));
 }

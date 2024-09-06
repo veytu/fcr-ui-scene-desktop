@@ -1,4 +1,5 @@
 
+import { SvgIconEnum } from "@components/svg-img"
 import {
     UID,
     IAgoraRTCRemoteUser,
@@ -103,8 +104,22 @@ export enum TeachingSceneType {
  * 对话语言
  */
 export enum AiDialogueType {
-    EN_US = 0,"en-us",//英语
+    EN_US = 0, "en-us",//英语
 }
 
 export type Language = "en-US" | "zh-CN" | "ja-JP" | "ko-KR"
 export type VoiceType = "male" | "female"
+
+//网络状态信息
+export class NetStateInfo {
+    color: string;
+    text: string;
+    img: any;
+    icon: SvgIconEnum;
+    constructor(color: string, text: string, img: any, icon: SvgIconEnum) {
+        this.color = color;
+        this.text = text;
+        this.img = img;
+        this.icon = icon;
+    }
+}
