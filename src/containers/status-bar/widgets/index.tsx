@@ -195,27 +195,35 @@ const RttMinimize = observer(() => {
   const transI18n = useI18n();
   const {
     eduToolApi: { isWidgetMinimized, setMinimizedState },
-    widgetUIStore: {
-      widgetInstanceList,
-      classroomStore: {
-        widgetStore: { widgetController },
-      },
+    widgetUIStore: { widgetInstanceList,widgetActiveList },
+    classroomStore: {
+      widgetStore: { widgetController },
     },
   } = useStore();
-  const { updateZIndex } = useZIndex('rttbox');
-  const [countdownTimerState, setCountdownTimerState] = useState<CountdownTimerStates>({
-    current: 0,
-    state: CountdownTimerState.STOPPED,
-    tooltip: '',
-    icon: SvgIconEnum.FCR_V2_RTT,
-  });
-  const countdownTimer = widgetInstanceList.find((w) => w.widgetId === 'rttbox');
- 
+  const widgetId = "rttbox";
+  const { updateZIndex } = useZIndex(widgetId);
+  const [show, setShow] = useState<boolean>(false)
+
+  const rttWidget = widgetInstanceList.find((w) => w.widgetId === widgetId);
+  useEffect(() => {
+    if (rttWidget && widgetController) {
+      widgetController.addBroadcastListener({
+        messageType: AgoraExtensionWidgetEvent.RttConversionOpenSuccess,
+        onMessage: () => { setShow(true) },
+      });
+      widgetController.addBroadcastListener({
+        messageType: AgoraExtensionWidgetEvent.RttConversionCloseSuccess,
+        onMessage: () => { setShow(false) },
+      });
+    }
+  }, [rttWidget, widgetController]);
+
   const handleClick = () => {
-    if (isWidgetMinimized('rttbox')) {
+    debugger
+    if (isWidgetMinimized(widgetId)) {
       setMinimizedState({
         minimized: false,
-        widgetId: 'rttbox',
+        widgetId: widgetId,
         minimizedProperties: {
           minimizedCollapsed: false,
         },
@@ -224,18 +232,13 @@ const RttMinimize = observer(() => {
       updateZIndex();
     }
   };
-
-  const { current, state, icon } = countdownTimerState;
-  return countdownTimer ? (
-      <div
-        className={classnames('fcr-minimized-widget-icon', 'fcr-minimized-widget-countdown', {
-          'fcr-minimized-widget-countdown-danger':
-            current <= 10 && state !== CountdownTimerState.STOPPED,
-        })}
-        onClick={handleClick}>
-        <SvgImg type={icon} size={20} />
-        {transI18n('fcr_device_option_rtt')}
-        {/* 转写中... */}
-      </div>
+  return show ? (
+    <div
+      className={classnames('fcr-minimized-widget-icon', 'fcr-minimized-widget-countdown')}
+      onClick={handleClick}>
+      <SvgImg type={SvgIconEnum.FCR_V2_RTT} size={20} />
+      {transI18n('fcr_device_option_rtt')}
+      {/* 转写中... */}
+    </div>
   ) : null;
 });

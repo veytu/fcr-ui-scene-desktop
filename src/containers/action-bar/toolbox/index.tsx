@@ -57,6 +57,7 @@ const ToolBoxPopoverContent = observer(({ onClick }: { onClick: () => void }) =>
   const {
     getters,
     eduToolApi: { registeredCabinetToolItems },
+    widgetUIStore: { widgetActiveList }
   } = useStore();
   const transI18n = useI18n();
   const isWidgetActive = (widgetId: string) => {
@@ -64,10 +65,10 @@ const ToolBoxPopoverContent = observer(({ onClick }: { onClick: () => void }) =>
       return getters.isBreakoutActive;
     }
     if (widgetId === 'rtt') {
-      return "true" === localStorage.getItem(`${getters.roomUuid}_subtitle`)
+      return widgetActiveList.includes(widgetId)
     }
     if (widgetId === 'rttbox') {
-      return "true" === localStorage.getItem(`${getters.roomUuid}_transcribe`)
+      return widgetActiveList.includes(widgetId)
     }
     return getters.activeWidgetIds.includes(widgetId);
   };
@@ -85,7 +86,6 @@ const ToolBoxPopoverContent = observer(({ onClick }: { onClick: () => void }) =>
             onWidgetIdChange={()=>{
             }}
             active={isWidgetActive(id)}
-            dropupActive={id === "rtt" || id === "rttbox"}
           />
         ))}
       </div>
@@ -97,12 +97,11 @@ interface ToolBoxItemProps {
   icon: SvgIconEnum;
   label: string;
   active: boolean;
-  dropupActive: boolean;
   onClick: () => void;
   onWidgetIdChange: (id: string) => void;
 }
 const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
-  const { icon, label, active, dropupActive, id, onClick, onWidgetIdChange } = props;
+  const { icon, label, active, id, onClick, onWidgetIdChange } = props;
   const { widgetUIStore, eduToolApi, breakoutUIStore } = useStore();
   const { updateZIndex } = useZIndex(id);
   useEffect(() => {
@@ -113,7 +112,6 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
     }
     if (id === 'rttbox') {
       widgetUIStore.createWidget(id);
-      eduToolApi.setWidgetVisible(id, false);
     }
   }, []);
   const handleClick = () => {
@@ -138,6 +136,9 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
         eduToolApi.changeSubtitleOpenState()
       } else {
         if (id === "rttbox") {
+          if(!eduToolApi.isWidgetVisible(id)){
+            eduToolApi.setWidgetVisible(id, true);
+          }
           eduToolApi.sendWidgetRttboxShow(id, true); 
           eduToolApi.changeConversionOpenState()
         }
@@ -154,8 +155,7 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
     <div className="fcr-toolbox-popover-item" onClick={handleClick}>
       <SvgImg type={icon} size={30}></SvgImg>
       <span className="fcr-toolbox-popover-item-label">{label}</span>
-     {dropupActive&&<div className='fcr-toolbox-popover-item-dropbox' onClick={()=>handleSettingClick}>
-      </div>}
+      {(id === "rtt" || id === "rttbox") && <div className='fcr-toolbox-popover-item-dropbox' onClick={() => handleSettingClick}></div>}
       {active && <div className="fcr-toolbox-popover-item-active"></div>}
     </div>
   );
