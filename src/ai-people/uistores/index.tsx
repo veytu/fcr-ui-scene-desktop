@@ -20,18 +20,28 @@ import AgoraRTC from "agora-rtc-sdk-ng"
 import { transI18n } from 'agora-common-libs';
 import { SvgIconEnum, SvgImg } from '@components/svg-img';
 import loadingGif from '../container/loading/assets/circle-loading.gif';
+import { StatusBarUIStore } from './status-bar';
+import { NotiticationUIStore } from './notification';
+import { LayoutUIStore } from './layout';
 
 export class SceneUIAiStore {
   readonly getters: Getters;
   readonly classroomStore: EduClassroomStore;
   readonly connectionStore: EduConnectionStore;
+  readonly statusBarUIStore: StatusBarUIStore;
   readonly rtcStore: EduRtcStore;
+  readonly notiticationUIStore: NotiticationUIStore;
+  readonly layoutUIStore: LayoutUIStore;
 
   constructor() {
     this.classroomStore = EduStoreFactory.createWithType(EduRoomTypeEnum.CloudClass);
+    this.classroomStore.initialize();
     this.getters = new Getters(this);
     this.connectionStore = new EduConnectionStore(this.classroomStore, this.getters)
     this.rtcStore = new EduRtcStore(this.classroomStore, this.getters)
+    this.statusBarUIStore = new StatusBarUIStore(this.classroomStore, this.getters);
+    this.notiticationUIStore = new NotiticationUIStore(this.classroomStore, this.getters);
+    this.layoutUIStore = new LayoutUIStore(this.classroomStore, this.getters);
   }
 
   @bound
@@ -57,16 +67,17 @@ export class SceneUIAiStore {
     //设置形象
     AppDispatch(setVoiceType('male'))
 
-    // //加人基础房间
-    // const { joinClassroom } = this.classroomStore.connectionStore;
-    // try {
-    //   await joinClassroom({ mode: 'entry' });
-    // } catch (e) {
-    //   if (AGError.isOf(e as AGError, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
-    //     return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
-    //   }
-    //   return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
-    // }
+    //加人基础房间
+    this.classroomStore.connectionStore.initialize
+    const { joinClassroom } = this.classroomStore.connectionStore;
+    try {
+      await joinClassroom({ mode: 'entry' });
+    } catch (e) {
+      if (AGError.isOf(e as AGError, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
+        return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
+      }
+      return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
+    }
 
 
     //加人对话房间
