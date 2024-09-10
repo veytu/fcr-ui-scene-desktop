@@ -219,8 +219,8 @@ const RttMinimize = observer(() => {
   }, [rttWidget, widgetController]);
 
   const handleClick = () => {
-    debugger
     if (isWidgetMinimized(widgetId)) {
+      updateZIndex();
       setMinimizedState({
         minimized: false,
         widgetId: widgetId,
@@ -229,7 +229,13 @@ const RttMinimize = observer(() => {
         },
       });
     } else {
-      updateZIndex();
+      setMinimizedState({
+        minimized: true,
+        widgetId: widgetId,
+        minimizedProperties: {
+          minimizedCollapsed: false,
+        },
+      });
     }
   };
   return show ? (

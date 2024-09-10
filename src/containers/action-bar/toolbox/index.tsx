@@ -7,6 +7,7 @@ import './index.css';
 import { useI18n } from 'agora-common-libs';
 import { ToolTip } from '@components/tooltip';
 import { useZIndex } from '@ui-scene/utils/hooks/use-z-index';
+import { RttTypeEnum } from '@ui-scene/uistores/type';
 export const ToolBox = observer(() => {
   const {
     layoutUIStore: { setHasPopoverShowed }  } = useStore();
@@ -107,43 +108,70 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
   useEffect(() => {
     if (id === 'rtt') {
       widgetUIStore.createWidget(id);
-      eduToolApi.setWidgetVisible(id, false);
       eduToolApi.sendWidgetVisibleIsShowTool(id, true);
     }
     if (id === 'rttbox') {
       widgetUIStore.createWidget(id);
     }
   }, []);
+
+  //修改最大最小化
+  const setMinimizedState = (minimized: boolean) => {
+    eduToolApi.setMinimizedState({
+      minimized: minimized,
+      widgetId: id,
+      minimizedProperties: {
+        minimizedCollapsed:
+          widgetUIStore.widgetInstanceList.find((w) => w.widgetId === id)?.minimizedProperties
+            ?.minimizedCollapsed || false,
+      },
+    });
+  }
+
   const handleClick = () => {
-    if (eduToolApi.isWidgetMinimized(id)) {
-      eduToolApi.setMinimizedState({
-        minimized: false,
-        widgetId: id,
-        minimizedProperties: {
-          minimizedCollapsed:
-            widgetUIStore.widgetInstanceList.find((w) => w.widgetId === id)?.minimizedProperties
-              ?.minimizedCollapsed || false,
-        },
-      });
-    } else {
-      updateZIndex();
-      onWidgetIdChange(id)
-      if (id === 'breakout') {
-        breakoutUIStore.setDialogVisible(true);
-      } else if (id === 'rtt') {
-        eduToolApi.setWidgetVisible('rtt', true);
-        eduToolApi.sendWidgetVisibleIsShowRtt(id, true);
-        eduToolApi.changeSubtitleOpenState()
-      } else {
-        if (id === "rttbox") {
-          if(!eduToolApi.isWidgetVisible(id)){
+    //当前widget是否是最小化的
+    const widgetIsMinimized = eduToolApi.isWidgetMinimized(id);
+    //档位widget是否是正在使用的状态
+    const widgetActive = (RttTypeEnum.SUBTITLE === id || RttTypeEnum.CONVERSION === id) ? widgetUIStore.widgetActiveList.includes(id) : active;
+    switch (id) {
+      case RttTypeEnum.SUBTITLE:
+        if(widgetIsMinimized){setMinimizedState(false)}else{
+          updateZIndex();
+          onWidgetIdChange(id)
+          //如果没有激活使用的话也要弹窗显示
+          if(!widgetActive){
             eduToolApi.setWidgetVisible(id, true);
           }
+          eduToolApi.sendWidgetVisibleIsShowRtt(id, true);
+          eduToolApi.changeSubtitleOpenState()
+        }
+        break
+      case RttTypeEnum.CONVERSION:
+        updateZIndex();
+        onWidgetIdChange(id)
+        if(!eduToolApi.isWidgetVisible(id)){
+          eduToolApi.setWidgetVisible(id, true);
+        }
+        if(widgetActive){
+          setMinimizedState(!widgetIsMinimized)
+        }else{
           eduToolApi.sendWidgetRttboxShow(id, true); 
           eduToolApi.changeConversionOpenState()
         }
-        widgetUIStore.createWidget(id);
-      }
+        break;
+      case 'breakout':
+        if (widgetIsMinimized) { setMinimizedState(false) } else {
+          updateZIndex();
+          onWidgetIdChange(id)
+          breakoutUIStore.setDialogVisible(true);
+        }
+        break;
+      default:
+        if (widgetIsMinimized) { setMinimizedState(false) } else {
+          updateZIndex();
+          onWidgetIdChange(id)
+        }
+        break;
     }
     onClick();
   };
