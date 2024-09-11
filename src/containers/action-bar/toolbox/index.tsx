@@ -168,6 +168,7 @@ const ToolBoxItem: FC<ToolBoxItemProps> = observer((props) => {
         break;
       default:
         if (widgetIsMinimized) { setMinimizedState(false) } else {
+          widgetUIStore.createWidget(id);
           updateZIndex();
           onWidgetIdChange(id)
         }
