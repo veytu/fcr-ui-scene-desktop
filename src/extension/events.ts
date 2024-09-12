@@ -193,4 +193,6 @@ export enum AgoraExtensionWidgetEvent {
   RttChangeToSubtitleOpenState = "RttChangeToSubtitleOpenState",
   //修改转写开启状态
   RttChangeToConversionOpenState = "RttChangeToConversionOpenState",
+  //设置里面的显示转写视图
+  RttSettingShowConversion = "RttSettingShowConversion",
 }

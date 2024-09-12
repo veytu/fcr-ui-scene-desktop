@@ -12,7 +12,7 @@ import {
 import { ToastApi } from '@components/toast';
 import { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from '@ui-scene/extension/events';
 import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
-import { CommonDialogType } from './type';
+import { CommonDialogType, RttTypeEnum } from './type';
 import { v4 as uuidv4 } from 'uuid';
 @Log.attach({ proxyMethods: false })
 export class WidgetUIStore extends EduUIStoreBase {
@@ -313,6 +313,10 @@ export class WidgetUIStore extends EduUIStoreBase {
               messageType: AgoraExtensionWidgetEvent.WidgetActiveStateChange,
               onMessage: this._handleWidgetActiveStateChange,
             })
+            controller.addBroadcastListener({
+              messageType: AgoraExtensionWidgetEvent.RttSettingShowConversion,
+              onMessage: this._handleVisibleRttConversionChange,
+            })
           }
         },
       ),
@@ -388,10 +392,10 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   @bound
   private _handleVisibleRttConversionChange() {
-    this.createWidget("rttbox");
+    this.createWidget(RttTypeEnum.CONVERSION);
     if (this.classroomStore.widgetStore.widgetController) {
       this.classroomStore.widgetStore.widgetController.broadcast(AgoraExtensionWidgetEvent.SetVisible, {
-        widgetId: "rttbox",
+        widgetId: RttTypeEnum.CONVERSION,
         visible: true,
       });
     }
@@ -417,6 +421,10 @@ export class WidgetUIStore extends EduUIStoreBase {
     this.classroomStore.widgetStore.widgetController?.removeBroadcastListener({
       messageType: AgoraExtensionWidgetEvent.WidgetActiveStateChange,
       onMessage: this._handleWidgetActiveStateChange,
+    })
+    this.classroomStore.widgetStore.widgetController?.removeBroadcastListener({
+      messageType: AgoraExtensionWidgetEvent.RttSettingShowConversion,
+      onMessage: this._handleVisibleRttConversionChange,
     })
     this._disposers.forEach((d) => d());
     this._disposers = [];

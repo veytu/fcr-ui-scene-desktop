@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { AgoraExtensionWidgetEvent } from '@ui-scene/extension/events';
 import { useZIndex } from '@ui-scene/utils/hooks/use-z-index';
 import { useI18n } from 'agora-common-libs';
+import { RttTypeEnum } from '@ui-scene/uistores/type';
 
 export const StatusBarWidgetSlot = observer(() => {
   const { eduToolApi } = useStore();
@@ -200,13 +201,13 @@ const RttMinimize = observer(() => {
       widgetStore: { widgetController },
     },
   } = useStore();
-  const widgetId = "rttbox";
+  const widgetId = RttTypeEnum.CONVERSION;
   const { updateZIndex } = useZIndex(widgetId);
   const [show, setShow] = useState<boolean>(false)
 
   const rttWidget = widgetInstanceList.find((w) => w.widgetId === widgetId);
   useEffect(() => {
-    if (rttWidget && widgetController) {
+    if (widgetController) {
       widgetController.addBroadcastListener({
         messageType: AgoraExtensionWidgetEvent.RttConversionOpenSuccess,
         onMessage: () => { setShow(true) },
@@ -216,26 +217,30 @@ const RttMinimize = observer(() => {
         onMessage: () => { setShow(false) },
       });
     }
-  }, [rttWidget, widgetController]);
+  }, [ widgetController]);
 
   const handleClick = () => {
-    if (isWidgetMinimized(widgetId)) {
-      updateZIndex();
-      setMinimizedState({
-        minimized: false,
-        widgetId: widgetId,
-        minimizedProperties: {
-          minimizedCollapsed: false,
-        },
-      });
-    } else {
-      setMinimizedState({
-        minimized: true,
-        widgetId: widgetId,
-        minimizedProperties: {
-          minimizedCollapsed: false,
-        },
-      });
+    if(!rttWidget){
+      widgetController?.broadcast(AgoraExtensionWidgetEvent.RttSettingShowConversion)
+    }else{
+      if (isWidgetMinimized(widgetId)) {
+        updateZIndex();
+        setMinimizedState({
+          minimized: false,
+          widgetId: widgetId,
+          minimizedProperties: {
+            minimizedCollapsed: false,
+          },
+        });
+      } else {
+        setMinimizedState({
+          minimized: true,
+          widgetId: widgetId,
+          minimizedProperties: {
+            minimizedCollapsed: false,
+          },
+        });
+      }
     }
   };
   return show ? (
