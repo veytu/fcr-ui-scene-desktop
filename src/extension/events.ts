@@ -87,6 +87,8 @@ export enum AgoraExtensionRoomEvent {
   SetFullscreen = 'set-fullscreen',
   // 学生邀请
   StudentGroupInvites = 'student-group-invites',
+  //打开share || whiteboard 等widget
+  OpenWidget = 'open-widget',
 }
 
 /**

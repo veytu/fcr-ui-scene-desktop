@@ -24,6 +24,7 @@ import {
 } from './type';
 import { chatroomWidgetId } from '@ui-scene/extension/type';
 import { getLanguage, transI18n } from 'agora-common-libs';
+import { AgoraExtensionRoomEvent } from '@ui-scene/extension/events';
 export class ActionBarUIStore extends EduUIStoreBase {
   // for student hands up
   private _handsUpTask: Scheduler.Task | null = null;
@@ -149,7 +150,7 @@ export class ActionBarUIStore extends EduUIStoreBase {
   @computed get showHelp() {
     return this.getters.isStudent;
   }
-  
+
   @observable showLeaveOption = false;
   @observable leaveFlag = 1;
 
@@ -211,6 +212,7 @@ export class ActionBarUIStore extends EduUIStoreBase {
     } else {
       //web
       this.classroomStore.mediaStore.startScreenShareCapture({ withAudio: true });
+      this.classroomStore.widgetStore.widgetController?.broadcast(AgoraExtensionRoomEvent.OpenWidget, true);
     }
   }
   preCheckScreenShareStatus() {
@@ -219,6 +221,7 @@ export class ActionBarUIStore extends EduUIStoreBase {
     }
     if (this.isLocalScreenSharing) {
       this.stopLocalScreenShare();
+      this.classroomStore.widgetStore.widgetController?.broadcast(AgoraExtensionRoomEvent.OpenWidget, true);
     }
   }
   @bound
@@ -288,7 +291,7 @@ export class ActionBarUIStore extends EduUIStoreBase {
     }
   }
   @bound
-  private _onReceivePeerMessage(message: AgoraRteCustomMessage) {}
+  private _onReceivePeerMessage(message: AgoraRteCustomMessage) { }
   onDestroy(): void {
     this._disposers.forEach((d) => d());
     this._disposers = [];
