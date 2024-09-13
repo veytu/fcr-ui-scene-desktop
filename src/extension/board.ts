@@ -238,8 +238,6 @@ export class Board {
               },
             });
 
-            this._sendBoardCommandMessage(AgoraExtensionRoomEvent.OpenWidget, true);
-
           }
           if (!newGranted.has(userUuid) && oldGranted?.has(userUuid)) {
             ToastApi.open({
@@ -253,7 +251,6 @@ export class Board {
               },
             });
 
-            this._sendBoardCommandMessage(AgoraExtensionRoomEvent.OpenWidget, false);
           }
         }),
       );
