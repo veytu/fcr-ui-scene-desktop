@@ -162,4 +162,6 @@ export enum AgoraExtensionWidgetEvent {
   UpdatePosition = 'update-position',
   //更新倒计时状态
   CountdownTimerStateChanged = 'countdown-timer-state-changed',
+  //打开share || whiteboard 等widget
+  OpenWidget = 'open-widget',
 }

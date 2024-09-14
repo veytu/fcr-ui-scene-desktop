@@ -24,7 +24,6 @@ import {
 } from './type';
 import { chatroomWidgetId } from '@ui-scene/extension/type';
 import { getLanguage, transI18n } from 'agora-common-libs';
-import { AgoraExtensionRoomEvent } from '@ui-scene/extension/events';
 export class ActionBarUIStore extends EduUIStoreBase {
   // for student hands up
   private _handsUpTask: Scheduler.Task | null = null;
@@ -212,7 +211,6 @@ export class ActionBarUIStore extends EduUIStoreBase {
     } else {
       //web
       this.classroomStore.mediaStore.startScreenShareCapture({ withAudio: true });
-      this.classroomStore.widgetStore.widgetController?.broadcast(AgoraExtensionRoomEvent.OpenWidget, true);
     }
   }
   preCheckScreenShareStatus() {
@@ -221,7 +219,6 @@ export class ActionBarUIStore extends EduUIStoreBase {
     }
     if (this.isLocalScreenSharing) {
       this.stopLocalScreenShare();
-      this.classroomStore.widgetStore.widgetController?.broadcast(AgoraExtensionRoomEvent.OpenWidget, true);
     }
   }
   @bound
