@@ -512,7 +512,7 @@ const AudioVolumeEffect = observer(
             reportDuration.current = [];
             startTime.current = 0;
             reportTimer?.current && window.clearTimeout(reportTimer?.current);
-          }, 1000 * 15);
+          }, 1000 * 60);
         }
       }
 
