@@ -1184,11 +1184,13 @@ export class BreakoutUIStore extends EduUIStoreBase {
         false,
       );
       if (this.teacherGroupUuid && this.teacherGroupUuid !== groupUuid) {
-        this.classroomStore.groupStore.moveUsersToGroup(this.teacherGroupUuid, groupUuid, [
+        await this.classroomStore.groupStore.moveUsersToGroup(this.teacherGroupUuid, groupUuid, [
           teacherUuid,
         ]);
+        this.client && this.client.channelName && await this.client.leave();
+        this.isAttendDiscussionConfig?.groupId && this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
       } else {
-        this.classroomStore.groupStore.updateGroupUsers(
+        await this.classroomStore.groupStore.updateGroupUsers(
           [
             {
               groupUuid: groupUuid,
@@ -1197,11 +1199,14 @@ export class BreakoutUIStore extends EduUIStoreBase {
           ],
           false,
         );
+        this.client && this.client.channelName && await this.client.leave();
+        this.isAttendDiscussionConfig?.groupId && this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
       }
     }
     //@ts-ignore
     const idx = this._inviteGroups.findIndex((v) => v.groupUuid === groupUuid);
-    this._inviteGroups.splice(idx, 1);
+    this.setInviteGroup(idx);
+    // this._inviteGroups.splice(idx, 1);
     this.changeReduceInviteGroup(this._inviteGroups);
     await sleep(800);
     console.log('acceptInviteacceptInviteacceptInviteacceptInviteacceptInvite');
@@ -1510,8 +1515,10 @@ export class BreakoutUIStore extends EduUIStoreBase {
           id: dialogId,
           title,
           content,
-          onOk: () => {
-            this.classroomStore.groupStore.acceptGroupInvite(groupUuid);
+          onOk: async () => {
+            await this.classroomStore.groupStore.acceptGroupInvite(groupUuid);
+            this.isAttendDiscussionConfig?.groupId && this.leaveRtcClient();
+            this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
           },
           onClose: () => {
             this.classroomStore.groupStore.rejectGroupInvite(groupUuid);
@@ -1598,6 +1605,11 @@ export class BreakoutUIStore extends EduUIStoreBase {
   changeInviteGroup(arr: any, index: number, isShow: boolean) {
     arr[index].isShow = isShow;
     this._inviteGroups = [...arr];
+  }
+
+  @action.bound
+  setInviteGroup(idx: any) {
+    idx && this._inviteGroups.length && this._inviteGroups.splice(idx, 1);
   }
   @action.bound
   changeReduceInviteGroup(arr: any, isOut = false, index = -1) {
