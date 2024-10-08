@@ -1,5 +1,6 @@
 import { Language } from "../types"
 import { REQUEST_URL } from "./constant"
+import { getGraphProperties } from "./graph"
 import { genUUID } from "./utils"
 
 interface StartRequestConfig {
@@ -44,7 +45,8 @@ export const apiStartService = async (config: StartRequestConfig): Promise<any> 
     user_uid: userId,
     graph_name: graphName,
     language,
-    voice_type: voiceType
+    properties: getGraphProperties(channel,graphName, language, voiceType,userId),
+
   }
   let resp: any = await fetch(url, {
     method: "POST",
@@ -109,7 +111,6 @@ export const apiUpdateDocument = async (options: { channel: string, collection: 
   resp = (await resp.json()) || {}
   return resp
 }
-
 
 // ping/pong 
 export const apiPing = async (channel: string) => {

@@ -63,7 +63,7 @@ export class SceneUIAiStore {
       AppDispatch(setLanguage("en-US"))
     }
     //设置模式
-    AppDispatch(setGraphName('camera.va.openai.azure'))
+    AppDispatch(setGraphName('va.openai.azure'))
     //设置形象
     AppDispatch(setVoiceType('male'))
 
