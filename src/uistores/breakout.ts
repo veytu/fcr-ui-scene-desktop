@@ -16,7 +16,13 @@ import difference from 'lodash/difference';
 import range from 'lodash/range';
 import findLast from 'lodash/findLast';
 import { v4 as uuidv4 } from 'uuid';
-import { AGRtcConnectionType, AGRtcState, AgoraRteCustomMessage, AgoraRteScene, Scheduler } from 'agora-rte-sdk';
+import {
+  AGRtcConnectionType,
+  AGRtcState,
+  AgoraRteCustomMessage,
+  AgoraRteScene,
+  Scheduler,
+} from 'agora-rte-sdk';
 import { isTeacher } from '@ui-scene/utils/check';
 import {
   CustomMessageAcceptInviteType,
@@ -50,8 +56,8 @@ interface StudentInfoProps {
 }
 
 interface MemberProps {
-  userUuid: string | undefined,
-  [porperty: string]: any
+  userUuid: string | undefined;
+  [porperty: string]: any;
 }
 
 @Log.attach()
@@ -135,28 +141,28 @@ export class BreakoutUIStore extends EduUIStoreBase {
   @observable
   private _inviteStudents: { userUuid: string }[] = [];
   /**
-    * 已选中的未分组的成员
-    */
+   * 已选中的未分组的成员
+   */
   @observable selectedUnGroupMember: MemberProps[] = [];
   /**
-    * 已选中的已分组的成员
-    */
+   * 已选中的已分组的成员
+   */
   @observable selectedGroupMember: MemberProps[] = [];
   /**
-    * 已选中的分组
-    */
+   * 已选中的分组
+   */
   @observable selectedGroup: any = {};
 
   /**
-    * 旁听RTC频道
-    */
+   * 旁听RTC频道
+   */
   @observable client: any;
   /**
    * 是否正在旁听RTC频道
    */
-  @observable isAttendDiscussionConfig: { groupName: string, groupId: string } = {
+  @observable isAttendDiscussionConfig: { groupName: string; groupId: string } = {
     groupName: '',
-    groupId: ''
+    groupId: '',
   };
   /**
    * 正在加入分组
@@ -204,15 +210,15 @@ export class BreakoutUIStore extends EduUIStoreBase {
   }
 
   /**
-  * 更改旁听状态
-  */
+   * 更改旁听状态
+   */
   @action.bound
-  setIsAttendDiscussionConfig(value: { groupName: string, groupId: string }) {
+  setIsAttendDiscussionConfig(value: { groupName: string; groupId: string }) {
     this.isAttendDiscussionConfig = value;
   }
   /**
-    * 储存已选中的未分组成员
-    */
+   * 储存已选中的未分组成员
+   */
   @action.bound
   setSelectedUnGroupMember(member: MemberProps) {
     this.selectedUnGroupMember.push(member);
@@ -223,31 +229,34 @@ export class BreakoutUIStore extends EduUIStoreBase {
    */
   @action.bound
   removeSelectedUnGroupMember(member: MemberProps) {
-    const newData = this.selectedUnGroupMember.filter((item: { userUuid: string | undefined; }) => item.userUuid !== member.userUuid)
+    const newData = this.selectedUnGroupMember.filter(
+      (item: { userUuid: string | undefined }) => item.userUuid !== member.userUuid,
+    );
     this.selectedUnGroupMember = newData;
   }
 
-
   /**
-     * 储存已选中的已分组成员
-     */
+   * 储存已选中的已分组成员
+   */
   @action.bound
   setSelectedGroupMember(member: MemberProps) {
     this.selectedGroupMember.push(member);
   }
 
   /**
-    * 移除已选中的已分组成员
-    */
+   * 移除已选中的已分组成员
+   */
   @action.bound
   removeSelectedGroupMember(member: MemberProps) {
-    const newData = this.selectedGroupMember.filter((item: MemberProps) => item.userUuid !== member.userUuid)
+    const newData = this.selectedGroupMember.filter(
+      (item: MemberProps) => item.userUuid !== member.userUuid,
+    );
     this.selectedGroupMember = newData;
   }
 
   /**
-       * 储存已选中的分组
-       */
+   * 储存已选中的分组
+   */
   @action.bound
   setSelectedGroup(group: any) {
     this.selectedGroup = group;
@@ -332,11 +341,11 @@ export class BreakoutUIStore extends EduUIStoreBase {
   }
 
   /**
- * 是否开启分组讨论
- */
+   * 是否开启分组讨论
+   */
   @computed
   get isStartDiscussion() {
-    return this.classroomStore.groupStore.state === GroupState.OPEN
+    return this.classroomStore.groupStore.state === GroupState.OPEN;
   }
 
   /**
@@ -496,14 +505,11 @@ export class BreakoutUIStore extends EduUIStoreBase {
   }
 
   /**
-* 老师是否在某个房间
-*/
+   * 老师是否在某个房间
+   */
   @action.bound
   teacherInCurrentRoom(groupId: string) {
-    return (
-      !!this.teacherGroupUuid &&
-      this.teacherGroupUuid === groupId
-    );
+    return !!this.teacherGroupUuid && this.teacherGroupUuid === groupId;
   }
 
   @action.bound
@@ -631,10 +637,10 @@ export class BreakoutUIStore extends EduUIStoreBase {
       roomUuid: groupUuid,
       userUuid,
       role,
-      userName
+      userName,
     });
 
-    return data?.data
+    return data?.data;
   }
 
   /**
@@ -776,11 +782,16 @@ export class BreakoutUIStore extends EduUIStoreBase {
   removeGroup(groupUuid: string) {
     if (this.groupState === GroupState.OPEN) {
       this.classroomStore.groupStore.removeGroups([groupUuid]);
-      if (this.isAttendDiscussionConfig?.groupId && this.isAttendDiscussionConfig?.groupId === groupUuid) {
+      if (
+        this.isAttendDiscussionConfig?.groupId &&
+        this.isAttendDiscussionConfig?.groupId === groupUuid
+      ) {
         //删除当前旁听组
         this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
         this.leaveRtcClient();
-        this.getters.classroomUIStore.subscriptionUIStore.setActive(this.classroomStore.connectionStore.sceneId);
+        this.getters.classroomUIStore.subscriptionUIStore.setActive(
+          this.classroomStore.connectionStore.sceneId,
+        );
       }
     } else {
       this._localGroups.delete(groupUuid);
@@ -824,16 +835,25 @@ export class BreakoutUIStore extends EduUIStoreBase {
             [
               {
                 groupUuid: toGroupUuid,
-                addUsers: typeof userUuid === 'string' ? [userUuid] : Array.isArray(userUuid) ? [...userUuid] : [],
+                addUsers:
+                  typeof userUuid === 'string'
+                    ? [userUuid]
+                    : Array.isArray(userUuid)
+                    ? [...userUuid]
+                    : [],
               },
             ],
             true,
           );
-          this.selectedUnGroupMember?.map(item => this.removeSelectedUnGroupMember(item));
+          this.selectedUnGroupMember?.map((item) => this.removeSelectedUnGroupMember(item));
         } else {
           //已分组成员移动
-          await this.classroomStore.groupStore.moveUsersToGroup(fromGroupUuid, toGroupUuid, Array.isArray(userUuid) ? [...userUuid] : [userUuid]);
-          this.selectedGroupMember?.map(item => this.removeSelectedGroupMember(item));
+          await this.classroomStore.groupStore.moveUsersToGroup(
+            fromGroupUuid,
+            toGroupUuid,
+            Array.isArray(userUuid) ? [...userUuid] : [userUuid],
+          );
+          this.selectedGroupMember?.map((item) => this.removeSelectedGroupMember(item));
         }
       } else {
         const fromGroup = this._localGroups.get(fromGroupUuid);
@@ -845,18 +865,20 @@ export class BreakoutUIStore extends EduUIStoreBase {
           // toGroup.users = toGroup.users.concat([{ userUuid }]);
           this._localGroups.set(fromGroupUuid, fromGroup);
           // this._localGroups.set(toGroupUuid, toGroup);
-          this.selectedGroupMember?.map(item => this.removeSelectedGroupMember(item));
+          this.selectedGroupMember?.map((item) => this.removeSelectedGroupMember(item));
         }
 
         if (toGroup) {
           if (typeof userUuid === 'string') {
             toGroup.users = toGroup.users.concat([{ userUuid }]);
           } else if (Array.isArray(userUuid)) {
-            const arr = userUuid?.map(item => ({ userUuid: item }))
+            const arr = userUuid?.map((item) => ({ userUuid: item }));
             toGroup.users = toGroup.users.concat(arr);
           }
           this._localGroups.set(toGroupUuid, toGroup);
-          fromGroup ? null : this.selectedUnGroupMember?.map(item => this.removeSelectedUnGroupMember(item));
+          fromGroup
+            ? null
+            : this.selectedUnGroupMember?.map((item) => this.removeSelectedUnGroupMember(item));
         }
       }
     } catch (error) {
@@ -912,22 +934,22 @@ export class BreakoutUIStore extends EduUIStoreBase {
   }
 
   /**
-  * 创建旁听rtc频道
-  */
+   * 创建旁听rtc频道
+   */
   @bound
   async createRtcClient() {
     if (!this.client) {
       const client = AgoraRTC.createClient({
-        codec: "vp8",
-        mode: "rtc",
+        codec: 'vp8',
+        mode: 'rtc',
       });
       this.setRTCClient(client);
     }
   }
 
   /**
- * 离开旁听rtc频道
- */
+   * 离开旁听rtc频道
+   */
   @bound
   async leaveRtcClient() {
     if (this.client) {
@@ -935,13 +957,14 @@ export class BreakoutUIStore extends EduUIStoreBase {
       this.setRTCClient(null);
       this.setIsAttendDiscussionConfig({ groupName: '', groupId: '' });
       //重新订阅之前房间的音频
-      this.getters.classroomUIStore.subscriptionUIStore.setActive(this.classroomStore.connectionStore.sceneId);
+      this.getters.classroomUIStore.subscriptionUIStore.setActive(
+        this.classroomStore.connectionStore.sceneId,
+      );
     }
   }
 
-
-  /** 
-    * 创建并加入RTC频道（旁听）
+  /**
+   * 创建并加入RTC频道（旁听）
    * @param groupId 分组id
    */
   @bound
@@ -958,14 +981,18 @@ export class BreakoutUIStore extends EduUIStoreBase {
       this._requestLock.add(lockName);
       await this.createRtcClient();
       const { appId } = EduClassroomConfig.shared;
-      const { localUser: { streamUuid, rtcToken } } = await this.getUserToken(groupId as string);
-      this.client.channelName && await this.client.leave();
+      const {
+        localUser: { streamUuid, rtcToken },
+      } = await this.getUserToken(groupId as string);
+      this.client.channelName && (await this.client.leave());
       await this.client.join(appId, groupId, rtcToken, +streamUuid);
       this.setIsAttendDiscussionConfig({ groupId, groupName });
     } catch (e) {
       this.logger.error('attend discussion', e);
       this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
-      this.getters.classroomUIStore.subscriptionUIStore.setActive(this.classroomStore.connectionStore.sceneId);
+      this.getters.classroomUIStore.subscriptionUIStore.setActive(
+        this.classroomStore.connectionStore.sceneId,
+      );
     } finally {
       this._requestLock.delete(lockName);
     }
@@ -1120,16 +1147,18 @@ export class BreakoutUIStore extends EduUIStoreBase {
             addUsers: [EduClassroomConfig.shared.sessionInfo.userUuid],
           },
         ]);
-        this.client && this.client.channelName && await this.client.leave();
-        this.isAttendDiscussionConfig?.groupId && this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
+        this.client && this.client.channelName && (await this.client.leave());
+        this.isAttendDiscussionConfig?.groupId &&
+          this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
       } else {
         await this.classroomStore.groupStore.moveUsersToGroup(
           this.classroomStore.groupStore.currentSubRoom,
           groupUuid,
           [EduClassroomConfig.shared.sessionInfo.userUuid],
         );
-        this.client && this.client.channelName && await this.client.leave();
-        this.isAttendDiscussionConfig?.groupId && this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
+        this.client && this.client.channelName && (await this.client.leave());
+        this.isAttendDiscussionConfig?.groupId &&
+          this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
       }
     } catch (e) {
     } finally {
@@ -1187,8 +1216,9 @@ export class BreakoutUIStore extends EduUIStoreBase {
         await this.classroomStore.groupStore.moveUsersToGroup(this.teacherGroupUuid, groupUuid, [
           teacherUuid,
         ]);
-        this.client && this.client.channelName && await this.client.leave();
-        this.isAttendDiscussionConfig?.groupId && this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
+        this.client && this.client.channelName && (await this.client.leave());
+        this.isAttendDiscussionConfig?.groupId &&
+          this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
       } else {
         await this.classroomStore.groupStore.updateGroupUsers(
           [
@@ -1199,8 +1229,9 @@ export class BreakoutUIStore extends EduUIStoreBase {
           ],
           false,
         );
-        this.client && this.client.channelName && await this.client.leave();
-        this.isAttendDiscussionConfig?.groupId && this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
+        this.client && this.client.channelName && (await this.client.leave());
+        this.isAttendDiscussionConfig?.groupId &&
+          this.setIsAttendDiscussionConfig({ groupId: '', groupName: '' });
       }
     }
     //@ts-ignore
@@ -1800,9 +1831,9 @@ export class BreakoutUIStore extends EduUIStoreBase {
     });
     this._disposers.push(
       reaction(
-        () => this.getters.boardApi.mounted,
+        () => this.getters.boardApi.mounted && this.getters.isGranted,
         (mounted) => {
-          if (mounted && this.getters.isGranted) {
+          if (mounted) {
             this._copyRoomContent();
           }
         },
