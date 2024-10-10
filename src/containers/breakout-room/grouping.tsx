@@ -447,7 +447,7 @@ export const GroupedList = observer(
                   {groupName} ({list.length})
                 </span>
                 <div className="fcr-breakout-room__grouping-grouped-group-actions">
-                  <Button disabled={!isStartDiscussion || (groupDetails.get(groupId) && !groupDetails.get(groupId)?.users.length)} type='secondary' onClick={handleDiscussion} size="XXS" styleType={discussionBtn && groupId === isAttendDiscussionConfig?.groupId ? "danger" : 'gray'}>
+                  <Button disabled={!isStartDiscussion || (groupDetails.get(groupId) && !groupDetails.get(groupId)?.users.length && !discussionBtn)} type='secondary' onClick={handleDiscussion} size="XXS" styleType={discussionBtn && groupId === isAttendDiscussionConfig?.groupId ? "danger" : 'gray'}>
                     {transI18n((discussionBtn && groupId === isAttendDiscussionConfig?.groupId) ? 'fcr_board_close_discussion' : 'fcr_board_attend_discussion')}
                   </Button>
                   <Button disabled={!isStartDiscussion || isTeacherInRoom} onClick={handleJoin} size="XXS">
