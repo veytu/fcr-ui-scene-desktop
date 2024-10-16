@@ -15,9 +15,9 @@ export const SpeakAiView = observer(() => {
     useEffect(()=>{if(agentRtcUser){setRemoteUser(agentRtcUser)}},[agentRtcUser])
     return (
         <div className="stream-ai-container">
-            <img src={AiPicImage} className='bg-image'></img>
-            {agentRtcUser?.videoTrack && <StreamPlayer videoTrack={agentRtcUser?.videoTrack}></StreamPlayer>}
+            {!agentRtcUser?.videoTrack &&  <img src={AiPicImage} className='bg-image'></img>}
             <div className='audio'><MicSection audioTrack={remoteuser?.audioTrack}></MicSection></div>
+            {agentRtcUser?.videoTrack && <StreamPlayer videoTrack={agentRtcUser?.videoTrack}></StreamPlayer>}
             <div className='name'>Agent</div>
         </div>
     );
@@ -72,7 +72,7 @@ const MicSection = (props: MicSectionProps) => {
         type="agent"
         barWidth={5}
         minBarHeight={9}
-        maxBarHeight={53}
+        maxBarHeight={15}
         frequencies={subscribedVolumes}
         borderRadius={5}
         gap={3}></AudioVisualizer>

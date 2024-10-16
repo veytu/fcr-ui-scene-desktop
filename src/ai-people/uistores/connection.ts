@@ -55,7 +55,6 @@ export class EduConnectionStore extends EduUIStoreBase {
                 return false
             }
             this.dispatch(setAgentConnected(true))
-            this.startPing(channel)
             return true;
         }
         this.loading = false;
@@ -66,12 +65,12 @@ export class EduConnectionStore extends EduUIStoreBase {
     private checkAgentConnected = async (channel:string) => {
         const res: any = await apiPing(channel)
         if (res?.code == 0) {
-            this.dispatch(setAgentConnected(true))
+            // this.dispatch(setAgentConnected(true))
         }
     }
 
     //停止ping
-    private startPing(channel:string) {
+     startPing(channel:string) {
         if (intervalId) {
             this.stopPing(channel)
         }

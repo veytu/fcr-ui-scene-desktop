@@ -1,6 +1,6 @@
 import { ColorItem, GraphOptionItem, IOptions, LanguageOptionItem, VoiceOptionItem } from "../types"
 
-export const REQUEST_URL ="https://astra-agents-api.agora.io"
+export const REQUEST_URL ="http://192.168.43.71:8080"
 export const GITHUB_URL = "https://github.com/TEN-framework/ASTRA.ai"
 export const OPTIONS_KEY = "__options__"
 export const DEFAULT_OPTIONS: IOptions = {
@@ -30,7 +30,7 @@ export const LANGUAGE_OPTIONS: LanguageOptionItem[] = [
 export const GRAPH_OPTIONS: GraphOptionItem[] = [
   {
     label: "Voice Agent - OpenAI LLM + Azure TTS",
-    value: "va.openai.azure"
+    value: "va.openai.azure.fashionai"
   },
   {
     label: "Voice Agent with Vision - OpenAI LLM + Azure TTS",

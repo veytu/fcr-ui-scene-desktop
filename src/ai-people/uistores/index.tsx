@@ -11,7 +11,7 @@ import { EduRtcStore } from './rtc';
 import { AppDispatch, AppSelectData } from './store';
 import { setGraphName, setLanguage, setOptions, setVoiceType } from './store/reducers/global';
 import { getRandomChannel, getRandomUserId } from '../utils/utils';
-import { AiDialogueType, NetStateType } from '../types';
+import { AiDialogueType, Language, NetStateType, VoiceType } from '../types';
 import { AGError, bound } from 'agora-rte-sdk';
 import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, toJS } from 'mobx';
@@ -51,8 +51,12 @@ export class SceneUIAiStore {
     //先初始化存储配置信息
     //@ts-ignore
     const { sessionInfo: { userUuid, userName, channel }, flexProperties } = window.EduClassroomConfig
+    // const currentChannel = 'astra_agents_test';//channel ? channel : getRandomChannel()
     const currentChannel = channel ? channel : getRandomChannel()
     const currentUserId = getRandomUserId();
+    const graphName = 'va.openai.azure.fashionai';
+    const language = 'zh-CN'
+    const voiceType = "male"
     AppDispatch(setOptions({
       userName,
       channel: currentChannel,
@@ -60,26 +64,25 @@ export class SceneUIAiStore {
     }))
     //设置语言
     if (!flexProperties || !flexProperties.dialogueType || AiDialogueType.EN_US === Number(flexProperties.dialogueType)) {
-      AppDispatch(setLanguage("en-US"))
+      AppDispatch(setLanguage(language))
     }
     //设置模式
-    AppDispatch(setGraphName('va.openai.azure'))
+    AppDispatch(setGraphName(graphName))
     //设置形象
-    AppDispatch(setVoiceType('male'))
+    AppDispatch(setVoiceType(voiceType))
 
     //加人基础房间
     this.classroomStore.connectionStore.initialize
-    const { joinClassroom } = this.classroomStore.connectionStore;
-    try {
-      await joinClassroom({ mode: 'entry' });
-    } catch (e) {
-      if (AGError.isOf(e as AGError, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
-        return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
-      }
-      return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
-    }
-
-
+    // const { joinClassroom } = this.classroomStore.connectionStore;
+    // try {
+    //   await joinClassroom({ mode: 'entry' });
+    // } catch (e) {
+    //   if (AGError.isOf(e as AGError, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
+    //     return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
+    //   }
+    //   return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
+    // }
+this.connectionStore.startPing(channel)
     //加人对话房间
     await this.rtcStore.createTracks()
     await this.rtcStore.join({ userId: currentUserId, channel: currentChannel, userName: userName })
@@ -87,7 +90,7 @@ export class SceneUIAiStore {
     this.rtcStore.on("remoteUserChanged", () => { runInAction(() => { this.showLoading = false }) })
 
     //开启链接
-    await this.connectAgent(currentChannel,currentUserId)
+    await this.connectAgent(currentChannel,currentUserId,graphName,language,voiceType)
   }
 
   //链接重试总次数
@@ -95,14 +98,14 @@ export class SceneUIAiStore {
   //链接重试当前次数
   private connectRetryCurrentCount = 0;
   //链接机器人
-  private async connectAgent(currentChannel:string,currentUserId:number){
+  private async connectAgent(currentChannel:string,currentUserId:number,graphName:string,language:Language,voiceType:VoiceType){
     if(this.connectRetryCurrentCount < this.connectRetrySumCount){
-      const res = await this.connectionStore.toConnenction(currentChannel, currentUserId, AppSelectData.global.graphName, AppSelectData.global.language, AppSelectData.global.voiceType)
+      const res = await this.connectionStore.toConnenction(currentChannel, currentUserId, graphName, language,voiceType)
       if (res) {
         this.connectRetryCurrentCount = 0
       } else {
         this.connectRetryCurrentCount++
-        await this.connectAgent(currentChannel, currentUserId)
+        await this.connectAgent(currentChannel, currentUserId,graphName,language,voiceType)
         this.showNormalInfo(transI18n('fcr_ai_people_connect_retry', {
           reason1: this.connectRetryCurrentCount,
           reason2: this.connectRetrySumCount,

@@ -19,6 +19,8 @@ import NetworkGoodImg from '@ui-scene/containers/status-bar/network/assets/netwo
 import NetworkDownImg from '@ui-scene/containers/status-bar/network/assets/network_down.png';
 import { SvgIconEnum } from "@components/svg-img";
 
+//@ts-ignore
+let messageList : IChatItem[] = window.messageList || []
 /**
  * Rtc管理store
  */
@@ -44,7 +46,7 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     agentRtcUser?: IRtcUser
     //聊天消息列表
     @observable
-    chatItems: IChatItem[] = []
+    chatItems: IChatItem[] = messageList
     @observable
     netQuality: NetStateInfo = new NetStateInfo("rgba(100, 187, 92, 1)", transI18n('fcr_ai_people_tip_quality_good'), NetworkGoodImg, SvgIconEnum.FCR_V2_SIGNAL_GOOD,NetStateType.GOOD)
 
@@ -61,6 +63,8 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     async join({ channel, userId, userName }: { channel: string; userId: number, userName: string }) {
         try {
             if (!this._joined) {
+                //@ts-ignore   清除上一次记录
+                window.messageList = []
                 const res = await apiGenAgoraData({ channel, userId })
                 const { code, data } = res
                 if (code != 0) {
@@ -113,15 +117,17 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
             this.emit("networkQuality", quality)
         })
         this.client.on("user-published", async (user, mediaType) => {
-            await this.client.subscribe(user, mediaType)
-            if (mediaType === "audio") {
-                this._playAudio(user.audioTrack)
-            }
-            this.emit("remoteUserChanged", {
-                userId: user.uid,
-                audioTrack: user.audioTrack,
-                videoTrack: user.videoTrack,
-            })
+            // if("12345" === user.uid){
+                await this.client.subscribe(user, mediaType)
+                if (mediaType === "audio") {
+                    this._playAudio(user.audioTrack)
+                }
+                this.emit("remoteUserChanged", {
+                    userId: user.uid,
+                    audioTrack: user.audioTrack,
+                    videoTrack: user.videoTrack,
+                })
+            // }
         })
         this.client.on("user-unpublished", async (user, mediaType) => {
             await this.client.unsubscribe(user, mediaType)
@@ -214,7 +220,12 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
                 userName: this.currentJoinUserName
             }
             runInAction(() => {
-                this.chatItems = paramsChatData(this.chatItems, current);
+                messageList= paramsChatData(messageList, current);
+                if(messageList.length > 0 ){
+                    //@ts-ignore
+                    window.messageList = messageList;
+                }
+                this.chatItems = [...messageList.filter(item => "" !== item.text)]
             });
         }
     }

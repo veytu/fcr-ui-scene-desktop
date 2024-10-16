@@ -81,7 +81,7 @@ export const getGraphProperties = (channel: string,graphName: string, language: 
                 "azure_synthesis_voice_name": voiceNameMap[language]["azure"][voiceType]
             }
         }
-    } else if (graphName == "va.openai.azure") {
+    } else if (graphName == "va.openai.azure.fashionai") {
         return {
             "agora_rtc": {
                 "agora_asr_language": language,
@@ -95,7 +95,6 @@ export const getGraphProperties = (channel: string,graphName: string, language: 
             },
             "fashionai": {
                 "channel": channel,//获取动态频道名
-                "stream_id": userId + "" 	//数字人的流id，与界面上订阅渲染的一致就行
             }
         }
     } else if (graphName == "va.qwen.rag") {
