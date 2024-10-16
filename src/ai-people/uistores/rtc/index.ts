@@ -63,8 +63,6 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     async join({ channel, userId, userName }: { channel: string; userId: number, userName: string }) {
         try {
             if (!this._joined) {
-                //@ts-ignore   清除上一次记录
-                window.messageList = []
                 const res = await apiGenAgoraData({ channel, userId })
                 const { code, data } = res
                 if (code != 0) {
@@ -117,7 +115,7 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
             this.emit("networkQuality", quality)
         })
         this.client.on("user-published", async (user, mediaType) => {
-            // if("12345" === user.uid){
+            if("12345" === user.uid){
                 await this.client.subscribe(user, mediaType)
                 if (mediaType === "audio") {
                     this._playAudio(user.audioTrack)
@@ -127,7 +125,7 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
                     audioTrack: user.audioTrack,
                     videoTrack: user.videoTrack,
                 })
-            // }
+            }
         })
         this.client.on("user-unpublished", async (user, mediaType) => {
             await this.client.unsubscribe(user, mediaType)
@@ -169,6 +167,9 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     }
     async onDestroy(): Promise<void> {
         this.removeListener()
+        this.chatItems = []
+        //@ts-ignore
+        window.messageList = []
         this.localTracks?.audioTrack?.close()
         this.localTracks?.videoTrack?.close()
         if (this._joined) {

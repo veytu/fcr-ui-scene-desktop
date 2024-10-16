@@ -46,6 +46,8 @@ export class SceneUIAiStore {
 
   @bound
   async init() {
+    //@ts-ignore   清除上一次记录
+    window.messageList = []
     this.checkDevices()
     runInAction(() => { this.showLoading = true })
     //先初始化存储配置信息
