@@ -13,7 +13,6 @@ export class StatusBarUIStore extends EduUIStoreBase {
   }
   @computed
   get classStatusText() {
-    debugger
     const duration = this.classTimeDuration || 0;
 
     if (duration < 0) {

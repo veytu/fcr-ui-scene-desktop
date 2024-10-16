@@ -1,7 +1,7 @@
 import './index.css'
 import AiPicImage from './assets/ai_pic.png';
-import { IMicrophoneAudioTrack } from "agora-rtc-sdk-ng"
-import { useState, useEffect } from 'react';
+import { ICameraVideoTrack, IMicrophoneAudioTrack } from "agora-rtc-sdk-ng"
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { AudioVisualizer } from '../audio-visualizer';
 import { useStore } from '@ui-scene/ai-people/utils/hooks/use-store';
 import { IRtcUser } from '@ui-scene/ai-people/types';
@@ -16,12 +16,31 @@ export const SpeakAiView = observer(() => {
     return (
         <div className="stream-ai-container">
             <img src={AiPicImage} className='bg-image'></img>
+            {agentRtcUser?.videoTrack && <StreamPlayer videoTrack={agentRtcUser?.videoTrack}></StreamPlayer>}
             <div className='audio'><MicSection audioTrack={remoteuser?.audioTrack}></MicSection></div>
             <div className='name'>Agent</div>
         </div>
     );
 })
 
+interface StreamPlayerProps {
+    videoTrack?: ICameraVideoTrack
+}
+const StreamPlayer = observer((props: StreamPlayerProps) => {
+    const { videoTrack } = props
+    const vidDiv = useRef(null)
+    useLayoutEffect(() => {
+        if (!videoTrack?.isPlaying && vidDiv.current) {
+            videoTrack?.play(vidDiv.current, { fit: "cover" })
+        }
+        return () => {
+            videoTrack?.stop()
+        }
+    }, [videoTrack])
+
+
+    return <div style={{ width: '100%', height: '100%' }} className="stream-people-container-video" ref={vidDiv}></div>
+})
 interface MicSectionProps {
     audioTrack?: IMicrophoneAudioTrack
 }
