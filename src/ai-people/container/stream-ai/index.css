@@ -39,3 +39,10 @@
     left: 0;
     right: 0;
 }
+.stream-ai-people-container-video> :first-child {
+    border-radius: 8px;
+    border: 1px solid rgba(51, 51, 51, 1);
+}
+.stream-ai-people-container-video> :first-child :first-child {
+    object-fit: contain !important;
+}

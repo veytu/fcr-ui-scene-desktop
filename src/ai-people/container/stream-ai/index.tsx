@@ -39,7 +39,7 @@ const StreamPlayer = observer((props: StreamPlayerProps) => {
     }, [videoTrack])
 
 
-    return <div style={{ width: '100%', height: '100%' }} className="stream-people-container-video" ref={vidDiv}></div>
+    return <div style={{ width: '100%', height: '100%' }} className="stream-ai-people-container-video" ref={vidDiv}></div>
 })
 interface MicSectionProps {
     audioTrack?: IMicrophoneAudioTrack
