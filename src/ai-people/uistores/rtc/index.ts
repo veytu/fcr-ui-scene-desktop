@@ -18,6 +18,7 @@ import NetworkBadImg from '@ui-scene/containers/status-bar/network/assets/networ
 import NetworkGoodImg from '@ui-scene/containers/status-bar/network/assets/network_good.png';
 import NetworkDownImg from '@ui-scene/containers/status-bar/network/assets/network_down.png';
 import { SvgIconEnum } from "@components/svg-img";
+import { FcrUIAiSceneContext } from "../context";
 
 //@ts-ignore
 let messageList : IChatItem[] = window.messageList || []
@@ -104,7 +105,11 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
             tracks.push(this.localTracks.audioTrack)
         }
         if (tracks.length) {
-            await this.client.publish(tracks)
+            try{
+                await this.client.publish(tracks)
+            }catch(e){
+                console.log("订阅失败")
+            }
         }
     }
 
@@ -115,7 +120,7 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
             this.emit("networkQuality", quality)
         })
         this.client.on("user-published", async (user, mediaType) => {
-            if("12345" === user.uid){
+            // if("12345" === user.uid){
                 await this.client.subscribe(user, mediaType)
                 if (mediaType === "audio") {
                     this._playAudio(user.audioTrack)
@@ -125,7 +130,7 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
                     audioTrack: user.audioTrack,
                     videoTrack: user.videoTrack,
                 })
-            }
+            // }
         })
         this.client.on("user-unpublished", async (user, mediaType) => {
             await this.client.unsubscribe(user, mediaType)
@@ -167,7 +172,7 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     }
     async onDestroy(): Promise<void> {
         this.removeListener()
-        this.chatItems = []
+        messageList = []
         //@ts-ignore
         window.messageList = []
         this.localTracks?.audioTrack?.close()

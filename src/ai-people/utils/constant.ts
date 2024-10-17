@@ -1,6 +1,6 @@
 import { ColorItem, GraphOptionItem, IOptions, LanguageOptionItem, VoiceOptionItem } from "../types"
 
-export const REQUEST_URL ="http://astra-agents-api.agora.io"
+export const REQUEST_URL ="https://test-astra-apaas-api.la3.agoralab.co"
 export const GITHUB_URL = "https://github.com/TEN-framework/ASTRA.ai"
 export const OPTIONS_KEY = "__options__"
 export const DEFAULT_OPTIONS: IOptions = {

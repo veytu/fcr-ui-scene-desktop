@@ -1,6 +1,7 @@
 import { EduUIStoreBase } from './base';
-import { observable, action, reaction } from 'mobx';
+import { observable, action, computed, reaction, runInAction } from 'mobx';
 import { Log } from 'agora-common-libs';
+import { bound, Lodash, Scheduler } from 'agora-rte-sdk';
 import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
 import { ClassDialogProps } from '@components/dialog/class-dialog';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,6 +10,7 @@ import { CommonDialogType, DialogType, Layout } from '@ui-scene/uistores/type';
 
 @Log.attach({ proxyMethods: false })
 export class LayoutUIStore extends EduUIStoreBase {
+  private _hasPopoverShowed = false;
   @observable layout: Layout = Layout.Grid;
   @action.bound
   setLayout(layout: Layout) {
@@ -43,6 +45,10 @@ export class LayoutUIStore extends EduUIStoreBase {
     this.dialogMap.delete(id);
   };
 
+  @bound
+  setHasPopoverShowed(has: boolean) {
+    this._hasPopoverShowed = has;
+  }
   onDestroy(): void {
     this._disposers.forEach((d) => d());
     this._disposers = [];

@@ -17,8 +17,8 @@ export const SpeakAiView = observer(() => {
         <div className="stream-ai-container">
             {!agentRtcUser?.videoTrack &&  <img src={AiPicImage} className='bg-image'></img>}
             <div className='audio'><MicSection audioTrack={remoteuser?.audioTrack}></MicSection></div>
-            {agentRtcUser?.videoTrack && <StreamPlayer videoTrack={agentRtcUser?.videoTrack}></StreamPlayer>}
             <div className='name'>Agent</div>
+            {agentRtcUser?.videoTrack && <StreamPlayer videoTrack={agentRtcUser?.videoTrack}></StreamPlayer>}
         </div>
     );
 })

@@ -23,12 +23,16 @@ import loadingGif from '../container/loading/assets/circle-loading.gif';
 import { StatusBarUIStore } from './status-bar';
 import { NotiticationUIStore } from './notification';
 import { LayoutUIStore } from './layout';
+import { BreakoutUIStore } from './breakout';
+import { ActionBarUIStore } from './action-bar';
 
 export class SceneUIAiStore {
   readonly getters: Getters;
   readonly classroomStore: EduClassroomStore;
   readonly connectionStore: EduConnectionStore;
   readonly statusBarUIStore: StatusBarUIStore;
+  readonly actionBarUIStore: ActionBarUIStore;
+  readonly breakoutUIStore: BreakoutUIStore;
   readonly rtcStore: EduRtcStore;
   readonly notiticationUIStore: NotiticationUIStore;
   readonly layoutUIStore: LayoutUIStore;
@@ -38,10 +42,12 @@ export class SceneUIAiStore {
     this.classroomStore.initialize();
     this.getters = new Getters(this);
     this.connectionStore = new EduConnectionStore(this.classroomStore, this.getters)
+    this.actionBarUIStore = new ActionBarUIStore(this.classroomStore, this.getters);
     this.rtcStore = new EduRtcStore(this.classroomStore, this.getters)
     this.statusBarUIStore = new StatusBarUIStore(this.classroomStore, this.getters);
     this.notiticationUIStore = new NotiticationUIStore(this.classroomStore, this.getters);
     this.layoutUIStore = new LayoutUIStore(this.classroomStore, this.getters);
+    this.breakoutUIStore = new BreakoutUIStore(this.classroomStore, this.getters);
   }
 
   @bound
@@ -84,7 +90,7 @@ export class SceneUIAiStore {
     //   }
     //   return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
     // }
-this.connectionStore.startPing(channel)
+    this.connectionStore.startPing(channel)
     //加人对话房间
     await this.rtcStore.createTracks()
     await this.rtcStore.join({ userId: currentUserId, channel: currentChannel, userName: userName })
@@ -92,7 +98,19 @@ this.connectionStore.startPing(channel)
     this.rtcStore.on("remoteUserChanged", () => { runInAction(() => { this.showLoading = false }) })
 
     //开启链接
-    await this.connectAgent(currentChannel,currentUserId,graphName,language,voiceType)
+    await this.connectAgent(currentChannel, currentUserId, graphName, language, voiceType)
+  }
+
+  //销毁所有
+  destroyAll(){
+    this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
+    this.connectionStore.onDestroy()
+    this.statusBarUIStore.onDestroy()
+    this.actionBarUIStore.onDestroy()
+    this.breakoutUIStore.onDestroy()
+    this.rtcStore.onDestroy()
+    this.notiticationUIStore.onDestroy()
+    this.layoutUIStore.onDestroy()
   }
 
   //链接重试总次数
@@ -100,21 +118,21 @@ this.connectionStore.startPing(channel)
   //链接重试当前次数
   private connectRetryCurrentCount = 0;
   //链接机器人
-  private async connectAgent(currentChannel:string,currentUserId:number,graphName:string,language:Language,voiceType:VoiceType){
-    if(this.connectRetryCurrentCount < this.connectRetrySumCount){
-      const res = await this.connectionStore.toConnenction(currentChannel, currentUserId, graphName, language,voiceType)
+  private async connectAgent(currentChannel: string, currentUserId: number, graphName: string, language: Language, voiceType: VoiceType) {
+    if (this.connectRetryCurrentCount < this.connectRetrySumCount) {
+      const res = await this.connectionStore.toConnenction(currentChannel, currentUserId, graphName, language, voiceType)
       if (res) {
         this.connectRetryCurrentCount = 0
       } else {
         this.connectRetryCurrentCount++
-        await this.connectAgent(currentChannel, currentUserId,graphName,language,voiceType)
+        await this.connectAgent(currentChannel, currentUserId, graphName, language, voiceType)
         this.showNormalInfo(transI18n('fcr_ai_people_connect_retry', {
           reason1: this.connectRetryCurrentCount,
           reason2: this.connectRetrySumCount,
         }), true, 999999)
       }
     } else {
-      this.showNormalInfo(transI18n('fcr_ai_people_connect_refresh'),false)
+      this.showNormalInfo(transI18n('fcr_ai_people_connect_refresh'), false)
     }
 
   }
@@ -147,7 +165,7 @@ this.connectionStore.startPing(channel)
   }
 
   //显示异常信息
-  private showErrorInfo(info:string){
+  private showErrorInfo(info: string) {
     runInAction(() => {
       ToastApi.open({
         toastProps: {
@@ -161,14 +179,14 @@ this.connectionStore.startPing(channel)
     })
   }
   //显示正常信息
-  private showNormalInfo(info:string,loading:boolean,duration?:number){
+  private showNormalInfo(info: string, loading: boolean, duration?: number) {
     runInAction(() => {
       ToastApi.open({
         toastProps: {
           type: 'normal', content:
             <span style={{ display: 'flex', alignItems: 'center' }}>
               {info}
-              {loading && <img src={loadingGif} style={{ width: '24px', height: '24px',marginLeft:'5px' }} />}
+              {loading && <img src={loadingGif} style={{ width: '24px', height: '24px', marginLeft: '5px' }} />}
             </span>,
         }, duration: duration
       });

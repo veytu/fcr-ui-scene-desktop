@@ -2,13 +2,13 @@ import { SvgIconEnum } from '@components/svg-img';
 import { ToolTip } from '@components/tooltip';
 import './index.css';
 import { observer } from 'mobx-react';
-import { useStore } from '@ui-scene/utils/hooks/use-store';
 import { Popover } from '@components/popover';
 import { Button } from '@components/button';
 import { useEffect, useState } from 'react';
 import { ClassState, EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { useI18n } from 'agora-common-libs';
 import { StatusBarItemWrapper } from '..';
+import { useStore } from '@ui-scene/ai-people/utils/hooks/use-store';
 
 export const Leave = observer(() => {
   const transI18n = useI18n();
