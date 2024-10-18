@@ -267,7 +267,6 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
         const list = [...this.chatItems]
         let isAdd = true;
         if(list.length > 0){
-            debugger
             const lastItem = list[list.length - 1]
             if(lastItem && lastItem.userId === userId){
                 if(text && lastItem.text && text.startsWith(lastItem.text) || !lastItem.isFinal){

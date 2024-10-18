@@ -54,12 +54,12 @@ export class SceneUIAiStore {
     runInAction(() => { this.showLoading = true })
     //先初始化存储配置信息
     //@ts-ignore
-    const { sessionInfo: { userName, channel } } = window.EduClassroomConfig
+    const { sessionInfo: { userName, channel,flexProperties:{dialogueType,teacherImage} } } = window.EduClassroomConfig
     // const currentChannel = 'astra_agents_test';//channel ? channel : getRandomChannel()
     const currentChannel = channel ? channel : getRandomChannel()
     const currentUserId = getRandomUserId();
-    const graphName = 'va.openai.azure.fashionai';
-    const language = 'zh-CN'
+    const graphName = teacherImage;//'va.openai.azure.fashionai';
+    const language = dialogueType
     const voiceType = "male"
 
     //加人基础房间

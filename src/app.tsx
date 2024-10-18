@@ -26,6 +26,7 @@ export const App = observer(({ skipDevicePretest }: { skipDevicePretest: boolean
   return (
     <React.Fragment>
       {!devicePretestFinished && <DevicePretest />}
+      {/* {devicePretestFinished && <ClassroomAiPeople />} */}
       {devicePretestFinished && (EduRoomTypeEnum.Room1v1Class === EduClassroomConfig.shared.sessionInfo.roomType ? <ClassroomAiPeople /> : <Classroom />)}
     </React.Fragment>
   );

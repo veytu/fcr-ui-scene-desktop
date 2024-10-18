@@ -3,6 +3,8 @@
     height: 100%;
     background: linear-gradient(141.53deg, rgba(66, 98, 255, 0.8) 41.45%, rgba(102, 54, 209, 0.8) 97.31%);
     position: relative;
+    border-radius: 8px;
+    border: 1px solid rgba(51, 51, 51, 1);
 }
 
 .stream-ai-container .bg-image {
@@ -13,7 +15,8 @@
 }
 
 .stream-ai-container .audio {
-    width: 23vw;
+    width: 339px;
+    height: 149px;
     background: rgba(35, 37, 43, 0.2);
     border-radius: 999px;
     position: absolute;
