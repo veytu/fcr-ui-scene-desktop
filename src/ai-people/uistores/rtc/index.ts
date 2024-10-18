@@ -10,18 +10,14 @@ import { IChatItem, IRtcUser, ITextItem, IUserTracks, NetStateInfo, NetStateType
 import { apiGenAgoraData } from "../../utils/request";
 import { AGEventEmitter } from "./events";
 import { ICameraVideoTrack } from "agora-rtc-sdk-ng"
-import { paramsChatData } from "../store/reducers/global";
 import { action, observable, runInAction } from 'mobx';
-import { AGNetworkQuality, bound } from 'agora-rte-sdk';
-import { transI18n, useI18n } from "agora-common-libs";
+import { bound } from 'agora-rte-sdk';
+import { transI18n } from "agora-common-libs";
 import NetworkBadImg from '@ui-scene/containers/status-bar/network/assets/network_bad.png';
 import NetworkGoodImg from '@ui-scene/containers/status-bar/network/assets/network_good.png';
 import NetworkDownImg from '@ui-scene/containers/status-bar/network/assets/network_down.png';
 import { SvgIconEnum } from "@components/svg-img";
-import { FcrUIAiSceneContext } from "../context";
 
-//@ts-ignore
-let messageList : IChatItem[] = window.messageList || []
 /**
  * Rtc管理store
  */
@@ -47,7 +43,7 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     agentRtcUser?: IRtcUser
     //聊天消息列表
     @observable
-    chatItems: IChatItem[] = messageList
+    chatItems: IChatItem[] = []
     @observable
     netQuality: NetStateInfo = new NetStateInfo("rgba(100, 187, 92, 1)", transI18n('fcr_ai_people_tip_quality_good'), NetworkGoodImg, SvgIconEnum.FCR_V2_SIGNAL_GOOD,NetStateType.GOOD)
 
@@ -172,9 +168,6 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
     }
     async onDestroy(): Promise<void> {
         this.removeListener()
-        messageList = []
-        //@ts-ignore
-        window.messageList = []
         this.localTracks?.audioTrack?.close()
         this.localTracks?.videoTrack?.close()
         if (this._joined) {
@@ -225,14 +218,7 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
                 time: text.time,
                 userName: this.currentJoinUserName
             }
-            runInAction(() => {
-                messageList= paramsChatData(messageList, current);
-                if(messageList.length > 0 ){
-                    //@ts-ignore
-                    window.messageList = messageList;
-                }
-                this.chatItems = [...messageList.filter(item => "" !== item.text)]
-            });
+            this.paramsChatData(current)
         }
     }
     //机器人流信息
@@ -268,6 +254,36 @@ export class EduRtcStore extends AGEventEmitter<RtcEvents> {
             } else {
                 this.netQuality = new NetStateInfo("rgba(100, 187, 92, 1)", transI18n('fcr_ai_people_tip_quality_good'), NetworkGoodImg, SvgIconEnum.FCR_V2_SIGNAL_GOOD,NetStateType.GOOD)
             }
+        })
+    }
+
+    /**
+     * 格式化处理数据
+     * @param payload
+     * @returns
+     */
+    private paramsChatData(payload: IChatItem) {
+        const { userId,text } = payload
+        const list = [...this.chatItems]
+        let isAdd = true;
+        if(list.length > 0){
+            debugger
+            const lastItem = list[list.length - 1]
+            if(lastItem && lastItem.userId === userId){
+                if(text && lastItem.text && text.startsWith(lastItem.text) || !lastItem.isFinal){
+                    isAdd = false;
+                }
+            }
+        }else{
+            isAdd = true;
+        }
+        if (isAdd) {
+            list.push(payload)
+        } else {
+            list[list.length - 1] = payload
+        }
+        runInAction(() => {
+            this.chatItems = list.sort((a, b) => a.time - b.time).filter(item => "" !== item.text)
         })
     }
 }

@@ -1,7 +1,7 @@
 import { EduUIStoreBase } from './base';
-import { observable, action, computed, reaction, runInAction } from 'mobx';
+import { observable, action, reaction } from 'mobx';
 import { Log } from 'agora-common-libs';
-import { bound, Lodash, Scheduler } from 'agora-rte-sdk';
+import { bound } from 'agora-rte-sdk';
 import { ConfirmDialogProps } from '@components/dialog/confirm-dialog';
 import { ClassDialogProps } from '@components/dialog/class-dialog';
 import { v4 as uuidv4 } from 'uuid';

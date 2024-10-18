@@ -1,5 +1,4 @@
 import {
-  AGServiceErrorCode,
   EduClassroomStore,
   EduRoomTypeEnum,
   EduStoreFactory,
@@ -8,13 +7,10 @@ import {
 import { Getters } from './getters';
 import { EduConnectionStore } from './connection';
 import { EduRtcStore } from './rtc';
-import { AppDispatch, AppSelectData } from './store';
-import { setGraphName, setLanguage, setOptions, setVoiceType } from './store/reducers/global';
 import { getRandomChannel, getRandomUserId } from '../utils/utils';
-import { AiDialogueType, Language, NetStateType, VoiceType } from '../types';
-import { AGError, bound } from 'agora-rte-sdk';
-import { useStore } from '@ui-scene/utils/hooks/use-store';
-import { action, computed, IReactionDisposer, observable, reaction, runInAction, toJS } from 'mobx';
+import { Language, NetStateType, VoiceType } from '../types';
+import { bound } from 'agora-rte-sdk';
+import { observable, runInAction } from 'mobx';
 import { ToastApi } from '@components/toast';
 import AgoraRTC from "agora-rtc-sdk-ng"
 import { transI18n } from 'agora-common-libs';
@@ -58,26 +54,13 @@ export class SceneUIAiStore {
     runInAction(() => { this.showLoading = true })
     //先初始化存储配置信息
     //@ts-ignore
-    const { sessionInfo: { userUuid, userName, channel }, flexProperties } = window.EduClassroomConfig
+    const { sessionInfo: { userName, channel } } = window.EduClassroomConfig
     // const currentChannel = 'astra_agents_test';//channel ? channel : getRandomChannel()
     const currentChannel = channel ? channel : getRandomChannel()
     const currentUserId = getRandomUserId();
     const graphName = 'va.openai.azure.fashionai';
     const language = 'zh-CN'
     const voiceType = "male"
-    AppDispatch(setOptions({
-      userName,
-      channel: currentChannel,
-      userId: currentUserId
-    }))
-    //设置语言
-    if (!flexProperties || !flexProperties.dialogueType || AiDialogueType.EN_US === Number(flexProperties.dialogueType)) {
-      AppDispatch(setLanguage(language))
-    }
-    //设置模式
-    AppDispatch(setGraphName(graphName))
-    //设置形象
-    AppDispatch(setVoiceType(voiceType))
 
     //加人基础房间
     this.classroomStore.connectionStore.initialize

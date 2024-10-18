@@ -1,8 +1,5 @@
 import { EduUIStoreBase } from "./base";
-import { reaction } from 'mobx';
-import { AppDispatch, AppSelectData } from "./store";
 import { apiPing, apiStartService, apiStopService } from "../utils/request";
-import { setAgentConnected } from "./store/reducers/global";
 import { Language, VoiceType } from "../types";
 let intervalId: any
 
@@ -10,7 +7,6 @@ let intervalId: any
  * 服务端管理store
  */
 export class EduConnectionStore extends EduUIStoreBase {
-    dispatch = AppDispatch
     //链接状态
     private agentConnected = false;
     //是否正在连接
@@ -34,7 +30,6 @@ export class EduConnectionStore extends EduUIStoreBase {
     async disConnection(){
         if (this.agentConnected && this.currentJoinUserChannel) {
             await apiStopService(this.currentJoinUserChannel)
-            this.dispatch(setAgentConnected(false))
             this.stopPing(this.currentJoinUserChannel)
         }
     }
@@ -54,7 +49,6 @@ export class EduConnectionStore extends EduUIStoreBase {
                 this.loading = false;
                 return false
             }
-            this.dispatch(setAgentConnected(true))
             return true;
         }
         this.loading = false;

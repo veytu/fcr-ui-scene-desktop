@@ -1,7 +1,7 @@
 import { EduUIStoreBase } from './base';
-import { observable, computed, reaction, action, runInAction } from 'mobx';
+import { observable, computed, action, runInAction } from 'mobx';
 import { ShareStreamStateKeeper } from '@ui-scene/utils/stream/state-keeper';
-import { ClassroomState, EduClassroomConfig, LeaveReason, RecordMode } from 'agora-edu-core';
+import { EduClassroomConfig, RecordMode } from 'agora-edu-core';
 import {
   AgoraRteAudioSourceType,
   AgoraRteCustomMessage,
@@ -14,11 +14,7 @@ import { computedFn } from 'mobx-utils';
 
 import { isElectron } from '@ui-scene/utils/check';
 import { ToastApi } from '@components/toast';
-import { getRandomInt } from '@ui-scene/utils';
-import { chatroomWidgetId } from '@ui-scene/extension/type';
 import { getLanguage, transI18n } from 'agora-common-libs';
-import { reset } from './store/reducers/global';
-import { useStore } from '../utils/hooks/use-store';
 import { FcrUIAiSceneContext } from './context';
 export class ActionBarUIStore extends EduUIStoreBase {
   // for student hands up
