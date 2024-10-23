@@ -69,7 +69,8 @@ export class EduConnectionStore extends EduUIStoreBase {
             this.stopPing(channel)
         }
         intervalId = setInterval(() => {
-            apiPing(channel)
+            //@ts-ignore
+            apiPing(window.EduClassroomConfig.sessionInfo.channel)
         }, 3000)
     }
 

@@ -1,5 +1,5 @@
 import { Language } from "../types"
-import { REQUEST_URL } from "./constant"
+import { getRequestUrl } from "./constant"
 import { getGraphProperties } from "./graph"
 import { genUUID } from "./utils"
 
@@ -17,7 +17,7 @@ interface GenAgoraDataConfig {
 }
 
 export const apiGenAgoraData = async (config: GenAgoraDataConfig) => {
-  const url = `${REQUEST_URL}/token/generate`
+  const url = `${getRequestUrl()}/token/generate`
   const { userId, channel } = config
   const data = {
     request_id: genUUID(),
@@ -37,7 +37,7 @@ export const apiGenAgoraData = async (config: GenAgoraDataConfig) => {
 
 export const apiStartService = async (config: StartRequestConfig): Promise<any> => {
   // look at app/api/agents/start/route.tsx for the server-side implementation
-  const url = `${REQUEST_URL}/start`
+  const url = `${getRequestUrl()}/start`
   const { channel, userId, graphName, language, voiceType } = config
   const data = {
     request_id: genUUID(),
@@ -61,7 +61,7 @@ export const apiStartService = async (config: StartRequestConfig): Promise<any> 
 
 export const apiStopService = async (channel: string) => {
   // look at app/api/agents/stop/route.tsx for the server-side implementation
-  const url = `${REQUEST_URL}/stop`
+  const url = `${getRequestUrl()}/stop`
   const data = {
     request_id: genUUID(),
     channel_name: channel
@@ -78,7 +78,7 @@ export const apiStopService = async (channel: string) => {
 }
 
 export const apiGetDocumentList = async () => {
-  const url = `${REQUEST_URL}/vector/document/preset/list`
+  const url = `${getRequestUrl()}/vector/document/preset/list`
   let resp: any = await fetch(url, {
     method: "GET",
     headers: {
@@ -93,7 +93,7 @@ export const apiGetDocumentList = async () => {
 }
 
 export const apiUpdateDocument = async (options: { channel: string, collection: string, fileName: string }) => {
-  const url = `${REQUEST_URL}/vector/document/update`
+  const url = `${getRequestUrl()}/vector/document/update`
   const { channel, collection, fileName } = options
   const data = {
     request_id: genUUID(),
@@ -114,7 +114,7 @@ export const apiUpdateDocument = async (options: { channel: string, collection: 
 
 // ping/pong 
 export const apiPing = async (channel: string) => {
-  const url = `${REQUEST_URL}/ping`
+  const url = `${getRequestUrl()}/ping`
   const data = {
     request_id: genUUID(),
     channel_name: channel

@@ -1,6 +1,6 @@
 import { ColorItem, GraphOptionItem, IOptions, LanguageOptionItem, VoiceOptionItem } from "../types"
 
-export const REQUEST_URL ="https://test-astra-apaas-api.la3.agoralab.co"
+const REQUEST_URL = "https://test-astra-apaas-api.la3.agoralab.co"
 export const GITHUB_URL = "https://github.com/TEN-framework/ASTRA.ai"
 export const OPTIONS_KEY = "__options__"
 export const DEFAULT_OPTIONS: IOptions = {
@@ -9,6 +9,16 @@ export const DEFAULT_OPTIONS: IOptions = {
   userId: 0
 }
 export const DESCRIPTION = "This is an AI voice assistant powered by ASTRA.ai framework, Agora, Azure and ChatGPT."
+
+export const getRequestUrl=()=>{
+  const index = window.location.hash.indexOf("path=")
+  if (index >= 0) {
+    return window.location.hash.substring(window.location.hash.indexOf("path=") + 5)
+  } else {
+    return REQUEST_URL
+  }
+}
+
 export const LANGUAGE_OPTIONS: LanguageOptionItem[] = [
   {
     label: "English",
