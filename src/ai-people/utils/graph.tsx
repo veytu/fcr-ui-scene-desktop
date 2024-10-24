@@ -83,16 +83,16 @@ export const getGraphProperties = (channel: string,graphName: string, language: 
         }
     } else if (graphName == "va.openai.azure.fashionai") {
         return {
-            "agora_rtc": {
-                "agora_asr_language": language,
-            },
-            "openai_chatgpt": {
-                "model": "gpt-4o-mini",
-                ...localizationOptions
-            },
-            "azure_tts": {
-                "azure_synthesis_voice_name": voiceNameMap[language]["azure"][voiceType]
-            },
+            // "agora_rtc": {
+            //     "agora_asr_language": language,
+            // },
+            // "openai_chatgpt": {
+            //     "model": "gpt-4o-mini",
+            //     ...localizationOptions
+            // },
+            // "azure_tts": {
+            //     "azure_synthesis_voice_name": voiceNameMap[language]["azure"][voiceType]
+            // },
             "fashionai": {
                 "channel": channel,//获取动态频道名
             }
