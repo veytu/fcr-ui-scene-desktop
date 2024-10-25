@@ -58,8 +58,8 @@ export class SceneUIAiStore {
     // const currentChannel = 'astra_agents_test';//channel ? channel : getRandomChannel()
     const currentChannel = channel ? channel : getRandomChannel()
     const currentUserId = getRandomUserId();
-    const graphName = flexProperties?.teacherImage;//'va.openai.azure.fashionai';
-    const language = flexProperties?.dialogueType
+    const graphName = flexProperties?.teacherImage ? flexProperties?.teacherImage : 'va.openai.azure.fashionai';
+    const language = flexProperties?.dialogueType ? flexProperties?.dialogueType : 'en-US'
     const voiceType = "male"
     //@ts-ignore
     window.EduClassroomConfig.sessionInfo.channel = currentChannel
