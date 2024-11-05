@@ -31,6 +31,7 @@ export class EduConnectionStore extends EduUIStoreBase {
         if (this.agentConnected && this.currentJoinUserChannel) {
             await apiStopService(this.currentJoinUserChannel)
             this.stopPing(this.currentJoinUserChannel)
+            this.agentConnected = false;
         }
     }
 
@@ -49,6 +50,7 @@ export class EduConnectionStore extends EduUIStoreBase {
                 this.loading = false;
                 return false
             }
+            this.agentConnected = true;
             return true;
         }
         this.loading = false;
