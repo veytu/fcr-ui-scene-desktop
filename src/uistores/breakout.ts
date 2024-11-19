@@ -1847,9 +1847,27 @@ export class BreakoutUIStore extends EduUIStoreBase {
         },
       ),
     );
+    this._disposers.push(
+      reaction(
+        () => this.groupState,
+        (data) => {
+          const isTeacher = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+            EduClassroomConfig.shared.sessionInfo.role,
+          );
+          if (data === GroupState.CLOSE && !isTeacher) {
+            //因为当前map只存了邀请弹窗，所以移除map中的所有弹窗
+            this._dialogsMap.values().forEach(element => {
+              if(element){
+                this.getters.classroomUIStore.layoutUIStore.deleteDialog(element);
+              }
+            });
+            this._dialogsMap.clear()
+          }
+        },
+      ),
+    );
     EduEventCenter.shared.onClassroomEvents(this._handleClassroomEvent);
   }
-
   onDestroy() {
     EduEventCenter.shared.onClassroomEvents(this._handleClassroomEvent);
     this._disposers.forEach((d) => d());
